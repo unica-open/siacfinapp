@@ -1,0 +1,447 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+   <h4>Indirizzi</h4>
+                 <table summary="riepilogo indirizzo" class="table tableHover">
+                     
+                      <tr>
+                        <th> Tipo </th>
+                        <th> Indirizzo </th>
+                        <th>Principale</th>
+                        <th>Avviso</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                      <tr>
+                        <td>sede principale</td>
+                        <td>via delle magnolie 46, Firenze 10065</td>
+                        <td>si</td>
+                        <td>&nbsp;</td>
+                        <td>
+             <button class="btn"><i class="icon-trash"></i> elimina</button>         </td>
+                      </tr>
+                      <tr class="newline">
+                        <td>sede avviso pagamenti</td>
+                        <td>via delle risorse 54, Roma 1006</td>
+                        <td>&nbsp;</td>
+                        <td>si</td>
+                        <td><button class="btn"><i class="icon-trash"></i> elimina</button></td>
+                      </tr>
+                    </table>
+                    
+                                        
+
+
+
+
+<p>
+         <a class="btn"  data-toggle="collapse" data-target="#insInd">inserisci nuovi indirizzi</a>
+        </p>  
+                                           
+<div id="insInd" class="collapse">
+                                                     <div class="accordion_info"> 
+       <fieldset class="form-horizontal">
+
+                       
+                       
+              
+  
+                                                  
+             <div class="control-group">
+                <label class="control-label" for="tipoind">Tipo indirizzo</label>
+                <div class="controls">
+                <select id="tipoind" name="tipoind"><option>sede principale</option><option>sede legale</option><option>sede avviso pagamenti</option><option>sede per incassi</option></select></div>
+            </div>
+
+			
+	        <div class="control-group">
+                <label class="control-label" for="Ricorrente55">Principale</label>
+                 <div class="controls">
+                 <input id="Ricorrente2" type="checkbox" name="Ricorrente55"/>
+                 <span class="al">
+				 <label class="radio inline" for="Avviso">Avviso</label>
+			     </span>
+				 <input id="Avviso" type="checkbox" name="Avviso"/>
+			</div></div>
+			
+			
+			<div class="control-group">
+                <label class="control-label" for="Stato2">Stato\Comune</label>
+                <div class="controls">
+                	<select id="Stato2" name="Stato2" class="span3"><option>&nbsp;</option><option>italia</option><option>estero</option></select>
+
+			    <span class="al">
+				<!-- <label class="radio inline" for="comune"> Comune</label> -->
+				</span>
+				<input id="comune" name="comune" class="lbTextSmall span3" type="text" placeholder="comune"/> Provincia: xxxx
+
+			    				
+			</div>
+		    </div>    
+
+
+             <div class="control-group">
+                <label class="control-label" for="Sedime">Indirizzo</label>
+                <div class="controls">
+				<input id="Sedime" name="Sedime" class="lbTextSmall span1" type="text" placeholder="sedime" required="required"/>
+            
+			    <span class="al">
+				<!-- <label class="radio inline" for="nomevia">Nome via</label> -->
+				</span>
+				<input id="nomevia" name="nomevia" class="lbTextSmall span4" type="text" placeholder="nome via" required="required"/>
+
+				<span class="al">
+				<!-- <label class="radio inline" for="numciv">Numero civico</label> -->
+				</span>
+				<input id="numciv" name="numciv"  class="lbTextSmall span1" type="text" placeholder="n. civico" required="required"/>
+				
+				<span class="al">
+				<!-- <label class="radio inline" for="cap"><acronym title="codice di avviamento postale">\</acronym></label> -->
+				</span>
+				<input id="cap" name="cap" class="span1" type="text" placeholder="C.A.P." required="required"/> 
+            </div>
+            </div>
+
+			<!--
+           <div class="control-group">
+                <label class="control-label" for="Sedime">Sedime</label>
+                <div class="controls"><input id="Sedime" name="Sedime" type="text"/>
+             </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="nomevia">Nome via</label>
+                <div class="controls"><input id="nomevia" name="nomevia" type="text"/></div>
+            </div>
+            
+			<div class="control-group">
+                <label class="control-label" for="numciv">Numero civico</label>
+                <div class="controls"><input id="numciv" name="numciv" type="text"/></div>
+            </div>
+           
+            <div class="control-group">
+                <label class="control-label" for="cap"><acronym title="codice di avviamento postale">C.A.P.</acronym></label>
+                <div class="controls"><input id="cap" name="cap" class="min required toggle_radio toggle_radio_italia" type="text"/></div>
+            </div>
+            -->
+        
+                
+           <!--     
+                <div class="control-group">
+                <label class="control-label" for="Stato2">Stato</label>
+                <div class="controls">
+                	<select id="Stato2" name="Stato2"><option>&nbsp;</option><option>italia</option><option>estero</option></select>
+              </div></div>             
+                
+             <div class="control-group">
+                <label class="control-label" for="comune">Comune</label>
+                <div class="controls"><input id="comune" name="comune" type="text"/> Provincia: xxxx</div>
+            </div>
+             -->
+
+
+			 <!--
+              <div class="control-group">
+             <label class="control-label" for="Ricorrente55">Principale</label>
+              <div class="controls">
+                    <input id="Ricorrente2" type="checkbox" name="Ricorrente55"/>
+   </div></div>
+                  <div class="control-group">
+             <label class="control-label" for="Avviso">Avviso</label>
+              <div class="controls">
+                    <input id="Avviso" type="checkbox" name="Avviso"/>
+   </div></div>
+                -->
+                     </fieldset>  
+                     <p><a class="btn btn-link" href="">annulla inserimento</a>    <a class="btn" href="#"  data-toggle="collapse" data-target="#insInd">salva</a>  </p>
+
+                        </div>     </div>
+                      <div class="alert alert-success">
+    		<button type="button" class="close" data-dismiss="alert">&times;</button>
+ 			I dati sono stati inseriti correttamente
+    	    </div>
+ 
+ <h4>Contatti</h4>
+                 <table summary="riepilogo Numeri di telefono" class="table tableHover">
+                     
+                      <tr>
+                        <th> Tipo </th>
+                        <th> Dato </th>
+                        <th>Avviso</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                      <tr>
+                        <td> cellulare</td>
+                        <td> 3334567899 </td>
+                        <td>&nbsp;</td>
+                        <td><button class="btn"><i class="icon-trash"></i> elimina</button></td>
+                      </tr>
+                      <tr>
+                        <td>numero fisso </td>
+                        <td> 0114567890 </td>
+                        <td>&nbsp;</td>
+                        <td class="newline"><button class="btn"><i class="icon-trash"></i> elimina</button></td>
+                      </tr>
+                       <tr>
+                        <td>fax</td>
+                        <td> 0114567867 </td>
+                        <td>&nbsp;</td>
+                        <td><button class="btn"><i class="icon-trash"></i> elimina</button></td>
+                      </tr>
+                       <tr>
+                        <td>E-mail</td>
+                        <td>mario.rossi@csi.it</td>
+                        <td>&nbsp;</td>
+                        <td><button class="btn"><i class="icon-trash"></i> elimina</button></td>
+                        </tr>
+                      <tr>
+                        <td><acronym title="posta elettronica certificata">PEC</acronym></td>
+                        <td>mario.rossi@pec.it</td>
+                        
+                        <td>si</td>
+                        <td><button class="btn"><i class="icon-trash"></i> elimina</button></td>
+                      </tr>
+                    </table>
+                    
+
+ <p>
+         <a class="btn"  data-toggle="collapse" data-target="#instelefono">inserisci contatti</a>
+</p>  
+                                           
+<div id="instelefono" class="collapse">
+ <div class="accordion_info"> 
+       <fieldset class="form-horizontal">
+
+	 <div class="control-group">
+     <label class="control-label" for="Numero">Numero telefono</label>
+     <div class="controls"><input id="Numero" name="Numero" class="span2" type="text"/>
+
+			    <span class="al">
+				<label class="radio inline" for="Numero2">Numero cellulare</label>
+				</span>
+				<input id="Numero2" name="Numero2" class="span2" type="text"/>
+
+			    <span class="al">
+				<label class="radio inline" for="Numero3">Fax</label>
+				</span>
+				<input id="Numero3" name="Numero3" class="span2" type="text"/>
+	 </div>
+    </div>
+	   
+<!--
+             <div class="control-group">
+                <label class="control-label" for="Numero">Numero telefono</label>
+                <div class="controls"><input id="Numero" name="Numero" type="text"/></div>
+            </div>
+                
+              <div class="control-group">
+                <label class="control-label" for="Numero2">Numero cellulare</label>
+                <div class="controls"><input id="Numero2" name="Numero2" type="text"/></div>
+            </div>   
+                
+             <div class="control-group">
+                <label class="control-label" for="Numero3">Fax</label>
+                <div class="controls"><input id="Numero3" name="Numero3" type="text"/></div>
+            </div>   
+			
+-->
+
+<!--
+
+           <div class="control-group">
+                <label class="control-label" for="PEC"><acronym title="posta elettronica certificata">PEC</acronym></label>
+                <div class="controls"><input id="PEC" name="PEC" type="text"/><label class="checkbox">
+<input type="checkbox"> 
+Avviso</label>
+                </div>
+       </div>           
+     <div class="control-group">
+                <label class="control-label" for="mail">E-mail</label>
+                <div class="controls"><input id="mail" name="mail" type="text"/><label class="checkbox">
+<input type="checkbox"> 
+Avviso</label>
+                </div>
+       </div>
+             <div class="control-group">
+                <label class="control-label" for="web">Sito web</label>
+                <div class="controls"><input id="web" name="web" type="text"/></div>
+            </div>                                              
+                
+                
+-->
+
+<div class="control-group">
+    <label class="control-label" for="PEC"><acronym title="posta elettronica certificata">PEC</acronym></label>
+    <div class="controls">
+	 <input id="PEC" name="PEC" class="span2" type="text"/>
+	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label>-->
+     <span class="al">
+	 <label class="radio inline"> <input type="checkbox"> Avviso</label>
+	 </span>
+	 <!--
+	 <span class="al">
+	 <label class="radio inline" for="mail">E-mail</label>
+     <input id="mail" name="mail" class="span2" type="text"/>
+	 <span class="al">
+	 <label class="radio inline"> <input type="checkbox"> Avviso</label>
+	 </span>
+	 </span>
+	 -->
+	</div>
+</div>         
+
+
+<div class="control-group">
+    <label class="control-label" for="mail">E-mail</label>
+    <div class="controls">
+	 <input id="mail" name="mail" class="span2" type="text"/>
+	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label>-->
+     <span class="al">
+	 <label class="radio inline"> <input type="checkbox"> Avviso</label>
+	 </span>
+	 <!--
+	 <span class="al">
+	 <label class="radio inline" for="mail">E-mail</label>
+     <input id="mail" name="mail" class="span2" type="text"/>
+	 <span class="al">
+	 <label class="radio inline"> <input type="checkbox"> Avviso</label>
+	 </span>
+	 </span>
+	 -->
+	</div>
+</div>         
+
+
+<!--
+  
+<div class="control-group">
+  <label class="control-label" for="mail">E-mail</label>
+  <div class="controls"><input id="mail" name="mail" type="text"/><label class="checkbox">
+  <input type="checkbox"> Avviso</label>
+</div>
+</div>
+-->
+<div class="control-group">
+   <label class="control-label" for="web">Sito web</label>
+   <div class="controls"><input id="web" name="web" class="span3" type="text"/></div>
+</div>                  
+                                               
+                
+                
+                
+
+                     </fieldset>  
+                     <p><a class="btn btn-link" href="">annulla inserimento</a>    <a class="btn" href="#"  data-toggle="collapse" data-target="#instelefono">salva</a>  </p>
+
+                        </div>     </div>
+                        <div class="alert alert-success">
+    		<button type="button" class="close" data-dismiss="alert">&times;</button>
+   				
+           
+
+			I dati sono stati inseriti correttamente
+
+    	</div>		                
+  <!--<h4>Dati web</h4>
+                 <table summary="riepilogo dati web" class="table tableHover">
+                     
+                      <tr>
+                        <th> Tipo </th>
+                        <th>Dato</th>
+                       
+                      </tr>
+                      <tr>
+                        <td>E-mail</td>
+                        <td>mario.rossi@csi.it</td>
+                      
+                      </tr>
+                      <tr>
+                        <td><acronym title="posta elettronica certificata">PEC</acronym></td>
+                        <td>mario.rossi@pec.it</td>
+                        
+                      </tr>
+                    </table>
+                    
+                                        
+
+
+
+
+ <p>
+         <a class="btn"  data-toggle="collapse" data-target="#insweb">inserisci dati web</a>
+        </p>  
+                                           
+<div id="insweb" class="collapse">
+                                                     <div class="accordion_info"> 
+       <fieldset class="form-horizontal">
+
+                       
+                       
+              
+  
+                                                  
+                                                
+                
+                                                    
+                                                    
+                                                   
+                                                    
+                                                    
+                                                    
+                                                   <div class="control-group">
+                <label class="control-label" for="web">Tipo dati web</label>
+                <div class="controls"><select id="web" name="web"><option>E-mail</option>
+                                                      <option><acronym title="posta elettronica certificata">PEC</acronym></option>
+                                                       <option>sito web</option>
+                                                    </select></div>
+            </div>
+                
+                
+                
+                
+              <div class="control-group">
+                <label class="control-label" for="mail">Dato web</label>
+                <div class="controls"><input id="mail" name="mail" type="text"/></div>
+            </div>
+                
+                
+                
+                
+                                               
+                
+                
+                
+
+                
+                
+                                                  
+                     </fieldset>  
+                     <p><a class="btn btn-link" href="">annulla inserimento</a>    <a class="btn" href="#"  data-toggle="collapse" data-target="#insweb">salva</a>  </p>
+
+                        </div>     </div>
+                        <div class="alert alert-success">
+    		<button type="button" class="close" data-dismiss="alert">&times;</button>
+   				
+           
+
+			I dati sono stati inseriti correttamente
+
+    	</div>	 -->	
+<!-- Modal -->
+<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+<!--<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Attenzione</h3>
+</div> -->
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+<!--/modale elimina -->

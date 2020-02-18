@@ -1,0 +1,28 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!--h4>Provvedimento - ...</h4-->
+<fieldset class="form-horizontal margin-large">
+  <div class="control-group">
+    <label class="control-label" for="anno">Anno *</label>
+    <div class="controls">   
+      <input id="anno" class="lbTextSmall span1" type="text" value="" name="anno" maxlength="4" required/>
+      <span class="alRight">
+        <label class="radio inline" for="numero3">Numero *</label>
+      </span>
+      <input id="numero3" class="lbTextSmall span2" type="text" value="" name="numero3" required/> 
+      <span class="alRight">
+        <label class="radio inline" for="tipo3">Tipo *</label>
+      </span>
+      <select id="tipo3" name="tipo3" class="span4" required>
+		<option value="">Scegli il tipo </option>
+		<option value="">tipo x </option>
+		<option value="">tipo xx</option>
+		<option value="">tipo xxx </option>
+	  </select>   
+      <span class="radio guidata"><a href="#guidaProv" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
+    </div>
+  </div>
+  <!-- Modal -->
+</fieldset>

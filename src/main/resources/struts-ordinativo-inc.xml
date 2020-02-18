@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="ordinativoIncassoDefault" extends="default, json-default" abstract="true">
+		<!-- Package per la definizione delle estensioni comuni a tutti i varii packages di Struts2 e per la definizione centralizzata dello stack degli interceptors. -->
+		<interceptors>
+
+			<!-- Interceptor di log prima e a termine dell'invocazione -->
+			<interceptor name="logInterceptor" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+
+			<!-- Interceptor per la gestione degli errori di conversione <interceptor name="siacConversionErrorInterceptor" class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" /> -->
+
+			<!-- Interceptor per la gestione dei breadcrumb -->
+			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+				<param name="defaultRewindMode">AUTO</param>
+				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+
+			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
+			<interceptor name="redirectMessage" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.RedirectMessageInterceptor" />
+
+			<interceptor-stack name="myStack">
+				<!-- Default Stack -->
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="actionData" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="redirectMessage" />
+				<interceptor-ref name="chain" />
+				<interceptor-ref name="scopedModelDriven" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="multiselect" />
+				<interceptor-ref name="staticParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+				</interceptor-ref>
+
+				<!-- Injettato nello stack per la gestione degli errori di conversioneS <interceptor-ref name="siacConversionErrorInterceptor"/> -->
+
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+				</interceptor-ref>
+				<interceptor-ref name="debugging" />
+
+				<!-- Interceptor per breadcrumb -->
+				<interceptor-ref name="breadCrumbs" />
+
+
+				<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
+
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack" />
+	</package>
+
+	<!-- Gestione navigazione per il modulo movgest -->
+	<package namespace="/" extends="ordinativoIncassoDefault" name="ordinativoIncasso">
+	
+		<action name="gestioneOrdinativoIncassoStep1" class="gestioneOrdinativoIncassoStep1Action">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoIncassoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>
+			
+			<result name="tendinoCausali">/jsp/ordinativo/include/tendinoCausali.jsp</result>
+			
+		</action>
+		
+
+		<action name="ricercaOrdinativoIncasso" class="ricercaOrdinativoIncassoAction">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoIncasso.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoIncasso.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoIncasso" type="redirectAction">elencoOrdinativoIncasso</result>
+			<result name="gotoElencoOrdinativoIncasso_CollegaReversali" type="redirectAction">
+				<param name="actionName">elencoOrdinativoIncassoCollegaReversali</param>
+				<param name="uidOrdCollegaReversali">${uidOrdCollegaReversali}</param>
+			</result>
+			<result name="goToRicercaOrdinativoIncasso" type="redirectAction">ricercaOrdinativoIncasso</result>
+			<result name="tendinoCausaliPerRicerca">/jsp/ordinativo/include/tendinoCausaliPerRicerca.jsp</result>
+			<!-- <result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result> -->	
+		</action>
+		
+		<action name="elencoOrdinativoIncassoCollegaReversali" class="elencoOrdinativoIncassoCollegaReversaliAction">
+			<result name="success">/jsp/ordinativo/elencoOrdinativoIncassoCollegaReversali.jsp</result>
+			<result name="input">/jsp/ordinativo/elencoOrdinativoIncassoCollegaReversali.jsp</result>
+			<result name="gotoErroreRicerca" type="redirectAction">
+				<param name="actionName">ricercaOrdinativoIncasso</param>
+				<param name="uidOrdCollegaReversali">${uidOrdCollegaReversali}</param>
+			</result>
+			<result name="elencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+		</action>
+		
+		<action name="elencoOrdinativoIncasso" class="elencoOrdinativoIncassoAction">
+			<result name="success">/jsp/ordinativo/elencoOrdinativoIncasso.jsp</result>
+			<result name="input">/jsp/ordinativo/elencoOrdinativoIncasso.jsp</result>
+			<!-- <result name="gotoErroreRicerca">/jsp/ordinativo/ricercaOrdinativoIncasso.jsp</result> -->
+			<result name="gotoErroreRicerca" type="redirectAction">ricercaOrdinativoIncasso</result>
+		</action>
+		
+		 
+		<action name="gestioneOrdinativoIncassoStep2" class="gestioneOrdinativoIncassoStep2Action">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioConsultaQuota">/jsp/ordinativo/include/dettaglioConsultaOrdinativo.jsp</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoIncassoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoIncasso</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoIncassoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoIncassoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+		
+		<action name="nuovoAccertamentoOrdinativo" class="nuovoAccertamentoOrdinativoAction">
+			<result name="success">/jsp/ordinativo/nuovoAccertamentoOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovoAccertamentoOrdinativo.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoIncassoStep2</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>		
+		</action>
+
+		<action name="annullaOrdinativoIncasso" class="annullaOrdinativoIncassoAction">
+			<result name="success" type="redirectAction">
+			  <param name="actionName">elencoOrdinativoIncasso</param>
+			</result>  
+			<result name="input">/jsp/ordinativo/elencoOrdinativoIncasso.jsp</result>
+			<result name="gotoElencoOrdinativoIncasso" type="redirectAction">	
+				<param name="actionName">elencoOrdinativoIncasso</param>
+			</result>
+	  	</action>
+
+		
+		<action name="gestioneOrdinativoIncassoStep3" class="gestioneOrdinativoIncassoStep3Action">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoIncasso</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoIncassoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoIncassoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+			<result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		    
+		</action>
+		
+		<action name="consultaOrdinativoIncasso" class="consultaOrdinativoIncassoAction">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoIncasso.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoIncasso.jsp</result>
+			<result name="dettaglioQuoteOrdinativoIncassoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoIncassoInc.jsp</result>
+			<result name="dettaglioQuoteOrdinativoIncassoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoIncassoPag.jsp</result>
+			<result name="gotoRipeti" type="redirectAction">
+				<param name="actionName">gestioneOrdinativoIncassoStep1</param>
+				<param name="numeroOrdinativoRipeti">${numeroOrdinativoRipeti}</param>
+				<param name="annoOrdinativoRipeti">${annoOrdinativoRipeti}</param>
+				<param name="ripeti">si</param>
+			</result>
+	  	</action>
+	  	
+	  	<!-- 
+ 		<action name="consultaOrdinativoIncassoTabQuote" class="consultaOrdinativoIncassoAction">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoIncasso.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoIncasso.jsp</result>
+			<result name="dettaglioQuoteOrdinativoIncassoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoIncassoInc.jsp</result>
+			<result name="dettaglioQuoteOrdinativoIncassoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoIncassoPag.jsp</result>
+			<param name="tabFolder">tabQuote</param>
+	  	</action>
+	  	
+		<action name="consultaOrdinativoIncassoTabProvvisori" class="consultaOrdinativoIncassoAction">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoIncasso.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoIncasso.jsp</result>
+			<param name="tabFolder">tabProvvisori</param>
+	  	</action>  -->
+	  	
+		<!-- 
+		<action name="nuovaLiquidazioneOrdinativo" class="nuovaLiquidazioneOrdinativoAction">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+		</action>
+		
+		<action name="ricercaOrdinativoPagamento" class="ricercaOrdinativoPagamentoAction">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		
+		<action name="elencoOrdinativoPagamento" class="elencoOrdinativoPagamentoAction">
+			<result name="success">/jsp/ordinativo/elencoOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/elencoOrdinativoPagamento.jsp</result>
+			<result name="gotoErroreRicerca">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+		</action>
+		
+		<action name="consultaOrdinativoPagamento" class="consultaOrdinativoPagamentoAction">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+	  </action>
+	  
+		<action name="annullaOrdinativoPagamento" class="annullaOrdinativoPagamentoAction">
+			<result name="success" type="redirectAction">
+			  <param name="actionName">elencoOrdinativoPagamento</param>
+			</result>  
+			<result name="input">/jsp/ordinativo/elencoOrdinativoPagamento.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">	
+				<param name="actionName">elencoOrdinativoPagamento</param>
+			</result>
+	  	</action>
+       -->
+		
+	</package>
+
+</struts>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+    	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+                           
+    <context:property-placeholder location="classpath:spring/*.properties" />
+
+	<!-- ################ Servizi di FIN ################# -->
+	
+    <!--  CHIAMATA MODALITA IBRIDA - FINE -->
+
+    <!-- ################ Servizi di Core ################# -->
+    
+	<util:map id="jaxwsCustomProperties">
+		<entry key="javax.xml.ws.client.connectionTimeout">
+			<value type="java.lang.Integer">600000</value>
+		</entry>
+		<entry key="javax.xml.ws.client.receiveTimeout">
+			<value type="java.lang.Integer">3000000</value>
+		</entry>
+	</util:map>
+
+	<bean id="coreService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="it.csi.siac.siaccorser.frontend.webservice.CoreService" />
+		<property name="wsdlDocumentUrl" value="${endpoint.url.service.core}/CoreService?wsdl" />
+		<property name="namespaceUri" value="http://siac.csi.it/cor/svc/1.0" />
+		<property name="serviceName" value="CoreService" />
+		<property name="endpointAddress" value="${endpoint.url.service.core}/CoreService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+	</bean>
+	
+	<bean id="classificatoreService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="it.csi.siac.siaccorser.frontend.webservice.ClassificatoreService" />
+		<property name="wsdlDocumentUrl" value="${endpoint.url.service.core}/ClassificatoreService?wsdl" />
+		<property name="namespaceUri" value="http://siac.csi.it/cor/svc/1.0" />
+		<property name="serviceName" value="ClassificatoreService" />
+		<property name="endpointAddress" value="${endpoint.url.service.core}/ClassificatoreService" />
+		 <property name="customProperties" ref="jaxwsCustomProperties"/> 
+		 <property name="lookupServiceOnStartup" value="false" /> 
+	</bean>
+	
+	<!-- ###################### Servizi di FIN #######################  -->
+	
+	<bean id="soggettoService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.SoggettoService" />
+		<property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/SoggettoService?wsdl" />
+		<property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+		<property name="serviceName" value="SoggettoService" />
+		<property name="endpointAddress" value="${endpoint.url.service.fin}/SoggettoService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+	</bean>
+	
+		<bean id="movimentoGestioneService" class="it.csi.siac.siacfinapp.frontend.ui.util.proxy.SiacJaxWsPortAdvisedProxyFactoryBean">
+		<property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.MovimentoGestioneService" />
+		<property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/MovimentoGestioneService?wsdl" />
+		<property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+		<property name="serviceName" value="MovimentoGestioneService" />
+		<property name="endpointAddress" value="${endpoint.url.service.fin}/MovimentoGestioneService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		<property name="lookupServiceOnStartup" value="false" />
+		<property name="logSOAPMessages" value="true" />
+	</bean>
+	
+	<bean id="GenericService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.GenericService" />
+		<property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/GenericService?wsdl" />
+		<property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+		<property name="serviceName" value="GenericService" />
+		<property name="endpointAddress" value="${endpoint.url.service.fin}/GenericService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+	</bean>
+	
+	<bean id="mutuoService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.MutuoService" />
+		<property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/MutuoService?wsdl" />
+		<property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+		<property name="serviceName" value="MutuoService" />
+		<property name="endpointAddress" value="${endpoint.url.service.fin}/MutuoService" />
+		 <property name="lookupServiceOnStartup" value="false" /> 
+	</bean>
+	
+	<bean id="liquidazioneService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.LiquidazioneService" />
+		<property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/LiquidazioneService?wsdl" />
+		<property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+		<property name="serviceName" value="LiquidazioneService" />
+		<property name="endpointAddress" value="${endpoint.url.service.fin}/LiquidazioneService" />
+		<property name="customProperties" ref="jaxwsCustomProperties"/>
+		<property name="lookupServiceOnStartup" value="false" /> 
+	</bean>
+	
+	<bean id="ordinativoService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+		<property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.OrdinativoService" />
+		<property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/OrdinativoService?wsdl" />
+		<property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+		<property name="serviceName" value="OrdinativoService" />
+		<property name="endpointAddress" value="${endpoint.url.service.fin}/OrdinativoService" />
+		<property name="customProperties" ref="jaxwsCustomProperties"/>
+		<property name="lookupServiceOnStartup" value="false" /> 
+	</bean>
+	    
+    <bean id="provvisorioService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.ProvvisorioService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/ProvvisorioService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+        <property name="serviceName" value="ProvvisorioService" />
+        <property name="endpointAddress" value="${endpoint.url.service.fin}/ProvvisorioService" />
+         <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+	
+	<bean id="documentoSpesaService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacfin2ser.frontend.webservice.DocumentoSpesaService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/DocumentoSpesaService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin2/svc/1.0" /> 
+        <property name="serviceName" value="DocumentoSpesaService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/DocumentoSpesaService" />
+        <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+    
+   	<bean id="documentoEntrataService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacfin2ser.frontend.webservice.DocumentoEntrataService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/DocumentoEntrataService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin2/svc/1.0" /> 
+        <property name="serviceName" value="DocumentoEntrataService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/DocumentoEntrataService" />
+        <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+   
+   <!--  
+   <bean id="preDocumentoSpesaService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean" >
+        <property name="serviceInterface" value="it.csi.siac.siacfin2ser.frontend.webservice.PreDocumentoSpesaService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/PreDocumentoSpesaService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin2/svc/1.0" />
+        <property name="serviceName" value="PreDocumentoSpesaService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/PreDocumentoSpesaService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean> -->
+    
+    <bean id="preDocumentoEntrataService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean" >
+        <property name="serviceInterface" value="it.csi.siac.siacfin2ser.frontend.webservice.PreDocumentoEntrataService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/PreDocumentoEntrataService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin2/svc/1.0" />
+        <property name="serviceName" value="PreDocumentoEntrataService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/PreDocumentoEntrataService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean>
+	
+	 <!--  CLASSIFICATORE FIN -->
+	 <bean id="classificatoreFinService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.ClassificatoreFinService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/ClassificatoreFinService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+        <property name="serviceName" value="ClassificatoreFinService" />
+        <property name="endpointAddress" value="${endpoint.url.service.fin}/ClassificatoreFinService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+	
+	
+	
+	<!-- carta contabile -->
+	<bean id="cartaContabileService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.CartaContabileService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/CartaContabileService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+        <property name="serviceName" value="CartaContabileService" />
+        <property name="endpointAddress" value="${endpoint.url.service.fin}/CartaContabileService" />
+         <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+	
+	
+	<!-- ###################### Servizi di BIL #######################  --> 
+	
+	<bean id="capitoloUscitaGestioneService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacbilser.frontend.webservice.CapitoloUscitaGestioneService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/CapitoloUscitaGestioneService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/bil/svc/1.0" />
+        <property name="serviceName" value="CapitoloUscitaGestioneService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/CapitoloUscitaGestioneService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+	
+	 <bean id="capitoloEntrataGestioneService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacbilser.frontend.webservice.CapitoloEntrataGestioneService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/CapitoloEntrataGestioneService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/bil/svc/1.0" />
+        <property name="serviceName" value="CapitoloEntrataGestioneService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/CapitoloEntrataGestioneService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+    
+    <bean id="provvedimentoService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacattser.frontend.webservice.ProvvedimentoService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/ProvvedimentoService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/att/svc/1.0" />
+        <property name="serviceName" value="ProvvedimentoService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/ProvvedimentoService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+    
+    
+    <bean id="classificatoreBilService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacbilser.frontend.webservice.ClassificatoreBilService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/ClassificatoreBilService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/bil/svc/1.0" />
+        <property name="serviceName" value="ClassificatoreBilService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/ClassificatoreBilService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+    
+     <bean id="vincoloCapitoloService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacbilser.frontend.webservice.VincoloCapitoloService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/VincoloCapitoloService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/bil/svc/1.0" />
+        <property name="serviceName" value="VincoloCapitoloService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/VincoloCapitoloService" />
+		<!-- <property name="customProperties" ref="jaxwsCustomProperties"/> -->
+		 <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+    
+    <bean id="stampaCartaContabileService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.StampaCartaContabileService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.integ}/StampaCartaContabileService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+        <property name="serviceName" value="StampaCartaContabileService" />
+        <property name="endpointAddress" value="${endpoint.url.service.integ}/StampaCartaContabileService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean>
+    
+    <bean id="progettoService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacbilser.frontend.webservice.ProgettoService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/ProgettoService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/bil/svc/1.0" />
+        <property name="serviceName" value="ProgettoService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/ProgettoService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean>
+
+
+    <bean id="saldoService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean">
+        <property name="serviceInterface" value="it.csi.siac.siacfinser.frontend.webservice.SaldoService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.fin}/SaldoService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/fin/svc/1.0" />
+        <property name="serviceName" value="SaldoService" />
+        <property name="endpointAddress" value="${endpoint.url.service.fin}/SaldoService" />
+         <property name="lookupServiceOnStartup" value="false" /> 
+    </bean>
+    
+     <bean id="registrazioneMovFinService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean" primary="true">
+        <property name="serviceInterface" value="it.csi.siac.siacgenser.frontend.webservice.RegistrazioneMovFinService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/RegistrazioneMovFinService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/gen/svc/1.0" />
+        <property name="serviceName" value="RegistrazioneMovFinService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/RegistrazioneMovFinService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean>
+
+	<bean id="causaleService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean" primary="true">
+        <property name="serviceInterface" value="it.csi.siac.siacgenser.frontend.webservice.CausaleService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/CausaleService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/gen/svc/1.0" />
+        <property name="serviceName" value="CausaleService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/CausaleService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean>
+    
+     <bean id="codificheService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean" primary="true">
+        <property name="serviceInterface" value="it.csi.siac.siacbilser.frontend.webservice.CodificheService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/CodificheService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/bil/svc/1.0" />
+        <property name="serviceName" value="CodificheService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/CodificheService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean>
+    
+    <bean id="primaNotaService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean" primary="true">
+        <property name="serviceInterface" value="it.csi.siac.siacgenser.frontend.webservice.PrimaNotaService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/PrimaNotaService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/gen/svc/1.0" />
+        <property name="serviceName" value="PrimaNotaService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/PrimaNotaService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean>
+    
+    <bean id="contoService" class="org.springframework.remoting.jaxws.JaxWsPortProxyFactoryBean" primary="true">
+        <property name="serviceInterface" value="it.csi.siac.siacgenser.frontend.webservice.ContoService" />
+        <property name="wsdlDocumentUrl" value="${endpoint.url.service.bil}/ContoService?wsdl" />
+        <property name="namespaceUri" value="http://siac.csi.it/gen/svc/1.0" />
+        <property name="serviceName" value="ContoService" />
+        <property name="endpointAddress" value="${endpoint.url.service.bil}/ContoService" />
+        <property name="lookupServiceOnStartup" value="false" />
+    </bean>
+	
+</beans>

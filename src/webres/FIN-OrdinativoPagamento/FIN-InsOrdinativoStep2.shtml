@@ -1,0 +1,266 @@
+﻿   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">xxxxx</a> <span class="divider">></span></li>
+      <li class="active">Inserimento ordinativo</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+     <form class="form-horizontal">
+		<!--#include virtual="include/alertErrorSuccess.html" -->
+		<h3>Inserimento quote ordinativo</h3>
+       	
+        <div id="MyWizard" class="wizard">
+			<ul class="steps" >
+				<li data-target="#step1" class="complete"><span class="badge badge-success">1</span>Dati ordinativo<span class="chevron"></span></li>
+				<li data-target="#step2" class="active"><span class="badge">2</span>Quote ordinativo<span class="chevron"></span></li>
+				<li id="MySteps" data-target="#step3"><span class="badge">3</span>Provvisori di cassa<span class="chevron"></span></li>
+			</ul>
+        </div>
+		
+        <div class="step-content"> 
+          <div class="step-pane active" id="step2">
+				<dl class="dl-horizontal">
+					<dt>Capitolo <a class="tooltip-test" title="Visualizza dettagli" href="#capitoloTab" data-toggle="modal"><i class="icon-info-sign">&nbsp;<span class="nascosto">Visualizza dettagli</span></i></a></dt>
+					<dd>Anno/numero/ueb  - descrizione  - codice della  struttura amministrativo contabile - tipo Finanziamento: xxxx</dd>              
+					<dt>Provvedimento</dt>
+					<dd>anno/numero – tipo – oggetto – codice della struttura amministrativo contabile -  Stato: statoOperativo</dd>
+					<dt>Soggetto</dt>
+					<dd>Soggetto.codice - denominazione – CF: codiceFiscale – PIVA : partitaIVA o Classe Codice</dd>
+					<dt>Transazione elementare</dt>
+					<dd>xxxxxxxxxxxx</dd>
+				</dl>
+
+           <table class="table table-hover tab_left" summary="....">
+              <thead> 
+                <tr>                
+					<th>Quota </th>
+					<th>A. liq</th>
+					<th>N. liq</th>
+					<th>Descrizione quota</th>
+					<th>Impegno</th>
+					<th>Mutuo</th>
+					<th><p class="pagination-right">Importo quota</p></th>
+					<th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody> 
+                <tr>                  
+					<td> 1</td>
+					<td>2012</td>
+					<td>152</td>
+					<td>Sedie</td>                  
+					<td><a data-content="XXXXXXX" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto">2012/201234/0</a></td>
+					<td>xxxxx</td>
+					<td><p class="pagination-right">13.124,99</p></td>
+					<td class="tab_Right">
+						<div class="btn-group">
+						  <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+						  <ul class="dropdown-menu pull-right">
+							<li><a href="#aggOrdinativo2" data-toggle="modal">aggiorna</a></li>                      
+							<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+						  </ul>
+						</div>
+					</td>
+                </tr>
+                <tr class="newline">                  
+					<td>2</td>
+					<td>2013</td>
+					<td>100072</td>
+					<td>Scrivanie</td>
+					<td><a data-content="XXXXXXX" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto">2013/20125/1</a></td>
+					<td>xxxxx</td>
+					<td><p class="pagination-right">1.213,25</p></td>
+					<td class="tab_Right">
+						<div class="btn-group">
+							<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+							<ul class="dropdown-menu pull-right">
+							  <li><a href="#aggOrdinativo2" data-toggle="modal">aggiorna</a></li>                   
+							  <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+							</ul>
+						</div>
+					</td>
+                </tr>               
+              </tbody> 
+             
+				<tr class="newline">
+					<th scope="col" colspan="6">Totale ordinativo</th>
+					<th scope="col"><p class="pagination-right">14.338,24</p></th>
+					<th scope="col"></th>
+                </tr>
+              
+            </table>
+			
+		
+			<div class="row pagination_conth">
+				<div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+				<div class="span6">                               
+					<div id="paginazione2" class="dataTables_paginate paging_bootstrap pagination">
+						<ul>
+							<li><a href="#">&laquo; inizio</a></li>
+							<li><a href="#">&laquo; prec</a></li>
+							<li><a href="#">1</a></li>
+							<li class="active"><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+							<li><a href="#">succ &raquo;</a></li>
+							<li><a href="#"> fine &raquo;</a></li>              
+						</ul>
+					</div>         
+				  </div>  
+            </div>
+			
+			<div class="Border_line"></div>
+		
+			<p><a class="btn"  data-toggle="collapse" data-target="#insQuota">inserisci quota</a></p>  
+                                           
+			<div id="insQuota" class="collapse">
+				<div class="accordion_info"> 
+					<div class="step-pane active" id="step1"> 
+						
+						<!--#include virtual="include/nuovaQuota.html" --> 
+					</div>
+					
+
+				<!--#include virtual="include/modal.html" --> 
+						
+				<p>
+					<a class="btn btn-secondary"  data-toggle="collapse" data-target="#insQuota" >annulla inserimento</a>    
+					<span class="pull-right"><a class="btn btn-primary" data-toggle="collapse" data-target="#insQuota">inserisci quota</a>
+					</span> 
+				</p>
+
+				</div>    
+			</div>
+	
+		</div> 
+	</div>
+					
+		<p class="margin-medium">
+			<a class="btn btn-secondary conferma" rel="FIN-InsOrdinativoStep1.shtml">indietro</a>   	
+			<span class="pull-right">
+				<a id="MyLink" class="btn btn-primary" href="FIN-InsOrdinativoStep3.shtml">prosegui</a>
+				<a id="SaveBtn" class="btn btn-primary" href="" >salva</a>		
+			</span>				
+		</p> 
+		
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<script type="text/javascript">
+var listaVariabili="";
+
+$(function getUrl(){
+var stringUrl = window.location.search;
+stringUrl = stringUrl.substring(1);
+listaVariabili = stringUrl.split('var=').pop(); 
+
+	if(listaVariabili=="cop"){
+			document.getElementById("MySteps").className += " actived";
+			document.getElementById("MyLink").className += " actived";
+			
+	}else{
+			console.log("no cop")
+			document.getElementById("SaveBtn").href = "FIN-AggOrdinativoStep1.shtml";
+		}
+
+});
+
+ 
+</script>
+
+</body>
+</html>

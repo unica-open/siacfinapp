@@ -1,0 +1,351 @@
+﻿﻿﻿------------------------
+SIAC FIN app
+------------------------
+
+Funzionalità rilasciate
+--------------------------+
+build 27/11/2019 versione 4.16.0
+ SIAC-6879
+ SIAC-7093
+ SIAC-7114
+ SIAC-7133
+ SIAC-7144
+ SIAC-7146
+ SIAC-7148
+ SIAC-7151
+ SIAC-7197
+ SIAC-7198
+
+build 22/10/2019 versione 4.15.0
+ SIAC-7046
+ SIAC-7049
+ SIAC-7084
+ SIAC-7087
+
+build 07/10/2019 versione 4.14.0
+ SIAC-6702
+ SIAC-6703
+ SIAC-6744
+ SIAC-6847
+ SIAC-6961
+ SIAC-6964
+ SIAC-6968
+ SIAC-6992
+ SIAC-6993
+ SIAC-6994
+ SIAC-6995
+ SIAC-7018
+ SIAC-7025
+ SIAC-7026
+ SIAC-7032
+ SIAC-7037
+ SIAC-7042
+ SIAC-7048
+
+build 28/08/2019 versione 4.13.0
+ SIAC-6874 
+ SIAC-6949
+ SIAC-6983
+ SIAC-7009
+
+build 24/07/2019 versione 4.12.0
+ SIAC-6352
+ SIAC-6693
+
+build 26/06/2019 versione 4.11.0
+ SIAC-6720
+ SIAC-6935
+ SIAC-6947
+ 
+build 29/05/2019 versione 4.10.0
+ SIAC-6255
+ SIAC-6818
+ SIAC-6833
+ SIAC-6834
+ SIAC-6841
+ SIAC-6844
+ SIAC-6916
+ SIAC-6936
+
+build 29/04/2019 versione 4.9.0
+ SIAC-6688
+
+build 27/03/2019 versione 4.8.0
+ SIAC-6565
+
+build 06/03/2019 versione 4.8.0
+ SIAC-6741
+ 
+build 06/03/2019 versione 4.7.0
+ SIAC-6714
+ SIAC-6716
+
+build 19/02/2019 versione 4.6.2
+ SIAC-6701
+ SIAC-6708
+
+build 19/02/2019 versione 4.6.1
+ SIAC-6698
+
+build 13/02/2019 versione 4.6.0
+ SIAC-6257
+ SIAC-6651
+ SIAC-6658
+ SIAC-6659
+ SIAC-6671
+ SIAC-6673
+ SIAC-6586
+ rilascio modifiche js: committare tutti i file .properties
+ razionalizzazione js -> ricordare di committare su svn anche i file di properties
+ 
+build 23/01/2019 versione 4.5.0
+ refactoring core
+
+build 09/01/2019 versione 4.4.0
+ SIAC-6365
+ SIAC-6582
+ SIAC-6606
+ SIAC-6631 
+ 
+build 13/12/2018 versione 4.3.0
+ SIAC-6261
+
+build 22/11/2018 versione 4.2.0
+ SIAC-6351
+ SIAC-6353
+
+build 15/11/2018 versione 4.1.0
+ SIAC-6472
+
+build 25/10/2018 versione  4.0.0
+ incremento versione per modifiche architettura
+ 
+build 27/09/2018 versione 3.42.0
+ SIAC-6328
+ SIAC-6338
+ SIAC-6433
+ SIAC-6443
+ SIAC-6419
+
+build 20/09/2018 versione 3.41.0
+ SIAC-6439
+
+build 26/07/2018 versione 3.40.0
+ SIAC-6175
+ SIAC-6206
+ SIAC-6230
+ SIAC-6312
+ SIAC-6349
+
+build 21/06/2018 versione 3.39.0
+ SIAC-6183
+ SIAC-6247
+ SIAC-6268
+
+build 14/06/2018 versione 3.38.0
+ SIAC-6184
+
+build 14/06/2018 versione 3.37.0
+ SIAC-6165
+
+build 31/05/2018 versione 3.36.0
+ SIAC-6092
+ SIAC-6188
+ SIAC-6223
+
+build 24/05/2018 versione 3.35.0
+ SIAC-6076
+ SIAC-6138
+ SIAC-6148
+ SIAC-6149
+ SIAC-6150
+ SIAC-6151
+ SIAC-6172
+ SIAC-6173
+ SIAC-6179
+ SIAC-6180
+ SIAC-6181
+ SIAC-6194
+
+build 17/05/2018 versione 3.34.0
+ SIAC-6092
+ SIAC-6157
+ SIAC-6158
+ SIAC-6171
+
+build 10/05/2018 versione 3.33.0
+ SIAC-6122
+ SIAC-6141
+ 
+build 03/05/2018 versione 3.32.0
+ SIAC-6102
+ SIAC-6103
+ SIAC-6104
+
+build 19/04/2018 versione 3.31.0
+ SIAC-6086
+
+build 05/04/2018 versione 3.30.0
+ SIAC-6056
+ SIAC-6061
+
+build 29/03/2018 versione 3.29.0
+ SIAC-6000
+ SIAC-6031
+ SIAC-6045
+
+build 22/03/2018 versione 3.28.0
+ SIAC-5943
+ SIAC-5957
+ SIAC-6032
+ SIAC-6033
+
+build 15/03/2018 versione 3.27.0
+ SIAC-5995
+
+build 08/03/2018 versione 3.26.0
+ SIAC-5933
+ SIAC-5953
+ SIAC-5993
+
+build 01/03/2018 versione 3.25.0
+ SIAC-5902
+ SIAC-5903
+ SIAC-5935
+ SIAC-5948
+ SIAC-5956
+
+build 22/02/2018 versione 3.24.0
+ SIAC-5856
+ SIAC-5875
+ SIAC-5881
+ SIAC-5889
+ SIAC-5912
+ SIAC-5913
+ SIAC-5914
+ SIAC-5931
+ SIAC-5932
+
+build 15/02/2018 versione 3.23.0
+ SIAC-5728
+ SIAC-5782
+ SIAC-5857
+ SIAC-5864
+ SIAC-5867
+
+build 08/02/2018 versione 3.22.0
+ SIAC-5333
+ SIAC-5831
+ SIAC-5872
+ SIAC-5876
+
+build 01/02/2018 versione 3.21.0
+ SIAC-5333
+ SIAC-5678
+ SIAC-5682
+ SIAC-5745
+ SIAC-5815
+ SIAC-5827
+ SIAC-5833
+ SIAC-5847
+
+build 25/01/2018 versione 3.20.0
+ SIAC-5729
+ SIAC-5801 
+
+build 18/01/2018 versione 3.19.0
+ SIAC-5722
+ SIAC-5776
+ SIAC-5785
+
+build 11/01/2018 versione 3.18.0
+ SIAC-5747
+
+build 28/12/2017 versione 3.17.0
+ SIAC-5689
+ SIAC-5738
+ SIAC-5742 
+
+build 21/12/2017 versione 3.16.0
+ SIAC-5692
+
+build 14/12/2017 versione 3.15.0
+ SIAC-5558
+ SIAC-5610
+ SIAC-5614
+ SIAC-5619
+ SIAC-5655
+ 
+build 23/11/2017 versione 3.14.0
+ SIAC-5559
+ SIAC-5568
+ 	
+build 16/11/2017 versione 3.13.0
+ SIAC-5524
+ SIAC-5526
+ SIAC-5543
+
+build 09/11/2017 versione 3.12.0
+ SIAC-5490
+ SIAC-5492
+
+FIN - Inserisci Liquidazione
+build 26/10/2017 versione 3.11.0
+#### SIOPE+ INIZIO ####
+ SIAC-5311
+ SIAC-5339
+ SIAC-5355
+ SIAC-5369
+ SIAC-5370
+ SIAC-5392
+ SIAC-5394
+ SIAC-5401
+ SIAC-5408
+ SIAC-5413
+ SIAC-5436
+ SIAC-5450
+####  SIOPE+ FINE  ####
+
+build 05/10/2017 versione 3.9.0
+ SIAC-5273
+ SIAC-5282
+ SIAC-5288
+
+build 28/09/2017 versione 3.8.0
+ SIAC-5251
+
+build 21/09/2017 versione 3.7.0
+ SIAC-5244
+ SIAC-5248
+ SIAC-5253
+
+build 14/09/2017 versione 3.6.0
+ SIAC-5218
+ SIAC-5235
+
+build 07/09/2017 versione 3.5.0
+ SIAC-5220
+
+build 31/08/2017 versione 3.4.0
+ SIAC-5022
+ SIAC-5143
+ SIAC-5149
+ SIAC-5151
+ SIAC-5156
+ SIAC-5158
+ SIAC-5183
+ SIAC-5184
+ SIAC-5195
+ SIAC-5207
+
+build 20/07/2017 versione 3.3.0
+ SIAC-5088
+ SIAC-5091 e refactoring InserisciLiquidazioneStep1Action per sonar
+ SIAC-5095
+
+build 13/07/2017 versione 3.2.0
+ SIAC-5068
+
+build 06/07/2017 versione 3.1.0
+ SIAC-5010
+

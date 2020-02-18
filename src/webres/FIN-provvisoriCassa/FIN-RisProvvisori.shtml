@@ -1,0 +1,180 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>                       
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXXX</a> <span class="divider">></span></li>
+      <li class="active">Risultati ricerca provvisori cassa</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form class="form-horizontal">
+	  <!--#include virtual="include/alertErrorSuccess.html" -->
+        
+        <h3>Risultati ricerca provvisori cassa</h3>
+        <h4><span class="num_result">19527</span> Risultati trovati</h4>		 
+		 
+			<fieldset class="form-horizontal">
+				<table class="table table-hover tab_left"  summary="...." >
+					<thead>
+						<tr>
+							<th>Tipo</th>
+							<th>Numero provvisorio</th>			
+							<th>Data emissione</th>
+							<th>Data annullamento</th>
+							<th>Descrizione soggetto</th>
+							<th>Causale</th>
+							<th class="tab_Right">Importo </th>
+							<th class="tab_Right">Da regolare</th>
+							<th class="tab_Right">Da emettere</th>							
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>E</td>
+							<td>9722</td>
+							<td>02/05/2013</td>
+							<td>08/07/2013</td>
+							<td>xxxxxxxxxxx</td>
+							<td><a data-content="xxxxxxx xxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Sub Causale">Comune di Torino - disposizione per giroc</a></td>
+							<td class="tab_Right">474,00</td>
+							<td class="tab_Right">387,02</td>
+							<td class="tab_Right">122,00</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th colspan="6">Totali</th>
+							<th class="tab_Right">474,00</th>
+							<th class="tab_Right">387,02</th>
+							<th class="tab_Right">122,00</th>								
+						</tr>
+					</tfoot>
+				</table>
+				
+				<div class="row pagination_conth">
+					<div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+					<div class="span6">                               
+						<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">
+							<ul>
+								<li><a href="#">&laquo; inizio</a></li>
+								<li><a href="#">&laquo; prec</a></li>
+								<li><a href="#">1</a></li>
+								<li class="active"><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#">4</a></li>
+								<li><a href="#">5</a></li>
+								<li><a href="#">succ &raquo;</a></li>
+								<li><a href="#"> fine &raquo;</a></li>              
+							</ul>
+						</div>         
+					</div>  
+				</div>   
+				
+
+			</fieldset>         
+		
+			<div class="Border_line"></div>
+			<p>
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> 
+			</p>       
+          
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

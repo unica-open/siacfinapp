@@ -1,0 +1,60 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+	<h4>Dati mutuo</h4>
+
+	<fieldset class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="numM">Tipo *</label>
+			<div class="controls">    
+
+			  <select name="tipoM" id="tipoM" class="span2" required><option> </option><option >xxxxx</option></select>   
+			  <span class="al">
+				<label class="radio inline" for="statoM">Stato</label>
+			  </span>
+			  <input id="statoM" class="lbTextSmall span2" type="text" value="XXXX" name="statoM" disabled/>
+			  <span class="al">
+				<label class="radio inline" for="numReg">Num. Registrazione</label>
+			  </span>
+			  <input id="numReg" class="lbTextSmall span1" type="text" value="" name="numReg" />
+		  
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="descM">Descrizione</label>
+			 <div class="controls">    
+			  <input id="descM" rows="1" cols="15" class="span9" type="text" value="" name="descM" />
+			  
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="descM">Importo *</label>
+			 <div class="controls">    
+			  
+			  <input id="importoM" class="lbTextSmall span2" type="text" value="" name="importoM" required/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="durataM">Durata (anni) *</label>
+			 <div class="controls">    
+			  <input id="durataM" class="span1" type="text" value="" name="durataM" required/>
+			  
+			  <span class="al">
+				<label class="radio inline " for="datainiM">Data inizio *</label>
+			  </span>
+			  <input id="datainiM" class="lbTextSmall span2" type="text" value="" name="datainiM" required/>
+			  <span class="al">
+				<label class="radio inline" for="datafinM">Data fine</label>
+			  </span>
+			  <input id="datafinM" class="lbTextSmall span2" type="text" value="XXXX" name="datafinM" disabled/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label" for="datafinM">Note</label>
+			 <div class="controls">     
+			  <textarea id="datafinM" rows="2" cols="15" class="input-medium span9" type="text" value="" name="datafinM"></textarea>
+			  </div>
+		</div>
+	  
+	</fieldset>

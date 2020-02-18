@@ -1,0 +1,202 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>                       
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+      <li class="active">Emissione ordinativi di pagamento</li>
+    </ul> 
+  </div>	
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form method="get" action="#">
+        <!--#include virtual="include/alertErrorSuccess.html" -->
+        
+		<h3>Emissione ordinativi di pagamento</h3>
+			
+		<div class="step-content">	   
+		<div class="step-pane active" id="step1">
+			<fieldset class="form-horizontal">
+			<br>
+				<div class="control-group">
+					<label class="control-label" for="anno">Anno</label>
+					<div class="controls">  
+						<input id="anno" class="lbTextSmall span1"  maxlength="4" type="text" value="" name="anno"/>
+						<span class="al">
+						  <label class="radio inline" for="numero">Numero </label>
+						</span>
+						<input id="numero" class="lbTextSmall span2" type="text" value="" name="numero"/>  
+				
+					</div>
+				</div>
+				
+				<div class="control-group">
+				  <label class="control-label">Struttura Amministrativa</label>
+				  <div class="controls">                    
+					<div class="accordion span9" class="struttAmm">
+					  <div class="accordion-group">
+						<div class="accordion-heading">    
+						  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmm" href="#2">
+						  Seleziona la Struttura amministrativa</a>
+						</div>
+						<div id="2" class="accordion-body collapse">
+						  <div class="accordion-inner">
+						   <ul id="treeStruttAmm2" class="ztree treeStruttAmm"></ul>
+						  </div>
+						</div>
+					  </div>
+					</div>
+				  </div>
+				</div>   
+			
+				<div class="control-group">
+					<label class="control-label" for="elenchiAnno">Elenchi anno</label>
+				
+					<div class="controls">
+						<input id="elenchiAnno" name="elenchiAnno" class="lbTextSmall span1"  maxlength="4"  type="text" value="" /> 					
+						<span class="al">
+							<label class="radio inline" for="daNum">Da numero </label>
+						</span>
+						<input id="daNum" name="daNum" class="lbTextSmall span2" type="text" value="" />  
+						
+						<span class="al">
+							<label class="radio inline" for="aNum">a numero</label>                
+						</span>
+						<input id="aNum" name="aNum" class="lbTextSmall span2" type="text" value="" />   
+					</div>
+				</div>
+				
+				<br>
+				
+				<div class="control-group">
+                    <label class="control-label" for="capitolo">Capitolo</label>
+                    <div class="controls">            
+                        <input id="capitolo" name="capitolo" maxlength="20" class="lbTextSmall span2" type="text" value="" />
+                        <span class="al">
+                        	<label class="radio inline" for="articolo">Articolo </label>
+                        </span>
+                        <input id="articolo" name="articolo" class="lbTextSmall span2" type="text" value="" />
+                        
+                        <span class="al">
+                       		 <label class="radio inline" for="ueb">UEB </label>
+                        </span>
+                        <input id="ueb" name="ueb" class="lbTextSmall span2" type="text" value="" />
+                    
+						<span class="alLeft">
+							<a class="btn btn-primary" href="#msgCerca" data-toggle="modal"><i class="icon-search icon"></i>&nbsp;cerca</a>
+						</span>
+                    </div>
+                </div>
+				
+              <br>
+            </fieldset>
+		</div>
+		</div>
+		<!--#include virtual="include/modal.html" -->
+		
+			<p class="margin-medium">
+			<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> 
+			<a class="btn btn-secondary" href="">annulla</a> 		
+			<span class="pull-right">
+				<a class="btn btn-primary" href="FIN-RisEmissAtto.shtml">cerca allegati all'atto </a>	
+				<a class="btn btn-primary" href="FIN-RisEmissLiquidazione.shtml">cerca liquidazioni e documenti</a>	
+			</p>       
+			  
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

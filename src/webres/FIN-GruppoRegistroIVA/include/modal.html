@@ -1,0 +1,253 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+<!-- modale msgAggiornaRegistro -->
+<div id="msgAggiornaRegistro" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAggiornaRegistroLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="nostep-pane">Aggiorna registro iva </h4>
+	</div>
+	<div class="modal-body">
+		<fieldset class="form-horizontal">
+
+			<div class="control-group">
+				<label class="control-label" for="grupIva">Gruppo attività iva</label>
+				<div class="controls">
+					<input id="grupIva" class="lbTextSmall span6" type="text" value="xxxxxxx xxxx" name="grupIva" disabled="disabled" />
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="tipoIva">Tipo registro iva</label>								
+					<div class="controls">
+						<input id="tipoIva" class="lbTextSmall span6" type="text" value="xxxxxxx xxxx" name="tipRegIva" disabled="disabled" />													
+					</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="codIva">Codice</label>
+				<div class="controls">
+					<input id="codIva" class="lbTextSmall span2" type="text" value="xx" name="codIva" disabled="disabled" />		
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="DescrIva">Descrizione</label>								
+					<div class="controls">
+						<textarea id="DescrIva" rows="1" cols="15" class="input-medium span9" type="text" value="" name="DescrIva" ></textarea>
+				</div>
+			</div>
+
+		</fieldset>
+					  
+    </div>   
+	<div class="modal-footer">
+		<button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">annulla</button>
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+	</div>
+</div>   
+<!-- end modale  -->
+ 
+
+<!-- modale msgConsultaRegistro -->
+<div id="msgConsultaRegistro" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgConsultaRegistroLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="nostep-pane">Consulta</h4>
+	</div>
+	<div class="modal-body">
+		<div class="boxOrSpan2">
+				<div class="boxOrInline">
+					<p>Registro Iva</p>
+					<ul class="htmlelt">	
+						<li>
+							<dfn>Gruppo attività iva</dfn> 
+							<dl>xxxx</dl>
+						</li>
+						<li>
+							<dfn>Tipo registro iva</dfn> 
+							<dl>xxx</dl>
+						</li>
+						<li>
+							<dfn>Codice</dfn> 
+							<dl>xxxx</dl>
+						</li>
+						<li>
+							<dfn>Descrizione</dfn> 
+							<dl>xxxxxx</dl>
+						</li>
+					</ul>					
+				</div>
+				
+			</div>
+						  
+    </div>   
+	<div class="modal-footer">
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">chiudi</button>
+	</div>
+</div>   
+<!-- end modale  -->
+ 
+<!-- modale msgAggiornaGruppo -->
+<div id="msgAggiornaGruppo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAggiornaGruppoLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="nostep-pane">Aggiorna gruppo attivit&agrave; iva</h4>
+	</div>
+	<div class="modal-body">
+		<fieldset class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label" for="codGrup">Anno esercizio</label>
+				<div class="controls">
+					<input id="codGrup" class="lbTextSmall span2" type="text" value="2013" name="codGrup" disabled="disabled" />		
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="codGrup">Codice</label>
+				<div class="controls">
+					<input id="codGrup" class="lbTextSmall span2" type="text" value="xx" name="codGrup" disabled="disabled" />		
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="DescrGrup">Descrizione *</label>								
+					<div class="controls">
+						<textarea id="DescrGrup" rows="1" cols="15" class="input-medium span10" type="text" value="" name="DescrGrup" required ></textarea>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="tipoAtt">Tipo attivit&agrave;</label>
+				<div class="controls">
+					<select id="tipoAtt" class="lbTextSmall span6">
+						<option>Commerciale</option>
+						<option>Istituzionale</option>
+						<option>Promiscua</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="tipoChius">Tipo chiusura</label>								
+					<div class="controls">
+						<input id="tipoChius" class="lbTextSmall span6" type="text" value="xxxxxxx xxxx" name="tipoChius" disabled="disabled" />													
+					</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="Prodata">&#37; Pro-data *</label>
+				<div class="controls">
+					<input id="Prodata" class="lbTextSmall span4" type="text" value="" placeholder="100,00" name="Prodata" required />
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="ivaPrecedente">Iva a credito precedente (negativa) </label>
+				<div class="controls">
+					<input type="text" id="ivaPrecedente" name="ivaPrecedente" value="-122,00" class="span6" />	
+				</div>
+			</div>
+
+		</fieldset>
+					  
+    </div>   
+	<div class="modal-footer">
+		<button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">annulla</button>
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+	</div>
+</div>   
+<!-- end modale  -->
+ 
+
+<!-- modale msgConsultaGruppo -->
+<div id="msgConsultaGruppo" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgConsultaGruppoLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="nostep-pane">Consulta </h4>
+	</div>
+	<div class="modal-body">
+		<div class="boxOrSpan2">
+				<div class="boxOrInline">
+					<p>Gruppo attivit&agrave; Iva</p>
+					<ul class="htmlelt">
+						
+						<li>
+							<dfn>Anno esercizio</dfn> 
+							<dl>xxxx</dl>
+						</li>
+						<li>
+							<dfn>Codice</dfn> 
+							<dl>xxx</dl>
+						</li>
+						<li>
+							<dfn>Descrizione</dfn> 
+							<dl>xxxxxx</dl>
+						</li>
+						<li>
+							<dfn>Tipo chiusura</dfn> 
+							<dl>xxxx</dl>
+						</li>
+						<li>
+							<dfn>Tipo attivit&agrave;</dfn> 
+							<dl>xxx</dl>
+						</li>
+						<li>
+							<dfn>&#37; Pro-data</dfn> 
+							<dl>999,00</dl>
+						</li>
+						<li>
+							<dfn>Iva a credito precedente <i>(negativa)</i></dfn> 
+							<dl>-000,00</dl>
+						</li>
+						
+						
+					</ul>					
+				</div>
+				
+			</div>
+						  
+    </div>   
+	<div class="modal-footer">
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">chiudi</button>
+	</div>
+</div>   
+<!-- end modale  -->
+
+
+<!-- Modal msgElimina -->
+<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+	<div class="modal-body">
+		<div class="alert alert-error">
+		  <button type="button" class="close" data-dismiss="alert">&times;</button>
+			<p><strong>Attenzione!</strong></p>
+			<p><strong>Elemento selezionato:.....</strong></p>
+			<p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+		</div>
+	</div>
+	
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">si, prosegui</button>
+	</div>
+</div>  
+<!-- end Modal msgElimina -->
+
+
+<!-- Modal msgAnnulla -->
+<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+	<div class="modal-body">
+		<div class="alert alert-error">
+		  <button type="button" class="close" data-dismiss="alert">&times;</button>
+		  <p><strong>Attenzione!</strong></p>
+		  <p><strong>Elemento selezionato:.....</strong></p>
+		  <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">si, prosegui</button>
+	</div>
+</div>  
+<!--end modale annulla --> 

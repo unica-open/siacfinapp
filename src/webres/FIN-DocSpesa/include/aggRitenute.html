@@ -1,0 +1,224 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+	<h4 class="step-pane">Ritenute</h4>
+			
+			<div class="control-group">
+				<label class="control-label" for="impEse">Importo esente</label>
+				<div class="controls">
+					<input id="impEse" name="impEse" class="span2" type="text" value="" />
+				</div>
+			</div> 
+			
+			<div class="control-group">
+				<label class="control-label" for="cassaPen">Cassa pensioni</label>
+				<div class="controls">
+					<input id="cassaPen" name="cassaPen" class="span2" value="" type="text" />
+					<span class="alRight">
+						<label class="radio inline" for="rivalsa">Rivalsa</label>
+					</span>
+					<input id="rivalsa" name="rivalsa" class="span2" value="" type="text" />
+					<span class="alRight">
+						<label class="radio inline" for="impIva">Importo IVA</label>
+					</span>
+					<input id="impIva" name="impIva" class="span2" value="" type="text" />
+				</div>
+			</div> 
+			
+			<div class="control-group">
+				<label class="control-label" ><h4>Totale</h4> </label>
+				<div class="controls">
+					<label class="radio inline" ><h4>100.000,00</h4></label>
+				</div>
+			</div> 
+			
+			<h4 class="step-pane">Elenco oneri</h4>
+			
+			<table class="table table-hover tab_left" summary="...." >
+				<thead>
+					<tr>
+						<th scope="col">Natura</th>
+						<th scope="col">Tipologia</th>
+						<th scope="col">Ordinativo</th>
+						<th class="tab_Right" scope="col">Imponibile</th>
+						<th class="tab_Right" scope="col">Aliquota a carico soggetto</th>
+						<th class="tab_Right" scope="col">Importo a carico soggetto </th>
+						<th class="tab_Right" scope="col">Aliquota a carico soggetto</th>
+						<th class="tab_Right" scope="col">Importo a carico Ente</th>
+						<th class="tab_Right" scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>IRPEF</td>
+						<td>1040-IRPEF RITENUTE LAVORO AUTONOMO</td>
+						<td>2014-12345</td>
+						<td class="tab_Right">2000,00</td>
+						<td class="tab_Right">20,00</td>
+						<td class="tab_Right">400,00</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">
+							<div class="btn-group">
+								<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+								<ul class="dropdown-menu pull-right">
+									<li><a href="#aggRitenuta" data-toggle="modal">aggiorna</a></li>
+									<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+								</ul>
+							</div>                                   
+						</td>
+					</tr>
+					
+					<tr>
+						<td>INPS</td>
+						<td>xxxxxxxxxxxxxx</td>
+						<td>2014-xxxx</td>
+						<td class="tab_Right">50,00</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">
+							<div class="btn-group">
+								<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+								<ul class="dropdown-menu pull-right">
+									<li><a href="#aggRitenuta" data-toggle="modal">aggiorna</a></li>
+									<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+								</ul>
+							</div>                                   
+						</td>
+					</tr>	
+					
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+			
+			<div class="row pagination_conth">
+				<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+				<div class="span6">                               
+					<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+						<ul>
+							<li><a href="#">« inizio</a></li>
+							<li><a href="#">« prec</a></li>
+							<li class="disabled"><a href="#">1</a></li>
+							<li class="active"><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+							<li><a href="#">succ »</a></li>
+							<li><a href="#"> fine »</a></li>
+						</ul>
+					</div>
+							
+				</div>  
+			</div>	
+			
+		<p>
+		<a class="btn btn-secondary" data-toggle="collapse" data-target="#insOnere">inserisci nuovo onere</a>
+		</p>
+		 
+			<div id="insOnere" class="collapse ">
+					<div class="accordion_info">
+					
+
+							<h4 class="step-pane">Dati principali</h4>
+								<fieldset class="form-horizontal">
+								<div class="control-group">
+									<label class="control-label" for="natOnere">Natura Onere *</label>
+									<div class="controls" required>
+										<select class="span4">
+											<option value="">Irpef</option>
+											<option value="">Inps</option>
+											<option value="">xxxx</option>
+										</select>
+										
+									</div>
+								</div>
+								<div class="control-group">
+									<label for="desc" class="control-label"> Codice Tributo *</label>
+									<div class="controls">
+										<select  class="span9" required>
+											<option>1040- Irpef ritenuta lavoro autonomo</option>
+											<option>1040- Irpef fattura professionisti</option>
+											<option>xxxx</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label for="impRit" class="control-label">Imponibile *</label>
+									<div class="controls">
+										<input id="impRit" name="impRit" class="lbTextSmall span2" type="text" value=""  placeholder="150,00" required />	
+										<span class="alRight">
+										<label class="radio inline" for="aliRitSogg">Aliquota a carico soggetto </label>
+										</span>
+										<input id="aliRitSogg" name="aliRitSogg" class="lbTextSmall span2" type="text" value=""  placeholder="50,00" />
+										<span class="alRight">
+										<label class="radio inline" for="aliRitEnte">Aliquota a carico Ente </label>
+										</span>
+										<input id="aliRitEnte" name="aliRitEnte" class="lbTextSmall span2" type="text" value="" placeholder="100,00"  />
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label for="impRitSogg" class="control-label">Importo a carico soggetto </label>
+									<div class="controls">
+										<input id="impRitSogg" name="impRitSogg" class="lbTextSmall span2" type="text" value=""  placeholder="50,00" />	
+										<span class="alRight">
+										<label class="radio inline" for="impRitSogg">Importo a carico Ente</label>
+										</span>
+										<input id="impRitSogg" name="impRitSogg" class="lbTextSmall span2" type="text" value=""  placeholder="50,00" />
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label" for="Att">Attività</label>
+									<div class="controls"> 
+										<select class="span5">
+											<option>Q- Attività previdenziale</option>
+											<option>X- xxxxxx</option>
+											<option>X- xxxxxx</option>
+										</select>
+										<span class="alRight">
+											<label class="radio inline" for="attDal">Dal</label>
+										</span>
+										<input id="attDal" class="lbTextSmall span2" type="text" value="" name="attDal" placeholder="06/03/2014">
+										<span class="alRight">
+											<label class="radio inline" for="attAl">Al</label>
+										</span>
+										<input id="attAl" class="lbTextSmall span2" type="text" value="" name="attAl" placeholder="31/12/2014">
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label" for="quadro770">Quadro 770 </label>
+									<div class="controls"> 
+										<input id="quadro770" name="quadro770" class="lbTextSmall span1" type="text" value="" placeholder="xxxx">
+										<span class="alRight">
+											<label class="radio inline" for="cau770">Causale 770</label>
+										</span>
+										<select class="span5">
+											<option>A- Prestazioni di lavoro autonomo</option>
+											<option>X- xxxxxx</option>
+											<option>X- xxxxxx</option>
+										</select>
+									</div>
+								</div>
+														
+								<p> <a class="btn btn-primary pull-right " data-toggle="collapse" data-target="#insOnere">inserisci</a></p>
+								
+								</fieldset>			
+
+					</div>
+				</div>
+
+			<div class="Border_line"></div>
+			<p>
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+				<a class="btn btn-secondary" href="">annulla</a>
+				<a href="#" class="btn btn-primary pull-right">salva</a> 
+			</p>
+	
+	

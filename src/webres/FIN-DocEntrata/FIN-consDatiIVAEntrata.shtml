@@ -1,0 +1,221 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>  
+		<ul id="sommario" class="nascosto">
+			<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+		</ul>
+	<hr />
+	
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+			<li><a href="../../pagine">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Consultazione Documenti entrata</li>
+		</ul> 
+    </div>	
+</div>
+ 
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 ">
+
+			<div class="contentPage">
+
+				<form method="get" action="#">
+				<h3>Consultazione Documenti entrata</h3>
+				  
+					<ul class="nav nav-tabs">
+						<li><a href="FIN-consDocumentiEntrata.shtml">Documenti entrata</a></li>
+						<li><a href="FIN-ConsultaquoteEntrate.shtml">Quote</a></li>
+						<li class="active"><a href="FIN-consDatiIVAEntrata.shtml">Dati iva</a></li>
+						<li><a href="FIN-consDocumentiCollEntrata.shtml">Documenti collegati</a></li>
+												
+					</ul>
+					
+					<!--#include virtual="include/datiAnagrafica.html" -->
+					<h4>Elenco quote rilevanti iva</h4>
+					<table class="table table-hover tab_left" summary="...." >
+						<thead>
+							<tr>
+								<th scope="col" class="span1">Numero</th>
+								<th scope="col">Accertamento</th>
+								<th scope="col">Capitolo</th>
+								<th scope="col">Attivit&agrave; iva</th>
+								<th scope="col">Registrazione iva</th>
+								<th scope="col" class="tab_Right">Importo quota</th>
+								<th scope="col" class="tab_Right">Importo totale movimenti iva</th>
+								<th scope="col" class="tab_Right span1">&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							
+							<tr>
+								<td>1</td>
+								<td>2013-2013-12345</td>
+								<td>2013-420-1-1</td>
+								<td>-</td>
+								<td>-</td>
+								<td class="tab_Right">15,00</td>
+								<td class="tab_Right">5,00</td>	
+								<td class="tab_Right">
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="../FIN-DocumentoIVASpesa/FIN-consDocumentiIVADetail.shtml">consulta</a></li>
+										</ul>
+									</div>
+								</td>								
+							</tr>
+							<tr>
+								<td>2</td>
+								<td>2013-2013-678</td>
+								<td>2013-420-1-2</td>
+								<td>02 - Cultura</td>
+								<td>xxxxxxx</td>
+								<td class="tab_Right">620,00</td>
+								<td class="tab_Right">20,00</td>
+								<td class="tab_Right">
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="../FIN-DocumentoIVASpesa/FIN-consDocumentiIVADetail.shtml">consulta</a></li>
+										</ul>
+									</div>
+								</td>	
+							</tr>
+
+						</tbody>
+						<tfoot>
+						</tfoot>
+					</table>
+					
+					<div class="row pagination_conth">
+						<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+							<div class="span6">                               
+								<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+									<ul>
+										<li><a href="#">« inizio</a></li>
+										<li><a href="#">« prec</a></li>
+										<li class="disabled"><a href="#">1</a></li>
+										<li class="active"><a href="#">2</a></li>
+										<li><a href="#">3</a></li>
+										<li><a href="#">4</a></li>
+										<li><a href="#">5</a></li>
+										<li><a href="#">succ »</a></li>
+										<li><a href="#"> fine »</a></li>
+									</ul>
+								</div>
+										
+							</div>  
+					</div>
+					
+
+		
+				<div class="Border_line"></div>
+				
+				<p> 
+					<a href="javascript:history.go(-1)" class="btn">indietro</a>
+				</p>  	   
+						
+				</form>
+			</div>
+			
+		</div>	
+	</div>	 
+</div>
+	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

@@ -1,0 +1,557 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Inserimento impegno</li>
+    </ul> 
+    </div>	
+	</div>
+    <div class="container-fluid">
+<div class="row-fluid">
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+       <h3>Impegno 2013 - 12300 - Acquisto scrivanie per Anagrafe - 100.000,00</h3>        
+             <ul class="nav nav-tabs">
+     <li>
+    <a href="#">Impegno</a>
+    </li>
+  <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+    <li class="active"><a href="#">Subimpegni</a></li>
+    <li><a href="#">Modifiche</a></li>
+    </ul>
+ <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Attenzione!!</strong><br /> Messaggio di feedback negativo
+        </div>
+         <div class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Attenzione!!</strong><br /> xxxxxxx
+        </div>
+        
+       
+     
+           <h4>Subimpegno - Totale: 100.000,00 - Disponibile a subimpegnare: 85.661,02</h4>
+                 <table summary="riepilogo indirizzo" class="table tableHover">
+                     
+                      <tr>
+                        <th> Numero </th>
+                        <th>Descrizione</th>
+                        <th>Creditore</th>
+                        <th>Stato</th>
+                        <th>CIG</th>
+                        <th>CUP</th>
+                        <th>Provvedimento</th>
+                        <th>Importo</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                      <tr>
+                        <td> 1</td>
+                        <td>sedie</td>
+                        <td>123-Ikea</td>
+                        <td>D</td>
+                        <td>2563771837879</td>
+                        <td>C16F080000000020001</td>
+                        <td>2013/201234</td>
+                        <td>13.124,99</td>
+                        <td><div class="btn-group">
+             <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+           <ul class="dropdown-menu pull-right">
+               <li><a href="#insInd" data-toggle="collapse" data-target="#insInd">aggiorna</a></li>
+             <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+             <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+            
+           </ul>
+         </div></td>
+                      </tr>
+                      <tr class="newline">
+                        <td>2</td>
+                        <td>scrivanie</td>
+                        <td>23567 - Aiazzone</td>
+                        <td>A</td>
+                        <td>2546738983939</td>
+                        <td>C16F080000000020001</td>
+                        <td>2013/201250</td>
+                        <td>1.213,99</td>
+                        <td><div class="btn-group">
+             <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+           <ul class="dropdown-menu pull-right">
+               <li><a href="#insInd" data-toggle="collapse" data-target="#insInd">aggiorna</a></li>
+             <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+             <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+              
+           </ul>
+         </div></td>
+                      </tr>
+                    </table>
+<!-- Modal -->
+<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+<!--<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Attenzione</h3>
+</div> -->
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+<!--/modale elimina -->
+<!-- Modal -->
+<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+  <!--/modale annulla -->                        <p>
+         <a class="btn"  data-toggle="collapse" data-target="#insInd">inserisci subimpegni</a>
+        </p>
+        
+        
+  <div id="insInd" class="collapse">
+  <div class="accordion_info">        
+  <fieldset class="form-horizontal margin-large">
+         	<div class="control-group">
+                <label class="control-label" for="Numero">Numero *</label>
+				 <div class="controls">
+                	 <input id="Numero" name="Numero" class="span1" type="text" value="1" disabled="disabled"/>
+ 				</div>
+          </div>
+          
+			<div class="control-group">
+                <label class="control-label" for="Descrizione">Descrizione *</label>
+                <div class="controls">
+               <input id="Descrizione" name="Descrizione" class="span9 required" type="text"/>
+                <span class="al">
+<label class="radio inline" for="Stato">Stato</label>
+</span>
+<input id="Stato" class="lbTextSmall span2" type="text" value="valido" name="Stato" disabled="disabled"/>
+              </div>
+          </div>
+           <div class="control-group">
+                <label class="control-label" for="codfisc">Importo *</label>
+                <div class="controls">
+                	<input id="codfisc" name="codfisc" class="span3" required="required" type="text"/>
+                    <!--<span class="al">
+<label class="radio inline" for="annoa">Tipo *</label>
+</span>
+<input id="annoa" class="lbTextSmall span2" type="text" value="" name="annoa" required="required"/>
+
+<span class="al">
+<label class="radio inline" for="art">Scadenza</label>
+</span>
+<input id="art" class="lbTextSmall span2" type="text" value="" name="art"/> -->
+              </div>
+          </div>
+           <!-- <div class="control-group">
+                <label class="control-label" for="iva">Partita IVA</label>
+                 <div class="controls">
+                 	<input id="iva" name="iva" class="span7 required" type="text"/>
+              </div>
+          </div> -->
+           <div class="control-group">
+                <!--<label class="control-label" for="CUP"><abbr title="codice unico di progetto">CUP</abbr></label>
+                <div class="controls">
+                	<input id="CUP" name="CUP" class="span3" type="text"/>
+                    <span class="al"> -->
+                <label class="control-label" for="CIG"><abbr title="codice identificativo gara">CIG</abbr></label>
+               <div class="controls">
+                <input id="CIG" class="lbTextSmall span2" type="text" value="" name="CIG"/>
+                <!-- <span class="al">
+                <label class="radio inline" for="Opera">Opera</label>
+                </span>
+                <input id="Opera" class="lbTextSmall span2" type="text" value="" name="Opera"/> -->
+                </div>
+                </div>
+          
+          
+          
+          
+        
+       </fieldset>
+         <!--#include virtual="altri_dati.html" -->     
+<h4>Provvedimento</h4>
+                     
+               
+
+        	
+       
+
+
+             <p>&Egrave; necessario inserire oltre all'anno almeno il numero atto oppure il tipo atto </p>			
+            
+<fieldset class="form-horizontal">
+        		 
+                <div class="control-group">
+                    <label class="control-label" for="Tipo">Anno *</label>
+                    <div class="controls">
+                    
+                        <input id="Tipo" class="lbTextSmall span1" type="text" value="" name="Tipo" />
+                        <span class="al">
+                        	<label class="radio inline" for="Anno">Numero</label>
+                        </span>
+                        <input id="Anno" class="lbTextSmall span1" type="text" value="" name="Anno"/>
+                        
+                        <span class="al">
+                       		 <label class="radio inline" for="Stato">Tipo</label>
+                        </span>
+                         <select id="Stato" class="lbTextSmall span2"><option></option><option>Delibera</option><option>Determina</option><option>Movimento Interno</option></select>
+                         <span class="al">
+                       		 <label class="radio inline">Struttura Amministrativa</label>
+                        </span>
+                      
+                     <a href="#struttAmm" role="button" class="btn" data-toggle="modal">Seleziona la Struttura amministrativa</a>
+                  </div>
+            </div>
+             <div class="control-group">
+                    <label class="control-label" for="Oggetto">Oggetto</label>
+                    <div class="controls">
+                    
+                        <input id="Oggetto" class="lbTextSmall span9" type="text" value="" name="Oggetto" />
+                      
+                       <a class="btn btn-primary" href="#"><i class="icon-search icon"></i>&nbsp;cerca</a> <span class="nascosto"> | </span><!--<a class="btn" href="#">inserisci</a>             -->
+                    </div>
+                </div>
+ 
+<!-- Modal -->
+<div id="struttAmm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel2">Struttura Amministrativa Responsabile</h3>
+</div>
+<div class="modal-body">
+ <ul id="treeStruttAmm" class="ztree"></ul>
+</div>
+<!--<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button class="btn btn-primary">Save changes</button>
+</div> -->
+</div>
+     
+        </fieldset>
+        <h4>Elenco provvedimenti trovati</h4>   
+           <table class="table table-hover" summary="...." >
+     <thead>
+       <tr>
+         <th scope="col" colspan="2">Anno<!--/Articolo/<abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr> --></th>
+         <th scope="col">Numero</th>
+         <th scope="col">Tipo</th>
+         <th scope="col">Oggetto</th>
+         <th scope="col"><abbr title="Struttura Amministrativa Responsabile">Strutt Amm Resp</abbr></th>
+         <th scope="col">Stato</th>
+         </tr>
+     </thead>
+     <tbody>
+       <tr>
+        <td> <input type="radio" name="file_33" id="file_33d" /></td>
+									
+		<td>2013</td>
+		<td>230</td>
+		<td>determina</td>
+		<td>oggetto determina 1</td>
+		<td>dir 01</td>
+		<td>provvisorio</td>
+		<!--<td>ggggggg</td> -->
+         </tr>
+       <tr>
+          <td> <input type="radio" name="file_33" id="file_33c" /></td>
+									
+		  <td>2013</td>
+		  <td>456</td>
+		  <td>determina</td>
+		  <td>oggetto determina 2</td>
+		  <td>dir 02</td>
+		  <td>provvisorio</td>
+		  <!--<td>ggggggg</td> -->
+         </tr>
+     </tbody>
+     <tfoot>
+     </tfoot>
+   </table> 
+   <div class="row pagination_conth">
+         <div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+             <div class="span6">                               
+                 <div id="paginazione2" class="pagination pagination-right">
+                          <ul>
+                            <li><a href="#">&laquo; inizio</a></li>
+                                               <li><a href="#">&laquo; prec</a></li>
+                                                <li class="disabled"><a href="#">1</a></li>
+                                                <li class="active"><a href="#">2</a></li>
+                                                 <li><a href="#">3</a></li>
+                                                  <li><a href="#">4</a></li>
+                                                   <li><a href="#">5</a></li>
+                                      <li><a href="#">succ &raquo;</a></li>
+                            <li><a href="#"> fine &raquo;</a></li>
+                            
+                              </ul>
+                      </div>
+                            
+                     </div>  
+             </div>       
+     
+   <a class="btn" href="#">seleziona</a>    
+    <h4>Seleziona soggetto</h4>	
+    	
+            <p> E' possibile associare al subimpegno un soggetto o una classe di soggetti</p>
+<fieldset class="form-horizontal">
+                     		 <div class="control-group">
+                <label class="control-label" for="Codice">Codice</label>
+                <div class="controls">
+                	<input id="Codice" name="Codice" class="span3" type="text"/>
+                    <label class="radio inline" for="codfisc">Codice Fiscale</label>
+               
+                	<input id="codfisc" name="codfisc" class="span4" type="text"/>
+              </div>
+          </div>
+           <div class="control-group">
+                <label class="control-label" for="iva">Partita IVA</label>
+                 <div class="controls">
+                 	<input id="iva" name="iva" class="span3" type="text"/>
+              
+                <label class="radio inline">Denominazione</label> <input type="text" name="optionsRadios" id="optionsRadios1" class="span4">
+                </div>
+          </div> 
+              <div class="control-group">
+                <label class="control-label" for="classif">Classificatore</label>
+                 <div class="controls">
+                  <select id="classif" name="classif" class="span3 selectpicker" multiple title='Scegli il tipo di classificazione'><option>&nbsp;</option><option>x0</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>    
+              
+                  <a class="btn btn-primary" href="#"><i class="icon-search icon"></i>&nbsp;cerca</a>
+                </div>
+          </div>     	
+                       
+                        
+               			
+                	
+                        
+                     
+              
+                
+                      
+                 
+              <!-- <div class="control-group">
+                 <label for="FPV" class="control-label"><abbr title="Fondo Pluriennale Vincolato">FPV</abbr></label>
+                    <div class="controls">
+                               <input id="FPV" type="checkbox" value="option1"/>
+        
+                    </div>
+              </div> -->
+        </fieldset>
+         <h4>Elenco soggetti</h4>   
+               
+<!--     TABELLE       RIEPILOGO   con azioni -->
+<table class="table table-hover" summary="...." >
+
+								<thead>
+								  <tr>
+									<th scope="col" colspan="2">Codice<!--/Articolo/<abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr> --></th>
+									<th scope="col">Codice fiscale</th>
+									<th class="header headerSortDown">Partita IVA</th>
+									<th scope="col">Denominazione</th>
+                                    <th scope="col">Stato</th>
+								  </tr>
+								</thead>
+								<tbody>
+ <tr><td> <input type="radio" name="file_3d" id="file_3" /></td>
+									<td><label for="file_3">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>01010203</td>
+									<!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>yyy yyyy</td>
+								  </tr>
+                                  <tr>
+                                    <td> <input type="radio" name="file_3" id="file_2" /></td>
+									<td><label for="file_2">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                    <td>01010203</td>
+									<!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>valido</td>
+								  </tr>
+								 <tr>
+								   <td> <input type="radio" name="file_3" id="file_1" /></td>
+									<td><label for="file_1">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>01010203</td>
+						         <!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>yyy yyyy</td>
+								  </tr>
+                                  </tbody>
+                                  </table>
+                                  
+ <div class="row pagination_conth">
+ <div id="risultatiricerca_info" class="span6">1 - 10 di 28 risultati</div>   
+ <div class="span6">                               
+ <div id="paginazione" class="pagination pagination-right">
+    
+          <ul>
+            <li><a href="#">&laquo; inizio</a></li>
+                               <li><a href="#">&laquo; prec</a></li>
+								<li class="disabled"><a href="#">1</a></li>
+                                <li class="active"><a href="#">2</a></li>
+                                 <li><a href="#">3</a></li>
+                                  <li><a href="#">4</a></li>
+                                   <li><a href="#">5</a></li>
+            
+         
+        <!--<li>di 272</li>--> 
+         
+                      <li><a href="#">succ &raquo;</a></li>
+            <li><a href="#"> fine &raquo;</a></li>
+            
+              </ul>
+      <!--<p>di 272</p>--> </div>
+                    
+             </div>  
+            </div>
+                
+              
+   <a class="btn" href="#">seleziona</a>              
+       
+
+       </div>
+</div>        
+   
+
+
+
+     <p class="margin-large"><input class="btn" type="button" value="indietro"/>   <a class="btn btn-link" href="">annulla</a>    <input class="btn btn-primary pull-right" type="button" value="salva"/>  </p>     
+    
+  
+
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

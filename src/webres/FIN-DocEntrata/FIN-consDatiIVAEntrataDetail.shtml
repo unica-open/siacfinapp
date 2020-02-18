@@ -1,0 +1,275 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>  
+		<ul id="sommario" class="nascosto">
+			<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+		</ul>
+	<hr />
+	
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+			<li><a href="../../pagine">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Consultazione Documenti entrata</li>
+		</ul> 
+    </div>	
+</div>
+ 
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 ">
+
+			<div class="contentPage">
+
+				<form method="get" action="#">
+				<h3>Consultazione Documenti entrata</h3>
+				  
+					<ul class="nav nav-tabs">
+						<li><a href="FIN-consDocumentiEntrata.shtml">Documenti entrata</a></li>
+						<li><a href="FIN-ConsultaquoteEntrate.shtml">Quote</a></li>
+						<li class="active"><a href="FIN-consDatiIVAEntrata.shtml">Dati iva</a></li>
+						<li><a href="FIN-consDocumentiCollEntrata.shtml">Documenti collegati</a></li>
+												
+					</ul>
+					
+					<h4>FAT 2013/39/132829 - SORIS - Società riscossione S.p.A.</h4>
+
+					<fieldset class="form-horizontal">
+						<div class="boxOrSpan2">
+							<div class="boxOrInLeft">
+								<p>Dati documento di riferimento</p>
+								<ul class="htmlelt">
+									<li>
+										<dfn>Tipo documento</dfn> 
+										<dl>xxxx</dl>
+									</li>
+									<li>
+										<dfn>Anno</dfn> 
+										<dl>xxxx</dl>
+									</li>
+									<li>
+										<dfn>Numero</dfn> 
+										<dl>xxx</dl>
+									</li>
+									<li>
+										<dfn>Data emissione</dfn> 
+										<dl>xx/xx/xxxx</dl>
+									</li>
+									<li>
+										<dfn>Data scadenza</dfn> 
+										<dl>xx/xx/xxxx</dl>
+									</li>
+									<li>
+										<dfn>Descrizione</dfn> 
+										<dl>xxx</dl>
+									</li>
+								</ul>					
+							</div>
+											
+							<div class="boxOrInRight">
+								<p>Soggetto</p>
+								<ul class="htmlelt">
+									<li>
+										<dfn>Codice</dfn> 
+										<dl>xxxx</dl>
+									</li>
+									<li>
+										<dfn>Codice Fiscale</dfn> 
+										<dl>xxxxxxxxx</dl>
+									</li>
+									<li>
+										<dfn>Partita IVA</dfn> 
+										<dl>xxxxxxx</dl>
+									</li>
+									<li>
+										<dfn>Denominazione</dfn> 
+										<dl>xxxxxx</dl>
+									</li>
+									<li>
+										<dfn>Sede secondaria</dfn> 
+										<dl>xxx</dl>
+									</li>
+								</ul>	
+							</div>				
+						
+						</div>
+
+					</fieldset>
+					
+					<fieldset class="form-horizontal">
+						<div class="boxOrSpan2">
+							<div class="boxOrInLeft">
+								<p>Dati iva</p>
+								<ul class="htmlelt">
+									<li>
+										<dfn>Registrazione</dfn> 
+										<dl><b>Numero</b> <span class="datiIns">xxxxx</span>  <span> - </span> <b>Data</b> <span class="datiIns">xxxx</span></dl>
+									</li>
+									<li>
+										<dfn>Tipo registrazione</dfn> 
+										<dl>xxxxx</dl>
+									</li>
+									<li>
+										<dfn>Tipo registro iva</dfn> 
+										<dl>xxxxx</dl>
+									</li>
+									<li>
+										<dfn>Attività</dfn> 
+										<dl>xxxx</dl>
+									</li>
+									<li>
+										<dfn>Rilevante IRAP</dfn> 
+										<dl>si/no</dl>
+									</li>
+									<li>
+										<dfn>Registro</dfn> 
+										<dl>xxxx xxxxxxx</dl>
+									</li>		
+									<li>
+										<dfn>Protocollo provvisorio</dfn> 
+										<dl><b>Numero</b> <span class="datiIns">xxxxx</span>  <span> - </span> <b>In data</b> <span class="datiIns">xxxx</span></dl>
+									</li>
+									<li>
+										<dfn>Protocollo definitivo</dfn> 
+										<dl><b>Numero</b> <span class="datiIns">xxxxx</span>  <span> - </span> <b>In data</b> <span class="datiIns">xxxx</span></dl>
+									</li>
+									<li>
+										<dfn>Descrizione </dfn> 
+										<dl>xxxx</dl>
+									</li>
+								</ul>
+							</div>
+											
+							<div class="boxOrInRight">
+								<p>Importi</p>
+								<ul class="htmlelt">
+									<li>
+										<dfn>Importo totale documento</dfn> 
+										<dl>xxxxx</dl>
+									</li>
+									<li>
+										<dfn>Importo non rilevante iva</dfn> 
+										<dl>xxxxx</dl>
+									</li>
+									<li>
+										<dfn>Importo rilevante iva</dfn> 
+										<dl>xxxxx</dl>
+									</li>
+									
+								</ul>
+							</div>				
+						
+						</div>
+						
+					</fieldset>
+
+				<!--#include virtual="include/ConsTableMovIVA.html" -->
+				
+				<div class="Border_line"></div>
+				
+				<p> 
+					<a href="javascript:history.go(-1)" class="btn">indietro</a>
+				</p>  	   
+						
+				</form>
+			</div>
+			
+		</div>	
+	</div>	 
+</div>
+	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

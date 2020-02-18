@@ -1,0 +1,280 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>                       
+
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+<div class="container-fluid-banner">
+
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+      <li class="active">Associa attivit&agrave; iva al capitolo</li>
+    </ul> 
+  </div>	
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form method="get" action="#">
+		<!--#include virtual="include/alertErrorSuccess.html" -->
+		<h3>Associa attivit&agrave; iva al capitolo</h3> 
+		<fieldset class="form-horizontal">
+			<div class="step-content">	   
+				<div class="step-pane active" id="step1">
+					<h4>Seleziona il capitolo</h4>
+						<fieldset class="form-horizontal">
+                     		 <div class="control-group">
+								<span class="control-label">Capitolo</span>
+								<div class="controls">
+									<label class="radio inline">
+										<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+										Entrata
+								  </label>
+									 <label class="radio inline">
+										<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+										Spesa
+									 </label>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="annoda2">Anno</label>
+								<div class="controls">
+								
+									<input id="annoda2" class="lbTextSmall span1" type="text" value="" name="annoda" disabled="disabled" />
+									<span class="al">
+										<label class="radio inline" for="annoa">Capitolo *</label>
+									</span>
+									<input id="annoa" class="lbTextSmall span2" type="text" value="" name="annoa" required />
+									
+									<span class="al">
+										 <label class="radio inline" for="art">Articolo *</label>
+									</span>
+									<input id="art" class="lbTextSmall span2" type="text" value="" name="art" required />
+
+									 <span class="al">
+										 <label class="radio inline" for="art5">Stato</label>
+									</span>
+									<select id="art5" class="lbTextSmall span2" disabled="disabled"><option>valido</option></select>
+								   <a class="btn btn-primary" data-toggle="collapse" data-target="#CercaUEBIVA"><i class="icon-search icon"></i>&nbsp;cerca</a>
+								</div>
+							</div>
+							
+							<div id="CercaUEBIVA" class="collapse">
+								<div class="step-pane active" id="CercaUEBIVATAB"> 
+									<h4>Elenco Ueb capitolo 0000004/1</h4>   
+									<table class="table table-hover tab_left" summary="...." >
+										<thead>
+											<tr>
+												<th>&nbsp;</th>
+												<th>Capitolo</th>
+												<th>Stato</th>
+												<th>Classificazione</th>
+												<th>Stanz.competenza</th>
+												<th>Stanz. residuo</th>
+												<th>Stanz.cassa</th>
+												<th><abbr title="Struttura Amministrativa Responsabile">Strutt Amm Resp</abbr></th>
+												<th><abbr title="Piano dei Conti">P.d.C.</abbr> finanziario</th>
+										   </tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td><input type="radio" name="RadioCapitoloUEB" id="RadioCapitoloUEB_1" /></td>
+												<td><a href="#" data-trigger="hover" rel="popover" title="Descrizione" data-content="descrizione del capitolo xxxxxxxx xxxx xxxxxxxxx xxxxx">0000004/1/1</a></td>
+												<td>valido</td>
+												<td>01010203</td>
+												<td>1000</td>
+												<td>200</td>
+												<td>1200</td>
+												<td>dir 01</td>
+												<td><a href="#" data-trigger="hover" rel="popover" data-placement="left" title="Voce" data-content="Altre imposte sostitutive n.a.c. riscosse in via ordinaria e attraverso altre forme">E.1.01.01.09.001</a></td>
+											</tr>
+											<tr>
+												<td><input type="radio" name="RadioCapitoloUEB" id="RadioCapitoloUEB_2" /></td>
+												<td><a href="#" data-trigger="hover" rel="popover" title="Descrizione" data-content="descrizione del capitolo xxxxxxxx xxxx xxxxxxxxx xxxxx">0000004/1/2</a></td>
+												<td>annullato</td>
+												<td>01010203</td>
+												<td>1500</td>
+												<td>400</td>
+												<td>1900</td>
+												<td>dir 02</td>
+												<td><a href="#" data-trigger="hover" rel="popover" data-placement="left" title="Voce" data-content="Altre imposte sostitutive n.a.c. riscosse in via ordinaria e attraverso altre forme">E.1.01.01.09.001</a></td>
+											</tr>
+											<tr>
+												<td><input type="radio" name="RadioCapitoloUEB" id="RadioCapitoloUEB_3" /></td>
+												<td><a href="#" data-trigger="hover" rel="popover" title="Descrizione" data-content="descrizione del capitolo xxxxxxxx xxxx xxxxxxxxx xxxxx">0000004/1/3</a></td>
+												<td>valido</td>
+												<td>01010203</td>
+												<td>2000</td>
+												<td>600</td>
+												<td>2600</td>
+												<td>dir 03</td>
+												<td><a href="#" data-trigger="hover" rel="popover" data-placement="left" title="Voce" data-content="Altre imposte sostitutive n.a.c. riscosse in via ordinaria e attraverso altre forme">E.1.01.01.09.001</a></td>
+											</tr>
+										</tbody>
+										<tfoot>
+										</tfoot>
+									</table> 
+									   
+									<div class="row pagination_conth">
+										<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+											<div class="span6">                               
+												<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+													<ul>
+														<li><a href="#">« inizio</a></li>
+														<li><a href="#">« prec</a></li>
+														<li class="disabled"><a href="#">1</a></li>
+														<li class="active"><a href="#">2</a></li>
+														<li><a href="#">3</a></li>
+														<li><a href="#">4</a></li>
+														<li><a href="#">succ »</a></li>
+														<li><a href="#"> fine »</a></li>
+													</ul>
+												</div>
+														
+											</div>  
+									</div> 
+									<p style="display:none" class="btnSelezionaUEBIVA" ><a class="btn btn-secondary">seleziona</a></p>
+									<div class="Border_line"></div>
+									
+									<p><a class="btn btn-primary"  data-toggle="collapse" data-target="#attIVAassociate">attivit&agrave; iva associate</a></p> 
+									
+								</div>
+							</div> 
+                                           
+							<div id="attIVAassociate" class="collapse">
+								<div class="step-content step-pane active" id="step1"> 
+										<!--#include virtual="include/tableAttIVA.html" -->
+										<p>
+											<a class="btn btn-secondary" data-toggle="collapse" data-target="#NewRelazioneIVA2" >inserisci nuova relazione </a>
+										</p>
+										<!--#include virtual="include/relazioneIVA.html" -->	
+								</div>				
+								<div class="clear"></div>									
+							</div>
+
+						</fieldset>
+       
+				</div>
+			</div>
+		</fieldset>
+		
+		<!--#include virtual="include/modal.html" -->
+		<p class="margin-medium">
+			<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> 
+			<a class="btn btn-secondary">annulla</a> 
+			<a class="btn btn-primary pull-right">salva</a> 			
+		</p>       
+          
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+	
+	<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+	<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+   
+	
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+
+<script type="text/javascript">
+
+	var btnRadioCapitoloUEB=$('input[name=RadioCapitoloUEB]');
+	var btnRadioRelazioneIVA=$('input[name=RadioRelazioniIva]');
+
+	$(btnRadioCapitoloUEB).click(function(){ 
+		$('.btnSelezionaUEBIVA').show();
+
+	});
+	
+	$(btnRadioRelazioneIVA).click(function(){ 
+		$('.btnSalvaRelazioneIVA').show();
+	});
+	
+	
+</script>
+
+</body>
+</html>

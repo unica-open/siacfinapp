@@ -1,0 +1,47 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+<script type="text/javascript">
+		$(document).ready(function() {
+				$('#ricercaScroll').dataTable(
+				{
+				
+				 "sScrollY": 300,
+        		"sDom": "<'row datatableth'r>t<'row datatableth'>",
+				"sPaginationType": "bootstrap",
+				"oLanguage": {
+				
+				"sProcessing": "Attendere prego...",
+				"sZeroRecords": "Non sono presenti risultati di ricerca secondo i parametri inseriti",
+            	"sInfo": "_START_ - _END_ di _TOTAL_ risultati",
+ 				"sInfoEmpty": "0 - 0 di 0 risultati",
+				"sInfoFiltered": "(filtrato su _MAX_ risultati)",
+				"sInfoPostFix": "",
+			
+				"sUrl": "",
+				"oPaginate": {
+					"sFirst":    "Prima",
+					"sPrevious": "Prec.",
+					"sNext":     "Succ",
+					"sLast":     "Ultima"
+				}
+				}
+				}
+				);
+			} );
+			
+			
+	$(function setNewTable(){
+			var newTable = document.getElementById('ricercaScroll');		
+			
+			$("#intTable th:nth-child(1)").removeClass('sorting_asc');
+			$("#intTable th").removeClass('sorting');
+
+			
+	});
+	
+
+</script>
+    

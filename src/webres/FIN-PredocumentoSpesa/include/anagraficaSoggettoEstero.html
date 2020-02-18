@@ -1,0 +1,171 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<h4>Anagrafica Predisposizione di Pagamento</h4>
+				<div class="control-group">
+					<label class="control-label" for="ragSoc">Ragione Sociale</label>
+					<div class="controls">
+						<input id="ragSoc" name="ragSoc" class="span9" type="text" />                                      
+					</div>
+				</div>
+				
+			
+				
+				<div class="control-group">
+					<label class="control-label" for="cogPag">Cognome</label>
+					<div class="controls">
+					  <input id="cogPag" name="cogPag" class="span3" type="text"  value="" />  
+					  <span class="alRight">
+						<label class="radio inline" for="NomePag">Nome </label>
+					  </span>
+					  <input id="NomePag" name="NomePag" class="span4" type="text"  value=""/>                     
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="tipoSogg">Tipo soggetto </label>
+					 <div class="controls">
+						<select id="tipoSogg" name="tipoSogg" class="span3" >
+							<option>&nbsp;</option>
+							<option>pubblico e privato</option>
+							<option>x1</option>
+							<option>x2</option>
+							<option>x3</option>
+							<option>x4</option>
+						</select>
+					
+					<span class="alRight">
+					<label class="radio inline" for="natGiu">Natura giuridica</label></span>
+						<select id="natGiu" name="natGiu" class="span3">
+							<option>&nbsp;</option>
+							<option>xxxx</option>
+							<option>x1</option>
+							<option>x2</option>
+							<option>x3</option>
+							<option>x4</option>
+						</select>			
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="CodFisc">Codice fiscale</label>
+					<div class="controls">
+					  <input id="CodFisc" name="CodFisc" class="span3" type="text"  value=""/>  
+					  <span class="alRight">
+						<label class="radio inline" for="parIVA">Partita IVA </label>
+					  </span>
+					  <input id="parIVA" name="parIVA" class="span4" type="text"  value=""/>                     
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<span class="control-label">Residente estero</span>
+					<div class="controls">
+						<label class="radio inline">
+							<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked">
+							si
+						 </label>
+						 <label class="radio inline">
+							<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+							no
+						 </label>
+					
+					
+						<span class="alRight alLeft">
+						<label class="radio inline" for="Codestero">Codice fiscale estero</label>
+						</span>
+						<input id="Codestero" name="Codestero" class="span4" type="text">
+						
+							 
+					</div>
+				</div>
+
+				<h5 class="subTitle">Dati Indirizzo</h5>
+				
+				<div class="control-group">
+					<label class="control-label" for="tipoind">Tipo indirizzo</label>
+					<div class="controls">
+						<select id="tipoind" name="tipoind"><option>sede principale</option><option>sede legale</option><option>sede avviso pagamenti</option><option>sede per incassi</option></select></div>
+				</div>
+			
+				<div class="control-group">
+					<label class="control-label" for="sedInd">Principale</label>
+					 <div class="controls">
+						 <input id="sedInd" type="checkbox" name="sedInd">
+						 <span class="alRight">
+						 <label class="radio inline" for="Avviso">Avviso</label>
+						 </span>
+						 <input id="Avviso" type="checkbox" name="Avviso">
+					</div>
+				</div>
+			
+				<div class="control-group">
+					<label class="control-label" for="Stato2">Stato\Comune</label>
+					<div class="controls">
+						<select id="Stato2" name="Stato2" class="span3"><option>&nbsp;</option><option>italia</option><option>estero</option></select>
+						<span class="al">
+						</span>
+						<input id="comune" name="comune" class="lbTextSmall span3" type="text" placeholder="comune"> Provincia: xxxx				
+					</div>
+				</div>    
+
+				<div class="control-group">
+					<label class="control-label" for="Sedime">Indirizzo</label>
+					<div class="controls">
+						<input id="Sedime" name="Sedime" class="lbTextSmall span1" type="text" placeholder="sedime" >           
+						<span class="al">
+						</span>
+						<input id="nomevia" name="nomevia" class="lbTextSmall span4" type="text" placeholder="nome via" >
+
+						<span class="al">
+						</span>
+						<input id="numciv" name="numciv" class="lbTextSmall span1" type="text" placeholder="n. civico">
+						
+						<span class="al">
+						</span>
+						<input id="cap" name="cap" class="span1" type="text" placeholder="C.A.P." > 
+					</div>
+				</div>
+				
+				<h5 class="subTitle">Dati aggiuntivi</h5>
+				
+				<div class="control-group">
+					<label class="control-label" for="Nascita">Data di Nascita</label>
+					<div class="controls">
+						<input id="Nascita" name="Nascita" class="min required span2 datepicker" placeholder="data" type="text">
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="Stato2">Stato\Comune</label>
+					<div class="controls">
+						<select id="Stato2" name="Stato2" class="span3">
+							<option>&nbsp;</option>
+							<option>italia</option>
+							<option>estero</option>
+						</select>
+					<input id="comune" name="comune" class="lbTextSmall span3" type="text" placeholder="comune"> Provincia: xxxx
+				
+					</div>
+				</div>
+				 
+				<div class="control-group">
+					<label class="control-label" for="Codice">Email</label>
+					<div class="controls">
+					  <input id="Codice" name="Codice" class="span5" type="text"  value=""/>  
+					  <span class="al">
+						<label class="radio inline" for="classe">Telefono </label>
+					  </span>
+					  <input id="Codice" name="Codice" class="span3" type="text"  value=""/>                     
+					</div>
+				</div>
+				
+				
+		  
+				<div class="control-group">
+					<label class="control-label" for="nota">Nota</label>
+					<div class="controls">                  
+					  <textarea id="nota" rows="2" cols="15"  name="Codice" class="span9" type="text" ></textarea>                  
+					</div>
+				</div>

@@ -1,0 +1,276 @@
+﻿   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>
+
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p> 
+	  <ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	  </ul>
+
+  <hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+  
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Aggiorna Documenti di Spesa</li>
+		</ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form method="get" action="#" class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" --> 
+			<h3>FAT 2013/39/132829 - SORIS - Società riscossione S.p.A.</h3>
+				
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#docSpesa" data-toggle="tab">Documenti di spesa</a></li>
+					<li><a href="FIN-quote.shtml" >Quote</a></li>
+					<li><a href="#datiIva" data-toggle="tab">Dati iva</a></li>
+					<li><a href="#ritbox" data-toggle="tab">Ritenute</a></li>
+					<li><a href="#penale" data-toggle="tab">Penale/Altro</a></li>
+					<li><a href="#noteCred" data-toggle="tab">Note credito</a></li>
+				</ul>
+				
+				<div class="tab-content noOverflow">
+					<div class="tab-pane active" id="docSpesa">
+						<h4 class="step-pane">Dati principali</h4>
+
+						<div class="control-group">
+							<label class="control-label" for="Data">Data *</label>
+							<div class="controls">			
+								<input id="Data" class="lbTextSmall span2" type="text" value="" name="Data"  placeholder="06/02/2014" required />			
+							</div>
+						</div>
+						<!--#include virtual="include/dati_importi.html" -->								
+						<!--#include virtual="include/dati_aggiuntivi.html" -->	
+						<!--#include virtual="include/datiSpesa.html" -->
+						<div class="Border_line"></div>
+						<p>
+							<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+							<a class="btn btn-secondary" href="">annulla</a>
+							<a href="#" class="btn btn-primary pull-right">salva</a> 
+						</p>
+					</div>
+					
+					<div class="tab-pane" id="datiIva">
+						<!--#include virtual="include/datiAnagrafica.html" -->
+						<!--#include virtual="include/gestisciDatiIVA.html"-->
+						<p>
+							<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+						</p>
+					</div>
+					
+					<div class="tab-pane" id="ritbox">
+						<!--#include virtual="include/aggRitenute.html"-->
+					</div>
+					
+					<div class="tab-pane" id="penale">
+						<!--#include virtual="include/penaleAltro.html"-->
+					</div>
+					
+					<div class="tab-pane" id="noteCred">
+						<!--#include virtual="include/noteCredito.html"-->
+						<div id="insNota" class="collapse ">
+							<div class="accordion_info">
+							
+								<fieldset class="form-horizontal" id="insNotaTAB">   
+									<h4 class="step-pane">Dati principali</h4>
+								
+										<div class="control-group">
+											<label class="control-label" for="numero">Tipo </label>
+											<div class="controls">
+												<input id="numero" name="numero"  class="lbTextSmall span2" type="text" value="" placeholder="NCD" disabled="disabled"/>
+												<span class="alRight">
+												<label class="radio inline" for="annoCred">Anno *</label>
+												</span>
+												<input id="annoCred" name="annoCred" class="lbTextSmall span2" type="text" value=""   required/>
+												<span class="alRight">
+												<label class="radio inline" for="numCred">Numero *</label>
+												</span>
+												<input id="numCred" name="numCred" class="lbTextSmall span2" type="text" value=""  required/>
+												<span class="alRight">
+												<label class="radio inline" for="dataCred">Data *</label>
+												</span>
+												<input id="dataCred" name="dataCred" class="lbTextSmall span2" type="text" value="" placeholder="31/04/2014" required />
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label for="desc" class="control-label">Descrizione *</label>
+											<div class="controls">
+												<textarea rows="1" cols="15" id="desc" value="" class="span10" placeholder="xxxxxxxx xxxxxxx " required ></textarea>
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label class="control-label">Dati repertorio/protocollo</label>
+											<div class="controls">
+												<span class="alRight">
+												<label class="radio inline" for="numRep">Numero</label>
+												</span>
+												 <input id="numRep" name="numRep" class="lbTextSmall span2" type="text" value="" placeholder="123" >
+												<span class="alRight">
+												<label class="radio inline" for="datRep">Data</label>
+												</span>
+												<input id="datRep" name="datRep" class="lbTextSmall span2" type="text" placeholder="01/07/2013" value="" >
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label class="control-label">Importo *</label>
+											<div class="controls">
+											 <input id="numRep" name="numRep" class="lbTextSmall span3" type="text" value="" required />
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label for="noteCred" class="control-label">Note </label>
+											<div class="controls">
+												<textarea rows="3" cols="15" id="noteCred" value="" class="span10" placeholder="Spese Tares " required ></textarea>
+											</div>
+										</div>
+										
+										<!--#include virtual="include/provvedimento.html"-->
+									
+								</fieldset>
+											  
+								<p> 
+									<a class="btn btn-secondary" data-toggle="collapse" data-target="#insNota" >annulla</a> 
+									<a class="btn btn-primary pull-right " data-toggle="collapse" data-target="#insNota">salva</a>
+								</p>
+							</div>
+						</div>
+						
+						<div class="Border_line"></div>
+						<p><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a></p>
+					</div>
+					
+				</div>
+			<!--#include virtual="include/modal.html"-->
+		
+           
+        </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<script>
+	
+		$(function() { 
+		
+        var btnCheckIva=$('input[name=optionsRadiosDocIva]');
+        $(btnCheckIva).click( function() {
+			var optRadIVA=$(this).filter(':checked').val();
+			
+			if(optRadIVA=="detail"){
+				$('#DocComplete').hide();
+				$('#DocDetail').show();			
+		   
+			}else{
+				$('#DocDetail').hide();
+				$('#DocComplete').show();
+
+			}
+        });
+		
+	});	
+
+
+</script>
+
+</body>
+</html>

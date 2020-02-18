@@ -1,0 +1,242 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+  
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>    
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+  <div class="row-fluid">
+    <div class="span12">
+      <ul class="breadcrumb">
+        <li><a href="../">Home</a> <span class="divider">></span></li>
+        <li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+        <li class="active">Consulta Accertamento</li>
+      </ul> 
+    </div>	
+  </div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">
+      <form class="form-horizontal">
+        <h3>Accertamento 2013/12300 - Riscossione IMU - 100.000,00</h3> 
+			<ul class="nav nav-tabs">
+				  <li class="active"><a href="#accertamento" data-toggle="tab">Accertamento</a></li>
+				  <li><a href="#subaccertamento" data-toggle="tab">Subaccertamento</a></li>
+				  <li><a href="#modifiche" data-toggle="tab">Modifiche</a></li>
+				  <li><a href="#impegni" data-toggle="tab">Impegni</a></li>
+			</ul>
+        <div class="tab-content">
+          <div class="tab-pane active" id="accertamento">
+           
+              <p>Data inserimento: xxxx - Data ultima modifica: xxxx</p>
+              <dl class="dl-horizontal">
+                <dt>Anno provvedimento</dt>
+                <dd>xxxxx</dd>
+                <dt>Numero provvedimento</dt>
+                <dd>xxx</dd>
+                <dt>Tipo provvedimento</dt>
+                <dd>xxx</dd>
+                <dt>Codice soggetto</dt>
+                <dd>xxx</dd>
+                <dt>Classe soggetto</dt>
+                <dd>xxxxx</dd>    
+                <dt>Tipo impegno</dt>
+                <dd>xxxxx</dd>
+                <dt>Descrizione</dt>
+                <dd>xxxxx</dd>
+                <dt>Importo</dt>
+                <dd>xxxxx</dd>
+                <dt>Scadenza</dt>
+                <dd>xxxx</dd>
+                <dt>Progetto</dt>
+                <dd>xxx</dd>
+              
+                <dt>Da riaccertamento</dt>
+                <dd>xxx</dd>
+                <dt>Accertamento di origine</dt>
+                <dd>xxx</dd>
+                <dt>Classificazione</dt>
+                <dd>xxxx</dd>             
+              </dl>       
+            </div>
+         
+            <div class="tab-pane" id="subaccertamento">
+              <h4>Subaccertamento - Totale: 14.338,98 - Disponibile a subaccertare: 85.661,02</h4>
+              <table summary="riepilogo indirizzo" class="table table-hover tab_left">                     
+                <thead>
+                  <tr>
+                    <th>Numero</th>
+                    <th>Debitore</th>
+                    <th>Stato</th>
+                   
+                    <th>Provvedimento</th>
+                    <th class="tab_Right">Importo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><a href="#consultazioneSubAcc" data-toggle="modal"> 1</a></td>
+                    <td>123-Ikea</td>
+                    <td>D</td>
+                   
+                    <td><a data-content="XXXXXXX" rel="popover" data-placement="left" data-trigger="hover" href="#" data-original-title="Oggetto">2013/201234</a></td>
+                    <td class="tab_Right">13.124,99</td>
+                  </tr>
+                  <tr class="newline">
+                    <td><a href="#consultazioneSubAcc" data-toggle="modal"> 2</a></td>           
+                    <td>23567 - Aiazzone</td>
+                    <td>D</td>
+                   
+                    <td><a data-content="XXXXXXX" rel="popover" data-placement="left" data-trigger="hover" href="#" data-original-title="Oggetto">2013/201250</a></td>
+                    <td class="tab_Right">1.213,99</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="tab-pane" id="modifiche">
+              <h4>Modifiche</h4>
+              <table summary="riepilogo indirizzo" class="table table-hover tab_left">
+                <thead> 
+                  <tr>                
+                    <th>Numero </th>
+                    <th>Sub</th>
+                    <th>Descrizione</th>
+                    <th>Motivo</th>
+                    <th>Stato</th>
+                    <th>Provvedimento</th>
+                    <th>Debitore</th>
+                    <th class="tab_Right">Importo</th>
+                  </tr>
+                </thead>
+                <tbody> 
+                  <tr>                  
+                    <td><a href="#consultazioneMod" data-toggle="modal"> 1</a></td>
+                    <td>0</td>
+                    <td>sedie</td>
+                    <td>xxxxxxxxx</td>
+                    <td>D</td>
+                    <td><a data-content="XXXXXXX" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto">2013/201234</a></td>
+                    <td><a data-content="XXXXXXX" rel="popover" data-placement="left" data-trigger="hover" href="#" data-original-title="">42341</a></td>
+                    <td class="tab_Right">4.204,99</td>                 
+                  </tr>
+                  <tr class="newline">                  
+                    <td><a href="#consultazioneMod" data-toggle="modal"> 2</a></td>
+                    <td>1</td>
+                    <td>scrivanie</td>
+                    <td>xxxxxxxxxxxxxxxxxxx</td>
+                    <td>A</td>
+                    <td><a data-content="XXXXXXX" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto">2013/201250</a></td>
+                    <td></td>
+                    <td class="tab_Right">1.000,99</td>                    
+                  </tr>
+                </tbody> 
+              </table>
+            </div>
+            <div class="tab-pane" id="impegni">
+              <h4>Impegni</h4>
+              
+            </div>
+            
+			</div>
+			
+			<!--#include virtual="include/modal.html" --> 
+			
+			<div class="Border_line"></div>			  
+			<p><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a></p>          
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

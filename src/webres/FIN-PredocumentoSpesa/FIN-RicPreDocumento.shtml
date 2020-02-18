@@ -1,0 +1,346 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--       
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>
+<body>  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXXX</a> <span class="divider">></span></li>
+      <li class="active">Ricerca Predisposizione di Pagamento</li>
+    </ul> 
+  </div>	
+</div>
+ 
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">        
+        <form method="get" action="#" class="form-horizontal">         
+			<!--#include virtual="include/alertErrorSuccess.html" -->
+			<h3>Ricerca Predisposizione di Pagamento</h3> 
+			<p>È necessario inserire almeno un criterio di ricerca.</p>	
+			
+			<div class="step-content">
+			<div class="step-pane active" id="step1"> 
+				<br/>
+				<p><span class="pull-right"><a href="FIN-RisRicPreDocumentoCOP.shtml" class="btn btn-primary ">cerca</a></span></p> <br/>
+			  
+				<h4>Predisposizione</h4>
+			  
+				<fieldset class="form-horizontal">  
+			  
+				<div class="control-group">
+				  <label class="control-label">Competenza </label>
+				  <div class="controls">  
+					<input id="period" class="lbTextSmall span2" type="text" value="" placeholder="Periodo" name="period"/>
+					<span class="al">
+					  <label class="radio inline" for="dat">Data da </label>
+					</span>
+					<input id="dat" class="lbTextSmall span2 datepicker" type="text" value="" name="dat"/>  
+					<span class="al">
+					  <label class="radio inline" for="datFino">a</label>                
+					</span>
+					<input id="datFino" class="lbTextSmall span2 datepicker" type="text" value="" name="datFino"/>  
+				  </div>
+				</div>
+				
+			
+				<div class="control-group">
+					<label class="control-label">Struttura Amministrativa</label>
+					<div class="controls">                    
+						<div class="accordion span9" class="struttAmm">
+						  <div class="accordion-group">
+							<div class="accordion-heading">    
+							  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmm" href="#23">
+							  Seleziona la Struttura amministrativa</a>
+							</div>
+							<div id="23" class="accordion-body collapse">
+							  <div class="accordion-inner">
+							   <ul id="treeStruttAmm2" class="ztree treeStruttAmm"></ul>
+							  </div>
+							</div>
+						  </div>
+						</div>
+					</div>
+				</div>
+					
+				<div class="control-group">
+					<label class="control-label" for="tipoCausale">Tipo causale </label>
+					<div class="controls">
+					  <select name="tipoCausale" value="" id="tipoCausale" class="span9" >
+					  <option>xxxxx</option>
+					  <option>xxxxx</option></select>                                    
+					</div>
+				</div>
+			  	
+			   
+				<div class="control-group">
+				  <label class="control-label" for="causale">Causale</label>
+				  <div class="controls">					        
+					<select name="causale" id="causale" class="span8">
+						<option>Incendi boschivi</option>
+						<option>xxxxx</option>
+					</select> 
+					<label class="radio inline">
+					  <div class="checkbox">
+						  <input type="checkbox" name="mancante"> Mancante
+					  </div>
+					</label>
+				  </div>
+				</div>
+				
+					<div class="control-group">
+					<label class="control-label" for="contoCC">Conto del tesoriere</label>
+					<div class="controls">					        
+						<select name="contoCC" id="contoCC" class="span8">
+							<option></option>
+							<option>xxxxx</option>
+						</select> 
+							
+						<label class="radio inline">
+						  <div class="checkbox">
+							  <input type="checkbox" name="mancante"> Mancante
+						  </div>
+						</label>                           
+				  </div>
+				</div>
+				
+				<div class="control-group">
+				  <div class="control-label">Stato operativo</div>
+				  <div class="controls">
+					<select name="statoOperativoSP" id="statoOperativoSP" class="span4">
+						<option>Incompleto</option>
+						<option>xxxxx</option>
+					</select>
+				  </div>
+				</div>
+				
+				<h4>Anagrafica Predisposizione di Pagamento</h4>
+					<div class="control-group">
+						<label class="control-label" for="ragSocialeSP">Ragione Sociale</label>
+						<div class="controls">
+						  <input id="ragSocialeSP" name="ragSocialeSP" class="span7" type="text" value=""/>                                      
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="cogPREcognome">Cognome</label>
+						<div class="controls">
+							<input id="cogPREcognome" name="cogPREcognome" class="span3" type="text" value="Rossi"/>  
+						<span class="alRight">
+							<label class="radio inline" for="nomPREnome">Nome </label>
+						</span>
+						<span class="alLeft">
+							<input id="nomPREnome" name="nomPREnome" class="span3" type="text" value="Mario"/>
+						</span>						  
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="CodiceFIS">Codice fiscale</label>
+						<div class="controls">
+						  <input id="CodiceFIS" name="CodiceFIS" class="span3" type="text"  value=""/>  
+						  <span class="alRight">
+							<label class="radio inline" for="parIVA">Partita IVA </label>
+						  </span>
+						  <input id="parIVA" name="parIVA" class="span3" type="text"  value=""/>                     
+						</div>
+					</div>
+				</fieldset> 
+				
+				
+				<div class="accordion" id="soggetto2">
+				  <div class="accordion-group">
+					<div class="accordion-heading">    
+					  <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#soggetto2" href="#impContab">
+					   Imputazioni contabili<span class="icon">&nbsp;</span>
+					  </a>
+					</div>
+					<div id="impContab" class="accordion-body collapse">
+					  <div class="accordion-inner">  
+						<!--#include virtual="include/capitolo.html" -->
+						<!--#include virtual="include/impegno.html" -->
+						<!--#include virtual="include/debitoreRicerca.html" -->
+						<!--#include virtual="include/provvedimentoRicerca.html" -->
+					  </div>
+					</div>
+				  </div>
+				</div> 
+
+				
+				<div class="accordion" id="soggettoEstremi">
+					<div class="accordion-group">
+						<div class="accordion-heading">    
+						  <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#soggettoEstremi" href="#3">
+						   Estremi di pagamento<span class="icon">&nbsp;</span>
+						  </a>
+						</div>
+						<div id="3" class="accordion-body collapse">
+						  <div class="accordion-inner">  
+							<div class="control-group">
+							  <label class="control-label" for="DocPredisposizioneSP">Documento di spesa</label>
+							  <div class="controls">    
+								<input id="docEntr" name="docEntrAnno" class="span1" placeholder="Anno" type="text"/>
+								<input id="docEntr" name="docEntrNum" class="span2" placeholder="Numero" type="text"/>     
+								<span class="al">
+									<label class="radio inline">Tipo </label>
+								</span>
+								<select class="span4">
+									<option>xxxx</option>
+								</select>   					
+							  </div>
+							</div>
+						 
+						  
+							<div class="control-group">
+							  <label class="control-label" for="numOR">Ordinativo</label>
+								<div class="controls">
+									<input id="docEntr" name="OrdEntrAnno" class="span1" placeholder="Anno" type="text"/>
+									<input id="docEntr" name="OrdEntrNum" class="span2" placeholder="Numero" type="text"/>     
+								</div>
+							</div>
+							<div class="control-group">
+							  <label class="control-label"> Estrai non pagato</label>
+							  <div class="controls">    
+								<label class="radio inline">
+								  <div class="checkbox">
+									  <input type="checkbox" name="EstrNonPag" > 
+								  </div>
+								</label> 
+							  </div>
+							</div>
+							
+						  </div>
+						  
+						</div>
+					</div>
+				</div> 
+
+				<!--#include virtual="include/modal.html" --> 
+				
+			</div>
+		</div>
+		
+		
+		<p class="margin-medium"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   <a class="btn btn-secondary" href="">annulla</a><span class="pull-right"><a href="FIN-RisRicPreDocumentoCOP.shtml" class="btn btn-primary ">cerca</a>&nbsp;<!--a href="FIN-RisRicPreDocumentoSOP.shtml" class="btn btn-primary ">cerca senza operazioni</a--> </span></p>
+          
+        </form>     	
+    </div>	
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<script>
+
+    var checkSoggMancante =true;
+	
+        $('#SoggMancante').click(function(){
+		if(checkSoggMancante == true){
+			$('#SoggNoEditable').hide();
+			 checkSoggMancante = false
+		   }else{
+			$('#SoggNoEditable').show();
+			 checkSoggMancante = true
+		   }
+
+        });
+		
+		var checkProvvMancante =true;
+	
+        $('#ProvvMancante').click(function(){
+		if(checkProvvMancante == true){
+			$('#ProvvNoEditable').hide();
+			 checkProvvMancante = false
+		   }else{
+			$('#ProvvNoEditable').show();
+			 checkProvvMancante = true
+		   }
+
+        });
+		
+		
+</script>
+
+</body>
+</html>

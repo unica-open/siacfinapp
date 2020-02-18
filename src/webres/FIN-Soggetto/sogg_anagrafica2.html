@@ -1,0 +1,119 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+  <h4>Dati soggetto</h4>
+      
+              <fieldset class="form-horizontal">
+         	<div class="control-group">
+                <label class="control-label" for="ente">Ragione sociale</label>
+				 <div class="controls">
+                 <input id="ente" name="Coentegnome" class="span6 required" type="text" placeholder="ragione sociale"/>
+                	<!-- <select id="ente" name="ente"><option>&nbsp;</option><option>pubblico e privato</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select> -->
+ 				</div>
+          </div>
+			<div class="control-group">
+                <label class="control-label" for="Cognome">Cognome e Nome</label>
+                <div class="controls">
+                	<input id="Cognome" name="Cognome" class="span2 required" type="text" placeholder="cognome"/>
+              	
+				<span class="al">
+				<input id="Nome" name="Nome" class="span2 required" type="text" placeholder="nome"/>
+				</span>
+
+				<label class="radio inline">
+                <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked"> Maschio
+                </label>
+                <label class="radio inline">
+                <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">Femmina
+                </label>
+			  </div>
+          </div>
+		  
+		  <!--
+            <div class="control-group">
+                <label class="control-label" for="Nome">Nome</label>
+                 <div class="controls">
+                 	<input id="Nome" name="Nome" class="span8 required" type="text"/>
+              </div>
+          </div>
+		  -->
+		  <!--
+         <div class="control-group">
+
+                <label class="control-label" for="Sesso">Sesso</label>
+                <div class="controls">
+                	 <select id="Sesso" name="Sesso" class="span8"><option>&nbsp;</option><option>maschio</option><option>femmina</option></select>
+              </div>
+          </div>
+		  -->
+            <div class="control-group">
+                <label class="control-label" for="Nascita">Data di Nascita</label>
+                <div class="controls">
+                	<input id="Nascita" name="Nascita" class="min required" type="text"/>
+              </div>
+          </div>
+          <!-- <div class="control-group">
+
+                <label class="control-label" for="Sesso">Sesso</label>
+                <div class="controls">
+                	 <select id="Sesso" name="Sesso"><option>&nbsp;</option><option>maschio</option><option>femmina</option></select>
+              </div>
+          </div> -->
+		  
+		    <div class="control-group">
+                <label class="control-label" for="Stato2">Stato\Comune</label>
+                <div class="controls">
+                	<select id="Stato2" name="Stato2" class="span3"><option>&nbsp;</option><option>italia</option><option>estero</option></select>
+
+			    <span class="al">
+				<!-- <label class="radio inline" for="comune"> Comune</label> -->
+				</span>
+				<input id="comune" name="comune" class="lbTextSmall span3" type="text" placeholder="comune"/> Provincia: xxxx
+
+			    				
+			</div>
+		    </div>    
+
+<!--		  
+           <div class="control-group">
+                <label class="control-label" for="Stato">Stato</label>
+                <div class="controls">
+                	<select id="Stato" name="Stato" class="span8"><option>&nbsp;</option><option>italia</option><option>estero</option></select>
+              </div></div>
+           <div class="control-group">
+                <label class="control-label" for="Comune">Comune</label>
+                <div class="controls">
+                	<input id="Comune" name="Comune" class="span8 required" type="text"/> Provincia: xxxx
+              </div>
+          </div>
+		  -->
+              <div class="control-group">
+                <label class="control-label" for="Note">Note</label>
+                 <div class="controls">
+                 	<textarea rows="3" id="Note" class="span6"></textarea>
+              </div>
+          </div>
+       </fieldset>
+                
+      <h4>Classificazioni</h4>  
+    <fieldset class="form-horizontal">
+         	<div class="control-group">
+                <label class="control-label" for="classif">Tipo classificazione</label>
+				 <div class="controls">
+                	 <select id="classif" name="classif" class="selectpicker" multiple title='Scegli il tipo di classificazione'><option>&nbsp;</option><option>x0</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>
+ 				</div>
+          </div>
+          </fieldset>
+		  
+		  
+		  
+           <h4>Oneri Fiscali e ritenute</h4>  
+    <fieldset class="form-horizontal">
+         	<div class="control-group">
+                <label class="control-label" for="Oneri">Oneri</label>
+				 <div class="controls">
+                	 <select id="Oneri" name="Oneri" class="selectpicker" multiple title='Scegli il tipo di onere'><option>&nbsp;</option><option>x0</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>
+ 				</div>
+          </div>
+          </fieldset>

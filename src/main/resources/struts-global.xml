@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- <constant name="struts.ui.theme" value="csi" /> -->
+	<constant name="struts.ui.theme" value="siac" />
+	<constant name="struts.action.extension" value="do" />
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.custom.i18n.resources" value="globalFormat" />
+	<constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+	<constant name="struts.mapper.action.prefix.enabled" value="true"/>
+	<constant name="struts.mapper.action.prefix.crossNamespaces" value="true"/>
+	
+	<!-- FIXME Ho copiato qui 3 tipologie di gestione degli errori che facevamo su DMAWA, che possiamo
+		 anche riusare in SIAC  -->
+		 
+	<package name="default" extends="struts-default" namespace="/">
+	
+	
+		<global-results>
+			<result name="utenteNonLoggato" type="redirectAction" >
+				<param name="actionName">login</param>
+	         	<param name="namespace">/login</param>
+				<param name="fromPortal">INTERNET_RUPAR</param>
+	         	<param name="cod_servizio">SIAC</param>
+         	</result>
+	        <result name="utenteNonConfigurato">/jsp/utenteNonConfigurato.jsp</result>
+			<!-- <result name="failure">/jsp/failure.jsp</result> -->
+			
+			<result name="failure" type="chain">
+				<param name="actionName">failureAction</param>
+				<param name="namespace">/</param>
+			</result>
+			
+		</global-results>
+		
+		<!-- <global-exception-mappings>
+			<exception-mapping result="utenteNonLoggato" exception="it.csi.siac.siacfinapp.frontend.ui.exception.UtenteNonLoggatoException" />
+			<exception-mapping result="utenteNonConfigurato" exception="it.csi.siac.siacfinapp.frontend.ui.exception.UtenteNonConfigurato" />
+			<exception-mapping result="failure" exception="java.lang.Exception" />
+		</global-exception-mappings> -->
+		
+		
+		<global-exception-mappings>
+			<exception-mapping result="utenteNonLoggato" exception="it.csi.siac.siaccommonapp.util.exception.UtenteNonLoggatoException" />
+			<exception-mapping result="failure" exception="java.lang.Throwable" />
+		</global-exception-mappings>
+		
+		<!-- Azioni che arrivano da CRUSCOTTO -->
+		<action name="azioneRichiesta" class="finAzioneRichiestaAction">
+			<result name="OP-SOG-inserisciSogg"	type="redirectAction">
+				<param name="actionName">inserisciSoggetto</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<result name="OP-SOG-inserisciSoggDec"	type="redirectAction">
+				<param name="actionName">inserisciSoggetto</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>	
+				
+			<result name="OP-SOG-leggiSogg"	type="redirectAction">
+				<param name="actionName">ricercaSoggetto</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>	 
+
+
+			<result name="OP-CEC-SOG-leggiSogg"	type="redirectAction">
+				<param name="actionName">ricercaSoggettoCec</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>	 
+
+			<result name="OP-CEC-SOG-gestisciSogg"	type="redirectAction">
+				<param name="actionName">inserisciSoggettoCec</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<result name="OP-SOG-gestioneClassiSogg"	type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<!-- nuova azione sui soggetti -->
+			<result name="OP-SOG-gestioneClassi" type="redirectAction">
+				<param name="actionName">gestioneClassi</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+
+			<!-- <result name="OP-SOG-leggiSogg" type="redirectAction">
+				<param name="actionName">prova</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>	 -->
+			<result name="OP-SPE-leggiImpegno" type="redirectAction">
+				<param name="actionName">ricercaImpegno</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			<result name="OP-SPE-gestisciImpegno"	type="redirectAction">
+				<param name="actionName">inserisceImpegno</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<result name="OP-SPE-gestisciStoricoImpAcc" type="redirectAction">
+				<param name="actionName">gestisciStoricoImpegnoAccertamentoStep1</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<result name="OP-ENT-gestisciAccertamento"	type="redirectAction">
+				<param name="actionName">inserisceAccertamento</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			<result name="OP-ENT-leggiAccertamento" type="redirectAction">
+				<param name="actionName">ricercaAccertamento</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+
+			<result name="OP-MUT-gestisciMutuo" type="redirectAction">
+				<param name="actionName">gestioneMutuo</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			<result name="OP-MUT-leggiMutuo" type="redirectAction">
+				<param name="actionName">ricercaMutuo</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<result name="OP-SPE-gestisciImpegnoDecentrato"	type="redirectAction">
+				<param name="actionName">inserisceImpegno</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			<result name="OP-ENT-gestisciAccertamentoDecentrato" type="redirectAction">
+				<param name="actionName">inserisceAccertamento</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<result name="OP-SPE-insLiq" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep1</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+
+			<result name="OP-SPE-leggiLiq" type="redirectAction">
+				<param name="actionName">ricercaLiquidazione</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<!--  ORDINATIVO PAGAMENTO  -->
+			<result name="OP-SPE-insMan" type="redirectAction">
+				<param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+						
+			<result name="OP-SPE-ricMan" type="redirectAction">
+				<param name="actionName">ricercaOrdinativoPagamento</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+						
+			<result name="OP-ENT-ricOrdInc" type="redirectAction">
+				<param name="actionName">ricercaOrdinativoIncasso</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<result name="OP-SPE-reintroitoOrdPag" type="redirectAction">
+				<param name="actionName">reintroitoOrdinativoPagamentoStep1</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<!--  PROVVISORIO CASSA -->
+			<result name="OP-OIL-leggiProvvisoriCassa" type="redirectAction">
+				<param name="actionName">ricercaProvvisorioCassa</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<result name="OP-OIL-InsProvvisorioCassa" type="redirectAction">
+				<param name="actionName">inserisciProvvisorioCassa</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+
+            <!--  ORDINATIVO INCASSO  -->
+			<result name="OP-ENT-insOrdInc" type="redirectAction">
+				<param name="actionName">gestioneOrdinativoIncassoStep1</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			<!-- CARTA CONTABILE -->
+			<result name="OP-SPE-insCarta" type="redirectAction">
+				<param name="actionName">gestioneCartaStep1</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			<!-- CARTA CONTABILE -->
+			<result name="OP-SPE-ricCarta" type="redirectAction">
+				<param name="actionName">ricercaCarta</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+
+			<!-- CRUD CLASSI -->
+			<result name="OP-SOG-gestioneClassi" type="redirectAction">
+				<param name="actionName">gestioneClassi</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			
+			
+				<!-- nuova azione sui soggetti -->
+			<result name="OP-SAL-gestioneSaldi" type="redirectAction">
+				<param name="actionName">ricercaContoCorrente</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+
+		   <result name="OP-SAL-consultaSaldi" type="redirectAction">
+				<param name="actionName">consultaContoCorrente</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+
+			
+			
+			
+			
+		</action>
+		
+        <action name="logout" class="logoutAction">
+			<result name="success" type="redirect" >/../siacboapp/logout.do</result>
+		</action>
+        
+
+		<action name="failureAction" class="failureAction">
+			<result>/jsp/failure.jsp</result>
+		</action>
+		
+		<action name="redirectToCruscotto" class="redirectToCruscottoAction">
+			<result name="success" type="redirect">/../siaccruapp/home.do</result>
+		</action>
+		
+	</package>
+</struts>

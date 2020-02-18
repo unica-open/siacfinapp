@@ -1,0 +1,358 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+    <li><a href="../../pagine">Fin</a> <span class="divider">></span></li>
+    <li class="active">Risultati di ricerca Soggetto</li>
+    </ul> 
+    </div>	
+	</div>
+ 
+    <div class="container-fluid">
+<div class="row-fluid">
+<div class="span12 ">
+
+<div class="contentPage">  <form method="get" action="#">
+      <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Attenzione!!</strong><br /> Messaggio di feedback negativo
+        </div>
+        <div class="alert alert-warning">
+    		<button type="button" class="close" data-dismiss="alert">&times;</button>
+   				
+            <strong>Attenzione!!</strong><br />
+
+			Messaggio di tipo segnalazione
+
+    	</div>
+        
+        
+          
+             
+
+<h3>Risultati di ricerca Soggetto</h3>
+
+ <p> Seleziona un soggetto per visualizare le sedi e le modalit&agrave; di pagamento collegate</p>      
+      
+                <h3><span class="num_result">19527</span> Risultati trovati</h3>                           
+<!--     TABELLE       RIEPILOGO   con azioni -->
+<table class="table table-striped table-bordered table-hover" summary="...." >
+
+								<thead>
+								  <tr>
+									<th scope="col">Codice<!--/Articolo/<abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr> --></th>
+									<th scope="col">Codice fiscale</th>
+									<th class="header headerSortDown">Partita IVA</th>
+									<th scope="col">Denominazione</th>
+                                    <th scope="col">Stato</th>
+									<th scope="col">Azioni Soggetto</th>
+								  </tr>
+								</thead>
+								<tbody>
+ <tr>
+									    <td><label for="file_3f"> <input type="radio" name="file_3" id="file_3f" />&nbsp;xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>01010203</td>
+									<!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>yyy yyyy</td>
+									<td><div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right">
+                                                 <li><a href="FIN_consSoggetto.shtml">consulta</a></li>
+                                                  <li><a href="FIN-AggSoggetto.shtml">aggiorna</a></li>
+												  <li><a href="FIN_catenaSoggetti.shtml">collega</a></li>
+                                                  <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+                                                  <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+                                                  <li><a href="#msgAnnulla" data-toggle="modal">sospendi</a></li>
+                                                  <li><a href="#msgAnnulla" data-toggle="modal">blocca</a></li>
+                                                  <li><a href="FIN_valSoggetto.shtml">valida</a></li>
+                                                </ul>
+                              			</div><!-- /btn-group -->                                    </td>
+								  </tr>
+                                  <tr>
+                                    <td> <label for="file_3c"><input type="radio" name="file_3" id="file_3c" />&nbsp;xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                    <td>01010203</td>
+									<!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>       
+                                        </td>
+									<td><div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right">
+                                                   <li><a href="FIN_consSoggetto.shtml">consulta</a></li>
+                                                   <li><a href="FIN-AggSoggetto.shtml">aggiorna</a></li>
+												   <li><a href="FIN_catenaSoggetti.shtml">collega</a></li>
+                                                  <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+                                                  <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+                                                  <li><a href="#msgAnnulla" data-toggle="modal">sospendi</a></li>
+                                                  <li><a href="#msgAnnulla" data-toggle="modal">blocca</a></li>
+                                                  <li><a href="FIN_valSoggetto.shtml">valida</a></li>
+                                                </ul>
+                              			</div><!-- /btn-group -->                                    </td>
+								  </tr>
+								 <tr>
+								   <td> <label for="file_3b"><input type="radio" name="file_3" id="file_3b" />&nbsp;xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>01010203</td>
+						         <!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>yyy yyyy</td>
+									<td><div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right">
+                                                 <li><a href="FIN_consSoggetto.shtml">consulta</a></li>
+                                                   <li><a href="FIN-AggSoggetto.shtml">aggiorna</a></li>
+												   <li><a href="FIN_catenaSoggetti.shtml">collega</a></li>
+                                                  <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+                                                  <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+                                                  <li><a href="#msgAnnulla" data-toggle="modal">sospendi</a></li>
+                                                  <li><a href="#msgAnnulla" data-toggle="modal">blocca</a></li>
+                                                  <li><a href="FIN_valSoggetto.shtml">valida</a></li>
+                                                </ul>
+                              			</div><!-- /btn-group -->                                    </td>
+								  </tr>
+                                  </tbody>
+                                  </table>
+    <p> <a href="#" class="btn">visualizza dettaglio</a>   </p>  	                                       
+ <div class="row pagination_conth">
+ <div id="risultatiricerca_info" class="span6">1 - 10 di 28 risultati</div>   
+ <div class="span6">                               
+ <div id="paginazione" class="pagination pagination-right">
+    
+          <ul>
+            <li><a href="#">&laquo; inizio</a></li>
+                               <li><a href="#">&laquo; prec</a></li>
+								<li class="disabled"><a href="#">1</a></li>
+                                <li class="active"><a href="#">2</a></li>
+                                 <li><a href="#">3</a></li>
+                                  <li><a href="#">4</a></li>
+                                   <li><a href="#">5</a></li>
+            
+         
+        <!--<li>di 272</li>--> 
+         
+                      <li><a href="#">succ &raquo;</a></li>
+            <li><a href="#"> fine &raquo;</a></li>
+            
+              </ul>
+      <!--<p>di 272</p>--> </div>
+                    
+             </div>  
+             </div>
+             
+             
+              <h4>Soggetto:  XXXXXX</h4>   
+      
+      <table summary="riepilogo indirizzo" class="table tableHover">
+      <caption>Sedi secondarie</caption>               
+                      <tr>
+                        <th> Denominazione </th>
+                        <th>Indirizzo</th>
+                        <th>Comune</th>
+                        <th>Stato</th>
+                      </tr>
+                      <tr>
+                         <td><label for="sed1"> sede </label></td>
+                        <td>via don borio, 5</td>
+                        <td>torino</td>
+                        <td>valido</td>
+                      </tr>
+                      <tr class="newline">
+                        <td><label for="sed2"> concessionaria 3</label></td>
+                        <td>via della consolata, 6</td>
+                        <td>ivrea</td>
+                        <td>annullato</td>
+                      </tr>
+                    </table>
+    <table summary="riepilogo indirizzo" class="table tableHover margin-large">
+                     <caption>Modalit&agrave; pagamento</caption>
+                      <tr>
+                        <th>Modalit&agrave;</th>
+                        <th> <abbr title="progressivo">Associato a</abbr> </th>
+                        <th>Stato</th>
+                      </tr>
+                      <tr>
+                       <td>
+                        <a href="#" data-trigger="hover" rel="popover" title="IBAN" data-content="IBAN ITI2a0000000089012 ">CB - Conto corrente bancario</a></label></td>
+                        <td> Soggetto</td>
+                        <td>valido</td>
+                      </tr>
+                      <tr class="newline">
+                        <td><label for="mod2"><a href="#" data-trigger="hover" rel="popover" title="cessione" data-content="1200- istituo AAAA ">CC - cessione credito</a></label></td>
+                        <td>Sede secondaria</td>
+                        <td>annullato</td>
+                      </tr>
+                       <tr class="newline">
+                       <td><label for="mod3"> contanti</label></td>
+                        <td>soggetto</td>
+                        <td>valido</td>
+                      </tr>
+                    </table>      
+             
+            
+             
+             
+ <!-- Modal -->
+<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+<!--<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Attenzione</h3>
+</div> -->
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+<!--/modale elimina -->
+<!-- Modal -->
+<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+  <!--/modale annulla -->
+                                  <p class="marginLarge"> <a href="javascript:history.go(-1)" class="btn">indietro</a>   </p>  	                                 
+  
+         
+       
+
+                                                    
+                                                   
+        
+</form>
+</div>	
+</div>	
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

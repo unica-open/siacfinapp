@@ -1,0 +1,35 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<script>
+	$(function() { 
+        var btnCheckPagEstero=$('input[name=optionsPagamentoEstero]');
+		var valSelect="false";
+		
+		var btnCheckTipologia=$('input[name=radioTipologia]');
+		var valRadioSelect="false";
+		
+        $(btnCheckPagEstero).click( function() {
+			if(valSelect == "false"){
+				$('#AccpagEstero').show();
+				valSelect="true";
+			}else{
+				$('#AccpagEstero').hide();
+				valSelect="false";
+			}
+		});
+
+       
+		$(btnCheckTipologia).click( function() {
+			if($( this ).val() == "assegno"){
+				$('#modConsegna').show();
+				
+			}else{
+				$('#modConsegna').hide();
+				
+			}
+		});
+
+	});
+</script>

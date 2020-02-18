@@ -1,0 +1,402 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+		<!--  accordion dettQuote  -->
+		<div id="dettQuotaDC" class="collapse" >
+			<div class="accordion_info">
+					
+				<fieldset class="form-horizontal" id="dettQuotaDCTAB">   
+							<h4 class="step-pane">Dati principali</h4>
+						
+							<fieldset class="form-horizontal">
+							
+									<div class="control-group">
+										<label class="control-label" for="numero">Numero *</label>
+										<div class="controls">
+											<input id="numero" name="numero" class="lbTextSmall span2" type="text" value="" placeholder="30" disabled="disabled">
+											 <span class="alRight">
+											<label class="radio inline" for="importo">Importo *</label>
+											</span>
+											<input id="importo" name="importo" class="lbTextSmall span2" type="text" value="" placeholder="50,00" required="">
+										</div>
+									</div>
+									
+									<div class="control-group">
+										<label class="control-label" for="scadenza">Data scadenza *</label>
+										<div class="controls">
+											<input id="scadenza" name="scadenza" class="lbTextSmall span2" type="text" value="" placeholder="31/04/2014" required="">
+											<span class="alRight">
+											<label class="radio inline" for="dataEsec">Data esecuzione pagamento</label>
+											</span>
+											<input id="dataEsec" class="lbTextSmall span2" type="text" value="03/02/2014" name="dataEsec">		
+										</div>
+									</div>
+									
+									
+									
+									<div class="control-group">
+										<label for="desc" class="control-label">Descrizione *</label>
+										<div class="controls">
+											<textarea rows="1" cols="15" id="desc" value="" class="span10" placeholder="Spese Tares " required=""></textarea>
+										</div>
+									</div>
+								
+									<div class="step-pane active" id="sediSEC">
+										<div class="accordion">
+											<div class="accordion-group">
+												<div class="accordion-heading">
+													<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#sediSEC" href="#sediTAB">
+														Sedi secondarie<span class="icon">&nbsp;</span></a>
+													
+												</div>
+											
+												<div id="sediTAB" class="accordion-body collapse">
+													<div class="accordion-inner">
+
+														<fieldset class="form-horizontal">				
+															<table class="table table-hover tab_left" summary="....">
+															<thead>	
+																<tr>
+																	<th></th>
+																	<th> Denominazione </th>
+																	<th>Indirizzo</th>
+																	<th>Comune</th>
+																	<th>Stato</th>
+																</tr>						
+															</thead>
+															<tbody>									
+																<tr>
+																	<td> <input type="radio" name="sed1" id="sed1"></td>
+																	<td><label for="sed1"> sede </label></td>
+																	<td>via don borio, 5</td>
+																	<td>torino</td>
+																	<td>valido</td>
+																</tr>
+																<tr class="newline">
+																	<td> <input type="radio" name="sed1" id="sed2"></td>
+																	<td><label for="sed2"> concessionaria 3</label></td>
+																	<td>via della consolata, 6</td>
+																	<td>ivrea</td>
+																	<td>annullato</td>
+																</tr>
+															</tbody>
+														</table>
+															
+														</fieldset>
+														
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="step-pane active" id="modPAG">
+									<div class="accordion">
+										<div class="accordion-group">
+											<div class="accordion-heading">
+												<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#modPAG" href="#modTAB">
+													Modalità pagamento : <span class="datiPagamento">000000/X/XX - .....</span><span class="icon">&nbsp;</span></a>
+												
+											</div>
+										
+											<div id="modTAB" class="accordion-body collapse">
+												<div class="accordion-inner">
+
+													<fieldset class="form-horizontal">				
+														<table class=" table table-hover tab_left" summary="....">
+															<thead>	
+																<tr>
+																	<th></th>
+																	<th>Modalità</th>
+																	<th> <abbr title="progressivo">Associato a</abbr> </th>
+																	<th>Stato</th>
+																</tr>						
+															</thead>
+															<tbody>							
+																<tr>
+																	<td> <input type="radio" name="mod1" id="mod1"></td>
+																	<td><label for="mod1"><a href="#" data-trigger="hover" rel="popover" data-content="IBAN ITI2a0000000089012 " data-original-title="IBAN">CB - Conto corrente bancario</a></label></td>
+																	<td> Soggetto</td>
+																	<td>valido</td>
+																</tr>
+																<tr class="newline">
+																	<td><input type="radio" name="mod1" id="mod2"></td>
+																	<td><label for="mod2"><a href="#" data-trigger="hover" rel="popover" data-content="1200- istituo AAAA " data-original-title="cessione">CC - cessione credito</a></label></td>
+																	<td>Sede secondaria</td>
+																	<td>annullato</td>
+																</tr>
+																<tr class="newline">
+																	<td><input type="radio" name="mod1" id="mod3"></td>
+																	<td><label for="mod3"> contanti</label></td>
+																	<td>soggetto</td>
+																	<td>valido</td>
+																</tr>
+															</tbody>
+														</table>
+													</fieldset>
+													
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>	
+							
+							</fieldset>
+									
+					<h4 class="step-pane">Impegno</h4>
+					<fieldset class="form-horizontal">   
+				  
+						<div class="control-group">
+							<label for="" class="control-label">Movimento</label>
+							<div class="controls">
+							 <input id="anno" name="anno" class="span1" type="text" placeholder="anno"> 
+							   <input id="num" name="num" class="span2" type="text" placeholder="numero">
+							   <input id="subImp" name="subImp" class="span2" type="text" placeholder="subimpegno">
+							   <span class="radio guidata"><a href="#guidaImpegno" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
+							</div>
+						</div>
+				  
+						<div class="control-group datiVisibili">
+							<label for="" class="control-label"><abbr title="codice identificativo gara">CIG</abbr></label>
+							<div class="controls">
+							 <input id="cig" name="cig" class="span3" type="text"> 
+							  <span class="al">
+								<label class="radio inline" for=""><abbr title="codice unico progetto">CUP</abbr></label>
+							  </span>
+							   <input id="cup" name="cup" class="span3" type="text">
+							   <span class="al">
+								<label class="radio inline" for="">Mutuo</label>
+							  </span>
+							   <input id="mutuo" name="mutuo" class="span3" type="text" placeholder="numero">
+							 
+							</div>
+						</div>
+
+					</fieldset>
+					  
+									
+					<h4 class="step-pane">Dati Iva</h4>
+					<fieldset class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label">Iva :</label>
+							<div class="controls">
+								<span class="alRight">
+								<label class="radio inline" for="rilevante">rilevante </label>
+								</span>
+									<input id="rilevante" name="rilevante" type="checkbox" value="">
+								<span class="alRight">
+									<label class="radio inline" for="NumIva">Numero registrazione</label>
+								</span>
+									<input id="NumIva" name="NumIva" class="lbTextSmall span2" type="text" value="" placeholder="xxxxxx">
+								<span class="alRight">
+									<div class="radio inline collapse_alert" for="iva"><span class="icon-warning-sign icon-red alRight">&nbsp;</span>CAPITOLO RILEVANTE IVA </div>
+								</span>
+							
+							</div>
+						</div>
+					</fieldset>
+					
+					<h4 class="step-pane">Provvedimento : <span class="datiPagamento">000000/X/XX - .....</span></h4>
+					<fieldset class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label" for="anno">Anno </label>
+							<div class="controls">   
+							  <input id="anno" class="lbTextSmall span1" type="text" value="" name="anno">
+							  <span class="al">
+								<label class="radio inline" for="numero3">Numero </label>
+							  </span>
+							  <input id="numero3" class="lbTextSmall span2" type="text" value="" name="numero3"> 
+							  <span class="al">
+								<label class="radio inline" for="tipo3">Tipo </label>
+							  </span>
+							  <select id="tipo3" name="tipo3" class="span4">
+							  <option>xxx </option>
+							  </select>
+
+							  <span class="radio guidata"><a href="#guidaProv" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
+							</div>
+						</div>
+						
+						
+						<div class="control-group">
+							<label class="control-label">Struttura Amministrativa</label>
+							<div class="controls">                    
+								<div class="accordion span8">
+								  <div class="accordion-group">
+									<div class="accordion-heading">    
+									  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmm" href="#strA">
+									  Seleziona la Struttura amministrativa</a>
+									</div>
+									<div id="strA" class="accordion-body collapse">
+									  <div class="accordion-inner">
+									   <ul id="treeStruttAmm2" class="ztree treeStruttAmm"><li id="treeStruttAmm2_1" class="level0" tabindex="0" hidefocus="true" treenode=""><span id="treeStruttAmm2_1_switch" title="" class="button level0 switch roots_close" treenode_switch=""></span><span id="treeStruttAmm2_1_check" class="button chk radio_false_full" treenode_check=""></span><a id="treeStruttAmm2_1_a" class="level0" treenode_a="" onclick="" target="_blank" style="" title="Direzione 1"><span id="treeStruttAmm2_1_ico" title="" treenode_ico="" class="button ico_close" style=""></span><span id="treeStruttAmm2_1_span">Direzione 1</span></a></li><li id="treeStruttAmm2_7" class="level0" tabindex="0" hidefocus="true" treenode=""><span id="treeStruttAmm2_7_switch" title="" class="button level0 switch bottom_close" treenode_switch=""></span><span id="treeStruttAmm2_7_check" class="button chk radio_false_full" treenode_check=""></span><a id="treeStruttAmm2_7_a" class="level0" treenode_a="" onclick="" target="_blank" style="" title="Direzione 2 "><span id="treeStruttAmm2_7_ico" title="" treenode_ico="" class="button ico_close" style=""></span><span id="treeStruttAmm2_7_span">Direzione 2 </span></a></li></ul>
+									  </div>
+									</div>
+								  </div>
+								</div>
+							</div>
+						</div>   
+					  
+						
+					</fieldset>
+					<br>
+					<div class="accordion" id="altriDati">
+						<div class="accordion-group">
+							<div class="accordion-heading">    
+								<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#altriDati" href="#altriDatiTAB">
+								 Altri dati<span class="icon">&nbsp;</span>
+								</a>
+							</div>
+							
+							<div id="altriDatiTAB" class="accordion-body collapse">
+								<div class="accordion-inner">   
+									
+									
+									<fieldset class="form-horizontal">
+									
+										<div class="control-group">
+											<label class="control-label">Provvisorio di Cassa</label>
+											<div class="controls">
+												<span class="alRight">
+												<label class="radio inline" for="numero">Numero</label>
+												</span>
+													<input id="numero" name="numero" class="lbTextSmall span2" type="text" value="30">
+												<span class="alRight">
+													<label class="radio inline" for="data">Data</label>
+												</span>
+													<input id="data" name="data" class="lbTextSmall span2" type="text" value="13/05/2013">
+											</div>
+										</div>
+										
+										<div class="control-group"> 
+											<label class="control-label">Avviso</label>						
+											<div class="controls">
+												<select class="">
+													<option>SI-TESORIERE</option>
+													<option> SI-ALTRO</option>
+													<option>NO</option>
+												</select>
+												<label class="radio inline">Ordinativo singolo</label>
+													<input type="checkbox" id="inlineCheckbox2" value="option2"> 	
+												<label class="radio inline">Esproprio</label>
+													<input type="checkbox" id="inlineCheckbox3" value="option3"> 
+													<span class="alRight">
+														<div class="radio inline collapse_alert" for="iva"><span class="icon-warning-sign icon-red alRight">&nbsp;</span>AVVISO: &lt; valore campo derivato &gt; </div>
+													</span>
+											</div>
+											
+										</div>
+					
+										<div class="control-group">
+											<label for="fondo" class="control-label">Note al tesoriere</label>
+											<div class="controls input-append">
+												<select id="fondo">
+													<option>xxx</option>
+													<option>xxx</option>
+													<option>3</option>
+													<option>4</option>
+													<option>5</option>
+												</select>
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label class="control-label">Commissioni *</label>
+											<div class="controls">
+												<select id="commissioni" class="span9">
+													<option value="">xxxx 0</option>
+													<option value="">xxx 1</option>
+													<option value="">xxx 2</option>
+												</select>	
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label class="control-label" for="causaleM">Causale ordinativo *</label>
+											<div class="controls">
+												<input id="causaleM" class="lbTextSmall span9" type="text" value="">
+											</div>
+										</div>
+						
+										<div class="control-group">
+											<label for="Note" class="control-label">Note</label>
+											<div class="controls">
+												<textarea rows="3" cols="15" id="Note" class="span10"></textarea>
+											</div>
+										</div>
+
+									</fieldset>
+									
+										
+
+								</div>
+							</div>
+						</div>
+					</div>
+					 
+					<div class="accordion" id="decreto">
+						<div class="accordion-group">
+							<div class="accordion-heading">    
+								<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#decreto" href="#decretoTAB">
+								 Dati certificazione del credito<span class="icon">&nbsp;</span>
+								</a>
+							</div>
+							<div id="decretoTAB" class="accordion-body collapse">
+								<div class="accordion-inner">   
+									
+									
+									<fieldset class="form-horizontal">
+									
+										<div class="control-group">
+											<label class="control-label">Annotazioni</label>
+											<div class="controls">
+												<textarea rows="3" cols="15" id="Annotazioni" class="span10"></textarea>
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label class="control-label">Note certificazione</label>
+											<div class="controls">
+												<input name="note" id="note" type="text" class="span10" value="" placeholder="Contenzioso in corso">
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label class="control-label">Dati certificazione</label>
+											<div class="controls">
+												<input id="datiCert" name="datiCert" value="" type="text" class="span1" placeholder="23">
+												<input id="datiCert" name="datiCert" value="" type="text" class="span3 datepicker" placeholder="22/02/2014">
+												
+											</div>
+										</div>
+										
+							
+										<div class="control-group">
+											<label class="control-label" for="certif">Certificabile </label>
+											<div class="controls">
+												<input id="certif" name="certif" type="checkbox" value="">
+											</div>
+										</div>
+						
+									</fieldset>
+									
+										
+
+								</div>
+							</div>
+						</div>
+					</div>
+												
+
+												
+				</fieldset>
+											  
+				<p> 
+					<a class="btn btn-secondary" data-toggle="collapse" data-target="#dettQuotaDC">annulla</a> 
+					<a class="btn btn-primary pull-right " data-toggle="collapse" data-target="#dettQuotaDC">salva</a>
+				</p>
+			</div>
+		</div>
+
+		

@@ -1,0 +1,264 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+    <li><a href="../../pagine">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Consultazione Documenti di spesa</li>
+    </ul> 
+    </div>	
+	</div>
+ 
+    <div class="container-fluid">
+<div class="row-fluid">
+<div class="span12 ">
+
+<div class="contentPage">
+
+  <form method="get" action="#">
+  
+  
+ <h3>Consultazione Documenti di spesa</h3>
+  <ul class="nav nav-tabs">
+    <li class="active">
+    <a href="#docspesa" data-toggle="tab">Documenti di spesa</a>
+    </li>
+  <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+    <li><a href="#quote" data-toggle="tab">Quote</a></li>
+
+    </ul>
+    
+    <div class="tab-content">
+<div class="tab-pane active" id="docspesa">
+                 <h4>Impegno</h4>
+                 <dl class="dl-horizontal">
+                         <dt>Anno</dt>
+                    <dd>xxxx</dd>
+                    <dt>Numero</dt>
+                    <dd>xxx</dd>
+                      <dt>Piano dei Conti</dt>
+                    <dd>xxxxxx xxxxxxxxx xxxxxxx xxxxxxxxxx</dd>
+                      <dt>Descrizione</dt>
+                    <dd>xxxxxx xxxxxxxxx xxxxxxx xxxxxxxxxx</dd>
+                    <dt>Importo iniziale</dt>
+                    <dd>xxx</dd>
+                    <dt>Importo attuale</dt>
+                    <dd>xxx</dd>
+                    <dt>Disponibile a subimpegnare</dt>
+                    <dd>xxx</dd>
+                    <dt>Stato</dt>
+                    <dd>xxx</dd>
+                    <dt>Tipo</dt>
+                    <dd>xxx</dd>
+                    <dt>Scadenza</dt>
+                    <dd>xxx</dd>
+                    <dt>Da riaccertamento</dt>
+                    <dd>xxx</dd>
+                    <dt>Impegno riaccettato</dt>
+                    <dd>xxx</dd>
+                    <dt>Impegno di origine</dt>
+                    <dd>xxx</dd>
+                    <dt>CUP</dt>
+                    <dd>xxx</dd>
+                    <dt>CIG</dt>
+                    <dd>xxx</dd>
+                    <dt>Primo impegno opera</dt>
+                    <dd>xxx</dd>
+                    <dt>Data inserimento</dt>
+                    <dd>xx/xx/xxxx</dd>
+                    <dt>Data aggiornamento</dt>
+                    <dd>xx/xx/xxxx</dd>
+                    <dt>Data annullamento</dt>
+                    <dd>xx/xx/xxxx</dd>
+                    </dl>
+</div>
+
+
+    
+  
+<div class="tab-pane" id="quote">
+   <h4><span class="num_result">50</span> Quote</h4> 
+             <div class="accordion" id="accordion3">
+             
+                <div class="accordion-group">                
+                    <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapse3">
+                    Quota 1<span class="icon">&nbsp;</span>
+                    </a>
+                    </div>
+                    
+            		<div id="collapse3" class="accordion-body collapse">
+                        <div class="accordion-inner">xxxxx
+                        </div>
+                	</div>                    
+              	</div>
+              
+               <div class="accordion" id="accordion4">
+                <div class="accordion-group">              
+                    <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapse4">
+                    Quota 2<span class="icon">&nbsp;</span>
+                    </a>
+                    </div>
+                    
+                    <div id="collapse4" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                        
+                        xxxxx
+                        </div>
+                    </div>                    
+            	  </div>
+                 </div>
+                 
+                 
+            </div>
+            
+            <div class="row pagination_conth">
+         <div id="risultatiricerca_info" class="span6">1 - 10 di 28 risultati</div>   
+             <div class="span6">                               
+                 <div id="paginazione" class="pagination pagination-right">
+                          <ul>
+                            <li><a href="#">&laquo; inizio</a></li>
+                                               <li><a href="#">&laquo; prec</a></li>
+                                                <li class="disabled"><a href="#">1</a></li>
+                                                <li class="active"><a href="#">2</a></li>
+                                                 <li><a href="#">3</a></li>
+                                                  <li><a href="#">4</a></li>
+                                                   <li><a href="#">5</a></li>
+                                      <li><a href="#">succ &raquo;</a></li>
+                            <li><a href="#"> fine &raquo;</a></li>
+                            
+                              </ul>
+                      </div>
+                            
+                     </div>  
+             </div>
+            </div>
+<p class="marginLarge"> <a href="javascript:history.go(-1)" class="btn">indietro</a>   </p>  	   
+                      
+ </div> 
+         
+  
+
+                                                    
+                                                   
+        
+</form>
+</div>	
+</div>	
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

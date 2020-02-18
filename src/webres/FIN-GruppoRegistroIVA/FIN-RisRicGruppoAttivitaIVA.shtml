@@ -1,0 +1,218 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Risultato ricerca gruppo attivit&agrave; iva </li>
+		</ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+	<div class="span12 contentPage">
+		<form method="get" action="#" class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" -->
+			<h3>Risultato ricerca gruppo attivit&agrave; iva</h3>
+
+				<!--<h5>Dati di ricerca: XXXX - XXXX - XXXX </h5>  -->
+				<h4 class="step-pane"><span class="num_result">19527</span> Risultati trovati</h4>                           
+				<table class="table table-hover tab_left" summary="...." >
+					  <thead>
+						<tr>
+							<th scope="col">Codice</th>
+							<th scope="col">Descrizione</th>
+							<th scope="col">Tipo chiusura</th>
+							<th scope="col">Tipo attività</th>								
+							<th scope="col" class="tab_Right">&#37; Pro-rata</th>
+							<th scope="col" class="tab_Right">&nbsp; </th>             
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr>
+							<td>01</td>
+							<td>Attività non separate</td>
+							<td>Mensile</td>
+							<td>Commerciale</td>
+							<td class="tab_Right">100,00</td>
+							<td class="tab_Right">
+								<div class="btn-group">
+									<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+									<ul class="dropdown-menu pull-right">
+										<li><a href="#msgAggiornaGruppo" data-toggle="modal">aggiorna</a></li>
+										<li><a href="#msgConsultaGruppo" data-toggle="modal">consulta </a></li>
+										<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+									</ul>
+								</div>                               
+							</td>
+						</tr>
+						<tr>
+							<td>02</td>
+							<td>Attività non separate</td>
+							<td>Mensile</td>
+							<td>Commerciale</td>
+							<td class="tab_Right">10,00</td>
+							<td class="tab_Right">
+								<div class="btn-group">
+									<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+									<ul class="dropdown-menu pull-right">
+										<li><a href="#msgAggiornaGruppo" data-toggle="modal">aggiorna</a></li>
+										<li><a href="#msgConsultaGruppo" data-toggle="modal">consulta </a></li>
+										<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+									</ul>
+								</div>                               
+							</td>
+						</tr>
+						
+						<tr>
+							<td>04</td>
+							<td>Attività non separate</td>
+							<td>Mensile</td>
+							<td>Commerciale</td>
+							<td class="tab_Right">50,00</td>
+							<td class="tab_Right">
+								<div class="btn-group">
+									<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+									<ul class="dropdown-menu pull-right">
+										<li><a href="#msgAggiornaGruppo" data-toggle="modal">aggiorna</a></li>
+										<li><a href="#msgConsultaGruppo" data-toggle="modal">consulta </a></li>
+										<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+									</ul>
+								</div>                               
+							</td>
+						</tr>
+	
+					  </tbody>
+				</table>
+				
+				<div class="row pagination_conth">
+				  <div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+				  <div class="span6">                               
+					<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">
+					  <ul>
+						<li><a href="#">&laquo; inizio</a></li>
+						<li><a href="#">&laquo; prec</a></li>
+						<li><a href="#">1</a></li>
+						<li class="active"><a href="#">2</a></li>
+						<li><a href="#">3</a></li>
+						<li><a href="#">4</a></li>
+						<li><a href="#">5</a></li>
+						<li><a href="#">succ &raquo;</a></li>
+						<li><a href="#"> fine &raquo;</a></li>              
+					  </ul>
+					</div>         
+				  </div>  
+				</div>  
+				
+			<!--#include virtual="include/modal.html" -->  
+			<div class="Border_line"></div>
+			<p>
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>		
+			</p>
+			 
+        </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

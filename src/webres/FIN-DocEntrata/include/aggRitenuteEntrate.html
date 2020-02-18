@@ -1,0 +1,119 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+		<h4 class="step-pane">Ritenute</h4>
+		<fieldset class="form-horizontal">
+			
+			<div class="control-group">
+				<label class="control-label" for="impEse">Importo esente</label>
+				<div class="controls">
+					<input id="impEse" name="impEse" class="span2" type="text" value="" />
+					<span class="alRight">
+						<label class="radio inline" for="cassaPen">Cassa pensioni</label>
+					</span>
+					<input id="cassaPen" name="cassaPen" class="span2" value="" type="text" />
+					<span class="alRight">
+						<label class="radio inline" for="rivalsa">Rivalsa</label>
+					</span>
+					<input id="rivalsa" name="rivalsa" class="span2" value="" type="text" />
+					<span class="alRight">
+						<label class="radio inline" for="impIva">Importo IVA</label>
+					</span>
+					<input id="impIva" name="impIva" class="span2" value="" type="text" />
+				</div>
+			</div> 
+			
+			<div class="control-group">
+				<label class="control-label" ><h4>Totale</h4> </label>
+				<div class="controls">
+					<label class="radio inline" ><h4>100.000,00</h4></label>
+				</div>
+			</div> 
+	
+		</fieldset>
+		
+		
+		<fieldset class="form-horizontal">
+			<h4 class="step-pane">Elenco oneri</h4>
+			<table class="table table-hover tab_left" summary="...." >
+				<thead>
+					<tr>
+						<th scope="col">Natura</th>
+						<th scope="col">Tipologia</th>
+						<th class="tab_Right" scope="col">Imponibile</th>
+						<th class="tab_Right" scope="col">Aliquota a carico soggetto</th>
+						<th class="tab_Right" scope="col">Importo a carico soggetto </th>
+						<th class="tab_Right" scope="col">Aliquota a carico soggetto</th>
+						<th class="tab_Right" scope="col">Importo a carico Ente</th>
+						<th class="tab_Right" scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>IRPEF</td>
+						<td>1040-IRPEF RITENUTE LAVORO AUTONOMO</td>
+						<td class="tab_Right">2000,00</td>
+						<td class="tab_Right">20,00</td>
+						<td class="tab_Right">400,00</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">
+							<div class="btn-group">
+								<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+								<ul class="dropdown-menu pull-right">
+									<li><a href="#aggRitenuta" data-toggle="modal">aggiorna</a></li>
+									<li><a href="#aggPignoramento" data-toggle="modal">pignoramento</a></li>
+									<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+								</ul>
+							</div>                                   
+						</td>
+					</tr>
+					
+					<tr>
+						<td>INPS</td>
+						<td>xxxxxxxxxxxxxx</td>
+						<td class="tab_Right">50,00</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">-</td>
+						<td class="tab_Right">
+							<div class="btn-group">
+								<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+								<ul class="dropdown-menu pull-right">
+									<li><a href="#aggRitenuta" data-toggle="modal">aggiorna</a></li>
+									<li><a href="#aggPignoramento" data-toggle="modal">pignoramento</a></li>
+									<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+								</ul>
+							</div>                                   
+						</td>
+					</tr>	
+					
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+			
+			<div class="row pagination_conth">
+				<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+				<div class="span6">                               
+					<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+						<ul>
+							<li><a href="#">« inizio</a></li>
+							<li><a href="#">« prec</a></li>
+							<li class="disabled"><a href="#">1</a></li>
+							<li class="active"><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+							<li><a href="#">succ »</a></li>
+							<li><a href="#"> fine »</a></li>
+						</ul>
+					</div>
+							
+				</div>  
+			</div>	
+			
+		</fieldset>
+		<p><a class="btn btn-secondary">inserisci nuovo onere</a></p>

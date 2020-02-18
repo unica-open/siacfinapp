@@ -1,0 +1,210 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>
+<body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+  <div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+    <a name="A-contenuti" title="A-contenuti"></a>
+  </div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+  <div class="row-fluid">
+    <div class="span12">
+      <ul class="breadcrumb">
+        <li><a href="../">Home</a> <span class="divider">></span></li>
+        <li><a href="../">Bilancio</a> <span class="divider">></span></li>
+        <li class="active">Inserimento impegno</li>
+      </ul> 
+    </div>	
+  </div>
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12 contentPage">    
+        <form class="form-horizontal">
+          <h3>Inserimento impegno</h3>
+          <!--#include virtual="include/alertErrorSuccess.html" -->  
+          <div id="MyWizard" class="wizard">
+            <ul class="steps">
+              <li data-target="#step1" class="complete"><span class="badge badge-success">1</span>Dati impegno<span class="chevron"></span></li>
+              <li data-target="#step2" class="complete"><span class="badge badge-success">2</span>Classificazioni<span class="chevron"></span></li>
+              <li data-target="#step3" class="active"><span class="badge">3</span>Impegni pluriennali<span class="chevron"></span></li>
+              <!--						<li data-target="#step4"><span class="badge">4</span>Salva<span class="chevron"></span></li> -->
+            </ul>
+          </div>
+				  <div class="step-content"> 
+            <div class="step-pane active" id="step2">
+              <h4>Anni di pluriennale: 10</h4>
+                  <dl class="dl-horizontal">
+                    <dt>Capitolo <a class="tooltip-test" title="Visualizza dettagli" href="#capitoloTab" data-toggle="modal"><i class="icon-info-sign">&nbsp;<span class="nascosto">Visualizza dettagli</span></i></a></dt>
+                    <dd>Anno/numero/ueb  - descrizione  - codice della  struttura amministrativo contabile - tipo Finanziamento: xxxx</dd>              
+                    <dt>Provvedimento</dt>
+                    <dd>anno/numero - tipo - oggetto - codice della struttura amministrativo contabile -  Stato: statoOperativo</dd>
+                    <dt>Soggetto</dt>
+                    <dd>Soggetto.codice - denominazione - CF: codiceFiscale - PIVA : partitaIVA o Classe Codice</dd>        
+                  </dl>
+                <table summary="riepilogo incarichi" class="table table-hover">   
+                  <tr>
+                    <th class="span2">Anno</th>
+                    <th class="span3">Importo</th>
+                    <th class="span3">Data scadenza </th>
+                    <th class="span4">&nbsp;</th>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2013"/></td>
+                    <td><input type="text" id="imp1" class="input-medium"/><label for="imp1" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad" class="input-medium"/><label for="scad" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2014"/></td>
+                    <td><input type="text" id="imp2" class="input-medium"/><label for="imp2" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad1" class="input-medium"/><label for="scad1" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2015"/></td>
+                     <td><input type="text" id="imp2" class="input-medium"/><label for="imp2" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad2" class="input-medium"/><label for="scad2" class="nascosto">inserisci data scadenza</label>  </td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2016"/></td>
+                    <td><input type="text" id="imp3" class="input-medium"/><label for="imp3" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad3" class="input-medium"/><label for="scad3" class="nascosto">inserisci data scadenza</label>  </td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2017"/></td>
+                    <td><input type="text" id="imp4" class="input-medium"/><label for="imp4" class="nascosto">inserisci importo</label>  </td>
+                    <td><input type="text" id="scad4" class="input-medium"/><label for="scad4" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                   <td><input type="text" id="imp1" class="input-small" value="2018"/></td>
+                   <td><input type="text" id="imp4a" class="input-medium"/><label for="imp4a" class="nascosto">inserisci importo</label>  </td>
+                   <td><input type="text" id="scad5" class="input-medium"/><label for="scad5" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2019"/></td>
+                    <td><input type="text" id="imp4b" class="input-medium"/><label for="imp4b" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad6" class="input-medium"/><label for="scad6" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2020"/></td>
+                    <td><input type="text" id="imp4c" class="input-medium"/><label for="imp4c" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad7" class="input-medium"/><label for="scad7" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2021"/></td>
+                    <td><input type="text" id="imp4d" class="input-medium"/><label for="imp4d" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad8" class="input-medium"/><label for="scad8" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2022"/></td>
+                    <td><input type="text" id="imp4e" class="input-medium"/><label for="imp4e" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad9" class="input-medium"/><label for="scad9" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                  <tr>
+                    <td><input type="text" id="imp1" class="input-small" value="2023"/></td>
+                    <td><input type="text" id="imp4f" class="input-medium"/><label for="imp4f" class="nascosto">inserisci importo</label></td>
+                    <td><input type="text" id="scad10" class="input-medium"/><label for="scad10" class="nascosto">inserisci data scadenza</label></td>
+                    <td><a href="" class="btn btn-secondary">pulisci</a></td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <!--#include virtual="include/modal.html" -->
+            <p class="margin-large"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   <a class="btn btn-secondary" href="">annulla</a>    <a class="btn btn-primary pull-right" href="FIN-AggImpegno.shtml">salva</a>  </p>  
+          </form>
+        </div>
+      </div>	 
+    </div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

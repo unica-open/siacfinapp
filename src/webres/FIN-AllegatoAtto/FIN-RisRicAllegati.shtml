@@ -1,0 +1,250 @@
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+                       
+<!-- NAVIGAZIONE -->
+<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+<!-- /NAVIGAZIONE -->
+
+<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">xxxx</a> <span class="divider">></span></li>
+			<li class="active">Risultati di ricerca allegati atto</li>
+		</ul> 
+	</div>	
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">  
+		  
+			<form method="get" action="#">
+				<!--#include virtual="include/alertErrorSuccess.html" --> 
+				
+				<h3>Risultati di ricerca allegati atto</h3> 
+				<h4 class="step-pane">Dati di ricerca: XXXX - XXXX - XXXX </h4>  
+				
+				<fieldset class="form-horizontal">
+					<h4><span class="num_result">19527</span> Risultati trovati</h4>                           
+		 
+					<table class="table table-hover tab_left dataTable" >
+						<thead>
+							<tr >
+								<th>Provvedimento</th>
+								<th>Causale</th>
+								<th>Data scadenza</th>
+								<th>Stato</th>
+								<th class="tab_Right"></th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr>                  
+							   <td>2011/DG/201235</td>
+							   <td>Pagamenti vari</td>
+							   <td>15/12/2013</td>  
+							   <td>Completato</td>    
+							   <td class="tab_Right">
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="#completaAtto" data-toggle="modal">completa</a></li> 
+											<li><a href="FIN-AggAllegatoAtto.shtml">aggiorna</a></li> 
+											<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li> 
+											<li><a href="FIN-ConsAllegato.shtml">consulta</a></li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+								
+							<tr>                  
+								<td>2011/DG/215369</td> 
+								<td>Pagamenti per XXXXXXX</td>
+								<td>10/12/2013</td>    
+								<td>Completato</td>                                    
+								<td  class="tab_Right">
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="#completaAtto" data-toggle="modal">completa</a></li> 
+											<li><a href="FIN-AggAllegatoAtto.shtml">aggiorna</a></li> 
+											<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li> 
+											<li><a href="FIN-ConsAllegato.shtml">consulta</a></li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+								
+							<tr>                  
+								<td>2011/DG/201235</td>
+								<td>Pagamenti di XXXXXXX</td>
+								<td>15/12/2016</td>    
+								<td>Completato</td> 
+								<td  class="tab_Right">
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="#completaAtto" data-toggle="modal">completa</a></li> 
+											<li><a href="FIN-AggAllegatoAtto.shtml">aggiorna</a></li> 
+											<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li> 
+											<li><a href="FIN-ConsAllegato.shtml">consulta</a></li>
+										</ul>
+									</div>
+								</td>
+							</tr>
+								
+							<tr>                  
+								<td>XXXX/XX/XXXXXX</td>
+								<td>XXXXXXX</td>
+								<td>XX/XX/XXXX</td>  
+								<td>XXX XXXXXXXXX</td>    
+								<td class="tab_Right">
+								   <div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="#completaAtto" data-toggle="modal">completa</a></li> 
+											<li><a href="FIN-AggAllegatoAtto.shtml">aggiorna</a></li> 
+											<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li> 
+											<li><a href="FIN-ConsAllegato.shtml">consulta</a></li>
+										</ul>
+									</div>
+								</td>
+							</tr> 
+							
+							<tr>                  
+								<td>XXXX/XX/XXXXXX</td>
+								<td>XXXXXXX</td>
+								<td>XX/XX/XXXX</td>  
+								<td>XXX XXXXXXXXX</td>    
+								<td class="tab_Right">
+								   <div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="#completaAtto" data-toggle="modal">completa</a></li> 
+											<li><a href="FIN-AggAllegatoAtto.shtml">aggiorna</a></li> 
+											<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li> 
+											<li><a href="FIN-ConsAllegato.shtml">consulta</a></li>
+										</ul>
+									</div>
+								</td>
+							</tr> 
+						</tbody>
+					</table>
+				   
+					<div class="row pagination_conth">
+						<div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+						<div class="span6">                               
+							<div id="paginazione2" class="dataTables_paginate paging_bootstrap pagination">
+								<ul>
+									<li><a href="#">&laquo; inizio</a></li>
+									<li><a href="#">&laquo; prec</a></li>
+									<li><a href="#">1</a></li>
+									<li class="active"><a href="#">2</a></li>
+									<li><a href="#">3</a></li>
+									<li><a href="#">4</a></li>
+									<li><a href="#">5</a></li>
+									<li><a href="#">succ &raquo;</a></li>
+									<li><a href="#"> fine &raquo;</a></li>              
+								</ul>
+							</div>         
+						</div>  
+					</div> 
+				</fieldset>
+				
+				<!--#include virtual="include/modal.html" --> 	
+				<div class="Border_line"></div>
+				
+				<p><a href="javascript:history.go(-1)" class="btn">indietro</a></p>
+		  
+			</form>
+			
+		</div>		 
+	</div>
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+ <!-- Footer ================================================== -->
+ 
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+	
+</body>
+</html>

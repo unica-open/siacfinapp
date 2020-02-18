@@ -1,0 +1,161 @@
+
+<!-- ***************** inclusione head portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+</head>
+<body>                       
+	<!-- NAVIGAZIONE -->
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- ***************** inclusione Banner portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--#include virtual="../navbarLogin.html" -->
+
+
+<!-- ***************** inclusione Banner applicativo *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+
+	<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+			<li class="active">Risultati ricerca carta contabile</li>
+		</ul> 
+	</div>	
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage"> 
+		
+			<form method="get" action="#">  
+				<!--#include virtual="include/alertErrorSuccess.html" -->	   
+				<h3>Risultati ricerca carta contabile</h3>
+				<h4>Dati di ricerca xxxxxxxxxxxxx</h4> 
+
+				<fieldset class="form-horizontal">
+				
+					<h4 class="step-pane"><span class="num_result">19527</span> Risultati trovati</h4>
+					
+					<table class="table table-hover tab_left">
+						<thead>
+							<tr>
+								<th>Numero</th>
+								<th>Stato</th>
+								<th>Provvedimento</th>
+								<th>Descrizione</th>
+								<th>Data scadenza</th>
+								<th>Causale</th>
+								<th class="tab_Right">Importo quota</th>
+								<th class="tab_Right">&nbsp;</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>                  
+								<td>01</td>
+								<td><a data-content="Parzialmente emesso" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">PE</a></td>
+								<td>2012/201235</td>
+								<td>xxxxxx xxxx xxxxxx xxxxxxx xxxxx</td>
+								<td>11/05/2014</td>
+								<td>xxxxx xxxxxxxx xxxxxxx xxxxx</td>
+								<td class="tab_Right">500,25</td>
+								<td class="tab_Right">
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li>
+											<li><a href="FIN-aggCartaContabileStep1.shtml">aggiorna</a></li>
+											<li><a href="FIN-consCartaContabile.shtml">consulta</a></li>
+											<li><a href="FIN-risRegolazCarta.shtml">regolarizza</a></li>
+											<li><a href="#msgCompleta" data-toggle="modal">completa</a></li>
+											<li><a href="#msgTrasmesso" data-toggle="modal">trasmetti</a></li>
+											<li><a href="#statoProvvisorio" data-toggle="modal">riporta a provvisorio</a></li>
+											<li><a href="#statoCompletato" data-toggle="modal">riporta a completato</a></li>
+											<li><a href="">stampa</a></li>
+										</ul>
+									</div>                               
+								</td>
+							</tr>
+							<tr>                  
+								<td>02</td>
+								<td><a data-content="Emesso" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">EM</a></td>
+								<td>2013/215369</td>
+								<td>xxxxxx xxxx xxxxxx xxxxxxx xxxxx</td>
+								<td>21/05/2014</td>
+								<td>xxxxx xxxxxxxx xxxxxxx xxxxx</td>
+								<td class="tab_Right">1.000.000,00</td>
+								<td class="tab_Right">
+									<div class="btn-group">
+										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+										<ul class="dropdown-menu pull-right">
+											<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li>
+											<li><a href="FIN-aggCartaContabileStep1.shtml">aggiorna</a></li>
+											<li><a href="FIN-consCartaContabile.shtml">consulta</a></li>
+											<li><a href="FIN-risRegolazCarta.shtml">regolarizza</a></li>
+											<li><a href="#msgCompleta" data-toggle="modal">completa</a></li>
+											<li><a href="#msgTrasmesso" data-toggle="modal">trasmetti</a></li>
+											<li><a href="#statoProvvisorio" data-toggle="modal">riporta a provvisorio</a></li>
+											<li><a href="#statoCompletato" data-toggle="modal">riporta a completato</a></li>
+											<li><a href="">stampa</a></li>
+										</ul>
+									</div>                               
+								</td>
+							</tr>	
+							
+						</tbody>  
+					</table>            
+				   
+					<div class="row pagination_conth">
+						<div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+						<div class="span6">                               
+							<div id="paginazione2" class="dataTables_paginate paging_bootstrap pagination">
+								<ul>
+									<li><a href="#">&laquo; inizio</a></li>
+									<li><a href="#">&laquo; prec</a></li>
+									<li><a href="#">1</a></li>
+									<li class="active"><a href="#">2</a></li>
+									<li><a href="#">3</a></li>
+									<li><a href="#">4</a></li>
+									<li><a href="#">5</a></li>
+									<li><a href="#">succ &raquo;</a></li>
+									<li><a href="#"> fine &raquo;</a></li>              
+								</ul>
+							</div>         
+						</div> 
+					</div> 
+				
+				</fieldset>
+
+
+				<!--#include virtual="include/modal.html" --> 
+			 
+				<div class="Border_line"></div>
+							
+				<p><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a></p>       
+			  
+			</form>
+		  
+		</div>
+	</div>	 
+</div>	
+<!-- ***************** inclusione footer portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+</body>
+</html>

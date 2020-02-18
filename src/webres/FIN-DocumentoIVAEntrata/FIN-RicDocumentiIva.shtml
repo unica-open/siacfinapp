@@ -1,0 +1,198 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+	<ul class="breadcrumb">
+		<li><a href="../">Home</a> <span class="divider">></span></li>
+		<li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+		<li class="active">Ricerca Documenti iva di entrata</li>
+    </ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" -->   	 
+			<h3>Ricerca Documenti iva di entrata</h3>
+			<p>È necessario inserire almeno un criterio di ricerca.</p>
+			<div class="step-content">
+				<div class="step-pane active" id="step1"> <br/>
+				<p><a class="btn btn-primary pull-right" href="FIN-RisRicDocumentiIva.shtml">cerca</a> </p> <br/>
+				<h4>Dati documento di riferimento</h4>
+				<fieldset class="form-horizontal">
+					<div class="control-group">
+						<label class="control-label" for="tipoDoc">Tipo documento</label>
+						<div class="controls">
+							<select id="tipoDoc" class="span6" >
+								<option value="">xxxx</option>
+								<option value="">xxxxxx</option>
+							</select>
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="annoIva">Anno </label>
+						<div class="controls">
+							<input id="annoIva" class="lbTextSmall span2" type="text" value="" placeholder="2013" name="annoIva" />
+							<span class="alRight">
+								<label class="radio inline" for="numIva">Numero</label>
+							</span>
+							<input id="numIva" class="lbTextSmall span2" type="text" value="" name="numIva" placeholder="30"  />			
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="dataEmiss">Data emissione </label>								
+							<div class="controls">
+								<input id="dataEmiss" class="lbTextSmall span2 " type="text" value="" name="dataEmiss" />
+						</div>
+					</div>
+
+					
+		
+					<!--#include virtual="include/soggetto.html" --> 
+					<!-- accordion --->	
+					<div class="step-pane active" id="datiIVA">
+							<div class="accordion" >
+								<div class="accordion-group">
+									<div class="accordion-heading">
+										<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#datiIVA" href="#datiIVAtab">
+											Dati iva<span class="icon">&nbsp;</span></a>
+										</a>
+									</div>
+								
+									<div id="datiIVAtab" class="accordion-body collapse">
+										<div class="accordion-inner">
+
+												<fieldset class="form-horizontal">	
+												<!--#include virtual="include/datiIvaRicerca.html" --> 	
+												</fieldset>
+										</div>
+									</div>
+								</div>
+							</div>
+					</div>		
+					<!-- end accordion --->
+
+				</fieldset>
+
+				
+				<!--#include virtual="include/modal.html" --> 
+				</div>				
+			</div>
+		<p class="margin-medium">
+		<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+		<a href="" class="btn">annulla</a>
+		<a class="btn btn-primary pull-right" href="FIN-RisRicDocumentiIva.shtml">cerca</a> 
+		</p>     
+  
+
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

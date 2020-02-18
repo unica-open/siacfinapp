@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+           				   http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- Accesso a JPA da Spring -->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"> 
+	    <property name="dataSource" ref="dataSource" />
+	    <!-- 
+	         E' necessario indicare qui tutte le risorse che eseguono il mapping 
+	         tra il modello ad oggetti ed il database
+	    -->
+	   <property name="packagesToScan">
+			<list>
+				<value>it.csi.siac.siaccorser.business.dto</value>
+				<value>it.csi.siac.siacbilser.business.dto</value>
+			</list>
+		</property>
+		
+		
+	    <property name="jpaVendorAdapter">
+	        <!-- Impostiamo hibernate come implementazione JPA --> 
+	        <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"> 
+	            <property name="showSql" value="true" /> 
+	            <property name="generateDdl" value="false" />
+	            <property name="databasePlatform" value="org.hibernate.dialect.PostgreSQLDialect" />
+	        </bean> 
+	    </property>
+<!-- 	    <property name="jpaProperties"> -->
+<!-- 	    	<props> -->
+<!-- 	-->    	    
+<!-- 	    	          Qui è possibile impostare diverse strategie per quanto riguarda la struttura del DB:  -->
+<!-- 	    	          creazione automatica da zero, aggiornamento, validazione o nessuna azione. -->
+<!-- 	    	          In questo caso non verrà eseguita nessuna azione sulla struttura del DB. -->
+<!-- 	    	       -->
+<!--                 <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto:none}</prop> -->
+<!-- 	    	</props>  -->
+<!-- 	    </property> -->
+    </bean>
+
+	<!-- Gestore delle transazioni di Spring -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+      	<property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean>
+
+    <!-- abilita la gestione delle transazioni dichiarativa tramite l'annotation @Transactional -->
+    <tx:annotation-driven/>
+
+    <!-- 
+         abilita l'interpretazione delle annotazioni @PersistenceUnit/@PersistenceContext
+         per l'accesso a EntityManagerFactory/EntityManager
+      -->
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>
+    	
+</beans>

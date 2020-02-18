@@ -1,0 +1,222 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Inserimento Documenti di Spesa</li>
+    </ul> 
+    </div>	
+	</div>
+    <div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+        <div id="MyWizard" class="wizard">
+					<ul class="steps">
+						<li data-target="#step1" class="complete"><span class="badge badge-success">1</span>dati principali<span class="chevron"></span></li>
+						<li data-target="#step2" class="complete"><span class="badge badge-success">2</span>dettaglio<span class="chevron"></span></li>
+						<li data-target="#step3" class="active"><span class="badge">3</span>riepilogo<span class="chevron"></span></li>
+						
+						
+					</ul>
+					
+				</div>
+				<div class="step-content">
+					<div class="step-pane active" id="step1">
+ <div class="alert alert-success margin-large">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            I dati sono stati salvati correttamente
+        </div>
+					<h4>Documenti di spesa</h4>
+                    <dl class="dl-horizontal">
+         <dt>Tipo</dt>
+    <dd>xxxx</dd>
+         <dt>Anno</dt>
+    <dd>xxxx</dd>
+    <dt>Numero</dt>
+    <dd>xxx</dd>
+      <dt>Dati soggetto intestatario</dt>
+    <dd>xxxxxx xxxxxxxxx xxxxxxx xxxxxxxxxx</dd>
+      <dt>Data documento</dt>
+    <dd>xxxxxx xxxxxxxxx xxxxxxx xxxxxxxxxx</dd>
+    <dt>Data scadenza</dt>
+    <dd>xxx</dd>
+    <dt>Struttura amministrativo contabile</dt>
+    <dd>xxx</dd>
+    <dt>Termine di pagamento</dt>
+    <dd>xxx</dd>
+    <dt>Data</dt>
+    <dd>xxx</dd>
+    <dt>Causale</dt>
+    <dd>xxx</dd>
+    <dt>Data</dt>
+    <dd>xxx</dd>
+    <dt>Numero</dt>
+    <dd>xxx</dd>
+    <dt>Data</dt>
+    <dd>xxx</dd>
+    <dt>Repertorio</dt>
+    <dd>xxx</dd>
+    <dt>Data repertorio</dt>
+    <dd>xxx</dd>
+    </dl>
+
+					<h4>Altri dati</h4>
+                    <dl class="dl-horizontal">
+         <dt>Dati soggetto pagamento</dt>
+    <dd>xxxx</dd>
+         <dt>Descrizione</dt>
+    <dd>xxxx</dd>
+    <dt>Documento</dt>
+    <dd>xxx</dd>
+      <dt>Arrotondamento</dt>
+    <dd>xxxxxx xxxxxxxxx xxxxxxx xxxxxxxxxx</dd>
+      <dt>Netto</dt>
+    <dd>xxxxxx xxxxxxxxx xxxxxxx xxxxxxxxxx</dd>
+    <dt>Note</dt>
+    <dd>xxx</dd>
+    <dt>Note tesoriere</dt>
+    <dd>xxx</dd>
+    <dt>Causale mandato</dt>
+    <dd>xxx</dd>
+    <dt>Commissioni</dt>
+    <dd>xxx</dd>
+    <dt>Codice bollo</dt>
+    <dd>xxx</dd>
+    <dt>Classificatore documento</dt>
+    <dd>xxx</dd>
+    <dt>Stato</dt>
+    <dd>xxx</dd>
+    <dt>Utente inserimento</dt>
+    <dd>xxx</dd>
+    <dt>Utente aggiornamento</dt>
+    <dd>xxx</dd>
+    <dt>Anno esercizio</dt>
+    <dd>xxx</dd>
+    </dl>
+
+             <p><a href="FIN-InsDocumentiSpesa2.shtml" class="btn">indietro</a> <span class="nascosto"> | </span> <a href="FIN_aggDocumentiSpesa.shtml" class="btn">aggiorna</a> <!-- <a class="btn btn-link" href="">annulla</a> --> <span class="nascosto"> | </span><a href="FIN_ripetiDocumentiSpesa.shtml" class="btn">ripeti</a>&nbsp;<span class="nascosto"> | </span><a href="FIN-quote.shtml" class="btn btn-primary pull-right">quote</a>&nbsp;</p>
+             </div>
+					
+				</div>
+        </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

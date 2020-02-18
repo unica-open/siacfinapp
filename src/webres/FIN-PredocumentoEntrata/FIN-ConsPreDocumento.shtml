@@ -1,0 +1,256 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>
+<body> 
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>    
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+      <li class="active">Consultazione Predisposizione di Incasso</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 ">
+      <div class="contentPage">  <form method="get" action="#">       
+        <h3>Predisposizione: .............</h3>
+		<h4 class="step-pane">Inserimento: xx/xx/xxxx (*********) - Ultima modifica: xx/xx/xxxx (*********)</h4>
+				
+		<div class="Border_line"></div>		
+        <fieldset class="form-horizontal">
+			<div class="boxOrSpan2">
+				<div class="boxOrInLeft"> 
+					<p>Dati predisposizione</p>
+					<ul class="htmlelt">
+						<li>
+							<dfn>Competenza : </dfn> 
+							<dl><b>Data: </b> xxxx <span class="alLeft">- </span> <span class="alLeft"><b>Periodo: </b></span> xxxx</dl>
+						</li>
+						<li>
+							<dfn>Strutt. amm. contabile</dfn> 
+							<dl>xxxxxx xxx</dl>
+						</li>
+						<li>
+							<dfn>Causale</dfn> 
+							<dl>xxx xxxxxxxxxxx xxxxxx xxxxxx</dl>
+						</li>
+						<li>
+							<dfn>Conto corrente</dfn> 
+							<dl>xxxxxx xxx</dl>
+						</li>
+						<li>
+							<dfn>Provvisorio di cassa</dfn> 
+							<dl>xxxxxx xxx</dl>
+						</li>
+						<li>
+							<dfn>Stato</dfn> 
+							<dl>xxxxxxx dal xx/xx/xxxx</dl>
+						</li>
+
+					</ul>
+	
+				</div>
+				<div class="boxOrInRight ">
+					<p>Anagrafica predisposizione</p>
+					<ul class="htmlelt">
+						<li>
+							<dfn>Denominazione</dfn> 
+							<dl>xxxxx</dl>
+						</li>
+						<li>
+							<dfn>Codice fiscale</dfn> 
+							<dl>xxxxxxxxxxxxxxx</dl>
+						</li>
+						<li>
+							<dfn>Partita IVA</dfn> 
+							<dl>xxxxx</dl>
+						</li>	
+						<li>
+							<dfn>Indirizzo</dfn> 
+							<dl>Via - Citt&agrave; - Provincia - Cap</dl>
+						</li>		
+						<li>
+							<dfn>Email</dfn> 
+							<dl>xxxxxxxxxxxx</dl>
+						</li>
+						<li>
+							<dfn>Telefono</dfn> 
+							<dl>xxxxxxxxxxx</dl>
+						</li>
+					</ul>
+				
+				</div>
+			</div>
+			
+			<div class="boxOrSpan2">
+				<div class="boxOrInLeft "> 
+					<p>Estremi predisposizione incasso</p>
+					<ul class="htmlelt">
+						<li>
+							<dfn>Data esecuzione </dfn> 
+							<dl>xxxxx</dl>
+						</li>
+						<li>
+							<dfn>Importo</dfn> 
+							<dl>xxx</dl>
+						</li>
+						<li>
+							<dfn>Denominazione</dfn> 
+							<dl>xxx xxxxxx xxxxxx xxx xxxxxx</dl>
+						</li>
+						<li>
+							<dfn>Codice IUV </dfn> 
+							<dl>xxxxx </dl>
+						</li>
+						<li>
+							<dfn>Note </dfn> 
+							<dl>xxx xxxxxx </dl>
+						</li>
+					</ul>
+					<p>Estremi incasso</p>
+					<ul class="htmlelt">
+						<li>
+							<dfn>Documento</dfn> 
+							<dl><b>Anno</b> <span class="alRight">xxxx</span> - <span class="alLeft"><b>Numero</b></span> <span class="alLeft">xxxxxxxx</span> - <span class="alLeft"><b>Tipo</b></span> <span class="alLeft">xxxxxxxx</span></dl>
+						</li>
+						<li>
+							<dfn>Ordinativo</dfn> 
+							<dl><b>Anno</b> <span class="alRight">xxxx</span> - <span class="alLeft"><b>Numero</b></span> <span class="alLeft">xxxxxxxx</span></dl>
+						</li>
+						<li>
+							<dfn>Capitolo ordinativo</dfn> 
+							<dl>xxxxxxxxxx</dl>
+						</li>
+						<li>
+							<dfn>Accertamento ordinativo</dfn> 
+							<dl>xxxxxxxxxx</dl>
+						</li>
+						<li>
+							<dfn>Soggetto ordinativo</dfn> 
+							<dl>xxxxxxxxxx</dl>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="boxOrInRight ">
+					<p>Imputazioni contabili</p>
+			
+					<ul class="htmlelt">
+						<li>
+							<dfn>Capitolo</dfn> 
+							<dl>xxxx - xxxx - UEB</dl>
+						</li>
+						<li>
+							<dfn>Accertamento</dfn> 
+							<dl>anno - numero - subaccertamento</dl>
+						</li>
+						<li>
+							<dfn>Soggetto</dfn> 
+							<dl>codice - codice fiscale - partita iva - denominazione</dl>
+						</li>
+						<li>
+							<dfn>Provvedimento</dfn> 
+							<dl>anno - numero - tipo</dl>
+						</li>
+					</ul>
+					
+					
+				</div>
+			</div>
+		
+        </fieldset>  
+        
+        
+        <p class="marginLarge"> <a href="javascript:history.go(-1)" class="btn">indietro</a>   </p>  	                                 
+      </form>
+      </div>	
+    </div>	
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

@@ -1,0 +1,175 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>                        
+<body>  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+      <li class="active">Aggiornamento subimpegno</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">
+      <ul class="nav nav-tabs">
+        <li>
+        <a class="conferma" rel="FIN-AggImpegno.shtml">Impegno</a>
+        </li>
+        <li  class="active"><a href="#">Subimpegni</a></li>
+        <li><a class="conferma" rel="FIN-Modifiche.shtml">Modifiche</a></li>
+        <li><a href="#" rel="#">Mutui</a></li>
+        <li><a href="#" rel="#">Accertamenti</a></li>
+      </ul>
+      <form class="form-horizontal">
+        <!--h3>Inserimento subimpegno</h3-->
+        <!--#include virtual="include/alertErrorSuccess.html" -->        
+        <div id="MyWizard" class="wizard">
+          <ul class="steps">
+            <li data-target="#step1" class="complete"><span class="badge badge-success">1</span>Dati subimpegno<span class="chevron"></span></li>
+            <li data-target="#step2" class="active"><span class="badge">2</span>Classificazioni<span class="chevron"></span></li>
+          </ul>
+        </div>       
+        <div class="step-content"> 
+          <div class="step-pane active" id="step2"> 
+            <div id="capitoloTab" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="capitoloTabLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h3 id="myModalLabel2">Dettagli del capitolo</h3>
+              </div>
+              <div class="modal-body">
+                <dl class="dl-horizontal">
+                  <dt>Numero</dt>
+                  <dd>cap - art - ueb</dd>
+                  <dt>Tipo finanziamento</dt>
+                  <dd>XXXXX</dd>
+                  <dt>Piano dei conti finanziario</dt>
+                  <dd>codice + descrizione</dd>
+                </dl>
+                <table class="table table-hover table-bordered">
+                  <tr>
+                    <th>&nbsp;</th>
+                    <th scope="col" class="text-center">2013</th>
+                    <th scope="col" class="text-center">2014</th>
+                    <th scope="col" class="text-center">2015</th>
+                  </tr>
+                  <tr>
+                    <th>Stanziamento</th>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>                  
+                  </tr>
+                  <tr>
+                    <th>Disponibile </th>
+                    <td scope="row" >&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>                  
+                  </tr>
+                </table>
+              </div>
+            </div>            
+            <fieldset class="form-horizontal">
+            <!--#include virtual="include/datiTransazione_subimp.html" -->
+            </fieldset>
+          </div>
+        </div><!-- questi pulsanti servono se non è pluriennale -->
+        <p class="margin-large"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>  <a class="btn btn-secondary" href="">annulla</a>   <a class="btn btn-primary pull-right" href="FIN-SubImpegno.shtml">salva</a> </p>     
+        <!-- questi pulsanti servono se è pluriennale -->
+        <!--p class="margin-large"><input class="btn" type="button" value="indietro"/>   <a class="btn btn-link" href="">annulla</a>    <a class="btn btn-primary pull-right" href="FIN-InsImpegnoStep3.shtml">conferma e prosegui</a>  </p-->       
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

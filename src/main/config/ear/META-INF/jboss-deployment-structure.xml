@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.0">
+	<sub-deployment name="${web-module-name}.war">
+		<dependencies>
+			<module name="org.apache.cxf" slot="main" />
+		</dependencies>
+	</sub-deployment>
+</jboss-deployment-structure>
+

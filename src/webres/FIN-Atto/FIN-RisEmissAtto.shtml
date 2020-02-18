@@ -1,0 +1,303 @@
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+        
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+	
+	<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+			<li class="active">Risultato allegato atto</li>
+		</ul> 
+	</div>	
+</div>
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">  
+		
+			<form method="get" action="#">
+				<!--#include virtual="include/alertErrorSuccess.html" -->
+				
+				<h3>Risultato allegato atto 2013/132435</h3>   
+				<fieldset class="form-horizontal">
+				<p><b>Struttura:</b> <span class="infoTitle">007 - DIR. CENTR. PATRIMONIO, COMMERCIO E SISTEMA INFORMATIVO</span> </p>
+
+				<h4 class="step-pane"><span class="num_result">19527</span> Risultati trovati</h4>                 
+				
+					<table class="table table-hover tab_left dataTable">
+						<thead>
+							<tr>
+								<th><input type="checkbox" onchange="checkAll()" name="chk[]" class="tooltip-test" title="Seleziona tutti" /></th>
+								<th>Anno</th>
+								<th>Numero</th>
+								<th>Stato</th>
+								<th>Data trasmissione</th>
+								<th class="tab_Right">Importo Elenco</th>	
+								<th class="tab_Right">Importo da Emettere</th>			
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><input type="checkbox" name="fooCheck" value="c1"></td>
+								<td>2013</td>
+								<td>1253</td>
+								<td>xxxx</td>
+								<td>xxxxxxx</td>
+								<td class="tab_Right">2.000,00</td>
+								<td class="tab_Right">2.000,00</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="fooCheck" value="c1"></td>
+								<td>2014</td>
+								<td>1212</td>
+								<td>xxxx</td>
+								<td>xxxxxxx</td>
+								<td class="tab_Right">8.000,00</td>
+								<td class="tab_Right">5.000,00</td>
+							</tr>
+							<tr>
+								<td><input type="checkbox" name="fooCheck" value="c1"></td>
+								<td>2013</td>
+								<td>555</td>
+								<td>xxxx</td>
+								<td>xxxxxxx</td>
+								<td class="tab_Right">12.000,00</td>
+								<td class="tab_Right">10.000,00</td>
+							</tr>
+						  
+							<tr>
+								<td><input type="checkbox" name="fooCheck" value="c1"></td>
+								<td>2015</td>
+								<td>7588</td>
+								<td>xxxx</td>
+								<td>xxxxxxx</td>
+								<td class="tab_Right">xxxxxxx</td>
+								<td class="tab_Right">xxxxxxx</td>
+							</tr>
+							  
+							<tr>
+								<td><input type="checkbox" name="fooCheck" value="c1"></td>
+								<td>2016</td>
+								<td>686</td>
+								<td>xxxx</td>
+								<td>xxxxxxx</td>
+								<td class="tab_Right">xxxxxxx</td>
+								<td class="tab_Right">xxxxxxx</td>
+							</tr>
+							  
+							  
+							<tr>
+								<td><input type="checkbox" name="fooCheck" value="c1"></td>
+								<td>2013</td>
+								<td>2266</td>
+								<td>xxxx</td>
+								<td>xxxxxxx</td>
+								<td class="tab_Right">xxxxxxx</td>
+								<td class="tab_Right">xxxxxxx</td>
+							</tr>
+						
+						
+							<tr>
+								<td><input type="checkbox" name="fooCheck" value="c1"></td>
+								<td>2013</td>
+								<td>1253</td>
+								<td>xxxx</td>
+								<td>xxxxxxx</td>
+								<td class="tab_Right">xxxxxxx</td>
+								<td class="tab_Right">xxxxxxx</td>
+							</tr>
+							
+						 
+						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="5">Totali</th>
+								<th class="tab_Right">28.000,00</th>
+								<th class="tab_Right">17.000,00</th>						
+							</tr>	
+						</tfoot>
+					</table>
+					
+					<div class="row pagination_conth">
+						<div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+						<div class="span6">                               
+							<div id="paginazione2" class="dataTables_paginate paging_bootstrap pagination">
+							  <ul>
+								<li><a href="#">&laquo; inizio</a></li>
+								<li><a href="#">&laquo; prec</a></li>
+								<li><a href="#">1</a></li>
+								<li class="active"><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#">4</a></li>
+								<li><a href="#">5</a></li>
+								<li><a href="#">succ &raquo;</a></li>
+								<li><a href="#"> fine &raquo;</a></li>              
+							  </ul>
+							</div>         
+						</div>  
+					</div> 
+					
+					<div class="Border_line"></div>
+					
+					<p><a class="btn btn-primary pull-right">applica a selezionati</a></p>
+					<div class="clear"></div>
+					<br>
+					
+					<div class="collapse_info"><b>ATTENZIONE! L'emissione degli ordinativi avverrà per tutte le liquidazioni definitve presenti sulle quote degli elenchi selezionati</b></div>
+					
+					<div class="step-content">	   
+						<div class="step-pane active" id="step1">
+						<h4>DATI COMPLESSIVI ALL'EMISSIONE</h4>
+						
+						<table class="table table-hover tab_left dataTable" >
+							<thead>
+								<tr>
+									<th class="ReportTable">Totale</th>
+									<td class="ReportTable"><span class="marginLeft2">17.000,00</span></td>
+								</tr>
+								<tr>
+									<th class="ReportTable">Nota dell'Ordinativo</th>
+									<td>
+										<div> 
+											<span class="marginLeft2">									
+											<input id="stato" name="stato" class="lbTextSmall span10" type="text" value="" />
+											</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<th class="ReportTable">Eventuale sostituzione informazioni presenti</th>
+									<td>
+								
+										<div> 
+										<span class="al">
+											<label class="radio inline">Distinta </label>
+										</span>								
+											<select class="lbTextSmall span4">
+												<option>xxxxxxxx</option>
+												<option>xxxxxxx</option>
+												<option>xxxxxxxxx</option>
+											</select>
+											<span class="al">
+												<label class="radio inline" > Conto Tesoriere </label>
+											</span>
+											<select class="lbTextSmall span5">
+												<option value="">xxxxxxxxxx</option>
+												<option value="">xxxxxxxxxx</option>
+												<option value="">xxxxxxxx</option>
+											</select>
+											
+										</div>
+									
+									</td>
+								</tr>							
+								
+							</thead>
+							<tbody>			
+							</tbody>
+							</table>
+						
+						</div>
+					</div>
+				</fieldset>
+				<p class="margin-medium"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> </p>       
+				  
+			</form>
+			
+		</div>
+	</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+	
+	<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+	<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+   
+	
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+	<!--#include virtual="../../ris/servizi/siac/include/myCheckbox.html" -->
+
+
+</body>
+</html>

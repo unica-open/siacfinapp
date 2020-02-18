@@ -1,0 +1,210 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>                                
+<body>  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+      <li class="active">Inserimento modifiche</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">
+       <h3>Impegno 2013/12300 - Acquisto scrivanie per Anagrafe - 100.000,00</h3>  
+      <ul class="nav nav-tabs">
+        <li><a rel="FIN-AggImpegno.shtml" class="conferma">Impegno</a> </li>
+        <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+        <li><!--a href="FIN-SubImpegno.shtml">Subimpegni</a--><a class="conferma" rel="FIN-SubImpegno.shtml">Subimpegno</a></li>
+        <li class="active"><a  href="#">Modifiche</a></li>
+        <!--li><a href="#" rel="#">Mutui</a></li>
+        <li><a href="#" rel="#">Accertamenti</a></li-->
+      </ul>
+      <form class="form-horizontal">     
+        <div class="alert alert-error">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Attenzione!!</strong><br /> Messaggio di feedback negativo
+        </div>
+        <div class="alert alert-success">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Attenzione!!</strong><br /> xxxxxxx
+        </div>  
+        <h4>Inserimento modifica soggetto</h4> 
+        <div class="step-content">
+          <div class="step-pane active" id="step1">
+           <fieldset class="form-horizontal margin-large">
+              <div class="control-group">
+                <!--label class="control-label" for="subimpegno">Subimpegno</label-->
+                <label class="control-label" for="subimpegno">Abbina a</label>
+                <div class="controls">
+                  <label class="radio inline">
+                  <input type="radio" name="optAbbina" id="optionsRadios1" value="impegno" checked>
+                  Impegno
+                  </label>
+                  <label class="radio inline">
+                  <input type="radio" name="optAbbina" id="optionsRadios2" value="subimpegno">
+                  Subimpegno
+                  </label>         
+                  <span class="campiSubimpegno">
+                    &nbsp;&nbsp;&nbsp;&nbsp;<select name="subimpegnoNum" class="span2" id="subimpegnoNum"><option> </option><option>xx</option><option>aaa</option></select>&nbsp;&nbsp;&nbsp; 
+                    <label class="checkbox inline" for="anche"><input name="anche" type="checkbox" value="" id="anche"> Anche impegno</label>
+                  </span>
+                </div>
+              </div>
+              <!--div class="control-group datiVisibili1">              
+                <div class="controls">              
+                  <dl class="dl-horizontal">
+                    <dt>Importo</dt>
+                    <dd>Minimo XXXX  - Massimo XXXX</dd>        
+                  </dl>             
+                </div>
+              </div>
+              <div class="control-group datiVisibili2">
+                <div class="controls">             
+                  <dl class="dl-horizontal">
+                    <dt>Codice subimpegno</dt>
+                    <dd>aaa</dd>
+                    <dt>Importo</dt>
+                    <dd>Minimo XXXX  - Massimo XXXX</dd>
+                  </dl>             
+                </div>
+              </div--> 
+              <!--#include virtual="include/provvedimento_modifiche.html" -->
+               <h4>Dati modifica</h4>     
+                    <div class="control-group">
+                      <label class="control-label" for="Descrizione">Descrizione *</label>
+                      <div class="controls">
+                        <input id="Descrizione" name="Descrizione" class="span9" required="required" type="text"/>
+                      </div>
+                    </div>
+                    <div class="control-group">
+                      <label class="control-label" for="motivo">Motivo </label>
+                      <div class="controls">
+                        <select id="motivo" name="motivo" class="span9"> <option></option><option value="">zzzzzz</option> <option id="pluriennale">xxxxxx</option></select>
+                      </div>
+                    </div>
+                    <!--div class="control-group anniPluriennale">
+                      <label class="control-label" for="motivo">Anni di pluriennale</label>
+                      <div class="controls">
+                        <input id="annipluri" name="annipluri" class="span1" type="text"/>
+                      </div>
+                    </div-->
+                    <!--div class="control-group">
+                      <label class="control-label" for="importo">Importo </label>
+                      <div class="controls">
+                        <input id="importo" name="importo" class="span2"  type="text"/> 
+                        <span class="al">
+                          <label class="radio inline" for="numero">Modifica compresa tra XXXX e XXXX</label>
+                        </span>                 
+                      </div>
+                    </div-->
+                  </fieldset>
+                  <!--p>&Egrave; necessario inserire oltre all'anno almeno il numero atto oppure il tipo atto </p-->			          
+                                    
+                  <!--#include virtual="include/creditore.html" -->
+            <!--#include virtual="include/modal.html" --> 
+            <!-- Fine Modal --> 
+                                   
+            <br/> <br/>                                         
+            <p><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   <a class="btn btn-secondary" href="">annulla</a>   <span class="pull-right buttonPluriennale"><a class="btn btn-primary confermaPluri" rel="FIN-insModificheStep2.shtml">Prosegui</a>&nbsp;<a class="btn btn-primary confermaPluri" rel="FIN-Modifiche.shtml">Salva</a></span> <span class="pull-right singleButton"><a class="btn btn-primary" href="FIN-Modifiche.shtml">Salva</a></span></p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+  
+
+  
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

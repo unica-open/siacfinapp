@@ -1,0 +1,292 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Valida modalit&agrave; di pagamento</li>
+    </ul> 
+    </div>	
+	</div>
+    <div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+         <ul class="nav nav-tabs">
+    <li class="active">
+    <a href="#soggetto" data-toggle="tab">Modalit&agrave; pagamento</a>
+    </li>
+  <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+ <!--   <li><a href="#sedi" data-toggle="tab">Sedi Secondarie</a></li>
+    <li><a href="#modalita" data-toggle="tab">Modalit&agrave; pagamento</a></li> -->
+    </ul>
+    
+    <div class="tab-content">
+<div class="tab-pane active" id="soggetto">
+   <div class="span6"> 
+    <h4>Attualmente presente</h4>
+          <dl class="dl-horizontal well">
+           
+
+
+			<dt>Tipo Accredito</dt>
+             <dd>xxx</dd>
+ 			<dt>Stato modalità</dt>
+             <dd>xxx</dd>           
+			  <dt>Codice cessione credito</dt>
+         		<dd>xxxx</dd>
+                
+                  <dt>P. IVA cessione</dt>
+         <dd>xxx</dd>
+
+ 		 <dt>Codice fiscale cessione</dt>
+         <dd>xxxxx</dd>
+
+             <dt>Ragione sociale cessione</dt>
+   			 <dd>xxxx</dd>
+
+			<dt>Modalit&agrave; collegata</dt>
+	        <dd>xxx</dd>
+             
+
+             
+
+           
+		<!--	<dt>Ricorrente</dt>
+	        <dd>xxxx     Percentuale %</dd> -->
+            
+  			 <dt>Note</dt>
+		    <dd>xxxx</dd> 
+            <dt>Data scadenza</dt>
+		    <dd>xxxx</dd>
+            
+            
+			
+            </dl>       
+	</div>
+    
+    
+    
+    <div class="span6"> 
+    <h4>Da validare</h4>
+          <dl class="dl-horizontal">
+           
+
+
+					<dt>Tipo Accredito</dt>
+             <dd>xxx</dd>
+ 			<dt>Stato modalità</dt>
+             <dd>xxx</dd>           
+			  <dt>Codice cessione credito</dt>
+         		<dd>xxxx</dd>
+                
+                  <dt>P. IVA cessione</dt>
+         <dd>xxx</dd>
+
+ 		 <dt>Codice fiscale cessione</dt>
+         <dd>xxxxx</dd>
+
+             <dt>Ragione sociale cessione</dt>
+   			 <dd>xxxx</dd>
+
+			<dt>Modalit&agrave; collegata</dt>
+	        <dd>xxx</dd>
+             
+
+             
+
+           
+		<!--	<dt>Ricorrente</dt>
+	        <dd>xxxx     Percentuale %</dd> -->
+            
+  			 <dt>Note</dt>
+		    <dd>xxxx</dd> 
+            <dt>Data scadenza</dt>
+		    <dd>xxxx</dd>
+            
+            
+			
+            </dl> 
+             
+    		
+            
+		   
+            </dl>       
+	</div>
+    
+</div>
+
+<!--<div class="tab-pane" id="sedi">
+   <h4>Sedi secondarie</h4>
+                 <table summary="riepilogo indirizzo" class="table tableHover">
+                     
+                      <tr>
+                        <th> Denominazione </th>
+                        <th>Indirizzo</th>
+                        <th>Comune</th>
+                        <th>Stato</th>
+                      </tr>
+                      <tr>
+                        <td> sede </td>
+                        <td>via don borio, 5</td>
+                        <td>torino</td>
+                        <td>valido</td>
+                      </tr>
+                      <tr class="newline">
+                        <td> concessionaria 3</td>
+                        <td>via della consolata, 6</td>
+                        <td>ivrea</td>
+                        <td>annullato</td>
+                      </tr>
+                    </table>
+</div>
+
+<div class="tab-pane" id="modalita">
+  <h4>Modalit&agrave; pagamento</h4>
+                 <table summary="riepilogo indirizzo" class="table tableHover">
+                     
+                      <tr>
+                        <th>Modalit&agrave;</th>
+                        <th> <abbr title="progressivo">Associato a</abbr> </th>
+                        <th>Stato</th>
+                      </tr>
+                      <tr>
+                        <td><a href="#" data-trigger="hover" rel="popover" title="IBAN" data-content="IBAN ITI2a0000000089012 ">CB - Conto corrente bancario</a></td>
+                        <td> Soggetto</td>
+                        <td>valido</td>
+                      </tr>
+                      <tr class="newline">
+                        <td><a href="#" data-trigger="hover" rel="popover" title="cessione" data-content="1200- istituo AAAA ">CC - cessione credito</a></td>
+                        <td>Sede secondaria</td>
+                        <td>annullato</td>
+                      </tr>
+                       <tr class="newline">
+                        <td>contanti</td>
+                        <td>soggetto</td>
+                        <td>valido</td>
+                      </tr>
+                    </table>
+</div> -->
+</div>                                       
+             <p><a href="#" class="btn">indietro</a><span class="nascosto"> &nbsp;|&nbsp;</span>&nbsp;<a href="#" class="btn btn-primary">rifiuta</a><span class="nascosto"> &nbsp;|&nbsp;</span> &nbsp;<a href="#" class="btn btn-primary pull-right">valida</a></p>
+          
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

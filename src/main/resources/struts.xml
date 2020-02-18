@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+  "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+    <!-- Costante di definizione del massimo numero di breadcrumbs visualizzabili -->
+	<constant name="arianna:maxCrumbs" value="6" />
+    <include file="struts-global.xml" />
+    <include file="struts-ajax.xml" />
+    <include file="struts-soggetto.xml" />
+    <include file="struts-soggetto-cec.xml" />
+    <include file="struts-movgest-imp.xml" />
+    <include file="struts-movgest-acc.xml" />
+	<include file="struts-fragments.xml" />
+	<include file="struts-mutuo.xml" />
+	<include file="struts-saldo.xml" />
+	<include file="struts-liquidazione.xml"/>
+	<include file="struts-ordinativo-pag.xml"/>
+	<include file="struts-ordinativo-inc.xml"/>
+	<include file="struts-provvisorio-cas.xml"/>
+	<include file="struts-ordinativo-inc.xml"/>
+	<include file="struts-carta.xml"/>
+	<include file="struts-gen-primaNota.xml"/>
+</struts>

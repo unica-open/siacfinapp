@@ -1,0 +1,298 @@
+﻿   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>
+  
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>   
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+  
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+	<div class="row-fluid">
+		<div class="span12">
+			<ul class="breadcrumb">
+				<li><a href="../">Home</a> <span class="divider">></span></li>
+				<li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+				<li class="active">Aggiorna Documenti entrata</li>
+			</ul> 
+		</div>	
+	</div>
+	
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">
+						
+			<form method="get" action="#">
+			<!--#include virtual="include/alertErrorSuccess.html" -->
+			<h3>FAT 2013/39/132829 - SORIS - Società riscossione S.p.A.</h3>
+			<h4>Stato: xxxxxx - Valido dal: xx/xx/xxxx</h4>
+				<ul class="nav nav-tabs">
+					<li><a href="FIN-aggDocumentiEntrata.shtml">Documenti entrata</a></li>
+					<li class="active"><a href="FIN-quoteEntrate.shtml" >Quote</a></li>
+				</ul>
+
+			
+			<fieldset class="form-horizontal">
+				<h4 class="nostep-pane">Importo documento: xxxx <span class="alLeft">netto:</span> xxxx <span class="alLeft">importo da attribuire:</span> xxx</h4>		
+				<h4 class="step-pane">Elenco quote</h4>
+				<!--#include virtual="include/tableQuoteEntrate.html" -->
+				
+
+				<p>
+				<a class="btn btn-secondary" id="NewQuoteEN" onclick="clickButtInEN()" >inserisci nuova quota</a>
+				</p>
+				
+		
+				<!-- accordion inserisci nuova quota e ripeti quota-->
+					<div id="insQuotaENaccordon" style="display:none">
+						<div class="accordion_info">
+							<fieldset class="form-horizontal" id="insQuotaTABEN">   
+								<h4 class="titleTxtEN">Inerisci nuova quota</h4>
+								<h4 class="step-pane">Dati principali</h4>
+							
+								<fieldset class="form-horizontal">
+								
+									<div class="control-group">
+										<label class="control-label" for="numero">Numero *</label>
+										<div class="controls">
+											<input id="numero" name="numero"  class="lbTextSmall span2" type="text" value="" placeholder="30" disabled="disabled"/>
+											 <span class="alRight">
+											<label class="radio inline" for="importo">Importo *</label>
+											</span>
+											<input id="importo" name="importo" class="lbTextSmall span2" type="text" value=""  placeholder="50,00" required/>
+											<span class="alRight">
+											<label class="radio inline" for="scadenza">Data scadenza *</label>
+											</span>
+											<input id="scadenza" name="scadenza" class="lbTextSmall span2" type="text" value="" placeholder="31/04/2014" required />
+										</div>
+									</div>
+									
+									<div class="control-group">
+										<label for="desc" class="control-label">Descrizione *</label>
+										<div class="controls">
+											<textarea rows="1" cols="15" id="desc" value="" class="span10" placeholder="xxxxx " required ></textarea>
+										</div>
+									</div>
+				
+								</fieldset>
+								
+								<!--#include virtual="include/accertamento.html" -->
+								<!--#include virtual="include/capitolo.html" -->
+								
+								<h4 class="step-pane">Dati Iva</h4>
+								<fieldset class="form-horizontal">
+									<div class="control-group">
+										<label class="control-label">Iva :</label>
+										<div class="controls">
+											<span class="alRight">
+											<label class="radio inline" for="rilevante">rilevante </label>
+											</span>
+												<input id="rilevante" name="rilevante"  type="checkbox" value="" />
+											<span class="alRight">
+												<label class="radio inline" for="NumIva">Numero registrazione</label>
+											</span>
+												<input id="NumIva" name="NumIva" class="lbTextSmall span2" type="text" value="" placeholder="xxxxxx" />
+											<span class="alRight">
+												<div class="radio inline collapse_alert" for="iva"><span class="icon-warning-sign icon-red alRight">&nbsp;</span>CAPITOLO RILEVANTE IVA </div>
+											</span>
+										
+										</div>
+									</div>
+								</fieldset>
+								
+								<!--#include virtual="include/provvedimento.html" -->
+								
+								<!--#include virtual="include/altriDatiEntrate.html" --> 					
+
+											
+							</fieldset>
+												  
+							<p> 
+								<a class="btn btn-secondary" onclick="clickButtOutEN()">annulla</a> 
+								<a class="btn btn-primary pull-right" onclick="clickButtOutEN()">salva</a>
+							</p>
+						</div>
+					</div>
+				<!-- /accordion inserisci nuova quota e ripeti quota -->
+				
+				
+				<!-- accordion aggiorna quota -->
+					<div id="aggQuotaENaccordion"  style="display:none">
+						<div class="accordion_info">
+								<fieldset class="form-horizontal" id="insQuotaENTAB">   
+									<h4>Aggiorna quota</h4>
+									<h4 class="step-pane">Dati principali</h4>
+								
+									<fieldset class="form-horizontal">
+									
+										<div class="control-group">
+											<label class="control-label" for="numero">Numero *</label>
+											<div class="controls">
+												<input id="numero" name="numero"  class="lbTextSmall span2" type="text" value="" placeholder="30" disabled="disabled"/>
+												 <span class="alRight">
+												<label class="radio inline" for="importo">Importo *</label>
+												</span>
+												<input id="importo" name="importo" class="lbTextSmall span2" type="text" value=""  placeholder="50,00" required/>
+												<span class="alRight">
+												<label class="radio inline" for="scadenza">Data scadenza *</label>
+												</span>
+												<input id="scadenza" name="scadenza" class="lbTextSmall span2" type="text" value="" placeholder="31/04/2014" required />
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label for="desc" class="control-label">Descrizione *</label>
+											<div class="controls">
+												<textarea rows="1" cols="15" id="desc" value="" class="span10" placeholder="xxxxx " required ></textarea>
+											</div>
+										</div>
+					
+									</fieldset>
+									
+									<!--#include virtual="include/accertamento.html" -->
+									<!--#include virtual="include/capitolo.html" -->
+									
+									<h4 class="step-pane">Dati Iva</h4>
+									<fieldset class="form-horizontal">
+										<div class="control-group">
+											<label class="control-label">Iva :</label>
+											<div class="controls">
+												<span class="alRight">
+												<label class="radio inline" for="rilevante">rilevante </label>
+												</span>
+													<input id="rilevante" name="rilevante"  type="checkbox" value="" />
+												<span class="alRight">
+													<label class="radio inline" for="NumIva">Numero registrazione</label>
+												</span>
+													<input id="NumIva" name="NumIva" class="lbTextSmall span2" type="text" value="" placeholder="xxxxxx" />
+												<span class="alRight">
+													<div class="radio inline collapse_alert" for="iva"><span class="icon-warning-sign icon-red alRight">&nbsp;</span>CAPITOLO RILEVANTE IVA </div>
+												</span>
+											
+											</div>
+										</div>
+									</fieldset>
+									
+									<!--#include virtual="include/provvedimentoAgg.html" -->
+									<br>
+									<!--#include virtual="include/altriDatiEntrateAgg.html" --> 					
+
+												
+								</fieldset>
+											 
+								
+								<p> 
+								<a class="btn btn-secondary" onclick="clickButtInAggOutEN()" >annulla</a>
+								
+								<a type="submit" class="btn btn-primary pull-right" onclick="clickButtInAggOutEN()">salva</a>
+							</p>
+						</div>
+					</div>
+				<!-- /accordion aggiorna quota -->
+				
+				
+			</fieldset>
+			
+			<!--#include virtual="include/modal.html" --> 
+			<br>
+			<div class="Border_line"></div>
+			<p><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> </p>
+           
+        </form>
+    </div>
+</div>	 
+</div>	
+
+				
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<!--#include virtual="include/javascript.html" --> 
+
+</body>
+</html>

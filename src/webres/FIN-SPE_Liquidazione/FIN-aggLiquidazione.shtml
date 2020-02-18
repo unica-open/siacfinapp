@@ -1,0 +1,159 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+  
+	<!-- NAVIGAZIONE -->
+		<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+		<ul id="sommario" class="nascosto">
+			<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+		</ul>
+		<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Inserimento impegno</li>
+		</ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+		<!--#include virtual="include/alertErrorSuccess.html" --> 
+		
+		<h3>Liquidazione 2013/12300 - xxxxxxxx - 50.000,00</h3> 
+		<dl class="dl-horizontal">
+				<dt>Capitolo <a class="tooltip-test" title="Visualizza dettagli" href="#capitoloTab" data-toggle="modal"><i class="icon-info-sign">&nbsp;<span class="nascosto">Visualizza dettagli</span></i></a></dt>
+					<dd>Anno/numero/ueb  - descrizione  - codice della  struttura amministrativo contabile - tipo Finanziamento: xxxx</dd>              
+				<dt>Provvedimento</dt>
+					<dd>anno/numero – tipo – oggetto – codice della struttura amministrativo contabile -  Stato: statoOperativo</dd>
+					<dt>Soggetto</dt>
+					<dd>Soggetto.codice - denominazione – CF: codiceFiscale – PIVA : partitaIVA o Classe Codice</dd>
+					<dt>Impegno</dt>
+					<dd>2013 - 0000004/1 - ...Descrizione........</dd>
+					<dt>Mutuo</dt>
+					<dd>12304</dd>
+			</dl>
+		
+		<div class="step-content"> 
+			<div class="step-pane active" id="insLiq">
+				<h4 class="step-pane">Creditore: 12456 - Mario Rossi</h4>
+				<!--#include virtual="include/sediSecondarie.html" --> 
+				<!--#include virtual="include/modalitaPagamento.html" --> 
+				<!--#include virtual="include/provvedimento.html" -->
+				<!--#include virtual="include/liquidazione.html" --> 
+
+				<!--#include virtual="include/datiTransazione.html" -->
+	  
+			</div>
+		</div>
+		
+		
+		<p class="margin-medium">
+			<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+			<a class="btn btn-secondary" href="">annulla</a>    
+			<a class="btn btn-primary pull-right" type="button" value="" href="">salva</a>  
+		</p>     
+		<!--#include virtual="include/modal.html" --> 
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>SIAC FIN Application</display-name>
+
+	<distributable/>
+	<!-- I file di configurazione di ContextLoaderListener di Spring sono tutti 
+		i file *.xml sotto la cartella spring del classpath. -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<!--  escludo momentaneamente datasource.xml, jpa.xml -->
+		<!--  <param-value>classpath:spring/*.xml</param-value> -->
+		<param-value>classpath:spring/*Context.xml</param-value>
+	</context-param>
+
+	<context-param>
+		<param-name>remincl.resource.provider.rp</param-name>
+		<param-value>${remincl.resource.provider}</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>remincl.cache.time</param-name>
+		<param-value>${remincl.cache.time}</param-value>
+	</context-param>
+	
+	
+	<listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <listener>
+  		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+
+<!-- 	<filter> -->
+<!-- 		<filter-name>CAS Filter</filter-name> -->
+<!-- 		<filter-class>edu.yale.its.tp.cas.client.filter.CASFilter</filter-class> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>logger</param-name> -->
+<!-- 			<param-value>MDA.MDAWA.CASFilter</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>urlServerParacadute</param-name> -->
+<!-- 			<param-value>${urlServerParacadute}</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>edu.yale.its.tp.cas.codServizio</param-name> -->
+<!-- 			<param-value>DMAWA</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>edu.yale.its.tp.cas.loginError</param-name> -->
+<!-- 			<param-value>/ssobart/errore.jsp</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>edu.yale.its.tp.cas.client.filter.serverName</param-name> -->
+<!-- 			<param-value>${edu.yale.its.tp.cas.client.filter.serverName}</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>edu.yale.its.tp.cas.client.filter.validateUrl</param-name> -->
+<!-- 			<param-value>${edu.yale.its.tp.cas.client.filter.validateUrl}</param-value> -->
+<!-- 		</init-param> -->
+<!-- 		<init-param> -->
+<!-- 			<param-name>pepauth.defpd</param-name> -->
+<!-- 			<param-value>/WEB-INF/SSOBARTPepAuthPD.xml</param-value> -->
+<!-- 		</init-param> -->
+<!-- 	</filter> -->
+
+
+<filter>
+		<filter-name>Shibboleth filter</filter-name>
+		<filter-class>it.csi.shibboleth.shibfilter.ShibbolethFilter</filter-class>
+		<init-param>
+			<param-name>IRIDE_ID_SESSIONATTR</param-name>
+			<param-value>edu.yale.its.tp.cas.client.filter.user</param-value>
+		</init-param>
+		<init-param>
+			<param-name>NO_CHECK_PAGE</param-name>
+			<param-value>
+              HomePage.do,
+                sessionExpired.do,
+                  fatalError,
+                      notFoundError,
+                            Logout
+           </param-value>
+		</init-param>
+	</filter>
+
+
+	<!-- == mapping di CAS <filter-mapping> <filter-name>CAS Filter</filter-name> 
+		<url-pattern>/login/*</url-pattern> </filter-mapping> == -->
+
+	<!-- == mapping di Shibboleth <filter-mapping> <filter-name>Shibboleth filter</filter-name> 
+		<url-pattern>*.do</url-pattern> </filter-mapping> == -->
+
+	<!-- == mapping parametrico di CAS o Shibboleth == -->
+	<filter-mapping>
+		<filter-name>${sso.filter.name}</filter-name>
+		<url-pattern>${sso.filter.url.pattern}</url-pattern>
+	</filter-mapping>
+
+	<filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>
+            org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</filter-class>
+    </filter>
+
+	<filter-mapping>
+		<filter-name>struts2</filter-name>
+		<url-pattern>*.do</url-pattern>
+	</filter-mapping>
+
+
+	<!-- =====inserito per il mapping di risorse statiche di struts2====== -->
+<!-- 	<filter-mapping> -->
+<!-- 		<filter-name>struts2</filter-name> -->
+<!-- 		<url-pattern>/struts/*</url-pattern> -->
+<!-- 	</filter-mapping> -->
+
+<!-- 	<error-page> -->
+<!-- 		<error-code>404</error-code> -->
+<!-- 		<location>/jsp/error.jsp</location> -->
+<!-- 	</error-page> -->
+
+	<jsp-config>
+	    
+	   <taglib>
+         <taglib-uri>/display-tags</taglib-uri>
+         <taglib-location>/WEB-INF/displaytag.tld</taglib-location>
+       </taglib>
+	
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<page-encoding>UTF-8</page-encoding>
+		</jsp-property-group>
+	</jsp-config>
+
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<distributable />
+</web-app>

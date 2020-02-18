@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<!-- SIAC-5333: PACKAGE DUPLICATO DALLA COMPONENTE BILAPPLICATION: per ogni modifica, valutare se necessario ribaltala -->
+<struts>
+	<package name="primaNotaDefault" extends="default, json-default" abstract="true">
+		<!-- Package per la definizione delle estensioni comuni a tutti i varii packages di Struts2 e per la definizione centralizzata dello stack degli interceptors. -->
+		<interceptors>
+
+			<!-- Interceptor di log prima e a termine dell'invocazione -->
+			<interceptor name="logInterceptor" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+
+			<!-- Interceptor per la gestione degli errori di conversione <interceptor name="siacConversionErrorInterceptor" class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" /> -->
+
+			<!-- Interceptor per la gestione dei breadcrumb -->
+			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+				<param name="defaultRewindMode">AUTO</param>
+				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+
+			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
+			<interceptor name="redirectMessage" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.RedirectMessageInterceptor" />
+			<interceptor name="putModelInSession" class="it.csi.siac.siacfinbasegengsaapp.frontend.ui.action.interceptor.PutModelInSessionInterceptor" />
+			
+			<interceptor-stack name="myStack">
+				<!-- Default Stack -->
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="actionData" />
+				<interceptor-ref name="putModelInSession"/>
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="redirectMessage" />
+				<interceptor-ref name="chain" />
+				<interceptor-ref name="scopedModelDriven" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="multiselect" />
+				<interceptor-ref name="staticParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+				</interceptor-ref>
+
+				<!-- Injettato nello stack per la gestione degli errori di conversioneS <interceptor-ref name="siacConversionErrorInterceptor"/> -->
+
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">execute</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">execute</param>
+				</interceptor-ref>
+				<interceptor-ref name="debugging" />
+
+				<!-- Interceptor per breadcrumb -->
+				<interceptor-ref name="breadCrumbs" />
+
+
+				<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
+
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack" />
+	</package>
+
+	<!-- Gestione navigazione per il modulo movgest -->
+	<package namespace="/" extends="primaNotaDefault" name="primaNota">
+		<result-types>
+			<result-type name="contoPrimaNotaIntegrata" class="it.csi.siac.siacfinbasegengsaapp.frontend.ui.util.result.ContoPrimaNotaIntegrataResult" />
+		</result-types>
+		<action name="gestionePrimaNotaIntegrataFIN" class="gestionePrimaNotaIntegrataFINAction">
+			<result name="success" type="redirectAction">
+				<param name="actionName">${nomeAzioneRedirezione}</param>
+			</result>
+		</action>
+		<!-- LIQUIDAZIONE -->
+		<action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN" class="completaValidaLiquidazioneInsPrimaNotaIntegrataFINAction">
+			<result name="success" type="redirectAction">completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_landOnPage</result>
+			<result name="input" type="redirectAction">inserisciLiquidazioneStep3Aggiorna</result>
+		</action>
+		<action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_landOnPage" class="completaValidaLiquidazioneInsPrimaNotaIntegrataFINAction" method="landOnPage">
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+        <action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_completeSalva" class="completaValidaLiquidazioneInsPrimaNotaIntegrataFINAction"  method="completeSalva">
+            <result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+        </action>
+        <action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_gestisciForward" class="completaValidaLiquidazioneInsPrimaNotaIntegrataFINAction" method="gestisciForward">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">redirectToCruscotto</param>
+			</result>
+		</action>
+        <action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_ottieniListaConti" class="completaValidaLiquidazioneInsContoPrimaNotaIntegrataFINAction" method="ottieniListaConti">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+		</action>
+		<action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_ottieniListaContiIniziale" class="completaValidaLiquidazioneInsContoPrimaNotaIntegrataFINAction" method="ottieniListaContiIniziale">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+		</action>
+        <action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_inserisciConto" class="completaValidaLiquidazioneInsContoPrimaNotaIntegrataFINAction" method="inserisciConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_aggiornaConto" class="completaValidaLiquidazioneInsContoPrimaNotaIntegrataFINAction" method="aggiornaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaLiquidazioneInsPrimaNotaIntegrataFIN_eliminaConto" class="completaValidaLiquidazioneInsContoPrimaNotaIntegrataFINAction" method="eliminaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<!-- Accertamento -->
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN" class="completaValidaAccertamentoInsPrimaNotaIntegrataFINAction">
+			<result name="success" type="redirectAction">completaValidaAccertamentoInsPrimaNotaIntegrataFIN_landOnPage</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">aggiornaAccertamentoStep1</param>
+				<param name="numeroAccertamento">${numeroMovimento}</param>
+				<param name="annoAccertamento">${annoMovimento}</param>
+				<param name="arrivoDaInserimento">si</param>
+			</result>
+		</action>
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN_landOnPage" class="completaValidaAccertamentoInsPrimaNotaIntegrataFINAction" method="landOnPage">
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN_completeSalva" class="completaValidaAccertamentoInsPrimaNotaIntegrataFINAction" method="completeSalva">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN_gestisciForward" class="completaValidaAccertamentoInsPrimaNotaIntegrataFINAction" method="gestisciForward">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">redirectToCruscotto</param>
+			</result>
+		</action>
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN_ottieniListaConti" class="completaValidaAccertamentoInsContoPrimaNotaIntegrataFINAction" method="ottieniListaConti">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN_ottieniListaContiIniziale" class="completaValidaAccertamentoInsContoPrimaNotaIntegrataFINAction" method="ottieniListaContiIniziale">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN_inserisciConto" class="completaValidaAccertamentoInsContoPrimaNotaIntegrataFINAction" method="inserisciConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN_aggiornaConto" class="completaValidaAccertamentoInsContoPrimaNotaIntegrataFINAction" method="aggiornaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaAccertamentoInsPrimaNotaIntegrataFIN_eliminaConto" class="completaValidaAccertamentoInsContoPrimaNotaIntegrataFINAction" method="eliminaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<!-- Impegno -->
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN" class="completaValidaImpegnoInsPrimaNotaIntegrataFINAction">
+			<result name="success" type="redirectAction">completaValidaImpegnoInsPrimaNotaIntegrataFIN_landOnPage</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="numeroImpegno">${numeroMovimento}</param>
+				<param name="annoImpegno">${annoMovimento}</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+		</action>
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN_landOnPage" class="completaValidaImpegnoInsPrimaNotaIntegrataFINAction" method="landOnPage">
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN_completeSalva" class="completaValidaImpegnoInsPrimaNotaIntegrataFINAction" method="completeSalva">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN_gestisciForward" class="completaValidaImpegnoInsPrimaNotaIntegrataFINAction" method="gestisciForward">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">redirectToCruscotto</param>
+			</result>
+		</action>
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN_ottieniListaConti" class="completaValidaImpegnoInsContoPrimaNotaIntegrataFINAction" method="ottieniListaConti">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+		</action>
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN_ottieniListaContiIniziale" class="completaValidaImpegnoInsContoPrimaNotaIntegrataFINAction" method="ottieniListaContiIniziale">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+		</action>
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN_inserisciConto" class="completaValidaImpegnoInsContoPrimaNotaIntegrataFINAction" method="inserisciConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN_aggiornaConto" class="completaValidaImpegnoInsContoPrimaNotaIntegrataFINAction" method="aggiornaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaImpegnoInsPrimaNotaIntegrataFIN_eliminaConto" class="completaValidaImpegnoInsContoPrimaNotaIntegrataFINAction" method="eliminaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		
+		<!-- SubAccertamento -->
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN" class="completaValidaSubAccertamentoInsPrimaNotaIntegrataFINAction">
+			<result name="success" type="redirectAction">completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_landOnPage</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">aggiornaSubaccertamento</param>
+				<param name="forceReload">true</param>
+			</result>
+		</action>
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_landOnPage" class="completaValidaSubAccertamentoInsPrimaNotaIntegrataFINAction" method="landOnPage">
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_completeSalva" class="completaValidaSubAccertamentoInsPrimaNotaIntegrataFINAction" method="completeSalva">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_gestisciForward" class="completaValidaSubAccertamentoInsPrimaNotaIntegrataFINAction" method="gestisciForward">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">aggiornaSubaccertamento</param>
+				<param name="forceReload">true</param>
+			</result>
+		</action>
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_ottieniListaConti" class="completaValidaSubAccertamentoInsContoPrimaNotaIntegrataFINAction" method="ottieniListaConti">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+		</action>
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_ottieniListaContiIniziale" class="completaValidaSubAccertamentoInsContoPrimaNotaIntegrataFINAction" method="ottieniListaContiIniziale">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+		</action>
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_inserisciConto" class="completaValidaSubAccertamentoInsContoPrimaNotaIntegrataFINAction" method="inserisciConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_aggiornaConto" class="completaValidaSubAccertamentoInsContoPrimaNotaIntegrataFINAction" method="aggiornaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaSubAccertamentoInsPrimaNotaIntegrataFIN_eliminaConto" class="completaValidaSubAccertamentoInsContoPrimaNotaIntegrataFINAction" method="eliminaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<!-- SubImpegno -->
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN" class="completaValidaSubImpegnoInsPrimaNotaIntegrataFINAction">
+			<result name="success" type="redirectAction">completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_landOnPage</result>
+			<result name="input" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">true</param>
+			</result>
+		</action>
+		
+		
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_landOnPage" class="completaValidaSubImpegnoInsPrimaNotaIntegrataFINAction" method="landOnPage">
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_completeSalva" class="completaValidaSubImpegnoInsPrimaNotaIntegrataFINAction" method="completeSalva">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+		</action>
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_gestisciForward" class="completaValidaSubImpegnoInsPrimaNotaIntegrataFINAction" method="gestisciForward">
+			<result name="input">/jsp/contabilitaGenerale/primaNotaIntegrata/gestisciMovimentoReg.jsp</result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">true</param>
+			</result>
+		</action>
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_ottieniListaConti" class="completaValidaSubImpegnoInsContoPrimaNotaIntegrataFINAction" method="ottieniListaConti">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+		</action>
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_ottieniListaContiIniziale" class="completaValidaSubImpegnoInsContoPrimaNotaIntegrataFINAction" method="ottieniListaContiIniziale">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+		</action>
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_inserisciConto" class="completaValidaSubImpegnoInsContoPrimaNotaIntegrataFINAction" method="inserisciConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_aggiornaConto" class="completaValidaSubImpegnoInsContoPrimaNotaIntegrataFINAction" method="aggiornaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+		<action name="completaValidaSubImpegnoInsPrimaNotaIntegrataFIN_eliminaConto" class="completaValidaSubImpegnoInsContoPrimaNotaIntegrataFINAction" method="eliminaConto">
+			<result name="success" type="contoPrimaNotaIntegrata" />
+			<result name="input" type="json">
+				<param name="ignoreHierarchy">false</param>
+				<param name="includeProperties">errori.*, messaggi.*, informazioni.*</param>
+			</result>
+		</action>
+	</package>
+</struts>
+<!-- SIAC-5333: PACKAGE DUPLICATO DALLA COMPONENTE BILAPPLICATION: per ogni modifica, valutare se necessario ribaltala -->

@@ -1,0 +1,454 @@
+
+<!-- ***************** inclusione head portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+</head>
+<body>                       
+	<!-- NAVIGAZIONE -->
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- ***************** inclusione Banner portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--#include virtual="../navbarLogin.html" -->
+
+
+<!-- ***************** inclusione Banner applicativo *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+
+	<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Consulta Carta Contabile</li>
+		</ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">
+		
+			<form class="form-horizontal">
+			
+				<h3>Carta 2014/23568 - Carta contabile per anticipo fatture</h3>
+				
+				<ul class="nav nav-tabs">
+					<li><a href="FIN-consCartaContabile.shtml">Carta contabile</a></li>
+					<li class="active"><a href="FIN-consCartaQuote.shtml">Righe</a></li>
+				</ul>
+				
+				<h4 class="step-pane"><span class="num_result">50</span> Righe</h4>
+					
+				<fieldset class="form-horizontal">
+					<div class="containerQuote">
+					
+				
+						
+						<div class="accordion" id="accordionCartaQuote"> 
+						
+								<!-- **** 1 quota **** -->
+								<div class="accordion-group">                
+									<div class="accordion-heading">
+									<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionCartaQuote1" href="#cartaquota1">
+									N.1 - Imp: 2013-2013-12345 - Sogg: SORIN spa - Importo: 100,00<span class="icon">&nbsp;</span>
+									</a>
+									</div>
+									
+									<div id="cartaquota1" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<h4>Inserimento: xx/xx/xxxx (*********) - Ultima modifica: xx/xx/xxxx (*********)</h4>
+											
+											<div class="boxOrSpan2">
+											
+												<div class="boxOrInLeft">
+													<p>Quota</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Numero</dfn> 
+															<dl>x</dl>
+														</li>
+														<li>
+															<dfn>Conto Tesoreria</dfn> 
+															<dl>xxxxxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Descrizione</dfn> 
+															<dl>xxxxxxx xxxx xx xxxxxxx xxxx xx xxxxxxx xxxx</dl>
+														</li>
+														<li>
+															<dfn>Note</dfn> 
+															<dl>xxxxxx xxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Importo euro</dfn> 
+															<dl>999.000,00</dl>
+														</li>
+														<li>
+															<dfn>Importo estero</dfn> 
+															<dl>999.000,00 $</dl>
+														</li>
+														<li>
+															<dfn>Da regolarizzare</dfn> 
+															<dl>999.000,00</dl>
+														</li>
+													</ul>				
+												</div>
+																
+												<div class="boxOrInRight">
+													<p>Impegno</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Anno</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Numero</dfn> 
+															<dl>xxx</dl>
+														</li>
+														<li>
+															<dfn>Subimpegno</dfn> 
+															<dl>xxxxxx</dl>
+														</li>
+													</ul>	
+												</div>				
+											
+											</div>
+											
+											<div class="boxOrSpan2">
+											
+												<div class="boxOrInLeft">
+													<p>Capitolo</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Anno</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Numero</dfn> 
+															<dl>xxx</dl>
+														</li>
+														<li>
+															<dfn>Articolo</dfn> 
+															<dl>xxxxxx</dl>
+														</li>
+														<li>
+															<dfn>UEB</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+														<li>
+															<dfn>Descrizione</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+														<li>
+															<dfn>Struttura</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+														<li>
+															<dfn>Tipo finanziamento</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+													</ul>				
+												</div>
+																
+												<div class="boxOrInRight">
+													<p>Creditore</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Codice</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Ragione sociale</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Partita Iva</dfn> 
+															<dl>xxxxxxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Codice fiscale</dfn> 
+															<dl>xxxxxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Modalità di pagamento</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+													</ul>
+													
+												</div>				
+											
+											</div>
+											
+											<!-- risultati pagamenti collegati -->
+											<h4>Elenco Pagamenti </h4>
+											<table class="table table-hover tab_left">
+												<thead>
+													<tr>
+														<th>Documento</th>
+														<th>Descrizione</th>
+														<th>Provvedimento</th>	
+														<th class="tab_Right">Importo</th>
+													</tr>
+												</thead>
+													
+												<tbody>
+													<tr>				
+														<td>xxxxxxxx</td>
+														<td>xxxxxxxx</td>
+														<td> -</td>
+														<td class="tab_Right">200,00</td>
+													</tr>
+													<tr>				
+														<td>xxxxxxxx</td>
+														<td>xxxxxxxx</td>
+														<td> -</td>
+														<td class="tab_Right">100,00</td>
+													</tr>
+													<tr>				
+														<td>xxxxxxxx</td>
+														<td>xxxxxxxx</td>
+														<td> -</td>
+														<td class="tab_Right">350,00</td>
+													</tr>												
+												</tbody>
+											</table>
+		
+											<!-- end risultati pagamenti collegati -->
+											   
+											   
+										</div>
+									</div> 
+									
+								</div>      
+								<!-- **** / 1 quota **** -->
+									
+								<!-- **** 2 quota **** -->
+								<div class="accordion-group">                
+									<div class="accordion-heading">
+									<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionCartaQuote2" href="#cartaquota2">
+									N.2 - Imp: 2013-2013-44672 - Sogg: SORIN spa - Importo: 350,00<span class="icon">&nbsp;</span>
+									</a>
+									</div>
+									
+									<div id="cartaquota2" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<h4>Inserimento: xx/xx/xxxx (*********) - Ultima modifica: xx/xx/xxxx (*********)</h4>
+											<div class="boxOrSpan2">
+											
+												<div class="boxOrInLeft">
+													<p>Quota</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Numero</dfn> 
+															<dl>x</dl>
+														</li>
+														<li>
+															<dfn>Conto Tesoreria</dfn> 
+															<dl>xxxxxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Descrizione</dfn> 
+															<dl>xxxxxxx xxxx xx xxxxxxx xxxx xx xxxxxxx xxxx</dl>
+														</li>
+														<li>
+															<dfn>Note</dfn> 
+															<dl>xxxxxx xxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Importo euro</dfn> 
+															<dl>999.000,00</dl>
+														</li>
+														<li>
+															<dfn>Importo estero</dfn> 
+															<dl>999.000,00 $</dl>
+														</li>
+														<li>
+															<dfn>Da regolarizzare</dfn> 
+															<dl>999.000,00</dl>
+														</li>
+													</ul>				
+												</div>
+																
+												<div class="boxOrInRight">
+													<p>Impegno</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Anno</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Numero</dfn> 
+															<dl>xxx</dl>
+														</li>
+														<li>
+															<dfn>Subimpegno</dfn> 
+															<dl>xxxxxx</dl>
+														</li>
+													</ul>	
+												</div>				
+											
+											</div>
+											
+											<div class="boxOrSpan2">
+											
+												<div class="boxOrInLeft">
+													<p>Capitolo</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Anno</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Numero</dfn> 
+															<dl>xxx</dl>
+														</li>
+														<li>
+															<dfn>Articolo</dfn> 
+															<dl>xxxxxx</dl>
+														</li>
+														<li>
+															<dfn>UEB</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+														<li>
+															<dfn>Descrizione</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+														<li>
+															<dfn>Struttura</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+														<li>
+															<dfn>Tipo finanziamento</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+													</ul>				
+												</div>
+																
+												<div class="boxOrInRight">
+													<p>Creditore</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Codice</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Ragione sociale</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Partita Iva</dfn> 
+															<dl>xxxxxxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Codice fiscale</dfn> 
+															<dl>xxxxxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Modalità di pagamento</dfn> 
+															<dl>xxxxx</dl>
+														</li>
+													</ul>
+													
+												</div>				
+											
+											</div>
+											
+											<!-- risultati pagamenti collegati -->
+											<h4>Elenco Pagamenti </h4>
+											<table class="table table-hover tab_left">
+												<thead>
+													<tr>
+														<th>Documento</th>
+														<th>Descrizione</th>
+														<th>Provvedimento</th>	
+														<th class="tab_Right">Importo</th>
+													</tr>
+												</thead>
+													
+													<tbody>
+													<tr>				
+														<td>xxxxxxxx</td>
+														<td>xxxxxxxx</td>
+														<td> -</td>
+														<td class="tab_Right">200,00</td>
+													</tr>
+													<tr>				
+														<td>xxxxxxxx</td>
+														<td>xxxxxxxx</td>
+														<td> -</td>
+														<td class="tab_Right">100,00</td>
+													</tr>
+													<tr>				
+														<td>xxxxxxxx</td>
+														<td>xxxxxxxx</td>
+														<td> -</td>
+														<td class="tab_Right">350,00</td>
+													</tr>			  
+												</tbody>
+											</table>
+
+											<!-- end risultati pagamenti collegati -->
+											   
+											   
+										</div>
+									</div>                    
+								</div>      
+								<!-- **** /2 quota **** -->
+								
+						</div>
+
+					</div>
+				</fieldset>
+					
+				<div class="row pagination_conth">
+					<div id="risultatiricerca_info" class="span6">1 - 10 di 250 risultati</div>   
+						<div class="span6">                               
+							<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+								<ul>
+									<li><a href="#">« inizio</a></li>
+									<li><a href="#">« prec</a></li>
+									<li class="disabled"><a href="#">1</a></li>
+									<li class="active"><a href="#">2</a></li>
+									<li><a href="#">3</a></li>
+									<li><a href="#">4</a></li>
+									<li><a href="#">5</a></li>
+									<li><a href="#">succ »</a></li>
+									<li><a href="#"> fine »</a></li>
+								</ul>
+							</div>
+									
+						</div>  
+				</div>
+								
+				<div class="Border_line"></div>
+				  
+				<p><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a></p>     
+
+			</form>
+		  
+		</div>
+	</div>	 
+</div>	
+<!-- ***************** inclusione footer portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+</body>
+</html>

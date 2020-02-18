@@ -1,0 +1,186 @@
+<!--   ================== inclusione HEAD ==================== -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+<!--   ================== / fine inclusione HEAD ====================-->
+
+  </head>
+  <body>                       
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+      <li class="active">Emissione ordinativi di pagamento</li>
+    </ul> 
+  </div>	
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form method="get" action="#">
+        <!--#include virtual="include/alertErrorSuccess.html" -->
+        
+		<h3>Emissione ordinativi di pagamento</h3>
+		
+		<div id="MyWizard" class="wizard">
+			<ul class="steps">
+				<li data-target="#step1" class="active"><span class="badge">1</span>Ricerca dettagli<span class="chevron"></span></li>
+				<li data-target="#step2" ><span class="badge">2</span>Emissione<span class="chevron"></span></li>
+			</ul>
+		</div>	
+				
+		<div class="step-content">	   
+		<div class="step-pane active" id="step1">
+			<fieldset class="form-horizontal">
+			
+				<div class="control-group margin-medium">
+					<span class="control-label">Emetti per</span>
+					<div class="controls">
+						<label class="radio inline">
+						<input type="radio" name="radio_emissAtto" id="emissAtto" value="elenchi"  checked="checked">
+						elenchi allegato atto
+						</label>
+						<label class="radio inline">
+						<input type="radio" name="radio_emissAtto" id="emissAtto" value="dettaglio">
+						dettagli quote
+						</label>
+					</div>
+				</div>
+				
+				<div class="emissAllegatoAtto">
+					<!--#include virtual="include/provvedimento.html" -->
+				</div>
+				
+				<div class="emissDettaglioAtto" style="display:none">
+					
+					<!--#include virtual="include/elenco.html" -->
+					<!--#include virtual="include/capitolo.html" -->
+					<!--#include virtual="include/soggetto.html" -->
+					
+					<h4>Altri dati</h4>
+					<div class="control-group">
+						<label class="control-label">Distinta</label>
+						<div class="controls">            
+							<select class="lbTextSmall span6" name="distinta" id="distinta">
+								<option value="">Scadenze oltre mese successivo(seconda quindicina)</option>
+								<option value="">xxxxxxx</option>
+								<option value="">xxxxxxxxx</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				
+				<br>
+				
+            </fieldset>
+			
+		</div>
+		</div>
+		<!--#include virtual="include/modal.html" -->
+		
+			<p class="margin-medium">
+			<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> 
+			<a class="btn btn-secondary" href="">annulla</a> 		
+			<span class="pull-right">
+				<a class="btn btn-primary" onclick="SetUrlVar()" >prosegui</a>
+			</span>
+			</p>       
+			  
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+
+<script type="text/javascript">
+
+var linkURL = "FIN-RisEmissPagamento.shtml";
+
+$(function() {  
+ 
+var typeEmiss=$('input[name=radio_emissAtto]');
+        $(typeEmiss).click(function(){          
+           var optRad=$(this).filter(':checked').val();
+		   
+			if(optRad=="elenchi"){            
+				$('.emissDettaglioAtto').hide();
+				linkURL = "FIN-RisEmissPagamento.shtml";
+            }else{
+				$('.emissDettaglioAtto').show();
+				linkURL = "FIN-RisDettPagamento.shtml";
+            } 
+        });
+
+})	
+		
+function SetUrlVar(){
+ location.href = linkURL;
+
+}
+</script>
+
+</body>
+</html>

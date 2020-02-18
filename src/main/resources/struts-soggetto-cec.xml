@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	
+	<package namespace="/" extends="soggetto" name="soggettoCec">
+	
+
+
+  	 
+  	 	<action name="ricercaSoggettoCec" class="ricercaSoggettoCecAction">
+			<result name="success">/jsp/soggetto/cec/ricercaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/ricercaSoggettoCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">elencoSoggettiCec</result>			
+		</action>
+ 
+ 		<action name="elencoSoggettiCec" class="elencoSoggettiCecAction">
+			<result name="success">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
+			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
+		</action>
+  	 
+ 		<action name="inserisciSoggettoCec" class="inserisciSoggettoCecAction">
+			<result name="success">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciContattiCec</result>
+		</action>
+  	 
+  		<action name="inserisciContattiCec" class="inserisciContattiCecAction">
+			<result name="success">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggettoCec</result>
+			<result name="salva" type="redirectAction">salvaSoggettoCec</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+  	 
+  		<action name="salvaSoggettoCec" class="salvaSoggettoAction">
+			<result name="success">/jsp/soggetto/cec/salvaSoggettoCec.jsp</result>
+			<result name="indietroStep2" type="redirectAction">inserisciContattiCec</result>					
+		</action>
+  	 
+  	 
+  	 
+  	 	<action name="aggiornaSoggettoCec" class="aggiornaSoggettoCecAction">
+			<result name="success">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapitiCec</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggettoCec</result>	
+		</action>
+		
+		<action name="aggiornaRecapitiCec" class="aggiornaRecapitiCecAction">
+			<result name="success">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggettiCec</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+  	 
+  		<action name="consultaSoggettoCec" class="consultaSoggettoCecAction">
+			<result name="success">/jsp/soggetto/cec/consultaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/consultaSoggettoCec.jsp</result>
+		</action>
+  	 
+  	 
+	    <action name="modalitaPagamentoSoggettoCec" class="modalitaPagamentoSoggettoCecAction">
+	    	<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+	    </action>  	 
+
+	 </package>
+</struts>		

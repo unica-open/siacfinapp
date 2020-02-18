@@ -1,0 +1,113 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!-- Modal -->
+	<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+            
+              <div class="modal-body">
+                <div class="alert alert-error">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <p><strong>Attenzione!</strong></p>
+                  <p><strong>Elemento selezionato:.....</strong></p>
+                  <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+                <button class="btn btn-primary">si, prosegui</button>
+              </div>
+	</div>  
+<!--/modale elimina -->
+
+
+<!-- modal CercaRelazioneIVA -->
+		<div id="CercaRelazioneIVA" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="CercaRelazioneIVALABEL" aria-hidden="true">
+            <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="nostep-pane">Ricerca le attivit&agrave; iva</h4>	   
+			</div>
+			<div class="modal-body">
+				    <fieldset class="form-horizontal">
+						<table class="table table-hover tab_left" summary="...." >
+							<thead>
+								<tr>
+									<th>&nbsp;</th>
+									<th>Codice</th>
+									<th>Descrizione</th>	
+									<th>Rilevante IRAP</th>
+									<th>Gruppo attivit&agrave; iva </th>
+							   </tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="radio" name="RadioRelazioniIva" id="RadioRelazioniIva_1" /></td>
+									<td>01</td>
+									<td>Istruzione</td>
+									<td>SI</td>
+									<td>01-Attivit&agrave; non separate</td>
+								</tr>
+								<tr>
+									<td><input type="radio" name="RadioRelazioniIva" id="RadioRelazioniIva_2" /></td>
+									<td>02</td>
+									<td>Cultura</td>
+									<td>NO</td>
+									<td>01-Attivit&agrave; non separate</td>
+								</tr>
+								<tr>
+									<td><input type="radio" name="RadioRelazioniIva" id="RadioRelazioniIva_3" /></td>
+									<td>03</td>
+									<td>Trasporti funebri</td>
+									<td>NO</td>
+									<td>02-Trasporti funebri</td>
+								</tr>
+								<tr>
+									<td><input type="radio" name="RadioRelazioniIva" id="RadioRelazioniIva_4" /></td>
+									<td>04</td>
+									<td>Refezione scolastica</td>
+									<td>SI</td>
+									<td>01-Attivit&agrave; non separate</td>
+								</tr>
+								<tr>
+									<td><input type="radio" name="RadioRelazioniIva" id="RadioRelazioniIva_5" /></td>
+									<td>05</td>
+									<td>Pubblicti&agrave; </td>
+									<td>SI</td>
+									<td>01-Attivit&agrave; non separate</td>
+								</tr>
+							</tbody>
+							<tfoot>
+							</tfoot>
+						</table>
+						
+						<div class="row pagination_conth">
+							<div id="risultatiricerca_info" class="span5">1 - 10 di 50 risultati</div>   
+								<div class="span7">                               
+									<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+										<ul>
+											<li><a href="#">« inizio</a></li>
+											<li><a href="#">« prec</a></li>
+											<li class="disabled"><a href="#">1</a></li>
+											<li class="active"><a href="#">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">4</a></li>
+											<li><a href="#">succ »</a></li>
+											<li><a href="#"> fine »</a></li>
+										</ul>
+									</div>
+											
+								</div>  
+						</div> 
+									
+			
+					</fieldset>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">annulla</button>
+				<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">associa</button>
+			</div>
+			
+	</div> 
+	
+<!-- /end -->
+

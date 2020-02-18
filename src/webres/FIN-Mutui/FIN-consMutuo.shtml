@@ -1,0 +1,227 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+  
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+
+  <hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+  <div class="row-fluid">
+    <div class="span12">
+      <ul class="breadcrumb">
+        <li><a href="../">Home</a> <span class="divider">></span></li>
+        <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+        <li class="active">Consulta Mutuo</li>
+      </ul> 
+    </div>	
+  </div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">
+      <form class="form-horizontal">
+        <h3>Mutuo 0004 </h3>
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#mutuo" data-toggle="tab">Mutuo</a></li>
+          <li><a href="#vociMutuo" data-toggle="tab">Voci di mutuo</a></li>
+        </ul>
+    
+			<div class="tab-content">
+			  <div class="tab-pane active" id="mutuo">
+				<h4>Data inserimento: xxxx - <span class="alLeft">Data ultima modifica: xxxx</span></h4>
+				<div class="boxOrSpan2">
+					<div class="boxOrInLeft">
+						<p>Provvedimento</p>
+						<ul class="htmlelt">
+							<li>
+								<dfn>Anno</dfn> 
+								<dl>xxxx</dl>
+							</li>
+							<li>
+								<dfn>Numero</dfn> 
+								<dl>xxxxxx </dl>
+							</li>
+							<li>
+								<dfn>Tipo</dfn> 
+								<dl>xxxxxxx</dl>
+							</li>
+						</ul>
+						<p>Istituto mutuante</p>
+						<ul class="htmlelt">
+							<li>
+								<dfn>Codice</dfn> 
+								<dl>xxxxxx </dl>
+							</li>
+							<li>
+								<dfn>Codice Fiscale</dfn> 
+								<dl>xxxxxxxxx</dl>
+							</li>
+							<li>
+								<dfn>Partita IVA</dfn> 
+								<dl>xxxxxxxxx</dl>
+							</li>
+							<li>
+								<dfn>Denominazione</dfn> 
+								<dl>xxxxxxxxx xxx xxxxxx</dl>
+							</li>
+							<li>
+								<dfn>Classificatore</dfn> 
+								<dl>xxx </dl>
+							</li>
+							
+						</ul>					
+					</div>
+					
+
+					<div class="boxOrInRight">
+						<p>Dati mutuo</p>
+						
+						<ul class="htmlelt">
+							<li>
+								<dfn>Tipo</dfn> 
+								<dl>xxxxx</dl>
+							</li>
+							<li>
+								<dfn>Stato</dfn> 
+								<dl>xxxxx</dl>
+							</li>
+							<li>
+								<dfn>Num. Registrazione</dfn> 
+								<dl>xxxxx</dl>
+							</li>
+							<li>
+								<dfn>Descrizione</dfn> 
+								<dl>xxxxxxxx xxx xxxxxx</dl>
+							</li>
+							<li>
+								<dfn>Importo</dfn> 
+								<dl>xxxxx,xx</dl>
+							</li>
+							<li>
+								<dfn>Durata (anni)</dfn> 
+								<dl>x</dl>
+							</li>
+							<li>
+								<dfn>Data inizio</dfn> 
+								<dl>xx-xx-xxxx</dl>
+							</li>
+							<li>
+								<dfn>Data fine</dfn> 
+								<dl>xx-xx-xxxx</dl>
+							</li>
+							<li>
+								<dfn>Note</dfn> 
+								<dl>xxxxxx xxxxxxxxxx xxxxx xxxx xxxxxx xxxxxxxxxx xxxxx xxxx</dl>
+							</li>
+						</ul>
+
+					</div>				
+				</div>
+				
+				 
+				</div>
+				
+				<div class="tab-pane" id="vociMutuo">
+					<h4>Codice Ist. Mutuante xxxxxx - xxxxxxxxxxx </h4>			
+					<h4>Importo attuale:xxx - Totale impegnato:xxxx - Disponibile mutuo:xxx</h4>
+					<!--#include virtual="include/consTableMutui.html" -->  
+				</div>
+				
+			</div>
+			<!--#include virtual="include/modal.html" -->                                       
+			<p><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a></p>          
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

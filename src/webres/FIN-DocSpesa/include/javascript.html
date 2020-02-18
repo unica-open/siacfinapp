@@ -1,0 +1,59 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<script language="javascript">
+	var status="false";
+	function clickButtIn()
+	{	
+		if(status == "false"){
+		$(".titleTxt").text("Inserisci nuova quota");	
+		$("#insQuotaSPaccordon").fadeToggle( "slow", "linear" );
+		$('#NewQuoteSP').attr("disabled", true);
+		status= "true";
+		}else{};
+	};
+
+	function clickButtRip()
+	{
+		if(status == "false"){
+		$(".titleTxt").text("Ripeti quota");
+		$("#insQuotaSPaccordon").fadeToggle( "slow", "linear" );
+		$('#NewQuoteSP').attr("disabled", true);
+		status= "true";
+		}else{};
+	
+	};
+	
+	function clickButtOut()
+	{
+		if(status == "true"){	
+		$("#insQuotaSPaccordon").fadeToggle( "fast", "linear" );
+		$('#NewQuoteSP').attr("disabled", false);
+		status= "false";
+		}else{};
+
+	};
+	
+	
+	function clickButtInAgg()
+	{
+		if(status == "false"){
+		$("#aggQuotaSPaccordion").fadeToggle( "slow", "linear" );
+		$('#NewQuoteSP').attr("disabled", true);
+		status= "true";
+		}else{};
+	};
+	
+	function clickButtInAggOut()
+	{
+		if(status == "true"){
+		$("#aggQuotaSPaccordion").fadeToggle( "fast", "linear" );
+		$('#NewQuoteSP').attr("disabled", false);
+		status= "false";
+		}else{};
+
+	};
+  
+
+</script>

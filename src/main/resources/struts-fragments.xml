@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+"http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+
+	<package name="fragments" extends="default, json-default"
+		namespace="/fragments">
+
+		<action name="programmiMissioneOptions" class="programmiMissioneAction">
+			<result name="success">/jsp/fragments/programmiMissioneOptions.jsp</result>
+		</action>
+		
+		<action name="macroaggregatiTitoloSpesaOptions" class="macroaggregatiTitoloSpesaAction">
+			<result name="success">/jsp/fragments/macroaggregatiTitoloSpesaOptions.jsp</result>
+		</action>
+		
+		<action name="pianoDeiContiMacroaggregatoJSON" class="pianoDeiContiMacroaggregatoAction">
+			<result name="success" >/jsp/fragments/pianoDeiContiMacroaggregatoJSON.jsp</result>
+		</action>
+		
+		
+	
+		
+
+	</package>
+
+
+
+</struts>

@@ -1,0 +1,175 @@
+﻿   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>
+
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p> 
+	  <ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	  </ul>
+
+  <hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+  
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../index.shtml">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Aggiorna Documenti iva Spesa</li>
+		</ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form method="get" action="#" class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" --> 
+			<h3>FAT 2013/39/132829 - SORIS - Società riscossione S.p.A.</h3>
+			<h4>Stato: xxxxxx - Valido dal: xx/xx/xxxx</h4>	
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="FIN-aggDocIvaSpesa.shtml">Documenti iva spesa</a></li>
+					<li><a href="FIN-aggDatiIVA.shtml">Dati iva</a></li>
+				</ul>
+				
+				<div class="tab-content noOverflow">
+					<div class="tab-pane active" id="docSpesa">
+						<h4 class="step-pane">Dati principali</h4>
+
+						<div class="control-group">
+							<label class="control-label">Data *</label>
+							<div class="controls">			
+								<input id="DataIva" class="span2 datepicker" type="text" value="" name="DataIva"  placeholder="06/02/2014" required />
+							</div>
+						</div>
+						
+						<h4 class="step-pane">Dati importi</h4>
+
+						<div class="control-group">
+							<label class="control-label">Importo </label>
+							<div class="controls">
+								<input id="importoIva"  name="importoIva" class="span2" type="text" value="1000,00"  disabled="disabled" />
+							</div>
+						</div>
+
+						
+						<div class="control-group">
+							<label class="control-label">Descrizione</label>
+							<div class="controls">
+								<textarea rows="2" cols="15" id="descIva" name="descIva" value="xxxxxxx xx xxxx xxxxxxxxx " class="span10" ></textarea>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" >Data scadenza</label>
+							<div class="controls">
+								<input id="dataScadenzaIva" class="span2 datepicker" type="text" value="" placeholder="06/02/2014" name="dataScadenzaIva" />	
+							</div>
+						</div>
+						
+		
+						<div class="Border_line"></div>
+						<p>
+							<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+							<a class="btn btn-secondary" href="">annulla</a>
+							<a href="#" class="btn btn-primary pull-right">salva</a> 
+						</p>
+					</div>
+
+				</div>
+			<!--#include virtual="include/modal.html"-->
+		
+           
+        </form>
+    </div>
+</div>	 
+</div>	
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+ 
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

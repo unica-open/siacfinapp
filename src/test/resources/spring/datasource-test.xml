@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Data Source dev usata per test -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="org.postgresql.Driver" />
+		<property name="url" value="jdbc:postgresql://tst-domdb46.csi.it:5432/PGDEV02" />
+		<property name="username" value="siac" />
+		<property name="password" value="xefai2xa" />
+		<property name="poolPreparedStatements"><value>true</value></property>
+		<property name="maxActive"><value>1</value></property>
+		<property name="maxIdle"><value>1</value></property>
+	</bean>	
+	
+	
+	
+</beans>

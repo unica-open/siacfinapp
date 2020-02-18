@@ -1,0 +1,362 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>                       
+
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+<div class="container-fluid-banner">
+
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+      <li class="active">Risultato documenti e liquidazioni atto XXXXXX</li>
+    </ul> 
+  </div>	
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form class="form-horizontal">
+		<!--#include virtual="include/alertErrorSuccess.html" -->
+		
+		<h3>Risultato documenti e liquidazioni atto </h3>   
+		<fieldset class="form-horizontal">
+		<div class="step-content">	   
+			<div class="step-pane active" id="step1">
+				<h4 class="nostep-pane">Anno: <span class="infoTitleh4">2013</span> - Numero: <span class="infoTitleh4">132435</span></h4>
+				<h4 class="nostep-pane">Struttura: <span class="infoTitleh4">007 - DIR. CENTR. PATRIMONIO, COMMERCIO E SISTEMA INFORMATIVO</span> </h4>	
+				<div class="control-group">
+					  <label class="control-label" for="elenchiAnno">Elenchi anno</label>
+					  <div class="controls">  
+						<input id="elenchiAnno" name="elenchiAnno" class="lbTextSmall span1"  maxlength="4" type="text" value="2013" disabled="disabled" />
+						<span class="alRight">
+						  <label class="radio inline" for="daNum">Da numero </label>
+						</span>
+						<input id="daNum" name="daNum" class="lbTextSmall span2" type="text" value="" disabled="disabled" />  
+						<span class="alRight">
+						  <label class="radio inline" for="aNum">a numero</label>                
+						</span>
+						<input id="aNum" name="aNum" class="lbTextSmall span2" type="text" value="" disabled="disabled" />   
+					  </div>
+				</div>
+				
+				
+				<div class="control-group">
+                    <label class="control-label" for="annoda2">Capitolo</label>
+                    <div class="controls">
+                    
+                        <input id="capitolo" name="capitolo" maxlength="20" class="lbTextSmall span2" type="text" value="1000" disabled="disabled" />
+                        <span class="alRight">
+                        	<label class="radio inline" for="articolo">Articolo </label>
+                        </span>
+                        <input id="articolo" name="articolo" class="lbTextSmall span2" type="text" value="10" disabled="disabled" />
+                        
+                        <span class="alRight">
+                       		 <label class="radio inline" for="ueb">UEB </label>
+                        </span>
+                        <input id="ueb" name="ueb" class="lbTextSmall span2" type="text" value="" disabled="disabled" />
+
+                    </div>
+                </div>
+			</div>
+		</div>	
+				
+		             
+			<h4 class="step-pane">Elenco documenti e liquidazioni convalidate</h4>
+			<h4><span class="num_result">19527</span> Risultati trovati</h4>   
+            
+			<table class="table table-hover tab_left dataTable" summary="...." >
+			<thead>
+				<tr>
+					<th><input type="checkbox" onchange="checkAll()" name="chk[]" class="tooltip-test" title="Seleziona tutti" /></th>
+					<th>Atto</th>
+					<th>Elenco</th>
+					<th>Creditore</th>
+					<th>Documento</th>
+					<th>Quota</th>
+					<th>Anno liq.</th>
+					<th>Liq.</th>
+					<th>Capitolo</th>
+					<th>Impegno</th>
+					<th>Descrizione</th>
+					<th>Distinta</th>
+					<th>Conto tesoriere</th>	
+					<th class="tab_Right">Importo</th>			
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013/DB15/1000</td>
+					<td>2013/1253</td>
+					<td>STEAM SRL</td>
+					<td>2013/FAT/230</td>
+					<td>1</td>
+					<td>2013</td>
+					<td>34</td>
+					<td>10000/10</td>
+					<td>2013/12</td>
+					<td>Servizio .... xxxx xxxxx</td>
+					<td>ORD</td>
+					<td>ASL</td>
+					<td class="tab_Right">2.000,00</td>
+				</tr>
+				
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013/DB15/1000</td>
+					<td>2013/1212</td>
+					<td>SARA S.R.L.</td>
+					<td>2012/NOT/1021</td>
+					<td>1</td>
+					<td>2013</td>
+					<td>35</td>
+					<td>10000/10</td>
+					<td>2013/34</td>
+					<td>ACQUISTO  .. .... xxxx xxxxx xxxxx </td>
+					<td>URG</td>
+					<td>xxxx</td>
+					<td class="tab_Right">8.000,00</td>
+				</tr>
+				
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013/DB15/1000</td>
+					<td>2013/555</td>
+					<td>AR.CA SRL</td>
+					<td>2013/FAT/02135</td>
+					<td>3</td>
+					<td>2013</td>
+					<td>26</td>
+					<td>10000/10</td>
+					<td>2013/67</td>
+					<td>PRESTAZIONE   .. .... xxxx xxxxx</td>
+					<td>xxx</td>
+					<td>xxxx</td>
+					<td class="tab_Right">10.000,00</td>
+				</tr>
+			  
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013</td>
+					<td>1253</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxxxxx</td>
+					<td>xxxx</td>
+					<td class="tab_Right">xxxxxxx</td>
+				</tr>
+				  
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013</td>
+					<td>1253</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxx</td>
+					<td>xxxxxxx</td>
+					<td>xxxx</td>
+					<td class="tab_Right">xxxxxxx</td>
+				</tr>
+			
+			 
+			</tbody>
+			<tfoot>
+				<th colspan="12" >Totale</th>
+				<th class="tab_Right"  colspan="12">20.000.00</th>
+			</tfoot>
+			</table>
+			<div class="row pagination_conth">
+				  <div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+				  <div class="span6">                               
+					<div id="paginazione2" class="dataTables_paginate paging_bootstrap pagination">
+					  <ul>
+						<li><a href="#">&laquo; inizio</a></li>
+						<li><a href="#">&laquo; prec</a></li>
+						<li><a href="#">1</a></li>
+						<li class="active"><a href="#">2</a></li>
+						<li><a href="#">3</a></li>
+						<li><a href="#">4</a></li>
+						<li><a href="#">5</a></li>
+						<li><a href="#">succ &raquo;</a></li>
+						<li><a href="#"> fine &raquo;</a></li>              
+					  </ul>
+					</div>         
+				  </div>  
+			</div> 
+			<div class="Border_line"></div>
+			
+			<p><a class="btn btn-primary pull-right" href="">applica a selezionati</a> </p>
+			<div class="clear"></div>
+			<br>
+		
+			
+				<div class="step-content">	   
+					<div class="step-pane active" id="step1">
+					<h4 >DATI COMPLESSIVI ALL'EMISSIONE</h4>
+					
+					<table class="table table-hover tab_left dataTable" summary="...." >
+						<thead>
+							<tr>
+								<th class="ReportTable">Totale</th>
+								<td class="ReportTable" ><span class="marginLeft2">20.000,00</span></td>
+							</tr>
+							<tr>
+								<th class="ReportTable">Nota dell'Ordinativo</th>
+								<td>
+			
+									<div> 
+									
+										<span class="marginLeft2">									
+										<input id="stato" name="stato" class="lbTextSmall span10" type="text" value="" />
+										</span>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th class="ReportTable">Eventuale sostituzione informazioni presenti</th>
+								<td>
+							
+									<div> 
+									<span class="alRight">
+										<label class="radio inline" for="distinta">Distinta </label>
+									</span>								
+										<select class="lbTextSmall span3">
+											<option>xxxxxxxx</option>
+											<option>xxxxxxx</option>
+											<option>xxxxxxxxx</option>
+										</select>
+										<span class="alRight">
+											<label class="radio inline" for="CCtesoriere"> Conto Tesoriere </label>
+										</span>
+										<select class="lbTextSmall span5">
+											<option>xxxxxxxxxx</option>
+											<option>xxxxxxxxxx</option>
+											<option>xxxxxxxx</option>
+										</select>
+										
+									</div>
+								
+								</td>
+							</tr>							
+							
+						</thead>
+						<tbody>			
+						</tbody>
+					</table>
+					
+					</div>
+				</div>
+			
+			</fieldset>
+		<p class="margin-medium"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> </p>       
+          
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+	
+	<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+	<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+   
+	
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+	<!--#include virtual="../../ris/servizi/siac/include/myCheckbox.html" -->
+	<!--#include virtual="include/javascriptTable.html" --> 
+
+
+</body>
+</html>

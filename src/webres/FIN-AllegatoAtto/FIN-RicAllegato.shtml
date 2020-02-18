@@ -1,0 +1,183 @@
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--       
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+                       
+<!-- NAVIGAZIONE -->
+<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+<!-- /NAVIGAZIONE -->
+
+<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+			<li class="active">Ricerca allegato atto</li>
+		</ul> 
+	</div>	
+</div>
+ 
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">  
+		
+			<form method="get" action="#" class="form-horizontal"> 
+			
+				<!--#include virtual="include/alertErrorSuccess.html" -->
+				<h3>Ricerca allegato atto</h3>
+				<p>&Egrave; necessario inserire almeno un criterio di ricerca.</p>  
+				
+				<div class="step-content">
+					<div class="step-pane active" id="step1"> <br/>
+						
+						<p><a href="FIN-RisRicAllegati.shtml" class="btn btn-primary pull-right">cerca</a></p> 
+					
+						<h4>Dati</h4>
+						<div class="control-group">
+							<label class="control-label">Causale</label>
+							<div class="controls">   
+							  <input id="Causale" name="Causale" class="span9" type="text" value="" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Stato</label>
+							<div class="controls">   
+								<select id="stato" class="span6" name="stato">
+									<option value="">Da completare</option>
+									<option value="">Completato</option>
+									<option value="">Annullato</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Data scadenza</label>
+							<div class="controls">   
+									<span class="al">
+										<label class="radio inline">Da</label>
+									</span>
+									<input id="DataScad_Da" name="DataScad_Da" class="span2 datepicker" type="text" value="" /> 
+									<span class="al">
+										<label class="radio inline">A</label>
+									</span>
+									<input id="DataScad_A" name="DataScad_A" class="span2 datepicker" type="text" value="" />
+								</div>
+						</div>
+						
+						<!--#include virtual="include/provvedimento.html" -->
+						<!--#include virtual="include/soggetto.html" -->
+						
+						<h4>Elenco</h4> 
+						<fieldset class="form-horizontal margin-large">
+							<div class="control-group">
+								<label class="control-label">Anno</label>
+								<div class="controls">   
+									<input id="annoElenco" name="annoElenco" class="span1" type="text" value="" maxlength="4"/>
+									<span class="al">
+										<label class="radio inline">Numero</label>
+									</span>
+									<input id="numeroElenco" name="numeroElenco" class="span2" type="text" value="" /> 
+									<span class="radio guidata"><a href="#associaElenco" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
+								</div>
+							</div>
+							
+						</fieldset>  
+						  
+						<!--#include virtual="include/modal.html" --> 
+			 
+					</div>
+				</div>
+				
+				<p class="margin-medium">
+					<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+					<a class="btn btn-secondary">annulla</a>
+					<a href="FIN-RisRicAllegati.shtml" class="btn btn-primary pull-right">cerca</a> 
+				</p>
+			  
+			</form> 
+		  
+		</div>	
+	</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

@@ -1,0 +1,259 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>                       
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXXX</a> <span class="divider">></span></li>
+      <li class="active">Aggiorna redisposizione di Incasso</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form class="form-horizontal">
+       
+	
+        <!--#include virtual="include/alertErrorSuccess.html" -->
+		<h3>Predocumento: ......................</h3>
+		<h4>Stato: xxxxxx - Valido dal: xx/xx/xxxx</h4>
+        <div class="step-content">
+          <div class="step-pane active" id="step1">    
+			<h4>Dati Predisposizione</h4>
+            <fieldset class="form-horizontal margin-large">
+				<div class="control-group">
+					<label class="control-label" for="competenzaEN">Competenza *</label>
+					<div class="controls">
+					
+					  <input id="competenzaDataEN" name="competenzaDataEN" class="span2 datepicker" placeholder="12/05/2013" type="text" value="" required />
+					  &nbsp;
+					
+					  <input id="competenzaPeriodoEN" name="competenzaPeriodoEN" class="span2" placeholder="201305" type="text" value="" required />                     
+					</div>
+				</div>
+				
+				
+				<div class="control-group">
+					<label class="control-label">Struttura Amministrativa</label>
+					<div class="controls">                    
+						<div class="accordion span9" class="struttAmm">
+						  <div class="accordion-group">
+							<div class="accordion-heading">    
+							  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmm" href="#2">
+							  Seleziona la Struttura amministrativa</a>
+							</div>
+							<div id="2" class="accordion-body collapse">
+							  <div class="accordion-inner">
+							   <ul id="treeStruttAmm2" class="ztree treeStruttAmm"></ul>
+							  </div>
+							</div>
+						  </div>
+						</div>
+					</div>
+				</div>  
+         
+		
+				
+				<div class="control-group">
+					<label class="control-label" for="tipoCausaleEntrata">Tipo causale *</label>
+					<div class="controls">
+					  <select name="tipoCausaleEntrata" id="tipoCausaleEntrata" class="span9" required>
+							<option value="" >Seleziona il tipo</option>
+							<option value="" >xxxxxxxxxxx</option>
+							<option value="" >xxxxx</option>
+					  </select>                                    
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="CausaleEntrata">Causale *</label>
+					<div class="controls">
+					  <select name="CausaleEntrata" id="CausaleEntrata" class="span9" required >
+					  <option value="" >Seleziona la causale</option>
+					  <option value="" >Incendi boschivi</option>
+					  <option value="" >xxxxx</option></select>                                    
+					</div>
+				</div>
+			  
+				<div class="control-group">
+					<label class="control-label" for="contoCorrenteEntrata">Conto corrente *</label>
+					<div class="controls">
+						<select name="contoCorrenteEntrata" id="contoCorrenteEntrata" class="span9" required>
+							<option value="" >Seleziona il conto corrente</option>
+							<option value="" >201305</option>
+							<option value="" >xxxxx</option>
+						</select>
+					                
+					</div>
+				</div>
+	
+			<!--#include virtual="include/anagraficaSoggetto.html" -->
+				
+			<h4>Estremi pagamento</h4>              
+				<!--#include virtual="include/provvisorioCassa.html" -->
+				<div class="control-group">
+					<label class="control-label" for="DataEsecuzioneEntrata">Data esecuzione *</label>
+					<div class="controls">
+					  <input id="DataEsecuzioneEntrata" name="DataEsecuzioneEntrata" class="span2 datepicker" type="text"  placeholder="12/05/2013" value="" required/>                    
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="importoPREEntrata">Importo *</label>
+					<div class="controls">
+					  <input id="importoPREEntrata" name="importoPREEntrata" class="span2" type="text"  value="" required/>
+					                   
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="DescrizionePREentrata">Descrizione </label>
+					<div class="controls">                  
+					  <textarea rows="1" cols="15"  id="DescrizionePREentrata" name="DescrizionePREentrata" class="span9" type="text" ></textarea>                     
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="CodiceIUV">Codice <abbr title="Identificativo univoco di versamento">IUV</abbr> </label>
+					<div class="controls">
+					  <input id="CodiceIUV" name="CodiceIUV" class="span5" type="text" value=""/>                     
+					</div>
+				</div>
+			  
+				<div class="control-group">
+					<label class="control-label" for="notePREentrata">Note </label>
+					<div class="controls">                  
+					  <textarea id="notePREentrata" name="notePREentrata" rows="3" cols="15"  class="span9" type="text" ></textarea>                     
+					</div>
+				</div>
+				
+				
+				<div class="accordion" id="soggetto1">
+                <div class="accordion-group">
+                  <div class="accordion-heading">    
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#soggetto1" href="#ImpCont">
+                     Imputazioni contabili<span class="icon">&nbsp;</span>
+                    </a>
+                  </div>
+                  <div id="ImpCont" class="accordion-body collapse">
+                    <div class="accordion-inner"> 
+                   
+					<!--#include virtual="include/capitolo.html" -->
+					<!--#include virtual="include/accertamento.html" -->
+					<!--#include virtual="include/debitore.html" -->
+					<!--#include virtual="include/provvedimento.html" -->
+                    </div>
+                  </div>
+                </div>
+              </div>     
+               </fieldset>
+            
+            
+            <!-- Modal -->
+            <!--#include virtual="include/modal.html" --> 
+            <!-- Fine Modal -->
+           </div>
+        </div>
+      
+		<p class="margin-medium">
+			<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+			<a class="btn btn-secondary" href="">annulla</a>    
+			<a class="btn btn-primary pull-right" href="FIN-AggPreDocumento.shtml">salva</a>  
+		</p>       
+          
+		</form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

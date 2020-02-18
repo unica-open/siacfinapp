@@ -1,0 +1,508 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Inserimento modalit&agrave; di pagamento</li>
+    </ul> 
+    </div>	
+	</div>
+    <div class="container-fluid">
+<div class="row-fluid">
+
+   
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+         <ul class="nav nav-tabs">
+     <li>
+    <a href="FIN-AggSoggetto.shtml">Soggetto</a>
+    </li>
+  <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+    <li><a href="FIN-AggSedi.shtml">Sedi Secondarie</a></li>
+    <li class="active"><a href="BIL_AggPagamenti.shtml">Modalit&agrave; pagamento</a></li>
+    </ul>
+     
+           <h4>Modalit&agrave; pagamento</h4>
+                 <table summary="riepilogo indirizzo" class="table tableHover">
+                     
+                      <tr>
+                        <th>Modalit&agrave;</th>
+                        <th> <abbr title="progressivo">Associato a</abbr> </th>
+                        <th>Stato</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                      <tr>
+                        <td><a href="#" data-trigger="hover" rel="popover" title="IBAN" data-content="IBAN ITI2a0000000089012 ">CB - Conto corrente bancario</a></td>
+                        <td> Soggetto</td>
+                        <td>valido</td>
+                        <td><div class="btn-group">
+             <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+           <ul class="dropdown-menu pull-right">
+               <li><a href="#inscontocorr" data-toggle="collapse" data-target="#inscontocorr">aggiorna</a></li>
+               <li><a href="FIN_valPagamenti.shtml">valida</a></li>
+             <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+             <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+             <li><a href="#consPag" data-toggle="modal">consulta</a></li>
+           </ul>
+         </div></td>
+                      </tr>
+                      <tr class="newline">
+                        <td><a href="#" data-trigger="hover" rel="popover" title="cessione" data-content="1200- istituo AAAA ">CC - cessione credito</a></td>
+                        <td>Sede secondaria</td>
+                        <td>annullato</td>
+                        <td><div class="btn-group">
+             <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+           <ul class="dropdown-menu pull-right">
+               <li><a href="#inscessione" data-toggle="collapse" data-target="#inscessione">aggiorna</a></li>
+               <li><a href="FIN_valPagamenti.shtml">valida</a></li>
+             <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+             <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+             <li><a href="#consPag" data-toggle="modal">consulta</a></li>
+           </ul>
+         </div></td>
+                      </tr>
+                       <tr class="newline">
+                        <td><a href="#" data-trigger="hover" rel="popover" title="contante" data-content="CF - Quietanzante ">contanti</a></td>
+                        <td>soggetto</td>
+                        <td>valido</td>
+                        <td><div class="btn-group">
+             <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+           <ul class="dropdown-menu pull-right">
+               <li><a href="#inscontante" data-toggle="collapse" data-target="#inscontante">aggiorna</a></li>
+                <li><a href="FIN_valPagamenti.shtml">valida</a></li>
+             <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+             <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+             <li><a href="#consPag" data-toggle="modal">consulta</a></li>
+           </ul>
+         </div></td>
+         </tr>
+        </table>
+                    
+ <div id="consPag" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="consPag" aria-hidden="true">
+ <div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<h3>Modalit&agrave; di pagamento: xxxx</h3>
+</div>
+<div class="modal-body">
+          <dl class="dl-horizontal">
+           
+
+
+			<dt>Tipo Accredito</dt>
+             <dd>xxx</dd>
+ 			<dt>Stato modalità</dt>
+             <dd>xxx</dd>           
+			  <dt>Swift/Bic</dt>
+         		<dd>xxxx</dd>
+                
+                  <dt>Stato</dt>
+         <dd>xxx</dd>             
+
+		<!--	<dt>Ricorrente</dt>
+	        <dd>xxxx     Percentuale %</dd> -->
+            
+  			 <dt>IBAN</dt>
+		    <dd>xxxx</dd>
+ 			<dt>Numero conto</dt>
+	        <dd>xxx</dd>
+           
+			 <dt>Note</dt>
+		    <dd>xxxx</dd> 
+            <dt>Data scadenza</dt>
+		    <dd>xxxx</dd>
+            
+            </dl>       
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">chiudi</button>
+</div>
+</div>                                       
+
+<p class="margin-medium"><a class="btn" href="#inseriscipag" data-toggle="collapse" data-target="#inseriscipag">inserisci nuove modalit&agrave;</a></p>
+
+ <div id="inseriscipag" class="collapse">
+    <div class="accordion_info"> 
+       <fieldset class="form-horizontal">
+	   
+	                  
+           <div class="control-group">
+                <label class="control-label" for="tipoind">Associato a *</label>
+				<div class="controls">
+                  <select id="tipoind" name="tipoind">
+				  <option>sede 1</option>
+				  <option>sede 2</option>
+				  <option>sede 3</option>
+				  
+	         </select>
+	       </div>
+				</div>
+	   
+         <div class="control-group">
+                <label class="control-label" for="tipoind">Tipo accredito *</label>
+				<div class="controls">
+                  <select id="tipoind" name="tipoind">
+				  <option href="#inscontocorr" data-toggle="collapse" data-target="#inscontocorr">coordinate bancarie</option>
+				  <option href="#inscontocorr" data-toggle="collapse" data-target="#inscontocorr">conto corrente</option>
+				  <option href="#inscontocorr" data-toggle="collapse" data-target="#inscontocorr">banca Italia</option>
+				  <option href="#inscontante" data-toggle="collapse" data-target="#inscontante">contanti</option>
+				  <option href="#inscessione" data-toggle="collapse" data-target="#inscessione">cessione credito</option>
+	</select>
+	</div>
+   </fieldset>                     
+
+
+  
+  </div></div>
+                     
+                     
+       
+
+
+<!--<div class="btn-group">
+             <button class="btn dropdown-toggle" data-toggle="dropdown">inserisci nuove modalit&agrave;<span class="caret"></span></button>
+           <ul class="dropdown-menu pull-right">
+               <li><a href="#inscontocorr" data-toggle="collapse" data-target="#inscontocorr">conto corrente</a></li>
+             <li><a href="#inscontanti" data-toggle="collapse" data-target="#inscontanti">contanti</a></li>
+             <li><a href="#inscessione" data-toggle="collapse" data-target="#inscessione">cessione credito</a></li>
+            
+           </ul>
+         </div>
+ --><!-- <p>
+         <a class="btn"  data-toggle="collapse" data-target="#insInd">inserisci nuove modalit&agrave;</a>
+        </p>  --> 
+                                           
+ <div id="inscontocorr" class="collapse">
+     <div class="accordion_info"> 
+       <fieldset class="form-horizontal">
+
+				
+             <div class="control-group">
+                <label class="control-label" for="iban">IBAN </label>
+                <div class="controls"><input id="iban" name="iban" type="text" class="span3"/></div>
+                <label class="control-label" for="bic">BIC </label>
+                <div class="controls"><input id="bic" name="bic" type="text" class="span3"/></div>
+
+				</div>
+                                                    
+            <div class="control-group">
+                <label class="control-label" for="conto">Numero conto</label>
+                <div class="controls">
+                <input id="conto" name="conto" type="text" class="span3"/></div>
+            </div>
+			             
+               <div class="control-group">
+                <label class="control-label" for="scadenza">Data scadenza</label>
+                <div class="controls">
+                <input id="scadenza" name="scadenza" type="text" class="span3"/></div>
+            </div> 
+
+             <div class="control-group">
+                <label class="control-label" for="notee">Note</label>
+                <div class="controls"> <textarea id="notee" class="span3"></textarea></div>
+            </div>
+           
+  </fieldset>                     
+  <p><a class="btn btn-link" href="">annulla inserimento</a>    <a class="btn" href="#"  data-toggle="collapse">salva</a>  </p> </div></div> 
+              
+<div id="inscontante" class="collapse">
+     <div class="accordion_info"> 
+       <fieldset class="form-horizontal">
+               
+                
+             <div class="control-group">
+                <label class="control-label" for="nomevia">Codice fiscale</label>
+                <div class="controls"><input id="nomevia" name="nomevia" type="text" class="span3"/></div>
+		    </div>
+                                                    
+            <div class="control-group">
+                <label class="control-label" for="conto">Quietanzante</label>
+                <div class="controls">
+                <input id="conto" name="conto" type="text" class="span3"/></div>
+            </div>
+             
+               <div class="control-group">
+                <label class="control-label" for="scadenza">Data scadenza</label>
+                <div class="controls">
+                <input id="scadenza" name="scadenza" type="text" class="span3"/></div>
+            </div> 
+            
+			<div class="control-group">
+                <label class="control-label" for="notee">Note</label>
+                <div class="controls"> <textarea id="notee" class="span3"></textarea></div>
+            </div>
+             
+			
+  </fieldset>                     
+  <p><a class="btn btn-link" href="">annulla inserimento</a>    <a class="btn" href="#"  data-toggle="collapse">salva</a>  </p> </div></div> 			  
+                     
+                     
+                     
+                     
+    <!--- per la gestione del credito si visualizzerà solo questo-->                 
+   <div id="inscessione" class="collapse" >
+   <div class="accordion_info"> 
+ 
+
+           <h5>Cerca Soggetto</h5>
+             <fieldset class="form-horizontal">
+                    <div class="control-group">
+                <label class="control-label" for="Codice">Codice</label>
+                <div class="controls">
+              <input id="Codice" name="Codice" type="text" class="span4"/>
+                <label for="den" class="radio inline">Denominazione</label>
+               
+                	<input id="den" name="den" class="span6 required" type="text"/>
+              </div>
+          </div>
+            <div class="control-group">
+                <label class="control-label" for="iva">Partita IVA</label>
+                 <div class="controls">
+                 	<input id="iva" name="iva" class="span4 required" type="text"/>
+             
+                <label  class="radio inline" for="codfisc">Codice Fiscale</label>
+               
+                	<input id="codfisc" name="codfisc" class="span6 required" type="text"/>
+              </div>
+          </div>
+
+</fieldset>
+ <p><a class="btn btn-link" href="">annulla</a>    <input class="btn" type="button" value="cerca"/>  </p>
+   <h5>Risultati della ricerca per XXXXXXX </h5>     
+    <table class="table table-hover" summary="...." >
+
+								<thead>
+								  <tr>
+									
+									<th scope="col">Codice</th>
+									<th scope="col">Cod. Fiscale</th>
+									<th scope="col">Partita IVA</th>
+                                    <th scope="col">Denominazione</th>
+									<th scope="col">Stato</th>
+								  </tr>
+								</thead>
+								<tbody>
+								  <tr>
+									<td scope="row"> <label for="file_0"><input type="radio" name="file_2" id="file_0" /> xxx</label></td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                  </tr>
+								 <tr>
+									<td scope="row"> <label for="file_2"><input type="radio" name="file_2" id="file_2" /> xxx</label></td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                  </tr> <tr>
+									<td scope="row"> <label for="file_3"><input type="radio" name="file_2" id="file_3" /> xxx</label></td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                    <td>xxx</td>
+                                    </tr>
+								</tbody>
+								</table>  
+                                 <p><a class="btn btn-link" href="">annulla</a>    <input class="btn" type="button" value="seleziona soggetto"/>  </p>                      
+               <h5>Soggetto selezionato: denominazione + codice fiscale o partita iva</h5>
+               <fieldset class="form-horizontal">   
+                                   
+               <div class="control-group">
+                <label class="control-label" for="pagamento">Modalit&agrave; di pagamento</label>
+                <div class="controls"><select id="pagamento" name="pagamento" class="span3"><option>tipo 1</option><option>tipo 2</option><option>tipo 3</option><option>tipo 4</option></select></div>
+            </div>
+                 <div class="control-group">
+                <label class="control-label" for="notee">Note</label>
+                <div class="controls"> <textarea id="notee" class="span3"></textarea></div>
+            </div>
+             
+               <div class="control-group">
+                <label class="control-label" for="scadenza">Data scadenza</label>
+                <div class="controls">
+                <input id="scadenza" name="scadenza" type="text" class="span3"/></div>
+            </div> 
+               <!--   <div class="control-group">
+                <label class="control-label" for="pagamento">Modalit&agrave; pagamento</label>
+                <div class="controls">
+                <select id="pagamento" name="pagamento"><option>&nbsp;</option>
+                                                      <option>xxx</option>
+                  </select></div>
+            </div> -->
+                    
+         </fieldset>  
+                     
+                     
+                     
+                     
+                     
+                     <p><a class="btn btn-link" href="">annulla inserimento</a>    <a class="btn" href="#"  data-toggle="collapse">salva</a>  </p>
+
+                        </div>     </div>
+                        
+                        
+                        
+      <div class="alert alert-success margin-medium">
+    		<button type="button" class="close" data-dismiss="alert">&times;</button>
+   				
+           
+
+			I dati sono stati inseriti correttamente
+
+    	</div>   
+
+<!-- Modal -->
+<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+<!--<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Attenzione</h3>
+</div> -->
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+<!--/modale elimina -->
+<!-- Modal -->
+<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+  <!--/modale annulla -->       
+                                          
+           <!--  <p class="margin-medium"><input class="btn" type="button" value="indietro"/>   <a class="btn btn-link" href="">annulla</a><a href="#" class="btn btn-primary pull-right">salva</a> </p> -->
+                         <p><input class="btn" type="button" value="indietro"/>   </p>
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

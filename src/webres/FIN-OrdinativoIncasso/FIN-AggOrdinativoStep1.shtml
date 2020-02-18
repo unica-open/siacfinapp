@@ -1,0 +1,189 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>                       
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+    <!--#include virtual="../../ris/servizi/siac/include/navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+  <div class="span12">
+   <ul class="breadcrumb">
+		  <li><a href="../">Home</a> <span class="divider">></span></li>
+		  <li><a href="../index.shtml">xxxxx</a> <span class="divider">></span></li>
+		  <li class="active">Aggiornamento ordinativo</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form class="form-horizontal">
+         <!--#include virtual="include/alertErrorSuccess.html" -->
+		<h3>Ordinativo 123000 del 31/11/2014 - Descrizione dell'ordinativo 123000</h3>
+        <dl class="dl-horizontal">
+			<dt>Capitolo <a class="tooltip-test" href="#capitoloTab" data-toggle="modal" data-original-title="Visualizza dettagli"><i class="icon-info-sign">&nbsp;<span class="nascosto">Visualizza dettagli</span></i></a></dt>
+			<dd>Anno/numero/ueb  - descrizione  - codice della  struttura amministrativo contabile - tipo Finanziamento: xxxx</dd>              
+			<dt>Provvedimento</dt>
+			<dd>anno/numero – tipo – oggetto – codice della struttura amministrativo contabile -  Stato: Operativo</dd>
+			<dt>Soggetto</dt>
+			<dd>Soggetto codice - denominazione – CF: codiceFiscale – PIVA : partitaIVA</dd>
+			<dt>Transazione elementare</dt>
+			<dd>xxxxxxxxxxxxxxxxxxxxxxx</dd>
+		</dl>	
+       
+		<div id="MyWizard" class="wizard">
+			<ul class="steps">
+				<li data-target="#step1" class="active"><span class="badge">1</span>Dati ordinativo<span class="chevron"></span></li>
+				<li data-target="#step2"><span class="badge">2</span>Quote ordinativo<span class="chevron"></span></li>
+				<li id="MySteps" data-target="#step3"><span class="badge">3</span>Provvisori di cassa<span class="chevron"></span></li>
+			</ul>
+        </div>
+		
+        <div class="step-content">
+          <div class="step-pane active" id="step1">  
+				  
+            	<h4 class="step-pane">Debitore: 12456 - Mario Rossi</h4>
+				<fieldset class="form-horizontal">
+					<!--#include virtual="include/sediSecondarie.html" --> 
+					
+				</fieldset>
+                                                                                        
+           
+            <!--#include virtual="include/datiEntita.html" --> 
+            <!--#include virtual="include/classificatori.html" --> 
+            
+            <!--#include virtual="include/modal.html" --> 
+     
+          </div>
+        </div>
+		   
+            <p class="margin-medium">
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+				<a class="btn btn-secondary" href="">annulla</a>    
+				<span class=" pull-right">
+				<a class="btn btn-primary" onclick="SetUrlVar()">prosegui</a> 
+				<a class="btn btn-primary" href="">salva</a> 
+				</span> 				
+			</p>  
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+
+<script type="text/javascript">
+var UrlVar = "";
+ 
+ $(function() {  
+        
+        $('#Acop').click( function() {
+ 
+           if($(this).is('input:checked')){
+				document.getElementById("MySteps").className += " actived";
+				UrlVar = "?var=cop";
+			
+           }
+           else{
+				document.getElementById("MySteps").removeAttribute('class'); 
+				UrlVar = "";
+           }
+
+        });
+		
+	
+});	
+
+function SetUrlVar(){
+var compUrl = "FIN-AggOrdinativoStep2.shtml"+UrlVar;
+ location.href = compUrl;
+
+}
+	
+	
+</script>
+
+</body>
+</html>

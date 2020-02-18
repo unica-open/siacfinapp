@@ -1,0 +1,489 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Inserimento Documenti di Spesa</li>
+    </ul> 
+    </div>	
+	</div>
+    <div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+        <div id="MyWizard" class="wizard">
+					<ul class="steps">
+						<li data-target="#step1" class="complete"><span class="badge badge-success">1</span>dati principali<span class="chevron"></span></li>
+						<li data-target="#step2" class="active"><span class="badge">2</span>dettaglio<span class="chevron"></span></li>
+						<li data-target="#step3"><span class="badge">3</span>riepilogo<span class="chevron"></span></li>
+						
+						
+					</ul>
+					
+				</div>
+				<div class="step-content">
+					<div class="step-pane active" id="step1">
+ <h4>Altri dati</h4>
+<fieldset class="form-horizontal">
+ <div class="control-group">
+          <label for="finanz2" class="control-label">Struttura Amministrativa *</label>
+          <div class="controls"> 
+             <a href="#struttAmm" role="button" class="btn" data-toggle="modal">Struttura amministrativa</a>
+ 
+<!-- Modal -->
+<div id="struttAmm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel2">Struttura Amministrativa</h3>
+</div>
+<div class="modal-body">
+ <ul id="treeStruttAmm" class="ztree"></ul>
+</div>
+<!--<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button class="btn btn-primary">Save changes</button>
+</div> -->
+</div>
+          </div>
+        </div>
+            <div class="control-group">
+<label class="control-label" for="pagamento">Termine di pagamento</label>
+<div class="controls">
+
+ <select id="pagamento">
+               <option></option>
+   			</select>
+<!--<span class="al">
+<label class="radio inline" for="annoa">Anno *</label>
+</span>
+<input id="annoa" class="lbTextSmall span2" type="text" value="10100" name="annoa"/>
+
+<span class="al">
+<label class="radio inline" for="art">Numero *</label>
+</span>
+<input id="art" class="lbTextSmall span2" type="text" value="1" name="art"/> -->
+<!--<span class="al">
+<label class="radio inline" for="ueb2"><abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr></label>
+</span>
+<input id="ueb2" class="lbTextSmall span2" type="text" value="" name="ueb2" maxlength="4" disabled="disabled"/> -->
+</div>
+</div>
+ <div class="control-group">
+<div class="control-label">Sospensione</div>
+<div class="controls">
+<span class="al">
+<label class="radio inline" for="Data">Data&nbsp;  </label>
+</span>
+ <input id="Data" class="lbTextSmall span2" type="text" value="1" name="Data">
+<span class="al">
+<label class="radio inline" for="scadenza">Causale</label>
+</span>
+<input id="scadenza" class="lbTextSmall span6" type="text" name="scadenza"/>
+</div>
+</div>
+ <div class="control-group">
+<div class="controls">
+<span class="al">
+<label class="radio inline" for="riattivazione">Data riattivazione</label>
+</span>
+<input id="riattivazione" class="lbTextSmall span2" type="text" value="1"/>
+<!--<span class="al">
+<label class="radio inline" for="ueb2"><abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr></label>
+</span>
+<input id="ueb2" class="lbTextSmall span2" type="text" value="" name="ueb2" maxlength="4" disabled="disabled"/> -->
+</div>
+</div>
+
+
+<div class="control-group">
+<div class="control-label">Dati protocollo</div>
+<div class="controls">
+<span class="al">
+<label class="radio inline" for="Data1">Numero&nbsp;&nbsp;&nbsp;  </label>
+</span>
+ <input id="Data1" class="lbTextSmall span2" type="text" value="1" name="Data1">
+<span class="al">
+<label class="radio inline" for="scadenza1">Data</label>
+</span>
+<input id="scadenza1" class="lbTextSmall span2" type="text" value="10100" name="scadenza1"/>
+</div>
+</div>
+ <div class="control-group">
+<div class="controls">
+<span class="al">
+<label class="radio inline" for="riattivazione1">Repertorio</label>
+</span>
+<input id="riattivazione1" class="lbTextSmall span2" type="text" value="1"/>
+<span class="al">
+<label class="radio inline" for="ueb2">Data</label>
+</span>
+<input id="ueb2" class="lbTextSmall span2" type="text" value="" name="ueb2"/> 
+</div>
+</div>
+         </fieldset>
+             <div class="accordion" id="soggetto1">
+            <div class="accordion-group">
+            <div class="accordion-heading">
+           
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#soggetto1" href="#soggetto">
+<i class="icon-pencil icon-2x"></i>&nbsp;soggetto pagamento</a>
+
+            </div>
+            <div id="soggetto" class="accordion-body collapse in">
+            <div class="accordion-inner">
+    <h4>Seleziona soggetto</h4>	
+    	
+          
+<fieldset class="form-horizontal">
+                     		 <div class="control-group">
+                <label class="control-label" for="Codice">Codice</label>
+                <div class="controls">
+                	<input id="Codice" name="Codice" class="span3" type="text"/>
+                    <label class="radio inline" for="codfisc">Codice Fiscale</label>
+               
+                	<input id="codfisc" name="codfisc" class="span4" type="text"/>
+              </div>
+          </div>
+           <div class="control-group">
+                <label class="control-label" for="iva">Partita IVA</label>
+                 <div class="controls">
+                 	<input id="iva" name="iva" class="span3" type="text"/>
+              
+                <label class="radio inline">Denominazione</label> <input type="text" name="optionsRadios" id="optionsRadios1" class="span4">
+                </div>
+          </div> 
+              <div class="control-group">
+                <label class="control-label" for="classif">Classificatore</label>
+                 <div class="controls">
+                  <select id="classif" name="classif" class="span3 selectpicker" multiple title='Scegli il tipo di classificazione'><option>&nbsp;</option><option>x0</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>    
+              
+                  <a class="btn btn-primary" href="#"><i class="icon-search icon"></i>&nbsp;cerca</a>
+                </div>
+          </div>     	
+                       
+                        
+               			
+                	
+                        
+                     
+              
+                
+                      
+                 
+              <!-- <div class="control-group">
+                 <label for="FPV" class="control-label"><abbr title="Fondo Pluriennale Vincolato">FPV</abbr></label>
+                    <div class="controls">
+                               <input id="FPV" type="checkbox" value="option1"/>
+        
+                    </div>
+              </div> -->
+        </fieldset>
+         <h4>Elenco soggetti</h4>   
+               
+<!--     TABELLE       RIEPILOGO   con azioni -->
+<table class="table table-hover" summary="...." >
+
+								<thead>
+								  <tr>
+									<th scope="col" colspan="2">Codice<!--/Articolo/<abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr> --></th>
+									<th scope="col">Codice fiscale</th>
+									<th class="header headerSortDown">Partita IVA</th>
+									<th scope="col">Denominazione</th>
+                                    <th scope="col">Stato</th>
+								  </tr>
+								</thead>
+								<tbody>
+ <tr><td> <input type="radio" name="file_3d" id="file_3" /></td>
+									<td><label for="file_3">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>01010203</td>
+									<!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>yyy yyyy</td>
+								  </tr>
+                                  <tr>
+                                    <td> <input type="radio" name="file_3" id="file_2" /></td>
+									<td><label for="file_2">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                    <td>01010203</td>
+									<!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>valido</td>
+								  </tr>
+								 <tr>
+								   <td> <input type="radio" name="file_3" id="file_1" /></td>
+									<td><label for="file_1">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>01010203</td>
+						         <!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>yyy yyyy</td>
+								  </tr>
+                                  </tbody>
+                                  </table>
+                                  
+ <div class="row pagination_conth">
+ <div id="risultatiricerca_info" class="span6">1 - 10 di 28 risultati</div>   
+ <div class="span6">                               
+ <div id="paginazione" class="pagination pagination-right">
+    
+          <ul>
+            <li><a href="#">&laquo; inizio</a></li>
+                               <li><a href="#">&laquo; prec</a></li>
+								<li class="disabled"><a href="#">1</a></li>
+                                <li class="active"><a href="#">2</a></li>
+                                 <li><a href="#">3</a></li>
+                                  <li><a href="#">4</a></li>
+                                   <li><a href="#">5</a></li>
+            
+         
+        <!--<li>di 272</li>--> 
+         
+                      <li><a href="#">succ &raquo;</a></li>
+            <li><a href="#"> fine &raquo;</a></li>
+            
+              </ul>
+      <!--<p>di 272</p>--> </div>
+                    
+             </div>  
+            </div>
+                
+              
+   <a class="btn" href="#">seleziona</a>              
+
+</div>
+</div>
+</div>
+</div>
+
+<fieldset class="form-horizontal">
+ <div class="control-group">
+          <label for="titolo_adv" class="control-label">Descrizione *</label>
+          <div class="controls">
+             <textarea rows="5" cols="15" id="titolo_adv" class="span10"></textarea>
+          </div>
+        </div>
+        
+        <div class="control-group">
+<div class="control-label">Importi</div>
+<div class="controls">
+<span class="al">
+<label class="radio inline" for="Documento">Documento *</label>
+</span>
+ <input id="Documento" class="lbTextSmall span2" type="text" value="1" name="Documento">
+<span class="al">
+<label class="radio inline" for="Arrotondamento">Arrotondamento</label>
+</span>
+<input id="Arrotondamento" class="lbTextSmall span2" type="text" value="10100" name="Arrotondamento"/>
+</div>
+</div>
+ <div class="control-group">
+<div class="controls">
+<span class="al">
+<label class="radio inline" for="Netto">Netto</label>
+</span>
+<input id="Netto" class="lbTextSmall span2" type="text" value="1"/>
+</div>
+</div>
+        
+        
+        
+        
+        
+        
+          <div class="control-group">
+          <label for="Note" class="control-label">Note</label>
+          <div class="controls">
+             <textarea rows="5" cols="15" id="Note"></textarea>
+          </div>
+        </div>
+           <div class="control-group">
+          <label for="fondo" class="control-label">Note al tesoriere</label>
+          <div class="controls input-append">
+            <select id="fondo">
+                <option>xxx</option>
+                <option>xxx</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+   			</select>
+          </div>
+        </div>
+        
+        
+          <div class="control-group">
+          <label for="mandato" class="control-label">Causale mandato *</label>
+          <div class="controls">
+          
+              <input id="mandato" class="lbTextSmall span2" type="text"/>
+            </div>
+            
+        </div>
+                   <div class="control-group">
+          <label for="Consultivo" class="control-label">Commissioni *</label>
+          <div class="controls">
+              <select id="Consultivo">
+                 <option>xxx</option>
+                <option>xxx</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+   			</select>
+          </div>
+        </div>
+           <div class="control-group">
+          <label for="capitolo" class="control-label">Codice bollo *</label>
+          <div class="controls input-append">
+            <select id="capitolo">
+                <option>01 Elenco 1</option>
+                <option>02 Elenco 2</option>
+                <option>03</option>
+                <option>4</option>
+                <option>5</option>
+   			</select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="Codice" class="control-label">Classificatore 1</label>
+          <div class="controls input-append">
+            <select id="Codice">
+            <option>01 Elenco 1</option>
+                <option>02 Elenco 2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+   			</select>
+          </div>
+        </div>
+        
+        
+        
+        
+</fieldset>
+
+
+             <p><a href="FIN-InsDocumentiSpesa1.shtml" class="btn">indietro</a>   <a class="btn btn-link" href="">annulla</a><a href="FIN-InsDocumentiSpesa3.shtml" class="btn btn-primary pull-right">salva</a> </p>
+             </div>
+					
+				</div>
+        </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

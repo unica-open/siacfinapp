@@ -1,0 +1,68 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<h4>Dati subimpegno</h4>
+<fieldset class="form-horizontal margin-large">  
+  <div class="control-group">
+    <label class="control-label" for="descrizione">Descrizione </label>
+    <div class="controls">
+      <input id="descrizione" name="Descrizione" class="span5" type="text"/>
+      <span class="al">
+        <label class="radio inline" for="stato">Stato</label>
+      </span>
+      <input id="Stato" class="lbTextSmall span2" type="text" value="valido" name="stato" disabled="disabled"/>
+    </div>
+  </div>
+  
+  <!--  SOLO IN INSERIMENTO -->
+  <div class="control-group">
+    <label class="control-label" for="codfisc">Importo *</label>
+    <div class="controls">
+      <input id="codfisc" name="codfisc" class="span2 required" required="required" type="text"/>
+      <span class="al">
+        <label class="radio inline" for="scadenza">Scadenza</label>
+      </span>
+      <input id="scadenza" class="lbTextSmall span2 datepicker" type="text" value="12/11/2013" name="scadenza"/>
+    </div>
+  </div>  
+  <!-- FINE SOLO IN INSERIMENTO -->
+
+  <!-- SOLO IN AGGIORNAMENTO -->
+  <!--div class="control-group">
+    <label class="control-label" for="codfisc">Importo *</label>
+    <div class="controls">
+      <input id="codfisc" name="codfisc" class="span2 required" required="required" type="text"/>
+      <span class="al">
+        <label class="radio inline" for="scadenza">Importo iniziale  XXXXXX </label>
+      </span>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="control-label" for="codfisc">Scadenza *</label>
+    <div class="controls">
+    <input id="scadenza" class="lbTextSmall span2 required" type="text" value="" name="scadenza"/>
+    </div>
+  </div-->
+  <!-- FINE SOLO IN AGGIORNAMENTO -->
+  <div class="control-group">
+    <label class="control-label" for="progetto">Progetto</label>
+      
+      <div class="controls">
+      <input id="progetto" class="lbTextSmall span3" type="text" value="XXXXXX" name="progetto" disabled/>
+     </div>
+    </div>
+
+  <div class="control-group">
+    <label class="control-label"  for="CIG"><abbr title="codice identificativo gara">CIG</abbr></label>
+    <div class="controls">
+      <input id="CIG" class="lbTextSmall span2" type="text" value="" name="CIG"/>
+      <span class="al">
+       <label class="radio inline" for="CUP"><abbr title="CUP">CUP</abbr>&nbsp;&nbsp;</label>
+      </span>
+      <input id="CUP" class="lbTextSmall span2" type="text" value="" name="CUP"/>       
+    </div>
+  </div>
+
+</fieldset>

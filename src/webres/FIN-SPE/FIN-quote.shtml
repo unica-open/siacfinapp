@@ -1,0 +1,757 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Aggiorna Documenti di Spesa</li>
+    </ul> 
+    </div>	
+	</div>
+    <div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+      <h3>FAT 2013/39/132829 - SORIS - Società riscossione S.p.A.</h3>
+       <ul class="nav nav-tabs">
+    <li>
+    <a href="FIN_aggDocumentiSpesa.shtml">Documenti di spesa</a>
+    </li>
+    <!-- <li><a href="../BIL-UPB/BIL_aggUPBEntrGest.shtml">U.P.B.</a></li> -->
+    <li class="active"><a href="#">Quote</a></li>
+   <!-- <li><a href="BIL_aggAttiLegge.shtml">Atti di legge</a></li> -->
+    </ul>
+      
+     
+
+ <table class="table table-hover" summary="...." >
+
+								<thead>
+								  <tr>
+								    <th scope="col">Numero</th>
+									<th scope="col">Importo</th>
+									<th scope="col">Impegno</th>
+									<th scope="col">Provvedimento</th>
+                                    <th scope="col">Liquidazione</th>
+                                    <th scope="col">Mandato</th>
+									<th scope="col">Azioni </th>
+								  </tr>
+								</thead>
+								<tbody>
+ <tr>
+   <td><label for="anno_1">1</label></td>
+		<td>100,00<BR></td>
+              <td>2013-2013-123456<BR></td>
+                                    <!--<td>ggggggg</td> -->
+									<td>2013/12345/DG/017</td>
+                                    <td>&nbsp;</td>
+              <td>1.000.000,00</td>
+									<td><div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right">
+                                                   <li><a href="#">inserisci</a></li>
+									    <li><a href="#">aggiorna</a></li>
+									    <li><a href="#msgAnnulla" data-toggle="modal">elimina </a></li>
+                                       
+                                                </ul>
+                              			</div><!-- /btn-group -->                                    </td>
+								  </tr>
+                                  <tr>
+   <td><label for="anno_2"></label>
+   2</td>
+		<td>50,00 </td>
+                                    <td>2013-2013-645</td>
+                                    <!--<td>ggggggg</td> -->
+									<td>2013/12345/DL/022</td>
+                                    <td><BR></td>
+                                    <td>500,23                                        </td>
+									<td><div class="btn-group">
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+									  <ul class="dropdown-menu pull-right">
+                                          <li><a href="#">inserisci</a></li>
+									    <li><a href="#">aggiorna</a></li>
+									    <li><a href="#msgAnnulla" data-toggle="modal">elimina </a></li>
+								      </ul>
+									  </div>
+									    <!-- /btn-group -->                                    </td>
+                                  </tr>
+                                  
+          </tbody>
+          </table>
+<!-- Modal -->
+<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+  <!--/modale annulla -->
+<div class="well">Totali:    Totale quote:    Importo da attribuire:      Netto: </div>                                
+  
+         
+     
+          <h4>Dati principali</h4>
+<fieldset class="form-horizontal">
+            <div class="control-group">
+<label class="control-label" for="art">Numero *</label>
+<div class="controls">
+<input id="art" class="lbTextSmall span2" type="text" value="1" name="art" disabled="disabled"/>
+ <span class="al">
+<label class="radio inline" for="annoa">Importo *</label>
+</span>
+<input id="annoa" class="lbTextSmall span2" type="text" value="50,00" name="annoa"/>
+
+<span class="al">
+<label class="radio inline" for="art">Data scadenza *</label>
+</span>
+<input id="art" class="lbTextSmall span2" type="text" name="art"/>
+
+</div>
+</div>
+         </fieldset>
+<div class="accordion margin-large" id="soggetto1">
+            <div class="accordion-group">
+            <div class="accordion-heading">
+           
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#soggetto1" href="#soggetto">
+<i class="icon-pencil icon-2x"></i>&nbsp;soggetto pagamento</a>
+ </a>
+            </div>
+            <div id="soggetto" class="accordion-body collapse in">
+            <div class="accordion-inner">
+    <h4>Seleziona soggetto</h4>	
+    	
+         
+<fieldset class="form-horizontal">
+                     		 <div class="control-group">
+                <label class="control-label" for="Codice">Codice</label>
+                <div class="controls">
+                	<input id="Codice" name="Codice" class="span3" type="text"/>
+                    <label class="radio inline" for="codfisc">Codice Fiscale</label>
+               
+                	<input id="codfisc" name="codfisc" class="span4" type="text"/>
+              </div>
+          </div>
+           <div class="control-group">
+                <label class="control-label" for="iva">Partita IVA</label>
+                 <div class="controls">
+                 	<input id="iva" name="iva" class="span3" type="text"/>
+              
+                <label class="radio inline">Denominazione</label> <input type="text" name="optionsRadios" id="optionsRadios1" class="span4">
+                </div>
+          </div> 
+              <div class="control-group">
+                <label class="control-label" for="classif">Classificatore</label>
+                 <div class="controls">
+                  <select id="classif" name="classif" class="span3 selectpicker" multiple title='Scegli il tipo di classificazione'><option>&nbsp;</option><option>x0</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>    
+              
+                  <a class="btn btn-primary" href="#"><i class="icon-search icon"></i>&nbsp;cerca</a>
+                </div>
+          </div>     	
+                       
+                        
+               			
+                	
+                        
+                     
+              
+                
+                      
+                 
+              <!-- <div class="control-group">
+                 <label for="FPV" class="control-label"><abbr title="Fondo Pluriennale Vincolato">FPV</abbr></label>
+                    <div class="controls">
+                               <input id="FPV" type="checkbox" value="option1"/>
+        
+                    </div>
+              </div> -->
+        </fieldset>
+         <h4>Elenco soggetti</h4>   
+               
+<!--     TABELLE       RIEPILOGO   con azioni -->
+<table class="table table-hover" summary="...." >
+
+								<thead>
+								  <tr>
+									<th scope="col" colspan="2">Codice<!--/Articolo/<abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr> --></th>
+									<th scope="col">Codice fiscale</th>
+									<th class="header headerSortDown">Partita IVA</th>
+									<th scope="col">Denominazione</th>
+                                    <th scope="col">Stato</th>
+								  </tr>
+								</thead>
+								<tbody>
+ <tr><td> <input type="radio" name="file_3d" id="file_3" /></td>
+									<td><label for="file_3">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>01010203</td>
+									<!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>yyy yyyy</td>
+								  </tr>
+                                  <tr>
+                                    <td> <input type="radio" name="file_3" id="file_2" /></td>
+									<td><label for="file_2">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                    <td>01010203</td>
+									<!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>valido</td>
+								  </tr>
+								 <tr>
+								   <td> <input type="radio" name="file_3" id="file_1" /></td>
+									<td><label for="file_1">xxxxx</label></td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>01010203</td>
+						         <!--<td>ggggggg</td> -->
+									<td>rrrrrrr</td>
+                                    <td>yyy yyyy</td>
+								  </tr>
+                                  </tbody>
+                                  </table>
+                                  
+ <div class="row pagination_conth">
+ <div id="risultatiricerca_info" class="span6">1 - 10 di 28 risultati</div>   
+ <div class="span6">                               
+ <div id="paginazione" class="pagination pagination-right">
+    
+          <ul>
+            <li><a href="#">&laquo; inizio</a></li>
+                               <li><a href="#">&laquo; prec</a></li>
+								<li class="disabled"><a href="#">1</a></li>
+                                <li class="active"><a href="#">2</a></li>
+                                 <li><a href="#">3</a></li>
+                                  <li><a href="#">4</a></li>
+                                   <li><a href="#">5</a></li>
+            
+         
+        <!--<li>di 272</li>--> 
+         
+                      <li><a href="#">succ &raquo;</a></li>
+            <li><a href="#"> fine &raquo;</a></li>
+            
+              </ul>
+      <!--<p>di 272</p>--> </div>
+                    
+             </div>  
+            </div>
+                
+              
+   <a class="btn" href="#">seleziona</a>              
+    <h4>Soggetto:  XXXXXX</h4>   
+      
+      <table summary="riepilogo indirizzo" class="table tableHover">
+      <caption>Sedi secondarie</caption>               
+                      <tr>
+                        <th colspan="2"> Denominazione </th>
+                        <th>Indirizzo</th>
+                        <th>Comune</th>
+                        <th>Stato</th>
+                      </tr>
+                      <tr>
+                         <td> <input type="radio" name="sed1" id="sed1" /></td>
+									<td><label for="sed1"> sede </label></td>
+                        <td>via don borio, 5</td>
+                        <td>torino</td>
+                        <td>valido</td>
+                      </tr>
+                      <tr class="newline">
+                        <td> <input type="radio" name="sed1" id="sed2" /></td>
+									<td><label for="sed2"> concessionaria 3</label></td>
+                        <td>via della consolata, 6</td>
+                        <td>ivrea</td>
+                        <td>annullato</td>
+                      </tr>
+                    </table>
+    <a class="btn" href="#">seleziona</a>      
+  <table summary="riepilogo indirizzo" class="table tableHover">
+                     <caption>Modalit&agrave; pagamento</caption>
+                      <tr>
+                        <th colspan="2">Modalit&agrave;</th>
+                        <th> <abbr title="progressivo">Associato a</abbr> </th>
+                        <th>Stato</th>
+                      </tr>
+                      <tr>
+                       <td> <input type="radio" name="mod1" id="mod1" /></td>
+									<td><label for="mod1">
+                        <a href="#" data-trigger="hover" rel="popover" title="IBAN" data-content="IBAN ITI2a0000000089012 ">CB - Conto corrente bancario</a></label></td>
+                        <td> Soggetto</td>
+                        <td>valido</td>
+                      </tr>
+                      <tr class="newline">
+                        <td><input type="radio" name="mod1" id="mod2" /></td>
+									<td><label for="mod2"><a href="#" data-trigger="hover" rel="popover" title="cessione" data-content="1200- istituo AAAA ">CC - cessione credito</a></label></td>
+                        <td>Sede secondaria</td>
+                        <td>annullato</td>
+                      </tr>
+                       <tr class="newline">
+                       <td><input type="radio" name="mod1" id="mod3" /></td>
+									<td><label for="mod3"> contanti</label></td>
+                        <td>soggetto</td>
+                        <td>valido</td>
+                      </tr>
+                    </table>
+                      <a class="btn" href="#">seleziona</a>
+</div>
+</div>
+</div>
+</div>    
+
+
+
+
+
+ 
+          
+          
+<div class="accordion margin-large" id="accordion5f">
+            <div class="accordion-group">
+            <div class="accordion-heading">
+           
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion5f" href="#collapse4f">
+<i class="icon-pencil icon-2x"></i>&nbsp;impegno</a>
+ </a>
+            </div>
+            <div id="collapse4f" class="accordion-body collapse in">
+            <div class="accordion-inner">
+           
+            
+<fieldset class="form-horizontal">
+        		 
+                <div class="control-group">
+                    <label class="control-label" for="Tipo2">Anno *</label>
+                    <div class="controls">
+                    
+                        <input id="Tipo2" class="lbTextSmall span1" type="text" value="" name="Tipo2" />
+                        <span class="al">
+                        	<label class="radio inline" for="Anno2">Numero *</label>
+                        </span>
+                        <input id="Anno2" class="lbTextSmall span1" type="text" value="" name="Anno2"/>                     
+                       <a class="btn btn-primary" href="#"><i class="icon-search icon"></i>&nbsp;cerca</a> <span class="nascosto"> | </span> </div>
+                </div>
+                </fieldset>
+                <table class="table table-hover" summary="...." >
+
+								<thead>
+								  <tr>
+									<th scope="col" colspan="2">Numero Subimpegno<!--/Articolo/<abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr> --></th>
+									<th scope="col">Descrizione</th>
+									<th class="header headerSortDown">Soggetto</th>
+									<th scope="col">Importo</th>
+									<th scope="col">Disponibilità a liquidare</th>
+                                  </tr>
+								</thead>
+								<tbody>
+ <tr><td> <input type="radio" name="file_3d" id="file_3" /></td>
+									<td><label for="file_3">1</label></td>
+									<td>lotto 1</td>
+                                     <td>csi piemonte</td>
+									 <td>1.000,00</td>
+								    <!--<td>ggggggg</td> -->
+									<td>200,00</td>
+                                  </tr>
+                                  <tr>
+                                    <td> <input type="radio" name="file_3" id="file_2" /></td>
+									<td><label for="file_2">2</label></td>
+									<td>lotto 2</td>
+                                    <td> regione piemonte</td>
+									<td>640,00</td>
+									<!--<td>ggggggg</td> -->
+									<td>340,00</td>
+                                  </tr>
+								 <tr>
+								   <td> <input type="radio" name="file_3" id="file_1" /></td>
+									<td><label for="file_1">3</label></td>
+									<td>lotto 3</td>
+                                     <td>01010203</td>
+						             <td>870,00</td>
+					               <!--<td>ggggggg</td> -->
+									<td>600,00</td>
+                                  </tr>
+                                  </tbody>
+                                  </table>
+                                  
+ <div class="row pagination_conth">
+ <div id="risultatiricerca_info" class="span6">1 - 10 di 28 risultati</div>   
+ <div class="span6">                               
+ <div id="paginazione" class="pagination pagination-right">
+    
+          <ul>
+            <li><a href="#">&laquo; inizio</a></li>
+                               <li><a href="#">&laquo; prec</a></li>
+								<li class="disabled"><a href="#">1</a></li>
+                                <li class="active"><a href="#">2</a></li>
+                                 <li><a href="#">3</a></li>
+                                  <li><a href="#">4</a></li>
+                                   <li><a href="#">5</a></li>
+            
+         
+        <!--<li>di 272</li>--> 
+         
+                      <li><a href="#">succ &raquo;</a></li>
+            <li><a href="#"> fine &raquo;</a></li>
+            
+              </ul>
+      <!--<p>di 272</p>--> </div>
+                    
+             </div>  
+            </div>
+                
+              
+  <p> <a class="btn" href="#">seleziona</a> <span class="nascosto">|</span>   <a class="btn" href="#">subimpegni</a> </p>
+              <fieldset class="form-horizontal">  
+                 <div class="control-group">
+<label class="control-label" for="scadenza"><abbr title="Codice Identificativo Gara">CIG</abbr></label>
+<div class="controls">
+<input id="scadenza" class="lbTextSmall span2" type="text" name="scadenza"/>
+
+<span class="al">
+<label class="radio inline" for="CUP"><abbr title="Codice Unico di Progetto">CUP</abbr></label>
+</span>
+<input id="CUP" class="lbTextSmall span2" type="text" value="" name="CUP"/>
+</div>
+</div>
+</fieldset>
+         
+        
+</div>
+          </div>
+  </div>
+          </div>         
+           
+           
+           
+<div class="accordion margin-large" id="accordion5">
+            <div class="accordion-group">
+            <div class="accordion-heading">
+           
+<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion4" href="#collapse4">
+<i class="icon-pencil icon-2x"></i>&nbsp;provvedimento</a>
+ </a>
+            </div>
+            <div id="collapse4" class="accordion-body collapse">
+            <div class="accordion-inner">
+             <p>&Egrave; necessario inserire oltre all'anno almeno il numero atto oppure il tipo atto </p>			
+            
+<fieldset class="form-horizontal">
+        		 
+                <div class="control-group">
+                    <label class="control-label" for="Tipo">Anno *</label>
+                    <div class="controls">
+                    
+                        <input id="Tipo" class="lbTextSmall span1" type="text" value="" name="Tipo" />
+                        <span class="al">
+                        	<label class="radio inline" for="Anno">Numero</label>
+                        </span>
+                        <input id="Anno" class="lbTextSmall span1" type="text" value="" name="Anno"/>
+                        
+                        <span class="al">
+                       		 <label class="radio inline" for="Stato">Tipo</label>
+                        </span>
+                         <select id="Stato" class="lbTextSmall span2"><option></option><option>Delibera</option><option>Determina</option><option>Movimento Interno</option></select>
+                         <span class="al">
+                       		 <label class="radio inline">Struttura Amministrativa</label>
+                        </span>
+                      
+                     <a href="#struttAmm" role="button" class="btn" data-toggle="modal">Seleziona la Struttura amministrativa</a>
+                  </div>
+            </div>
+             <div class="control-group">
+                    <label class="control-label" for="Oggetto">Oggetto</label>
+                    <div class="controls">
+                    
+                        <input id="Oggetto" class="lbTextSmall span9" type="text" value="" name="Oggetto" />
+                      
+                       <a class="btn btn-primary" href="#"><i class="icon-search icon"></i>&nbsp;cerca</a> <span class="nascosto"> | </span><a class="btn" href="#">inserisci</a>            
+                    </div>
+                </div>
+ 
+<!-- Modal -->
+<div id="struttAmm" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel2">Struttura Amministrativa Responsabile</h3>
+</div>
+<div class="modal-body">
+ <ul id="treeStruttAmm" class="ztree"></ul>
+</div>
+<!--<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button class="btn btn-primary">Save changes</button>
+</div> -->
+</div>
+     
+        </fieldset>
+        <h4>Elenco provvedimenti trovati</h4>   
+           <table class="table table-hover" summary="...." >
+     <thead>
+       <tr>
+         <th scope="col" colspan="2">Anno<!--/Articolo/<abbr title="Unit&agrave; Elementare Bilancio">UEB</abbr> --></th>
+         <th scope="col">Numero</th>
+         <th scope="col">Tipo</th>
+         <th scope="col">Oggetto</th>
+         <th scope="col"><abbr title="Struttura Amministrativa Responsabile">Strutt Amm Resp</abbr></th>
+         <th scope="col">Stato</th>
+         </tr>
+     </thead>
+     <tbody>
+       <tr>
+        <td> <input type="radio" name="file_33" id="file_33d" /></td>
+									
+		<td>2013</td>
+		<td>230</td>
+		<td>determina</td>
+		<td>oggetto determina 1</td>
+		<td>dir 01</td>
+		<td>provvisorio</td>
+		<!--<td>ggggggg</td> -->
+         </tr>
+       <tr>
+          <td> <input type="radio" name="file_33" id="file_33c" /></td>
+									
+		  <td>2013</td>
+		  <td>456</td>
+		  <td>determina</td>
+		  <td>oggetto determina 2</td>
+		  <td>dir 02</td>
+		  <td>provvisorio</td>
+		  <!--<td>ggggggg</td> -->
+         </tr>
+     </tbody>
+     <tfoot>
+     </tfoot>
+   </table> 
+   <div class="row pagination_conth">
+         <div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+             <div class="span6">                               
+                 <div id="paginazione2" class="pagination pagination-right">
+                          <ul>
+                            <li><a href="#">&laquo; inizio</a></li>
+                                               <li><a href="#">&laquo; prec</a></li>
+                                                <li class="disabled"><a href="#">1</a></li>
+                                                <li class="active"><a href="#">2</a></li>
+                                                 <li><a href="#">3</a></li>
+                                                  <li><a href="#">4</a></li>
+                                                   <li><a href="#">5</a></li>
+                                      <li><a href="#">succ &raquo;</a></li>
+                            <li><a href="#"> fine &raquo;</a></li>
+                            
+                              </ul>
+                      </div>
+                            
+                     </div>  
+             </div>       
+     
+   <a class="btn" href="#">seleziona</a>    
+</div>
+          </div>
+  </div>
+          </div>            
+ <fieldset class="form-horizontal">
+         <div class="control-group">
+          <label for="titolo_adv" class="control-label">Descrizione *</label>
+          <div class="controls">
+             <textarea rows="5" cols="15" id="titolo_adv" class="span10">Spese Tares </textarea>
+          </div>
+        </div>
+        <div class="control-group">
+         
+          <div class="controls">
+           <label class="checkbox inline">
+    <input type="checkbox" id="inlineCheckbox1" value="option1"> Ordinativo manuale
+    </label>
+    <label class="checkbox inline">
+    <input type="checkbox" id="inlineCheckbox2" value="option2"> Avviso
+    </label>
+    <label class="checkbox inline">
+    <input type="checkbox" id="inlineCheckbox3" value="option3"> Mandato singolo
+    </label>
+     <label class="checkbox inline">
+    <input type="checkbox" id="inlineCheckbox4" value="option4"> Esproprio
+    </label>
+    </div></div>
+    <div class="control-group">
+<div class="control-label">Provvisorio di Cassa</div>
+<div class="controls">
+<span class="al">
+<label class="radio inline" for="Data1">Numero</label>
+</span>
+ <input id="Data1" class="lbTextSmall span2" type="text" value="1" name="Data1">
+<span class="al">
+<label class="radio inline" for="scadenza1">Data</label>
+</span>
+<input id="scadenza1" class="lbTextSmall span2" type="text" value="13/05/2013" name="scadenza1"/>
+</div>
+</div>
+ <div class="control-group">
+ <div class="control-label">Quietanza</div>
+<div class="controls">
+<span class="al">
+<label class="radio inline" for="riattivazione1">Numero</label>
+</span>
+<input id="riattivazione1" class="lbTextSmall span2" type="text" value="1"/>
+<span class="al">
+<label class="radio inline" for="ueb2">Data</label>
+</span>
+<input id="ueb2" class="lbTextSmall span2" type="text" name="ueb2" value="11/03/2013"/> 
+</div>
+</div>
+ <div class="control-group">
+          <label for="Note" class="control-label">Note</label>
+          <div class="controls">
+             <textarea rows="5" cols="15" id="Note" class="span10"></textarea>
+          </div>
+        </div>
+           <div class="control-group">
+          <label for="fondo" class="control-label">Note al tesoriere</label>
+          <div class="controls input-append">
+            <select id="fondo">
+                <option>xxx</option>
+                <option>xxx</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+   			</select>
+          </div>
+        </div>
+           <div class="control-group">
+          <label for="mandato" class="control-label">Causale mandato *</label>
+          <div class="controls">
+          
+              <input id="mandato" class="lbTextSmall span9" type="text"/>
+            </div>
+            
+        </div>
+         </fieldset>
+<p>Utente inserimento: U186145; Utente ultima modifica: U186147 </p>
+            
+            
+          <p><input class="btn" type="button" value="indietro"/>   <a class="btn btn-link" href="">annulla</a><a href="#" class="btn btn-primary pull-right">salva</a> </p>
+           
+        </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

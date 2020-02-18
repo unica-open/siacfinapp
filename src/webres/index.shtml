@@ -1,0 +1,412 @@
+   <!--#include virtual="../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <div class="navbarLogin">     
+    <div class="container-fluid">
+      <div class="dropdown pull-left login-text">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="seleziona l'anno di bilancio su cui vuoi lavorare">Esercizio 2013 EC <i class="icon-pencil"></i> </a> - Esercizio Provvisorio con carimento bilancio di previsione
+        <div class="dropdown-menu span7" role="menu" aria-labelledby="dLabel">
+          <form action="#" method="post" accept-charset="UTF-8">
+            <div class="form-horizontal">
+              <label class="control-label" for="annoda2">Anno</label>
+              <input id="anno" class="text" type="text" name="anno" size="30" placeholder="anno di esercizio" />                
+              <input class="btn btn-primary" type="submit" name="submit" value="conferma" />
+            </div>
+          </form>
+        </div>
+      </div><!--p class="login-text pull-left"></p-->
+      <p class="login-text pull-right">
+      Mario Rossi <a href="#" class="navbar-link">&nbsp;</a>
+      </p>          
+    </div>   
+  </div>
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+  <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">
+      <!--<p class="text-center"><strong>NON è il cruscotto</strong><strong>NON è il cruscotto</strong><strong>NON è il cruscotto</strong><strong>NON è il cruscotto</strong></p> -->
+      <div class="">
+        <div class="span6">
+          <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+                Capitolo Spesa Previsione
+                </a>
+              </div>
+              <div id="collapseOne" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-capUscitaPrevisione/BIL_insCapUscPrev.shtml">Inserisci Capitolo Spesa Previsione</a></li>
+                    <li><a href="BIL-capUscitaPrevisione/BIL_aggCapUscPrev.shtml"> Aggiorna Capitolo Spesa Previsione</a></li>
+                    <li><a href="BIL-capUscitaPrevisione/BIL_ricCapUscPrev.shtml">Ricerca Capitolo Spesa Previsione</a></li>
+                    <li><a href="BIL-capUscitaPrevisione/BIL_consCapUscPrev.shtml">Consulta Capitolo Spesa Previsione</a></li>
+                    <li><a href="BIL-capUscitaPrevisione/BIL_aggCapUscPrevMassivo.shtml"> Aggiorna Capitolo Spesa Previsione Massivo</a></li>
+                    <li><a href="BIL-capUscitaPrevisione/BIL_ricCapUscPrevMassivo.shtml">Ricerca Capitolo Spesa Previsione Massivo</a></li>
+                    <li><a href="BIL-capUscitaPrevisione/BIL_consCapUscPrevMassivo.shtml">Consulta Capitolo Spesa Previsione Massivo</a></li>
+                    <li><a href="BIL-capUscitaPrevisione/BIL_dettaglioMovCapUscPrev.shtml">Dettaglio movimenti Capitolo Spesa Previsione Massivo</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+                Capitolo Spesa Gestione
+                </a>
+              </div>
+              <div id="collapseTwo" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-capUscitaGestione/BIL_insCapUscGest.shtml">Inserisci Capitolo Spesa Gestione</a></li>
+                    <li><a href="BIL-capUscitaGestione/BIL_aggCapUscGest.shtml"> Aggiorna Capitolo Spesa Gestione</a></li>
+                    <li><a href="BIL-capUscitaGestione/BIL_ricCapUscGest.shtml">Ricerca Capitolo Spesa Gestione</a></li>
+                    <li><a href="BIL-capUscitaGestione/BIL_consCapUscGest.shtml">Consulta Capitolo Spesa Gestione</a></li>
+                    <li><a href="BIL-capUscitaGestione/BIL_aggCapUscGestMassivo.shtml"> Aggiorna Capitolo Spesa Gestione Massivo</a></li>
+                    <li><a href="BIL-capUscitaGestione/BIL_ricCapUscGestMassivo.shtml">Ricerca Capitolo Spesa Gestione Massivo</a></li>
+                    <li><a href="BIL-capUscitaGestione/BIL_consCapUscGestMassivo.shtml">Consulta Capitolo Spesa Gestione Massivo</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseFasi">
+                Fasi di bilancio
+                </a>
+              </div>
+              <div id="collapseFasi" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-FasiBilancio/BIL_ricFasiBilancio.shtml">Ricerca fasi di bilancio</a></li>         
+                  </ul>
+                </div>
+              </div>
+            </div>         
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseVariazioni">
+                Variazioni
+                </a>
+              </div>
+              <div id="collapseVariazioni" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-variazioni/BIL-varStep1.shtml">Variazioni di bilancio</a></li>
+                    <li><a href="BIL-variazioni/BIL-definisciVar.shtml">Definisci Variazioni di bilancio</a></li>
+                    <li><a href="BIL-variazioni/BIL-definisciVarUEB.shtml">Definisci Variazioni di bilancio UEB</a></li>
+                    <li><a href="BIL-variazioni/BIL-definisciVarCod.shtml">Definisci Variazioni Codifiche</a></li>
+                    <li><a href="BIL-variazioni/BIL-aggVar.shtml">Aggiorna Variazioni di bilancio</a></li>
+                    <li><a href="BIL-variazioni/BIL-aggVarUEB.shtml">Aggiorna Variazioni di bilancio UEB</a></li>
+                    <li><a href="BIL-variazioni/BIL-aggVarCodEntr.shtml">Aggiorna Variazioni codifiche entrata</a></li>
+                    <li><a href="BIL-variazioni/BIL-aggVarCodUsc.shtml">Aggiorna Variazioni codifiche uscita</a></li>
+                    <li><a href="BIL-variazioni/BIL-ricVariazioni.shtml">Ricerca variazioni</a></li>          
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapsestorni">
+                Storni
+                </a>
+              </div>
+              <div id="collapsestorni" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-storni/BIL-insStorniUEB.shtml">Inserimento Storni ueb</a></li>
+                    <li><a href="BIL-storni/BIL_ricStorniUEB.shtml">Ricerca Storni ueb</a></li>
+                    <li><a href="BIL-storni/BIL-aggStorniUEB.shtml">Aggiorna Storni ueb</a></li>  
+                  </ul>
+                </div>
+              </div>
+            </div>          
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseProvvedimento">
+                Provvedimento
+                </a>
+              </div>
+              <div id="collapseProvvedimento" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="ATT-provvedimento/Att-insProvvedimento.shtml">Inserimento Provvedimento</a></li>
+                    <li><a href="ATT-provvedimento/Att-ricProvvedimento.shtml">Ricerca Provvedimento</a></li>
+                    <li><a href="ATT-provvedimento/Att-aggProvvedimento.shtml">Aggiorna Provvedimento</a></li>                    
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseTree">
+                Capitolo Entrata Previsione
+                </a>
+              </div>
+              <div id="collapseTree" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-capEntrataPrevisione/BIL_insCapEntrPrev.shtml">Inserisci Capitolo Entrata Previsione</a></li>
+                    <li><a href="BIL-capEntrataPrevisione/BIL_aggCapEntrPrev.shtml"> Aggiorna Capitolo Entrata Previsione</a></li>
+                    <li><a href="BIL-capEntrataPrevisione/BIL_ricCapEntrPrev.shtml">Ricerca Capitolo Entrata Previsione</a></li>
+                    <li><a href="BIL-capEntrataPrevisione/BIL_consCapEntrPrev.shtml">Consulta Capitolo Entrata Previsione</a></li>
+                    <li><a href="BIL-capEntrataPrevisione/BIL_aggCapEntrPrevMassivo.shtml"> Aggiorna Capitolo Entrata Previsione Massivo</a></li>
+                    <li><a href="BIL-capEntrataPrevisione/BIL_ricCapEntrPrevMassivo.shtml">Ricerca Capitolo Entrata Previsione Massivo</a></li>
+                    <li><a href="BIL-capEntrataPrevisione/BIL_consCapEntrPrevMassivo.shtml">Consulta Capitolo Entrata Previsione Massivo</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseFour">
+                Capitolo Entrata Gestione
+                </a>
+              </div>
+              <div id="collapseFour" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-capEntrataGestione/BIL_insCapEntrGest.shtml">Inserisci Capitolo Entrata Gestione</a></li>
+                    <li><a href="BIL-capEntrataGestione/BIL_aggCapEntrGest.shtml"> Aggiorna Capitolo Entrata Gestione</a></li>
+                    <li><a href="BIL-capEntrataGestione/BIL_ricCapEntrGest.shtml">Ricerca Capitolo Entrata Gestione</a></li>
+                    <li><a href="BIL-capEntrataGestione/BIL_consCapEntrGest.shtml">Consulta Capitolo Entrata Gestione</a></li>
+                    <li><a href="BIL-capEntrataGestione/BIL_aggCapEntrGestMassivo.shtml"> Aggiorna Capitolo Entrata Gestione Massivo</a></li>
+                    <li><a href="BIL-capEntrataGestione/BIL_ricCapEntrGestMassivo.shtml">Ricerca Capitolo Entrata Gestione Massivo</a></li>
+                    <li><a href="BIL-capEntrataGestione/BIL_consCapEntrGestMassivo.shtml">Consulta Capitolo Entrata Gestione Massivo</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>  
+            
+          </div>
+        </div>
+        <div class="span6">
+          <div class="accordion" id="accordion3">
+                    
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseSnippets">
+                Template e snippets
+                </a>
+              </div>
+              <div id="collapseSnippets" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="cruscotto/template_cruscotto.shtml">Possibile cruscotto</a></li>
+                    <li><a href="cruscotto/template_base.shtml">template base</a></li>
+                    <li><a href="cruscotto/template_ricerca.shtml">Tipo ricerca</a></li>
+                    <li><a href="cruscotto/template_risultati.shtml">Risultati di ricerca</a></li>
+                    <li><a href="cruscotto/template_inserimentoconerrori.shtml">Inserimento con errori</a></li>
+                    <li><a href="cruscotto/template_carica_file.shtml">Caricamento file</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>         
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseSoggetto">
+                Modulo FIn - Soggetto
+                </a>
+              </div>
+              <div id="collapseSoggetto" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="Fin-Soggetto/FIN-STetp1Soggetto.shtml">Inserisci Soggetto</a></li>
+                    <li><a href="Fin-Soggetto/FIN-AggSoggetto.shtml">Aggiorna Soggetto</a></li>
+                    <li><a href="Fin-Soggetto/FIN_ricSoggetto.shtml">Ricerca Soggetto</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseImpegno">
+                Modulo FIn - Spese
+                </a>
+              </div>
+              <div id="collapseImpegno" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="FIN-SPE/FIN-InsImpegnoStep1.shtml">Inserisci Impegno</a></li>
+                    <li><a href="FIN-SPE/FIN-RicImpegno.shtml">Ricerca Impegno</a></li>
+                    <!--li><a href="FIN-SPE/FIN-InsMutuo.shtml">Inserisci Mutuo</a></li>
+                    <li><a href="FIN-SPE/FIN-AggMutuo.shtml">Aggiorna Mutuo</a></li>
+                    <li><a href="FIN-SPE/FIN-RicMutuo.shtml">Ricerca Mutuo</a></li-->
+                    <li><a href="FIN-SPE/FIN-InsDocumentiSpesa1.shtml">Inserisci Documenti di spesa</a></li>
+                    <li><a href="FIN-SPE/FIN_aggDocumentiSpesa.shtml">Aggiorna Documenti di spesa</a></li>
+                    <li><a href="FIN-SPE/FIN-RicDocumentiSpesa.shtml">Ricerca Documenti di spesa</a></li>
+                    <li><a href="FIN-SPE/FIN-consDocumentiSpesa.shtml">Consulta Documenti di spesa (i dati sono tutti sbagliati)</a></li>
+                    <li><a href="FIN-SPE/FIN-InsLiquidazione.shtml">Inserisci Liquidazione</a></li>
+                    <li><a href="FIN-SPE/FIN-RicLiquidazione.shtml">Ricerca Liquidazione</a></li>
+                    <li><a href="FIN-SPE/FIN-ConsLiquidazione.shtml">Consulta Liquidazione</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>  
+            
+            
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseMutuo">
+                Modulo FIn - Mutui
+                </a>
+              </div>
+              <div id="collapseMutuo" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="FIN-Mutui/FIN-InsMutuo.shtml">Inserisci Mutuo</a></li>
+                    <!--li><a href="FIN-Mutui/FIN-AggMutuo.shtml">Aggiorna Mutuo</a></li-->
+                    <li><a href="FIN-Mutui/FIN-RicMutuo.shtml">Ricerca Mutuo</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseEntrate">
+                Modulo FIn - Entrate
+                </a>
+              </div>
+              <div id="collapseEntrate" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="FIN-entrate/FIN-InsAccertamentoStep1.shtml">Inserisci Accertamento</a></li>
+                    <li><a href="FIN-entrate/FIN_ricAccertamento.shtml">Ricerca Accertamento</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>   
+            
+                   
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseVincoli">
+                Modulo Bil - Vincoli
+                </a>
+              </div>
+              <div id="collapseVincoli" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-Vincoli/BIL_insVincoli.shtml">Inserisci Vincoli</a></li>
+                    <li><a href="BIL-Vincoli/BIL_aggVincoli.shtml">Aggiorna Vincoli</a></li>
+                    <li><a href="BIL-Vincoli/BIL_ricVincoli.shtml">Ricerca Vincoli</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-group">
+              <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#collapseProgetto">
+                Modulo Bil - Progetto
+                </a>
+              </div>
+              <div id="collapseProgetto" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  <ul>
+                    <li><a href="BIL-Progetto/BILL_insProgetto.shtml">Inserisci Progetto</a></li>
+                    <li><a href="BIL-Progetto/BILL_aggProgetto.shtml">Aggiorna Progetto</a></li>
+                    <li><a href="BIL-Progetto/BILL_ricercaProgetto.shtml">Ricerca Progetto</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>	 
+</div>	
+<br/>
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

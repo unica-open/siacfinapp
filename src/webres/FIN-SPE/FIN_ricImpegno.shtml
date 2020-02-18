@@ -1,0 +1,192 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--       
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../../ris/servizi/siac/include/navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+      <li><a href="../../pagine">XXXX</a> <span class="divider">></span></li>
+      <li class="active">Ricerca Impegno</li>
+    </ul> 
+  </div>	
+</div>
+ 
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 ">  
+      <div class="contentPage"> 
+        <form method="get" action="#">
+          <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Attenzione!!</strong><br /> Messaggio di feedback negativo
+          </div>
+          <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">&times;</button> 
+            <strong>Attenzione!!</strong><br />  
+            Messaggio di tipo segnalazione 
+          </div>
+          <h3>Ricerca Impegno</h3>
+          <p>&Egrave; necessario inserire almeno un criterio di ricerca.</p>  
+          <h4>Impegno</h4>
+          <fieldset class="form-horizontal">  
+            <div class="control-group">
+              <label class="control-label" for="annoda2">Anno</label>
+              <div class="controls">  
+                <select id="annoda2" name="annoda2" class="span1"><option>&nbsp;</option></select>
+                <span class="al">
+                  <label class="radio inline" for="numero">Numero </label>
+                </span>
+                <input id="numero" class="lbTextSmall span1" type="text" value="" name="numero"/>  
+                <span class="al">
+                  <label class="radio inline" for="piano">Piano dei conti </label>
+                </span>
+                <select id="piano" name="piano" class="span3"><option>&nbsp;</option></select>  
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="stato">Stato</label>
+              <div class="controls">					        
+                <select id="stato" name="stato" class="span2"><option>&nbsp;</option></select>
+                <label class="radio inline">
+                <input type="radio" name="tutti" id="tutti" value="option1" checked="checked">
+                Tutti
+                </label>
+                <label class="radio inline">
+                <input type="radio" name="residui" id="residui" value="option2">
+                Residui
+                </label>
+                <label class="radio inline">
+                <input type="radio" name="competenza" id="competenza" value="option3">
+                Competenza
+                </label>
+                <label class="radio inline">
+                <input type="radio" name="futuri" id="futuri" value="option2">
+                Futuri
+                </label>				                                     
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="cup">CUP</label>
+              <div class="controls">					        
+                <input id="cup" class="lbTextSmall span2" type="text" value="" name="cup"/>
+                <span class="cig">
+                <label class="radio inline" for="cig">CIG</label>  
+                </span>
+                <input id="cig" class="lbTextSmall span2" type="text" value="" name="cig"/>                                  
+              </div>
+            </div>
+          </fieldset>  
+          <!--#include virtual="include/capitolo.html" -->      
+          <!--#include virtual="include/provvedimento.html" -->            
+          <h4>Soggetto - ...</h4>
+          <!--#include virtual="include/soggetto.html" -->         
+          <!-- Modal -->
+          <!--#include virtual="include/modal.html" --> 
+          <!-- Fine Modal -->     
+          <p><a href="javascript:history.go(-1)" class="btn">indietro</a>   <a class="btn btn-secondary" href="">annulla</a><a href="../Fin-SPE/FIN-risricImpegni.shtml" class="btn btn-primary pull-right">cerca</a> </p>
+        </form>
+      </div>	
+    </div>	
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

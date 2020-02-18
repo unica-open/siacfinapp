@@ -1,0 +1,138 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+﻿<h4>Transazione elementare XXXXXXXXXXXXXXXXX</h4>         
+  <div class="control-group">
+    <label for="missionDT" class="control-label">Missione</label>
+    <div class="controls">
+      <select id="missionDT" disabled="disabled" class="span10">
+        <option>01-xxx</option>
+        <option>02-xxxx</option>
+        <option>03-xxxx</option>
+        <option>04-xxxx</option>
+        <option>05-xxxxxx</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="programmaDT" class="control-label">Programma</label>
+    <div class="controls">
+      <select id="programmaDT" disabled="disabled" class="span10">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="pdc" class="control-label"><abbr title="Piano dei Conti">P.d.C.</abbr> finanziario <!--a class="tooltip-test" title="selezionare prima il macroaggregato" href="#"><i class="icon-info-sign">&nbsp;<span class="nascosto">selezionare prima il macroaggregato</span></i></a--></label>
+    <div class="controls">
+      <!-- gestisce l'albero -->
+      <p class="span8">
+	  Entrate correnti di natura tributaria,  contributiva e perequativa - Tributi - Tributi diretti - Altre imposte sostitutive n.a.c. - 
+	  Altre imposte sostitutive n.a.c. riscosse in via ordinaria e attraverso altre forme</p> &nbsp;
+	  <a href="#myModalConti" role="button" class="btn btn-primary" data-toggle="modal">seleziona il Piano dei Conti</a>    
+    
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="pdc" class="control-label">Conto economico</label>
+    <div class="controls">
+      <!-- gestisce l'albero -->
+      xxxxxx &nbsp;<a href="#myModalConti" role="button" class="btn btn-primary" data-toggle="modal">seleziona il Conto Economico</a>      
+
+    </div>
+  </div>               
+  <div class="control-group">
+    <label for="Titolo" class="control-label">Cofog</label>
+    <div class="controls">
+      <select id="Titolo" class="span10">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="Macroaggregato" class="control-label">Codifica Transazione Europea</label>
+    <div class="controls">
+      <select id="Macroaggregato" class="span10">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="CUP" class="control-label">CUP</label>
+    <div class="controls">
+      <input id="CUP" type="text" />
+    </div>
+  </div>                
+  <div class="control-group">
+    <label for="Ricorrente" class="control-label">Ricorrente</label>
+    <div class="controls">
+      <select id="Ricorrente" class="span10">
+        <option selected="selected">MU Mutuo </option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">SIOPE</label>
+    <div class="controls">
+      <!-- gestisce l'albero -->
+      xxxxxx &nbsp;<a href="#myModalConti" role="button" class="btn btn-primary" data-toggle="modal">seleziona SIOPE</a>   
+      <!-- Modal -->
+  
+    </div>
+  </div>
+  <div class="control-group">
+    <label for="ASL" class="control-label">ASL</label>
+    <div class="controls">
+      <select id="ASL" class="span10">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+  </div>                
+  <div class="control-group">
+    <label for="Unitaria" class="control-label">Programma Pol. Reg. Unitaria</label>
+    <div class="controls">
+      <select id="Unitaria"  class="span10">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+      </select>
+    </div>
+  </div>
+                
+      <!-- Modal -->
+      <div id="myModalConti" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalContiLabel" aria-hidden="true">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+          <h3 id="myModalContiLabel">Piano dei Conti</h3>
+        </div>
+        <div class="modal-body">
+          <ul id="treePDC" class="ztree"></ul>
+        </div>
+        <div class="modal-footer">
+       <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+        </div>
+      </div>
+      <!-- fine modale-->           

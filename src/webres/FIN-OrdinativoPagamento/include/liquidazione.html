@@ -1,0 +1,49 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+ 		  
+            <h4>Liquidazione</h4> 
+            <fieldset class="form-horizontal">
+      
+				<div class="control-group">
+					<label class="control-label" for="descr">Descrizione *</label>
+					<div class="controls">    
+					  <textarea rows="1" cols="15" id="descr" class="span9" required ></textarea>               
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="importo">Importo *</label>
+					<div class="controls">    
+					  <input id="importo" name="importo" class="lbTextSmall span2" type="text" value="" required />	
+
+					</div>
+				</div>
+				
+
+				<div class="control-group">
+					<label class="control-label" for="CIG"><abbr title="codice identificativo gara">CIG</abbr></label>
+					<div class="controls">
+					  <input id="CIG" class="lbTextSmall span3" type="text" value="" name="CIG">
+					  <span class="alRight">
+					   <label class="radio inline" for="CUP"><abbr title="codice unico progetto">CUP</abbr></label>
+					  </span>
+					  <input id="CUP" class="lbTextSmall span3" type="text" value="" name="CUP"> 
+					</div>
+				  </div>
+
+				
+				<div class="control-group">
+					<label class="control-label" for="distinta">Distinta</label>
+					<div class="controls">
+					  <select id="distinta" name="distinta" class="span4"><option> </option></select>  
+					  <span class="alRight">
+						<label class="radio inline" for="ctTesoriere">Conto del tesoriere </label>
+					  </span>
+					  <select id="ctTesoriere" name="ctTesoriere" class="span4"><option> </option></select>  
+					</div>
+				</div>
+				
+            </fieldset> 
+            

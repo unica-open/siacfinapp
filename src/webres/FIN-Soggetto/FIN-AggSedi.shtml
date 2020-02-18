@@ -1,0 +1,492 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Inserimento sedi secondarie</li>
+    </ul> 
+    </div>	
+	</div>
+    <div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+         <ul class="nav nav-tabs">
+     <li>
+    <a href="FIN-AggSoggetto.shtml">Soggetto</a>
+    </li>
+  <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+    <li class="active"><a href="FIN-AggSedi.shtml">Sedi Secondarie</a></li>
+    <li><a href="BIL_AggPagamenti.shtml">Modalit&agrave; pagamento</a></li>
+    </ul>
+     
+           <h4>Sedi secondarie</h4>
+                 <table summary="riepilogo indirizzo" class="table tableHover">
+                     
+                      <tr>
+                        <th> Denominazione </th>
+                        <th>Indirizzo</th>
+                        <th>Stato</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                      <tr>
+                        <td> sede </td>
+                        <td>via don borio, 5</td>
+                        <td>valido</td>
+                        <td><div class="btn-group">
+             <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+           <ul class="dropdown-menu pull-right">
+               <li><a href="#insInd" data-toggle="collapse" data-target="#insInd">aggiorna</a></li>
+             <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+             <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+             <li><a href="FIN_valSedi.shtml">valida</a></li>
+             <li><a href="#consSede" data-toggle="modal" data-target="#consSede">consulta</a></li>
+           </ul>
+         </div></td>
+                      </tr>
+                      <tr class="newline">
+                        <td> concessionaria 3</td>
+                        <td>via della consolata, 6</td>
+                         <td>annullato</td>
+                        <td><div class="btn-group">
+             <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+           <ul class="dropdown-menu pull-right">
+               <li><a href="#insInd" data-toggle="collapse" data-target="#insInd">aggiorna</a></li>
+             <li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+             <li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+              <li><a href="FIN_valSedi.shtml">valida</a></li>
+             <li><a href="#consSede" data-toggle="collapse" data-target="#consSede">consulta</a></li>
+           </ul>
+         </div></td>
+                      </tr>
+                    </table>
+                    
+                                        
+
+
+<div id="consSede" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="consUPB" aria-hidden="true">
+ <div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+<h3>Sede xxxx</h3>
+</div>
+<div class="modal-body">
+
+         
+           <dl class="dl-horizontal">
+           
+
+
+			<dt>Denominazione</dt>
+             <dd>xxx</dd>
+ 			<dt>Indirizzo</dt>
+             <dd>xxx</dd>           
+			  <dt>Provincia - Comune</dt>
+         		<dd>xxxx</dd>
+                
+                  <dt><acronym title="codice di avviamento postale">C.A.P.</acronym></dt>
+         <dd></dd>
+
+ 		 <dt>Telefono</dt>
+         <dd>xxxxx</dd>
+
+             <dt>Fax</dt>
+   			 <dd>xxxx</dd>
+
+			<dt>Sito web</dt>
+	        <dd>xxx</dd>
+             
+
+             
+
+           
+		<!--	<dt>Ricorrente</dt>
+	        <dd>xxxx     Percentuale %</dd> -->
+            
+  			 <dt>Nome contatto</dt>
+		    <dd>xxxx</dd>
+            
+			<dt>E-mail</dt>
+	        <dd>xxxx </dd>
+            
+            <dt><acronym title="posta elettronica certificata">PEC</acronym></dt>
+   			 <dd>xxxx</dd>
+             
+    		
+            
+		   
+            </dl>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">chiudi</button>
+</div>
+</div>
+
+ <p>
+         <a class="btn"  data-toggle="collapse" data-target="#insInd">inserisci nuove sedi</a>
+        </p>  
+                                           
+ <div id="insInd" class="collapse">
+      <div class="accordion_info"> 
+       <fieldset class="form-horizontal">
+
+	        <div class="control-group">
+                <label class="control-label" for="Denominazione">Denominazione *</label>
+                <div class="controls">
+                <input id="Denominazione" name="Denominazione" type="text" class="span4" required=required"/></div>
+            </div>         
+			
+
+		    <div class="control-group">
+                <label class="control-label" for="Stato2">Stato\Comune</label>
+                <div class="controls">
+                	<select id="Stato2" name="Stato2" class="span3"><option>&nbsp;</option><option>italia</option><option>estero</option></select>
+
+			    <span class="al">
+				<!-- <label class="radio inline" for="comune"> Comune</label> -->
+				</span>
+				<input id="comune" name="comune" class="lbTextSmall span3" type="text" placeholder="comune" required="required"/> Provincia: xxxx
+
+			    				
+			</div>
+		    </div>    
+			
+		<!--	
+			<div class="control-group">
+                <label class="control-label" for="Sedime">Sedime</label>
+                <div class="controls"><input id="Sedime" name="Sedime" type="text"/>
+            </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="nomevia">Nome via</label>
+                <div class="controls"><input id="nomevia" name="nomevia" type="text"/><label class="checkbox">
+           <input type="checkbox"> Avviso</label></div>
+           </div>
+           
+		   <div class="control-group">
+                <label class="control-label" for="numciv">Numero civico</label>
+                <div class="controls"><input id="numciv" name="numciv" type="text"/></div>
+            </div>
+          
+		  <div class="control-group">
+                <label class="control-label" for="cap"><acronym title="codice di avviamento postale">C.A.P.</acronym></label>
+                <div class="controls"><input id="cap" name="cap" class="min required toggle_radio toggle_radio_italia" type="text"/></div>
+            </div>
+		  -->
+		  
+		  
+		   <div class="control-group">
+                <label class="control-label" for="Sedime">Indirizzo</label>
+                <div class="controls">
+				<input id="Sedime" name="Sedime" class="lbTextSmall span1" type="text" placeholder="sedime" required="required"/>
+            
+			    <span class="al">
+				<!-- <label class="radio inline" for="nomevia">Nome via</label> -->
+				</span>
+				<input id="nomevia" name="nomevia" class="lbTextSmall span4" type="text" placeholder="nome via" required="required"/>
+
+				<span class="al">
+				<!-- <label class="radio inline" for="numciv">Numero civico</label> -->
+				</span>
+				<input id="numciv" name="numciv"  class="lbTextSmall span1" type="text" placeholder="n. civico" required="required"/>
+				
+				<span class="al">
+				<!-- <label class="radio inline" for="cap"><acronym title="codice di avviamento postale">\</acronym></label> -->
+				</span>
+				<input id="cap" name="cap" class="span1" type="text" placeholder="C.A.P." required="required"/> 
+				<label class="radio inline"><input type="checkbox"> Avviso</label></div>
+				
+            </div>
+			 </fieldset>  
+            </div>
+		  
+		  <div class="accordion_info"> 
+		  
+		  <fieldset class="form-horizontal">
+		  <!--
+		  
+		  <div class="control-group">
+                <label class="control-label" for="Stato">Stato</label>
+                <div class="controls">
+                <select id="Stato" name="Stato"><option>&nbsp;</option><option>italia</option><option>estero</option></select>
+          </div></div>            
+          
+		  <div class="control-group">
+                <label class="control-label" for="comune">Comune</label>
+                <div class="controls"><input id="comune" name="comune" type="text"/> Provincia: xxxx</div>
+            </div>
+			
+			-->
+			
+	 <div class="control-group">
+     <label class="control-label" for="Numero">Numero telefono</label>
+     <div class="controls"><input id="Numero" name="Numero" class="span2" type="text"/>
+
+			    <span class="al">
+				<label class="radio inline" for="Numero2">Numero cellulare</label>
+				</span>
+				<input id="Numero2" name="Numero2" class="span2" type="text"/>
+
+			    <span class="al">
+				<label class="radio inline" for="Numero3">Fax</label>
+				</span>
+				<input id="Numero3" name="Numero3" class="span2" type="text"/>
+	 </div>
+    </div>
+	   
+			
+           <!--
+                
+            <div class="control-group">
+                <label class="control-label" for="Numero">Numero telefono 1</label>
+                <div class="controls"><input id="Numero" name="Numero" type="text"/> 
+                </div>
+            </div>
+               <div class="control-group">
+                <label class="control-label" for="Numero2">Numero telefono 2</label>
+                <div class="controls"><input id="Numero2" name="Numero2" type="text"/></div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="Fax">Fax</label>
+                <div class="controls"><input id="Fax" name="Fax" type="text"/></div>
+            </div>
+            -->
+	
+<div class="control-group">
+    <label class="control-label" for="PEC"><acronym title="posta elettronica certificata">PEC</acronym></label>
+    <div class="controls">
+	 <input id="PEC" name="PEC" class="span2" type="text"/>
+	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label>-->
+     <span class="al">
+	 <label class="radio inline"> <input type="checkbox"> Avviso</label>
+	 </span>
+
+	</div>
+</div>         
+
+
+<div class="control-group">
+    <label class="control-label" for="mail">E-mail</label>
+    <div class="controls">
+	 <input id="mail" name="mail" class="span2" type="text"/>
+	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label>-->
+     <span class="al">
+	 <label class="radio inline"> <input type="checkbox"> Avviso</label>
+	 </span>
+
+	</div>
+</div>         
+
+
+	
+			<div class="control-group">
+                <label class="control-label" for="web">Sito web</label>
+                <div class="controls"><input id="web" name="web" class="span3" type="text"/></div>
+            </div>
+         <div class="control-group">
+                <label class="control-label" for="contatto">Nome contatto</label>
+                <div class="controls"><input id="contatto" name="contatto" class="span3" type="text"/></div>
+            </div>
+              
+			  <!--
+			  <div class="control-group">
+                <label class="control-label" for="mail">E-mail</label>
+                <div class="controls"><input id="mail" name="mail" type="text"/><label class="checkbox">
+<input type="checkbox"> 
+Avviso</label></div>
+            </div>
+
+                                                    <div class="control-group">
+                <label class="control-label" for="PEC"><acronym title="posta elettronica certificata">PEC</acronym></label>
+                <div class="controls"><input id="PEC" name="PEC"  type="text"/><label class="checkbox">
+<input type="checkbox"> 
+Avviso</label></div>
+            </div>  
+              -->
+			  
+			  
+ <!--           <div class="control-group">
+             <span class="control-label">Avviso</span>
+              <div class="controls">
+                      <label class="check inline" for="Ricorrente2"> <input id="Ricorrente2" type="checkbox" name="Ricorrente2"/> Posta Elettronica</label>&nbsp;
+<span class="al">
+
+ <label class="check inline" for="Percentuale2"><input id="Percentuale2" type="checkbox" name="Percentuale2"/> Posta ordinaria</label>
+
+</span>
+
+   </div></div> -->
+                    
+                     </fieldset>  
+                     <p><a class="btn btn-link" href="">annulla inserimento</a>    <a class="btn" href="#"  data-toggle="collapse" data-target="#insInd">salva</a>  </p>
+
+                        
+		</div>     
+		
+		</div>
+                      <div class="alert alert-success">
+    		<button type="button" class="close" data-dismiss="alert">&times;</button>
+   				
+           
+
+			I dati sono stati inseriti correttamente
+
+    	</div>   
+
+ <!-- Modal -->
+<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+<!--<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Attenzione</h3>
+</div> -->
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+<!--/modale elimina -->
+<!-- Modal -->
+<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+<div class="modal-body">
+<div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><strong>Attenzione!</strong></p>
+          <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+        </div>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+<button class="btn btn-primary">si, prosegui</button>
+</div>
+</div>  
+  <!--/modale annulla -->             
+                                          
+             <p><input class="btn" type="button" value="indietro"/>   </p>
+            
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

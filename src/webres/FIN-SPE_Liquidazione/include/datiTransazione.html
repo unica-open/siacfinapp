@@ -1,0 +1,164 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<div class="accordion" id="soggetto1">
+  <div class="accordion-group">
+    <div class="accordion-heading">          
+      <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#soggetto1" href="#1">
+      Transazione elementare XXXXXXXXXXXXXXXXX<span class="icon">&nbsp;</span></a>
+    </div>
+    <div id="1" class="accordion-body collapse">
+      <div class="accordion-inner">                  
+        <div class="control-group">
+          <label for="nomeautore" class="control-label">Missione</label>
+          <div class="controls">
+            <select id="nomeautore" disabled="disabled" class="span10">
+              <option>01-xxx</option>
+              <option>02-xxxx</option>
+              <option>03-xxxx</option>
+              <option>04-xxxx</option>
+              <option>05-xxxxxx</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="soggetto5" class="control-label">Programma </label>
+          <div class="controls">
+            <select id="soggetto5" disabled="disabled" class="span10">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+        </div>        
+        <div class="control-group">
+          <label for="pdc" class="control-label"><abbr title="Piano dei Conti">P.d.C.</abbr> finanziario </label>
+          <div class="controls">
+ 
+            Entrate correnti di natura tributaria,  contributiva e perequativa - Tributi - Tributi diretti - Altre imposte sostitutive n.a.c. - Altre imposte sostitutive n.a.c. riscosse in via ordinaria e attraverso altre forme &nbsp;&nbsp;&nbsp;<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">seleziona il Piano dei Conti</a>
+ 
+            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                <h3 id="myModalLabel">Piano dei Conti</h3>
+              </div>
+              <div class="modal-body">
+                <ul id="treePDC" class="ztree"></ul>
+              </div>
+              <div class="modal-footer">
+                    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+                  </div>              
+            </div>
+     
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="pdc" class="control-label">Conto economico</label>
+          <div class="controls">
+            
+            xxxxxx &nbsp;&nbsp;&nbsp;<a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">seleziona il Conto Economico</a>
+            
+            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">Conto Economico</h3>
+              </div>
+              <div class="modal-body">
+                <ul id="treeCE" class="ztree"></ul>
+              </div>              
+            </div>
+            
+          </div>
+        </div>               
+        <div class="control-group">
+          <label for="Titolo" class="control-label">Cofog</label>
+          <div class="controls">
+            <select id="Titolo" class="span10">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="Macroaggregato" class="control-label">Codifica Transazione Europea</label>
+          <div class="controls">
+            <select id="Macroaggregato" class="span10">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">SIOPE</label>
+          <div class="controls">
+          
+            xxxxxx &nbsp;&nbsp;&nbsp;<a href="#myModal" role="button" class="btn  btn-primary" data-toggle="modal">seleziona SIOPE</a>                      
+          
+            <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="myModalLabel">SIOPE</h3>
+              </div>
+              <div class="modal-body">
+                <ul id="treeSIOPE" class="ztree"></ul>
+              </div>             
+            </div>
+            
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="CUP" class="control-label">CUP</label>
+          <div class="controls">
+            <input id="CUP" type="text" disabled="disabled" value="XXXXX"/>
+          </div>
+        </div>               
+        <div class="control-group">
+          <label for="Ricorrente" class="control-label">Ricorrente</label>
+          <div class="controls">
+            <select id="Ricorrente" class="span10">
+              <option selected="selected">1 XXXX</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+        </div>
+                         
+        <div class="control-group">
+          <label for="ASL" class="control-label">Capitoli perimetro sanitario</label>
+          <div class="controls">
+            <select id="ASL" class="span10">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+        </div>               
+        <div class="control-group">
+          <label for="Unitaria" class="control-label">Programma Pol. Reg. Unitaria</label>
+          <div class="controls">
+            <select id="Unitaria"  class="span10">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+          </div>
+        </div>               
+      </div>
+    </div>
+  </div>
+</div>      

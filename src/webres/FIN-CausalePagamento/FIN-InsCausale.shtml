@@ -1,0 +1,236 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>                       
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXXX</a> <span class="divider">></span></li>
+      <li class="active">Inserimento causale pagamento</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form class="form-horizontal">
+	  <!--#include virtual="include/alertErrorSuccess.html" -->
+        
+        <h3>Inserimento causale pagamento</h3>
+        
+        <div class="step-content">
+		   
+          <div class="step-pane active" id="step1">
+			<h4>Dati causale</h4>
+         		  
+			<fieldset class="form-horizontal margin-large">
+			  
+				<div class="control-group">
+				  <label class="control-label">Struttura Amministrativa</label>
+				  <div class="controls">                    
+					<div class="accordion span9" class="struttAmm">
+					  <div class="accordion-group">
+						<div class="accordion-heading">    
+						  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmm" href="#2">
+						  Seleziona la Struttura amministrativa</a>
+						</div>
+						<div id="2" class="accordion-body collapse">
+						  <div class="accordion-inner">
+						   <ul id="treeStruttAmm2" class="ztree treeStruttAmm"></ul>
+						  </div>
+						</div>
+					  </div>
+					</div>
+				  </div>
+				</div>   
+      
+     
+				<div class="control-group">
+					<label class="control-label" for="TipoCausale">Tipo causale *</label>
+					<div class="controls">
+						<select name="TipoCausale" id="TipoCausale" class="span9" required >
+							<option value="">Seleziona il tipo</option>
+							<option value="">zzzzzzzz </option>
+							<option value="">xxxxx</option>
+						</select>                                    
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="Causale">Causale *</label>
+					<div class="controls">
+							<input name="codice" id="codice" class="span2" type="text" value="" placeholder="codice" required >	
+							<input name="descrizione" id="descrizione" class="span7" type="text" placeholder="descrizione" value="" required>							
+					</div>
+				</div>
+				
+				<div class="accordion" id="soggetto2">
+					<div class="accordion-group">
+					  <div class="accordion-heading">    
+						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#soggetto2" href="#impCont">
+						 Imputazioni contabili<span class="icon">&nbsp;</span>
+						</a>
+					  </div>
+					  <div id="impCont" class="accordion-body collapse">
+						<div class="accordion-inner">              
+							<!--#include virtual="include/capitoloInactive.html" -->
+							<!--#include virtual="include/impegnoInactive.html" -->
+							<!--#include virtual="include/debitoreInactive.html" -->
+
+							<!--#include virtual="include/sediSecondarie.html" -->
+					
+							<div class="accordion" id="tabMod">
+								<div class="accordion-group">
+								  <div class="accordion-heading">    
+									<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#tabMod" href="#tabModalita">
+									 Modalità di pagamento<span class="icon">&nbsp;</span>
+									</a>
+								  </div>
+								  <div id="tabModalita" class="accordion-body collapse">
+									<div class="accordion-inner">              
+									  <table class="table tableHover" summary="riepilogo indirizzo">
+										<tbody><tr>
+										  <th></th>
+										  <th>Modalità</th>
+										  <th> <abbr title="progressivo">Associato a</abbr> </th>
+										  <th>Stato</th>
+										</tr>
+										<tr>
+										  <td> <input type="radio" id="mod1" name="mod1"></td>
+										  <td><label for="mod1">
+										  <a data-content="IBAN ITI2a0000000089012 " rel="popover" data-trigger="hover" href="#" data-original-title="IBAN">CB - Conto corrente bancario</a></label></td>
+										  <td> Soggetto</td>
+										  <td>valido</td>
+										</tr>
+										<tr class="newline">
+										  <td><input type="radio" id="mod2" name="mod1"></td>
+										  <td><label for="mod2"><a data-content="1200- istituo AAAA " rel="popover" data-trigger="hover" href="#" data-original-title="cessione">CC - cessione credito</a></label></td>
+										  <td>Sede secondaria</td>
+										  <td>annullato</td>
+										</tr>
+										<tr class="newline">
+										  <td><input type="radio" id="mod3" name="mod1"></td>
+										  <td><label for="mod3"> contanti</label></td>
+										  <td>soggetto</td>
+										  <td>valido</td>
+										</tr>
+									  </tbody></table>
+									</div>
+								  </div>
+								</div>
+							</div>
+						  
+						  <!--#include virtual="include/provvedimentoInactive.html" -->
+						</div>
+					  </div>
+					</div>
+				</div>     
+            
+			
+			</fieldset>         
+
+            <!--#include virtual="include/modal.html" --> 
+
+		</div>
+        </div>
+
+		<p class="margin-medium">
+			<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+			<a class="btn btn-secondary" href="">annulla</a>    
+			<a class="btn btn-primary pull-right" href="FIN-AggCausale.shtml">salva</a> 
+		</p>       
+          
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

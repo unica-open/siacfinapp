@@ -1,0 +1,27 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<h4>Provvedimento - ...</h4>
+<!--p>&Egrave; necessario inserire oltre all'anno almeno il numero atto oppure il tipo atto </p-->
+<fieldset class="form-horizontal">
+  <div class="control-group">
+    <label class="control-label" for="anno">Anno </label>
+    <div class="controls">   
+      <!-- IN AGGIORNAMENTO E IN SEZ SUBIMPEGNO: I CAMPI SONO VALORIZZATI E DISABILITATI -->
+      <input id="anno" class="lbTextSmall span1" type="text" value="" name="anno" />
+      <span class="al">
+        <label class="radio inline" for="numero3">Numero </label>
+      </span>
+      <input id="numero3" class="lbTextSmall span2" type="text" value="" name="numero3"/> 
+      <span class="al">
+        <label class="radio inline" for="tipo3">Tipo </label>
+      </span>
+      <select id="tipo3" name="tipo3" class="span4"><option> </option></select>
+      <!-- FINE IN AGGIORNAMENTO E IN SEZ SUBIMPEGNO -->
+      
+      <span class="radio guidata"><a href="#guidaProv" data-toggle="modal" class="btn btn-primary">complilazione guidata</a></span>
+    </div>
+  </div>
+  <!-- Modal -->
+</fieldset>

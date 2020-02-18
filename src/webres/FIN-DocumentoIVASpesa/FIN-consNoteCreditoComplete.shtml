@@ -1,0 +1,335 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+	<ul class="breadcrumb">
+		<li><a href="../">Home</a> <span class="divider">></span></li>
+		<li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+		<li class="active">Consulta Documenti iva di spesa</li>
+    </ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" -->   	 
+			<h3>NCD 2013/21/35651 - SORIS - Società riscossione S.p.A.</h3>
+
+			<fieldset class="form-horizontal">
+				<div class="boxOrSpan2">
+					<div class="boxOrInLeft">
+						<p>Dati documento finanziario di riferimento</p>
+						<ul class="htmlelt">
+							<li>
+								<dfn>Tipo documento</dfn> 
+								<dl>xxxx</dl>
+							</li>
+							<li>
+								<dfn>Anno</dfn> 
+								<dl>xxxx</dl>
+							</li>
+							<li>
+								<dfn>Numero</dfn> 
+								<dl>xxx</dl>
+							</li>
+							<li>
+								<dfn>Data emissione</dfn> 
+								<dl>xx/xx/xxxx</dl>
+							</li>
+							<li>
+								<dfn>Data scadenza</dfn> 
+								<dl>xx/xx/xxxx</dl>
+							</li>
+							<li>
+								<dfn>Descrizione</dfn> 
+								<dl>xxx</dl>
+							</li>
+						</ul>					
+					</div>
+									
+					<div class="boxOrInRight">
+						<p>Soggetto</p>
+						<ul class="htmlelt">
+							<li>
+								<dfn>Codice</dfn> 
+								<dl>xxxx</dl>
+							</li>
+							<li>
+								<dfn>Codice Fiscale</dfn> 
+								<dl>xxxxxxxxx</dl>
+							</li>
+							<li>
+								<dfn>Partita IVA</dfn> 
+								<dl>xxxxxxx</dl>
+							</li>
+							<li>
+								<dfn>Denominazione</dfn> 
+								<dl>xxxxxx</dl>
+							</li>
+							<li>
+								<dfn>Sede secondaria</dfn> 
+								<dl>xxx</dl>
+							</li>
+						</ul>	
+					</div>				
+				
+				</div>
+
+			</fieldset>
+			
+			<fieldset class="form-horizontal">
+				<div class="boxOrSpan2">
+					<div class="boxOrInLeft">
+						<p>Dati iva</p>
+						<ul class="htmlelt">
+							<li>
+								<dfn>Registrazione</dfn> 
+								<dl><b>Numero</b> <span class="datiIns">xxxxx</span>  <span> - </span> <b>Data</b> <span class="datiIns">xxxx</span></dl>
+							</li>
+							<li>
+								<dfn>Tipo registrazione</dfn> 
+								<dl>xxxxx</dl>
+							</li>
+							<li>
+								<dfn>Tipo registro iva</dfn> 
+								<dl>xxxxx</dl>
+							</li>
+							<li>
+								<dfn>Attività</dfn> 
+								<dl>xxxx</dl>
+							</li>
+							<li>
+								<dfn>Rilevante IRAP</dfn> 
+								<dl>si/no</dl>
+							</li>
+							<li>
+								<dfn>Registro</dfn> 
+								<dl>xxxx xxxxxxx</dl>
+							</li>		
+							<li>
+								<dfn>Protocollo provvisorio</dfn> 
+								<dl><b>Numero</b> <span class="datiIns">xxxxx</span>  <span> - </span> <b>In data</b> <span class="datiIns">xxxx</span></dl>
+							</li>
+							<li>
+								<dfn>Protocollo definitivo</dfn> 
+								<dl><b>Numero</b> <span class="datiIns">xxxxx</span>  <span> - </span> <b>In data</b> <span class="datiIns">xxxx</span></dl>
+							</li>
+							<li>
+								<dfn>Descrizione </dfn> 
+								<dl>xxxx</dl>
+							</li>
+						</ul>
+					</div>
+									
+					<div class="boxOrInRight">
+						<p>Importi</p>
+							<ul class="htmlelt">
+							<li>
+								<dfn>Importo totale note di credito</dfn> 
+								<dl>xxxxx</dl>
+							</li>
+							<li>
+								<dfn>Importo da dedurre su quote rilevanti iva</dfn> 						
+								<dl>xxxxx</dl>
+							</li>
+							
+						</ul>
+					</div>				
+				
+				</div>
+				
+			</fieldset>
+
+		<fieldset class="form-horizontal">
+			<h4 class="step-pane">Dettaglio quote pagate documento finanziario di riferimento</h4>
+			<!--#include virtual="include/tableDettIVA.html" -->
+		</fieldset>	
+		<br>
+		<fieldset class="form-horizontal">
+	
+			<h4 class="step-pane">Movimenti iva</h4>
+			<table class="table table-hover tab_left">
+				<thead>
+					<tr>
+						<th>Aliquota iva </th>
+						<th>%</th>
+						<th class="tab_Right">Imponibile</th>	
+						<th class="tab_Right">Imposta</th>
+						<th class="tab_Right">Importo detraibile</th>	
+						<th class="tab_Right">Importo indetraibile</th>	
+						<th class="tab_Right">Totale</th>	
+					</tr>
+				</thead>
+					
+				<tbody>
+					<tr>				
+						<td>004 - iva 4%</td>
+						<td>4</td>
+						<td class="tab_Right">769,71</td>
+						<td class="tab_Right">30,70</td>
+						<td class="tab_Right">30,70</td>
+						<td class="tab_Right">0</td>
+						<td class="tab_Right">800,50</td>								
+					</tr>
+					
+					<tr>				
+						<td>010 - iva 10%</td>
+						<td>10</td>
+						<td class="tab_Right">50,00</td>
+						<td class="tab_Right">5,00</td>
+						<td class="tab_Right">5,00</td>
+						<td class="tab_Right">0</td>
+						<td class="tab_Right">55,00</td>									
+					</tr>
+
+				</tbody>
+				<tfoot>
+					<tr>
+						<th colspan="2">Totali</th>
+						<th class="tab_Right">819,71</th>	
+						<th class="tab_Right">35,70</th>
+						<th class="tab_Right">&nbsp;</th>	
+						<th class="tab_Right">&nbsp;</th>	
+						<th class="tab_Right">855,50</th>	
+					</tr>
+				</tfoot>
+			</table>
+
+			<div class="row pagination_conth">
+				<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+					<div class="span6">                               
+						<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+							<ul>
+								<li><a href="#">« inizio</a></li>
+								<li><a href="#">« prec</a></li>
+								<li class="disabled"><a href="#">1</a></li>
+								<li class="active"><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#">4</a></li>
+								<li><a href="#">5</a></li>
+								<li><a href="#">succ »</a></li>
+								<li><a href="#"> fine »</a></li>
+							</ul>
+						</div>
+								
+					</div>  
+			</div>
+		</fieldset>					
+		
+		<!--#include virtual="include/modal.html" -->
+		
+		<div class="Border_line"></div>
+		<p>
+		<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+		</p>     
+  
+
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

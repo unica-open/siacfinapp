@@ -1,0 +1,62 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+			
+		<!-- accordion movimento iva-->
+			<div id="NewMovIVA" class="collapse">
+				<div class="accordion_info">
+					
+					<fieldset class="form-horizontal">        
+						<h4 class="step-pane">Dati principali</h4>
+					
+							<div class="control-group">
+								<label class="control-label" for="AliqIva">Aliquota iva *</label>
+								<div class="controls">
+									<select id="AliqIva" name="AliqIva"  class="span2" required />
+										<option>xxxxxxxxx</option>
+										<option>xxxxxxxx</option>
+									</select>
+									<span class="alRight">
+									<label class="radio inline" for="percentuale">Percentuale</label>
+									</span>
+									<input id="percentuale" name="percentuale" class="lbTextSmall span1" type="text" value=""  readonly />
+								</div>
+							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="scadenza">Imponibile *</label>
+								<div class="controls">
+									<input id="scadenza" name="scadenza" class="lbTextSmall span2" type="text" value=""  required />
+									<span class="alRight">
+										<label class="radio inline" for="Imposta">Imposta *</label>
+									</span>
+									<input id="Imposta" name="Imposta" class="lbTextSmall span2" type="text" value="" required />
+									<span class="alRight">
+										<label class="radio inline" for="ImpTotale">Totale *</label>
+									</span>
+									<input id="ImpTotale" name="ImpTotale" class="lbTextSmall span2" type="text" value="" required />									
+								</div>
+							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="ImpostaDet">Imposta detraibile</label>
+								<div class="controls">
+									<input id="ImpostaDet" class="lbTextSmall span2" type="text" value="" name="ImpostaDet" readonly />	
+									<span class="alRight">
+									<label class="radio inline" for="ImpostaINdet">Imposta indetraibile</label>
+									</span>
+									<input id="ImpostaINdet" class="lbTextSmall span2" type="text" value="" name="ImpostaINdet" readonly />														
+								</div>
+							</div>
+							
+					</fieldset>
+								  
+					<p> 
+						<a class="btn btn-secondary" data-toggle="collapse" data-target="#NewMovIVA">annulla</a> 
+						<a class="btn btn-primary pull-right" data-toggle="collapse" data-target="#NewMovIVA">aggiungi movimento</a>
+					</p>
+				</div>
+			</div>
+		<!-- /accordion accordion movimento iva -->
+							

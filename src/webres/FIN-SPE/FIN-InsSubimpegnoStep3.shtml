@@ -1,0 +1,208 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>
+<body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <div class="navbarLogin">
+    <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+       <p class="login-text pull-right">
+    Mario Rossi <a href="#" class="navbar-link">x</a>
+    </p>
+    </div>
+  </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+      <li class="active">Inserimento subimpegno</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">  
+    <div class="span12 contentPage">    
+      <form class="form-horizontal">
+        <h3>Inserimento subimpegno</h3>
+        <div class="alert alert-error">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Attenzione!!</strong><br /> Messaggio di feedback negativo
+        </div>
+        <div class="alert alert-success">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Attenzione!!</strong><br /> xxxxxxx
+        </div>    
+        <div id="MyWizard" class="wizard">
+          <ul class="steps">
+            <li data-target="#step1" class="complete"><span class="badge badge-success">1</span>Relazioni<span class="chevron"></span></li>
+            <li data-target="#step2" class="complete"><span class="badge badge-success">2</span>Transazione<span class="chevron"></span></li>
+            <li data-target="#step3" class="active"><span class="badge">3</span>Impegni pluriennali<span class="chevron"></span></li>
+            <!--						<li data-target="#step4"><span class="badge">4</span>Salva<span class="chevron"></span></li> -->
+          </ul>
+        </div>    
+        <div class="step-content"> 
+          <div class="step-pane active" id="step2">    
+            <h4>Anni di pluriennale: 10</h4>
+            <table summary="riepilogo incarichi" class="table table-hover">    
+              <tr>
+                <th>Anno</th>
+                <th> Importo</th>
+                <th>Data scadenza</th>
+              </tr>
+              <tr>
+                <td>2013</td>
+                <td><input type="text" id="imp1" class="input-small"/><label for="imp1" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad" class="input-small"/><label for="scad" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+              <tr>
+                <td>2014</td>
+                <td><input type="text" id="imp2" class="input-small"/><label for="imp2" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad1" class="input-small"/><label for="scad1" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+              <tr>
+                <td>2015</td>
+                <td><input type="text" id="imp2" class="input-small"/><label for="imp2" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad2" class="input-small"/><label for="scad2" class="nascosto">inserisci data scadenza</label>  </td>
+              </tr>
+              <tr>
+                <td>2016</td>
+                <td><input type="text" id="imp3" class="input-small"/><label for="imp3" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad3" class="input-small"/><label for="scad3" class="nascosto">inserisci data scadenza</label>  </td>
+              </tr>
+              <tr>
+                <td>2017</td>
+                <td><input type="text" id="imp4" class="input-small"/><label for="imp4" class="nascosto">inserisci importo</label>  </td>
+                <td><input type="text" id="scad4" class="input-small"/><label for="scad4" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+              <tr>
+                <td>2018</td>
+                <td><input type="text" id="imp4a" class="input-small"/><label for="imp4a" class="nascosto">inserisci importo</label>  </td>
+                <td><input type="text" id="scad5" class="input-small"/><label for="scad5" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+              <tr>
+                <td>2019</td>
+                <td><input type="text" id="imp4b" class="input-small"/><label for="imp4b" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad6" class="input-small"/><label for="scad6" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+              <tr>
+                <td>2020</td>
+                <td><input type="text" id="imp4c" class="input-small"/><label for="imp4c" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad7" class="input-small"/><label for="scad7" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+              <tr>
+                <td>2021</p>                                                           </td>
+                <td><input type="text" id="imp4d" class="input-small"/><label for="imp4d" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad8" class="input-small"/><label for="scad8" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+              <tr>
+                <td>2022</td>
+                <td><input type="text" id="imp4e" class="input-small"/><label for="imp4e" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad9" class="input-small"/><label for="scad9" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+              <tr>
+                <td>2023</td>
+                <td><input type="text" id="imp4f" class="input-small"/><label for="imp4f" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad10" class="input-small"/><label for="scad10" class="nascosto">inserisci data scadenza</label></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <p class="margin-large"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   <a class="btn" href="">annulla</a>    <a class="btn btn-primary pull-right" href="FIN-AggSubimpegno.shtml">salva</a>  </p>     
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

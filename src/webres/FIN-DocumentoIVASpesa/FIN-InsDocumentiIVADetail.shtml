@@ -1,0 +1,273 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Inserimento Documenti iva spesa</li>
+		</ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+	<div class="span12 contentPage">
+		<form method="get" action="#" class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" -->
+			<h3>Inserimento documento iva di spesa</h3>
+			<h4>FAT 2013/39/132829 - SORIS - Società riscossione S.p.A.</h4>
+				
+					<!--#include virtual="include/datiAnagraficaDetail.html" -->	
+						
+					<h4 class="step-pane">Dati iva</h4>
+					<fieldset>	
+						<div class="control-group">
+							<label class="control-label" for="DocIntracomunitario">Documento intracomunitario</label>								
+								<div class="controls">
+									<input id="DocIntracomunitario" type="checkbox" value="" name="DocIntracomunitario"  />
+									<span class="campiDocIntra" style="display:none">
+										<span class="alRight">
+											<label class="radio inline" for="valutaEstera">valuta estera</label>
+										</span>
+										<input id="valutaEstera" class="lbTextSmall span2 " type="text" value=""  name="valutaEstera" />
+										<span class="alRight">
+											<label class="radio inline" for="ImportoValuta">importo in valuta</label>
+										</span>
+										<input id="ImportoValuta" class="lbTextSmall span2 " type="text" value=""  name="ImportoValuta" />
+									</span>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="NumReg">N. registrazione *</label>								
+								<div class="controls">
+									<input id="NumReg" class="lbTextSmall span2 " type="text" value="" name="NumReg" required />
+									<span class="alRight">
+										<label class="radio inline" for="DataReg">Data registrazione *</label>
+									</span>
+									<input id="DataReg" class="lbTextSmall span2 " type="text" value=""  name="DataReg" required />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="tipoReg">Tipo registrazione *</label>								
+								<div class="controls">
+									<select id="tipoReg" class="span6" required >
+										<option value="">01 - NORMALE</option>
+									</select>
+							</div>
+						</div>	
+						
+						<div class="control-group">
+							<label class="control-label" for="tipoRegIva">Tipo registro iva *</label>								
+								<div class="controls">
+									<select id="tipoRegIva" class="span6" required >
+										<option value="">xxxx</option>
+										<option value="">xxxx</option>
+									</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="Attivita">Attività</label>								
+								<div class="controls">
+									<select id="Attivita" class="span6" >
+										<option>xxxx</option>
+										<option>xxxx</option>
+									</select>
+									<span class="alRight">
+										<label class="radio inline" for="RilIRAP">Rilevante IRAP</label>
+									</span>
+									<input id="RilIRAP" type="checkbox" value=""  name="RilIRAP" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="tipoRegIva">Registro *</label>								
+								<div class="controls">
+									<select id="tipoRegIva" class="span6" required >
+										<option value="">xxxx</option>
+										<option value="">xxxx</option>
+									</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="proProvv">Protocollo provvisorio </label>								
+								<div class="controls">
+									<input id="proProvv" class="lbTextSmall span2 " type="text" value=""  name="proProvv"  />
+									<span class="alRight">
+										<label class="radio inline" for="proData">In data </label>
+									</span>
+									<input id="proData" class="lbTextSmall span2" type="text" value=""  name="proData" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="proDef">Protocollo definitivo </label>								
+								<div class="controls">
+									<input id="proDef" class="lbTextSmall span2 " type="text" value=""  name="proDef"  />
+									<span class="alRight">
+										<label class="radio inline" for="proDefData">In data </label>
+									</span>
+									<input id="proDefData" class="lbTextSmall span2" type="text" value=""  name="proDefData" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="numOrd">N. ordinativo</label>								
+								<div class="controls">
+									<input id="numOrd" class="lbTextSmall span2 " type="text" value=""  name="numOrd"  />
+									<span class="alRight">
+										<label class="radio inline" for="dateOrd">Data ordinativo </label>
+									</span>
+									<input id="dateOrd" class="lbTextSmall span2" type="text" value=""  name="dateOrd" />
+									<span class="alRight">
+										<label class="radio inline" for="datePag">Data pagamento </label>
+									</span>
+									<input id="datePag" class="lbTextSmall span2" type="text" value=""  name="datePag" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="Descrizione">Descrizione </label>								
+								<div class="controls">
+									<textarea id="Descrizione" rows="2" cols="15" class="input-medium span9" type="text" value="" name="Descrizione"></textarea>
+							</div>
+						</div>
+					
+					<p><a class="btn btn-primary"  data-toggle="collapse" data-target="#aggMovIva">movimenti iva</a></p>  
+                                           
+					<div id="aggMovIva" class="collapse">
+						<div class="accordion_info"> 
+							<div class="step-pane active" id="step1"> 
+									<!--#include virtual="include/tableMovIVA.html" -->
+									<p>
+										<a class="btn btn-secondary" data-toggle="collapse" data-target="#NewMovIVA" >inserisci nuovo movimento iva</a>
+									</p>
+		
+									<!--#include virtual="include/movimentoIva.html" -->	
+							</div>
+	
+							<div class="clear"></div>
+
+						</div>    
+					</div>
+			</fieldset>
+			<div class="Border_line"></div>
+
+			<!--#include virtual="include/modal.html" -->
+			
+			<p>
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+				<a class="btn" href="">annulla</a>
+				<a id="SalvaIva" href="FIN-AggDocumentiIVADetail.shtml" data-toggle="modal" class="btn btn-primary pull-right">salva</a>
+			</p>
+			 
+        </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<!--#include virtual="include/jsSalva.html" -->
+
+</body>
+</html>

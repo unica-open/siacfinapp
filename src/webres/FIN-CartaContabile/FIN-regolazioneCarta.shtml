@@ -1,0 +1,288 @@
+
+<!-- ***************** inclusione head portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+</head>
+<body>                       
+	<!-- NAVIGAZIONE -->
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- ***************** inclusione Banner portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--#include virtual="../navbarLogin.html" -->
+
+
+<!-- ***************** inclusione Banner applicativo *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+
+	<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">xxxx</a> <span class="divider">></span></li>
+			<li class="active">Aggiornamento carta contabile</li>
+		</ul> 
+	</div>	
+</div>
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage"> 
+		
+				<form class="form-horizontal">
+					
+					<!--#include virtual="include/alertErrorSuccess.html" -->
+					<h3>Carta 2014/23568 - Carta contabile per anticipo fatture</h3>
+					<h4>Riga numero:99999</h4>
+			
+						<div class="accordion-group">
+							<div class="accordion-heading">
+								<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#DatiPrincipali" href="#DatiPrincipaliTAB">Dati principali<span class="icon">&nbsp;</span></a>		
+							</div>
+						
+							<div id="DatiPrincipaliTAB" class="accordion-body collapse">
+								<div class="accordion-inner">
+
+									<fieldset class="form-horizontal">	
+										<div class="boxOrSpan2">
+											<div class="boxOrInLeft">
+												<p>Quota</p>
+												<ul class="htmlelt">	
+													<li>
+														<dfn>Numero</dfn> 
+														<dl>xxxx</dl>
+													</li>
+													<li>
+														<dfn>Conto tesoriere</dfn> 
+														<dl>xxxxxxxxx</dl>
+													</li>
+													<li>
+														<dfn>Descrizione</dfn> 
+														<dl>xxxxxxxxxx xxxxxxxx</dl>
+													</li>
+													<li>
+														<dfn>Note</dfn> 
+														<dl>xxxxxx xxxxxxxxx xxxxxxx</dl>
+													</li>
+													<li>
+														<dfn>Importo totale</dfn> 
+														<dl>222.222,00</dl>
+													</li>
+												</ul>
+											</div>
+															
+											<div class="boxOrInRight">
+												<p>Creditore</p>
+												<ul class="htmlelt">
+													<li>
+														<dfn>Codice</dfn> 
+														<dl>xxxxxxxx</dl>
+													</li>
+													<li>
+														<dfn>Ragione sociale</dfn> 
+														<dl>xxxxxx</dl>
+													</li>
+													<li>
+														<dfn>Partita iva</dfn> 
+														<dl>xxxxxxxxxxx</dl>
+													</li>
+													<li>
+														<dfn>Codice fiscale</dfn> 
+														<dl>xxxxxxxxx</dl>
+													</li>
+													<li>
+														<dfn>Modalità di pagamento</dfn> 
+														<dl>xxxxxxx</dl>
+													</li>
+												</ul>
+											</div>				
+										
+										</div>
+										
+										<div class="boxOrSpan2">
+											<div class="boxOrInLeft">
+												<p>Impegno</p>
+												<ul class="htmlelt">	
+													<li>
+														<dfn>Anno</dfn> 
+														<dl>xxxx</dl>
+													</li>
+													<li>
+														<dfn>Numero</dfn> 
+														<dl>xxxxxxxxx</dl>
+													</li>
+													<li>
+														<dfn>Subimpegno</dfn> 
+														<dl>xxx</dl>
+													</li>
+												</ul>
+											</div>
+															
+										
+										</div>
+
+									</fieldset>
+									
+								</div>
+							</div>
+						</div>
+						
+						<h4 class="step-pane">Documenti collegati</h4>	
+						<table class="table table-hover tab_left">
+							<thead>
+								<tr>
+									<th>Documento</th>
+									<th>Data</th>
+									<th>Stato</th>
+									<th>Soggetto</th>
+									<th>Quota</th>
+									<th>Impegno</th>
+									<th class="tab_Right">Importo</th>
+									<th class="tab_Right">&nbsp;</th>  
+								</tr>
+							</thead>
+							<tbody>
+								<tr>                  
+									<td>2013/AGG/67890 </td>
+									<td>23/03/2013</td>
+									<td><a data-content="Parzialmente emesso" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">PE</a></td>
+									<td>132829-SORIS</td>
+									<td> 1</td>
+									<td>2013/12345</td>
+									<td class="tab_Right">500,25</td>
+									<td class="tab_Right">&nbsp;</td>  
+								</tr>
+								<tr>                  
+									<td>2013/FAT/12345</td>
+									<td>15/01/2013</td>
+									<td><a data-content="Emesso" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">EM</a></td>
+									<td>148801-EQUITALIA SERVIZI</td>
+									<td> 1</td>
+									<td>2013/12345-1</td>
+									<td class="tab_Right">1.000.000,00</td>
+									<td class="tab_Right">&nbsp;</td>  
+								</tr>
+							
+								<tr>                  
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+									<td>148801-EQUITALIA SERVIZI</td>
+									<td> 1</td>
+									<td>2013/1234</td>
+									<td  class="tab_Right">1.000,00</td>
+									<td class="tab_Right">
+										<div class="btn-group">
+											<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="#aggRegolaCarta" data-toggle="modal">aggiorna</a></li>
+												<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+											</ul>
+										</div>                               
+									</td>
+									
+								</tr>
+								
+								<tr>                  
+									<td>-</td>
+									<td>-</td>
+									<td>-</td>
+									<td>14567-TORINO CALCIO S.P.A.</td>
+									<td> 1</td>
+									<td>2013/12345-2</td>
+									<td class="tab_Right">5.000,01</td>
+									<td class="tab_Right">
+										<div class="btn-group">
+											<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="#aggRegolaCarta" data-toggle="modal">aggiorna</a></li>
+												<li><a href="#msgElimina" data-toggle="modal">elimina</a></li>
+											</ul>
+										</div>                               
+									</td>
+								
+								</tr>
+							</tbody>
+						</table>
+					
+						<div class="row pagination_conth">
+							<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+							<div class="span6">                               
+								<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+									<ul>
+										<li><a href="#">« inizio</a></li>
+										<li><a href="#">« prec</a></li>
+										<li class="disabled"><a href="#">1</a></li>
+										<li class="active"><a href="#">2</a></li>
+										<li><a href="#">3</a></li>
+										<li><a href="#">4</a></li>
+										<li><a href="#">5</a></li>
+										<li><a href="#">succ »</a></li>
+										<li><a href="#"> fine »</a></li>
+									</ul>
+								</div>
+										
+							</div>  
+						</div>
+			
+						<p><a class="btn btn-primary" data-toggle="collapse" data-target="#collImpegno">collega impegno</a></p>
+						<div class="clear"></div>
+						
+						<div id="collImpegno" class="collapse">
+							<div class="accordion_info">
+							
+								<fieldset class="form-horizontal" id="insRegolarizzaTAB">   
+									<!--#include virtual="include/impegno.html" -->
+									<div class="control-group">
+										<label class="control-label">Importo *</label>
+										<div class="controls">
+											<input id="ImpRegolarizza" name="ImpRegolarizza" class="lbTextSmall span2" type="text" value=""  required />	
+										</div>
+									</div>
+									
+									<div class="Border_line"></div>
+									<p> 
+										<a class="btn btn-secondary" data-toggle="collapse" data-target="#collImpegno" >annulla</a> 
+										<a class="btn btn-primary pull-right" data-toggle="collapse" data-target="#collImpegno">conferma</a>
+									</p>
+								</fieldset>
+								
+							</div>
+						</div>
+			
+					
+					<div class="Border_line"></div>
+					<p>
+						<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>
+						<a class="btn btn-primary pull-right" href="">consolida regolarizzazione</a>
+									
+					</p>  
+					
+					<!--#include virtual="include/modal.html" -->
+				</form>
+				
+		</div>	  
+	</div>	 
+</div>	
+
+<!-- ***************** inclusione footer portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+</body>
+</html>

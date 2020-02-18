@@ -1,0 +1,180 @@
+
+<!-- ***************** inclusione head portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+</head>
+<body>                       
+	<!-- NAVIGAZIONE -->
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- ***************** inclusione Banner portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--#include virtual="../navbarLogin.html" -->
+
+
+<!-- ***************** inclusione Banner applicativo *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+
+	<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">xxxx</a> <span class="divider">></span></li>
+			<li class="active">Aggiornamento carta contabile</li>
+		</ul> 
+	</div>	
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage"> 
+		
+			<form class="form-horizontal">
+				<!--#include virtual="include/alertErrorSuccess.html" -->
+				<h3>Carta 2014/23568 - Carta contabile per anticipo fatture</h3>
+				<h4>Stato completo dal 11/11/2011 - Valuta $/€</h4>
+				<h4 class="step-pane">Importo carta: 99.999.999,00 (Da regolarizzare: 11.111.111,00)</h4>
+				
+					<p class="clear paddingBottom"><a class="btn btn-primary pull-right">regolarizza (selezionati)</a></p>
+					<h4><span class="num_result">27</span> Righe</h4>
+				
+					<fieldset class="form-horizontal">
+						<table class="table table-hover tab_left" >
+							<thead>
+								<tr>
+									<th><input type="checkbox" onchange="checkAll()" name="chk[]" class="tooltip-test" title="Seleziona tutti" /></th>
+									<th>Numero</th>
+									<th>Descrizione</th>
+									<th>Conto del tesoriere</th>
+									<th>Impegno</th>
+									<th>Soggetto</th>			  
+									<th>Documento/Quota</th>				
+									<th class="tab_Right">Importo</th>
+									<th class="tab_Right">Da regolarizzare</th>
+									<th class="tab_Right">&nbsp;</th>										
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><input type="checkbox" name="fooCheck" value="rigCarta1"></td>
+									<td>1</td>
+									<td>xxxxx xxxxxxxx xxxxx xxxxxxxx xxxxx xxxxxxxx</td>
+									<td>xxxxxxxxxxxxxxx</td>
+									<td>2012/23546</td>	
+									<td>148801-EQUITALIA SERVIZI</td>										
+									<td>-</td>
+									<td class="tab_Right">999.000,00</td>
+									<td class="tab_Right">22.000,00</td>
+									<td class="tab_Right">
+										<a href="FIN-regolazioneCarta.shtml" class="btn btn-secondary">collega riga</a>
+									</td>
+								</tr>
+								<tr>
+									<td><input type="checkbox" name="fooCheck" value="rigCarta2"></td>
+									<td>2</td>
+									<td>xxxxx xxxxxxxx xxxxx xxxxxxxx</td>
+									<td>xxxxxxxxxxxxxxx</td>
+									<td>2013/156-1</td>	
+									<td>132829-SORIS</td>										
+									<td><a data-content="xxxxxxxxx xxxxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto">2013/ATT/233-1</a></td>
+									<td class="tab_Right">999.000,00</td>
+									<td class="tab_Right">5.222,00</td>
+									<td class="tab_Right">
+										<a href="FIN-regolazioneCarta.shtml" class="btn btn-secondary">collega riga</a>
+									</td>
+								</tr>
+								<tr>
+									<td><input type="checkbox" name="fooCheck" value="rigCarta3"></td>
+									<td>3</td>
+									<td>xxxxx xxxxxxxx xxxxx xxxxxxxx</td>
+									<td>xxxxxxxxxxxxxxx</td>
+									<td>2013/156-1</td>	
+									<td>132829-SORIS</td>										
+									<td><a data-content="xxxxxxxxx xxxxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto">2013/CCN/4561-1</a></td>
+									<td class="tab_Right">999.000,00</td>
+									<td class="tab_Right">5.222,00</td>
+									<td class="tab_Right">&nbsp;</td>
+								</tr>
+								<tr>
+									<td><input type="checkbox" name="fooCheck" value="rigCarta4"></td>
+									<td>4</td>
+									<td>xxxxx xxxxxxxx xxxxx xxxxxxxx</td>
+									<td>xxxxxxxxxxxxxxx</td>
+									<td>2013/156-1</td>	
+									<td>132829-SORIS</td>										
+									<td>vedi dettaglio</td>
+									<td class="tab_Right">999.000,00</td>
+									<td class="tab_Right">11.111,00</td>
+									<td class="tab_Right">
+										<a href="FIN-regolazioneCarta.shtml" class="btn btn-secondary">collega riga</a>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<th colspan="7">Totale</td>
+									<th class="tab_Right">999.000,00</th>
+									<th class="tab_Right">55.333,00</th>
+									<th class="tab_Right">&nbsp;</th>
+								</tr>
+							</tfoot>
+						</table>
+						
+						<div class="row pagination_conth">
+							<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+							<div class="span6">                               
+								<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+									<ul>
+										<li><a href="#">« inizio</a></li>
+										<li><a href="#">« prec</a></li>
+										<li class="disabled"><a href="#">1</a></li>
+										<li class="active"><a href="#">2</a></li>
+										<li><a href="#">3</a></li>
+										<li><a href="#">4</a></li>
+										<li><a href="#">5</a></li>
+										<li><a href="#">succ »</a></li>
+										<li><a href="#"> fine »</a></li>
+									</ul>
+								</div>	
+							</div>  
+						</div>
+
+					</fieldset>
+
+					
+					<!--#include virtual="include/modal.html" -->
+					<div class="Border_line"></div>
+					<p>
+						<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>
+						<span class="pull-right">
+							<a class="btn btn-primary">regolarizza (selezionati)</a>
+						</span>					
+					</p>       
+			
+			</form>
+				
+		</div>		  
+	</div>	 
+</div>	
+<!-- ***************** inclusione footer portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+<!--#include virtual="../../ris/servizi/siac/include/myCheckbox.html" -->
+
+</body>
+</html>

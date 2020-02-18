@@ -1,0 +1,249 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+  
+		<!-- NAVIGAZIONE -->
+		<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+		<ul id="sommario" class="nascosto">
+			<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+		</ul>
+		<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+<!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+			<li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Risultati di ricerca delle liquidazioni</li>
+		</ul> 
+    </div>	
+</div>
+ 
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 ">
+			<div class="contentPage"> 
+			
+				<form method="get" action="#">   
+					<!--#include virtual="include/alertErrorSuccess.html" --> 
+					
+					<h3>Risultati di ricerca delle liquidazioni</h3>
+
+					<h4><span class="num_result">19527</span> Risultati trovati</h4>                           
+	
+						<table class="table table-hover tab_left" summary="...." >
+							<thead>
+								<tr>
+								    <th scope="col">Anno</th>
+									<th scope="col">Numero</th>
+									<th scope="col">Creditore</th>
+									<th scope="col">Descrizione </th>
+									<th scope="col">Stato</th>
+									<th scope="col">Impegno</th>
+									<th scope="col">Mutuo</th>
+                                    <th scope="col">Capitolo</th>
+									<th scope="col">Provvedimento</th>
+									<th scope="col" class="tab_Right">Importo</th>
+									<th scope="col" class="tab_Right">&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>2011</td>
+									<td>000152</td>
+									<td>123 - Ikea</td>									
+									<td>Sedie</td>
+									<td><a data-content="Validato" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">V</a></td>
+                                    <td>2012/23546/0</td>
+									<td>xxxx</td>
+									<td>0000004/1/1</td>
+									<td>2012/201235</td>
+									<td  class="tab_Right">13.124,99</td>
+									<td  class="tab_Right">
+										<div class="btn-group">
+											<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni
+											<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="FIN-aggLiquidazione.shtml" >aggiorna</a></li>
+												<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li>
+												<li><a href="FIN-ConsLiquidazione.shtml">consulta </a></li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>2012</td>
+									<td>000072</td>
+									<td>23567 - Aiazzone</td>
+									<td>Scrivanie</td>
+									<td><a data-content="Provvisorio" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">P</a></td>
+									<td>2013/156/1</td>
+									<td>xxxxxx</td>
+									<td>0000004/1/22</td>
+									<td>2013/215369</td>
+									<td  class="tab_Right">15,00</td>
+									<td  class="tab_Right">
+										<div class="btn-group">
+											<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni
+											<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="FIN-aggLiquidazione.shtml" >aggiorna</a></li>
+												<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li>
+												<li><a href="FIN-ConsLiquidazione.shtml">consulta </a></li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>2012</td>
+									<td>0446790</td>
+									<td>433 - xxxx</td>
+									<td>Lampade</td>
+                                    <td><a data-content="Annullato" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">A</a></td>
+									<td>2012/355/670</td>
+									<td>xxxxxx</td>
+									<td>0000004/1/4</td>
+									<td>2012/468990</td>
+									<td  class="tab_Right">620,00</td>
+									<td  class="tab_Right">
+										<div class="btn-group">
+											<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni
+											<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="FIN-aggLiquidazione.shtml" >aggiorna</a></li>
+												<li><a href="#msgAnnulla" data-toggle="modal">annulla</a></li>
+												<li><a href="FIN-ConsLiquidazione.shtml">consulta </a></li>
+											</ul>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+							<tfoot>
+							</tfoot>
+						</table>
+						
+						<div class="row pagination_conth">
+							<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+								<div class="span6">                               
+									<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+										<ul>
+											<li><a href="#">« inizio</a></li>
+											<li><a href="#">« prec</a></li>
+											<li class="disabled"><a href="#">1</a></li>
+											<li class="active"><a href="#">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">4</a></li>
+											<li><a href="#">5</a></li>
+											<li><a href="#">succ »</a></li>
+											<li><a href="#"> fine »</a></li>
+										</ul>
+									</div>
+											
+								</div>  
+						</div>
+						
+				<p> <a class="btn btn-secondary" href="FIN-insLiquidazioneStep1.shtml" >inserisci liquidazione</a> </p>
+				<!--#include virtual="include/modal.html" --> 
+				
+				<div class="Border_line"></div>
+				<p> <a class="btn btn-secondary" href="javascript:history.go(-1)" >indietro</a> </p>
+					
+				</form>
+			</div>	
+		</div>	
+	</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>                       
+
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+			<li class="active">Risultato atto XXXXXX</li>
+		</ul> 
+	</div>	
+</div>
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">    
+			
+			<form method="get" action="#">
+				<!--#include virtual="include/alertErrorSuccess.html" -->
+				<h3>Quote in convalida elenco 2013/25</h3>   
+				<fieldset class="form-horizontal">
+						<b>Trasmesso il:</b> xx/xx/xxxx <b>da:</b> Sistema1 - <b>n.</b> xxxx/xxxx
+						<br>
+						<b>Provvedimento:</b>  2013 / 3 - <b>delibera</b> - <b>struttura:</b> 002 - Gabinetto del sindaco - <b>oggetto:</b> xxxxxxxx xxxx xxxxxxxxxxxx 
+						</p>
+
+					<h4 class="step-pane">Dettaglio elementi da convalidare &nbsp;<span class=""><a class="tooltip-test" href="#totaliTab" data-toggle="modal" data-original-title="Visualizza dettagli totali"><i class="icon-info-sign icon-1x">&nbsp;<span class="nascosto">Visualizza dettagli</span></i></a></span></h4>
+					
+					<!--#include virtual="include/tableDettAttivi.html" -->
+					<div class="Border_line"></div>
+					<p><a class="btn btn-primary pull-right" href="#boxConvalida" data-toggle="modal">convalida</a></p>
+					<div class="clear"></div>
+					<br>
+					<!--#include virtual="include/tableDettInattivi.html" -->
+						
+					</fieldset>
+				<div class="Border_line"></div>
+				<!--#include virtual="include/modal.html" -->
+				<p class="margin-medium"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> </p>       
+				  
+			</form>
+			
+		</div>
+	</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+	
+	<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+	<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+   
+	
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+	<!--#include virtual="../../ris/servizi/siac/include/myCheckbox.html" -->
+
+
+</body>
+</html>

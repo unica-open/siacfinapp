@@ -1,0 +1,306 @@
+﻿<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+                       
+<!-- NAVIGAZIONE -->
+<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+<!-- /NAVIGAZIONE -->
+
+<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+			<li class="active">Associa movimenti allegato atto</li>
+		</ul> 
+	</div>	
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">    
+		
+		  <form method="get" action="#">
+			<!--#include virtual="include/alertErrorSuccess.html" -->
+			
+			<h3>Allegato atto XXXXXX</h3>
+			
+			<div id="MyWizard" class="wizard">
+				<ul class="steps">
+					<li data-target="#step1"><span class="badge badge-success">1</span>Ricerca soggetto<span class="chevron"></span></li>
+					<li data-target="#step2" class="active"><span class="badge">2</span>Associa movimenti<span class="chevron"></span></li>
+				</ul>
+			</div>
+			
+			<div class="step-content">
+				<div class="step-pane active" id="step1">    
+					
+					<fieldset class="form-horizontal">
+					<h4>Soggetto: .... </h4>
+		
+						<p><a class="btn" data-toggle="collapse" data-target="#insMovimento">aggiungi movimento</a></p>
+						
+						<div id="insMovimento" class="collapse">
+							<div class="accordion_info"> 
+								<div class="step-pane active" id="step1"> 
+									<h4>Movimento</h4>
+
+									<fieldset class="form-horizontal">      
+										
+										<div class="control-group">
+											<label class="control-label">Tipo</label>
+											<div class="controls">
+												<label class="radio inline">
+												<input type="radio" name="optTipo" id="tipoEnt" value="entrata">Entrata
+												</label>
+												<span class="alLeft">
+													<label class="radio inline">
+													<input type="radio" name="optTipo" id="tipoSp" value="spesa" checked="checked">Spesa
+													</label>
+												</span>
+											</div>
+										</div>
+										
+										<div class="control-group">
+											<label class="control-label">Anno *</label>
+											<div class="controls">    
+												<input id="annoMov" name="annoMov" class="span1" type="text" value="" required />
+												<span class="al">
+													<label class="radio inline">Numero *</label>
+												</span>
+												<input id="numeroMov" name="numeroMov" class="span2" type="text" value="" required  />   
+												<span class="al">
+													<label class="radio inline">Sub</label>
+												</span>
+												<input id="sub" class="span2" type="text" value="" name="sub" />
+												<span class="al">
+													<label class="radio inline" >Mutuo</label>
+												</span>
+												<input id="mutuo" name="mutuo" class="span2" type="text" value="" />
+											  
+												<span class="radio guidata"><a href="#guidaMovimento" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
+											</div>
+										</div>
+										
+										<div class="well">
+											<div class="control-group datiVisibili">
+												<label class="control-label">CIG</label>
+												<div class="controls">
+													<input id="idCig" name="idCig" class="span3" type="text"/> 
+													<span class="al">
+														<label class="radio inline" >CUP</label>
+													</span>
+												   <input id="idCup" name="idCup" class="span3" type="text"/>
+												</div>
+											</div>
+											  
+											<div class="control-group">
+												<label class="control-label">Importo in atto *</label>
+												<div class="controls">
+													<input id="impAtto" name="impAtto" class="span2" type="text" required/> 
+													<div class="radio inline collapse_alert"><span class="icon-chevron-right icon-red alRight"></span>Disponibile 999.000,00 </div>           
+												</div>
+											</div>
+										</div>
+										
+										<p>
+										<a class="btn btn-secondary" data-toggle="collapse" data-target="#insMovimento">annulla</a>
+										<span class=" pull-right">
+											<a class="btn btn-primary" data-toggle="collapse" data-target="#insMovimento">conferma</a>
+										</span>
+										</p>
+									</fieldset>
+			 
+								</div>
+								
+							</div>
+						</div>
+						
+						<br>
+						<p><a class="btn btn-primary pull-right" href="FIN-CollegatiAtto.shtml" >salva in allegato</a></p>
+						
+						<h4 class="nostep-pane">Movimenti da collegare  - Totale entrate XXX - Totale spese 22.000,00</h4> 
+							
+						<table class="table table-hover tab_left">
+							<thead>
+								<tr>                
+									<th class="span2">Movimento</th>
+									<th class="span2">CIG</th>
+									<th class="span2">CUP</th>
+									<th class="span2">Mutuo</th>
+									<th class="span2">Capitolo</th>
+									<th>Provvedimento</th>
+									<th class="tab_Right span3">Importo in atto</th>
+									<th class="span1">&nbsp;</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>                       
+									<td>S-2013/12</td>
+									<td><input id="idCig" name="idCig" class="span12" type="text" value="XXXX" /></td>
+									<td><input id="idCup" name="idCup" class="span12" type="text" value="XXXX" /></td>
+									<td>XXXX</td>
+									<td>10000/10</td>
+									<td><a data-content="xxxxx xxx" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto" data-placement="left">2011/DG/201235</a></td>
+									<td class="tab_Right"><input id="impMov" name="impMov" class="span12" type="text" value="2.000,00" /></td>
+									<td class="tab_Right">
+										<a href="#msgElimina" data-toggle="modal"><i class="icon-trash icon-2x"></i></a>
+									</td>
+								</tr>
+								<tr>  
+									<td>S-2013/34</td>
+									<td><input id="idCig" name="idCig" class="span12" type="text" value="XXXX" /></td>
+									<td><input id="idCup" name="idCup" class="span12" type="text" value="XXXX" /></td>
+									<td>XXXX</td>
+									<td>10010/12</td>
+									<td><a data-content="xxxxx xxx" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto" data-placement="left">2011/DG/215369</a></td>
+									<td class="tab_Right"><input id="impMov" name="impMov" class="span12" type="text" value="8.000,00" /></td>
+									<td class="tab_Right">
+										<a href="#msgElimina" data-toggle="modal"><i class="icon-trash icon-2x"></i></a>
+									</td>
+								</tr>
+								<tr>          
+									<td>S-2013/67</td>
+									<td><input id="idCig" name="idCig" class="span12" type="text" value="XXXX" /></td>
+									<td><input id="idCup" name="idCup" class="span12" type="text" value="XXXX" /></td>
+									<td>XXXX</td>
+									<td>10010/0</td>
+									<td><a data-content="xxxxx xxx" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto" data-placement="left">2011/DG/215369</a></td>							
+									<td class="tab_Right"><input id="impMov" name="impMov" class="span12" type="text" value="12.000,00" /></td>
+									<td class="tab_Right">
+										<a href="#msgElimina" data-toggle="modal"><i class="icon-trash icon-2x"></i></a>
+									</td>
+								</tr>
+								<tr>          
+									<td>E-2013/91</td>
+									<td><input id="idCig" name="idCig" class="span12" type="text" value="" readonly /></td>
+									<td><input id="idCup" name="idCup" class="span12" type="text" value="" readonly /></td>
+									<td>XXXX</td>
+									<td>10010/0</td>
+									<td><a data-content="xxxxx xxx" rel="popover" data-trigger="hover" href="#" data-original-title="Oggetto" data-placement="left">2011/DG/215369</a></td>						
+									<td class="tab_Right"><input id="impMov" name="impMov" class="span12" type="text" value="10.000,00" /></td>
+									<td class="tab_Right">
+										<a href="#msgElimina" data-toggle="modal"><i class="icon-trash icon-2x"></i></a>
+									</td>
+								</tr>
+							</tbody>          
+						</table>
+						
+					</fieldset>
+					
+				</div>
+			</div>	
+			
+			<!--#include virtual="include/modal.html" --> 
+						 
+			<p class="margin-medium">
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> 
+				<a class="btn btn-secondary" >annulla</a> 		
+				<a class="btn btn-primary pull-right" href="FIN-CollegatiAtto.shtml">salva in allegato</a>
+			</p>       
+			 
+			</form>
+			
+		</div>
+	</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+  
+  <script type="text/javascript">
+  $(document).ready(function(){
+    var Opt=$('input[name=tipOption]');
+    $('.ent').hide();
+      $(Opt).click(function(){          
+         var radioVal=$(this).val();
+          $('.hidden-show').hide();
+          $('.'+radioVal).show();
+        });
+  });
+  </script>
+  
+  
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<project basedir="." default="default" name="finapp_RB_Release" xmlns:ivy="antlib:fr.jayasoft.ivy.ant">
+	
+	
+	<property file="buildfiles/build.properties" />
+	<property environment="env"/>
+	<taskdef resource="net/sf/antcontrib/antlib.xml"/>
+	
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # internal target: resolve-dependencies                     # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="resolve-dependencies" description="configurazione di ivy">
+		<tstamp />
+		<ivy:configure file="${buildfiles}/ivyconf.xml" />
+		<ivy:resolve   file="${buildfiles}/ivy.xml" conf="*" transitive="false"/>
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # internal target: load-dependencies                        # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="load-dependencies" description="carica le dipendenze tramite ivy" depends="resolve-dependencies">
+		<tstamp />
+		<ivy:retrieve pattern="${build.lib}/[conf]/[artifact].[ext]" conf="runtime,provided" />
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # internal target: load-local-dependencies                  # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="load-local-dependencies" description="carica le dipendenze tramite ivy" depends="resolve-dependencies">
+		<tstamp />
+		<ivy:retrieve pattern="${local.lib}/[conf]/[artifact].[ext]" conf="runtime,provided,test,src" />
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # public target: default                                    # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="default" description="verifica se eseguire il build per un solo environment specificato a linea di commando con -Dtarget=${target} o per tutti gli environment "
+		>
+		<condition property="first-call" value="distribution">
+			<not>
+				<equals arg1="${target}" arg2="$${target}" />
+			</not>
+		</condition>
+		<!-- -->
+		<condition property="first-call" value="all-target">
+			<equals arg1="${target}" arg2="$${target}" />
+		</condition>
+		<!-- -->
+		<echo message="target: ${target}" />
+		<echo message="first-call: ${first-call}" />
+		<!-- -->
+		<antcall target="${first-call}" />
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # public target: all-target                                 # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="all-target" description="Lancia il build per le varie distribuzioni in sequenza">
+		<antcall target="distribution">
+			<param name="target" value="dev" />
+		</antcall>
+		<antcall target="distribution">
+			<param name="target" value="tst" />
+		</antcall>
+		<antcall target="distribution">
+			<param name="target" value="coll" />
+		</antcall>
+		<antcall target="distribution">
+			<param name="target" value="prod" />
+		</antcall>
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # target: init                                              # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="init" description="Inizializza lo script Ant">
+		<tstamp>
+			<format property="ANNO-COPYRIGHT" pattern="yyyy" />
+		</tstamp>
+		<!-- -->
+		<property environment="env" />
+
+		<condition property="target" value="dev">
+			<equals arg1="${target}" arg2="$${target}" />
+		</condition>
+		<!-- -->
+		<echo message=" target: ${target}" />
+		<!-- -->
+		<loadproperties srcFile="buildfiles/${target}.properties" />
+		<loadproperties srcFile="buildfiles/build.properties" />
+		<!-- -->
+		<property name="dist-target" value="${dist}/${target}" />
+		<property name="archives-target" value="${archives}/${target}" />
+		<property name="temp-target" value="${temp}/${target}" />
+		<property name="conf-target" value="${temp-target}/conf" />
+		<property name="src-web-target" value="${temp-target}/src-web" />
+		<!-- -->
+		<property name="classes" value="${classes}" />
+		<!-- -->
+		<!-- -->
+		<property name="manifest-dir" value="${temp-target}/manifests" />
+		<!-- -->
+		<property name="ear-manifest-dir" value="${manifest-dir}/ear" />
+		<property name="web-manifest-dir" value="${manifest-dir}/web" />
+
+		<path id="class.path">
+			<!--<fileset dir="${build.lib}/dev" />-->
+			<fileset dir="${build.lib}/provided" />
+			<fileset dir="${build.lib}/runtime" />
+		</path>
+		
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # target: _create-tree-structure                             # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="_create-tree-structure" description="crea la struttura di cartelle necessarie al build" depends="init">
+		<mkdir dir="${dist-target}" />
+		<mkdir dir="${temp-target}" />
+		<mkdir dir="${classes}" />
+		<mkdir dir="${archives-target}" />
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # target: _check-source-uptodate                             # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="_check-source-uptodate" description="verifica se sono stati modificati sorgenti">
+		<uptodate property="source.uptodate" targetfile="${temp-target}/src-timestamp-file.txt">
+			<srcfiles dir="${src-java}">
+				<include name="**/*.java" />
+			</srcfiles>
+		</uptodate>
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # public target: compile-all                                # -->
+	<!-- ############################################################# -->
+	<!--   -->
+	<target name="compile-all" description="Compila tutti i sorgenti." depends="init, load-dependencies, _create-tree-structure">
+		<touch file="${temp-target}/src-timestamp-file.txt" />
+		<!-- -->
+		<echo message="JAVA_HOME: ${env.JAVA_HOME}"/>
+	
+		<javac classpathref="class.path" debug="true" debuglevel="lines,vars,source" 
+			   optimize="${flag-optimize}" destdir="${classes}" listfiles="no"
+			   fork="yes" executable="${env.JAVA_HOME}/bin/javac">
+			<src path="${src-java}" />
+			<classpath>
+				<pathelement path="${classes}" />
+			</classpath>
+		</javac>
+		
+	</target>
+
+	<!-- -->
+	<!-- ############################################################# -->
+	<!-- # public target: javadoc                                    # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="javadoc" description="genera la javadoc" depends="init">
+		<delete includeemptydirs="true" failonerror="false" quiet="true">
+			<fileset dir="${apidocs}">
+				<exclude name=".svn/**/*" />
+				<include name="**" />
+			</fileset>
+		</delete>
+		<!-- -->
+		<mkdir dir="${apidocs}" />
+		<!-- -->
+		<property name="JAVADOC-TITLE" value="${product-name}-${product-version}" />
+		<!-- -->
+		<javadoc destdir="${apidocs}" author="true" version="true" use="true" Splitindex="true" windowtitle="${JAVADOC-TITLE}">
+			<packageset dir="${src-java}">
+				<include name="it/csi/**/**" />
+			</packageset>
+			<classpath>
+				<pathelement path="${weblogic-classpath}" />
+				<fileset dir="${build.lib}" includes="**/*.*" />
+			</classpath>
+			<header>
+				<![CDATA[<h1>${JAVADOC-TITLE}</h1>]]></header>
+		<bottom>
+			<![CDATA[<i>Copyright &#169; ${ANNO-COPYRIGHT} ${company-name}. All Rights Reserved.</i>]]></bottom>
+</javadoc>
+<!-- -->
+<zip destfile="${docs}/${product-name}-${product-version}-api-javadoc.zip" compress="true">
+	<zipfileset dir="${docs}" includes="api/**/**" />
+</zip>
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # target: _create-manifests                                 # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="_create-manifests" description="crea la lista nominativa dei JAR per la creazione dei manifest. La liste viene memorizzata dentro la property[classpath-manifest]" depends="init, compile-all">
+<delete dir="${manifest-dir}" />
+<!-- -->
+<mkdir dir="${ear-manifest-dir}" />
+<mkdir dir="${web-manifest-dir}" />
+<copy file="${src-web}/META-INF/MANIFEST.MF" todir="${web-manifest-dir}" />
+
+<!-- -->
+<!-- ####################### -->
+<!-- # PRODUZIONE MANIFEST # -->
+<!-- ####################### -->
+<manifest file="${ear-manifest-dir}/MANIFEST.MF" mode="update">
+	<section name="${company-name}">
+		<attribute name="Nome-Prodotto" value="${product-name}" />
+		<attribute name="Nome-Componente" value="${component-name}" />
+		<attribute name="Versione" value="${product-version}" />
+		<attribute name="Ambiente" value="${nome.ambiente}" />
+	</section>
+</manifest>
+<!-- -->
+<manifest file="${web-manifest-dir}/MANIFEST.MF" mode="update">
+	<section name="${company-name}">
+		<attribute name="Nome-Prodotto" value="${product-name}" />
+		<attribute name="Nome-Componente" value="${component-name}" />
+		<attribute name="Versione" value="${product-version}" />
+		<attribute name="Modulo" value="${web-module-name}" />
+		<attribute name="Ambiente" value="${nome.ambiente}" />
+	</section>
+</manifest>
+<!-- -->
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: replace-placeholders                       # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="replace-placeholders" description="Replace configuration placeholders">
+	<mkdir dir="${conf-target}"/>
+    <copy todir="${conf-target}">
+	     <filterchain>
+	          <expandproperties/>
+	     </filterchain>     
+	     <fileset dir="${conf}" />
+	</copy>
+	<copy todir="${classes}">
+	     <filterchain>
+	          <expandproperties/>
+	     </filterchain>     
+		<fileset dir="${resources}"/>
+	</copy>
+	<copy todir="${src-web-target}">
+	     <filterchain>
+	          <expandproperties/>
+	     </filterchain>     
+		<fileset dir="${src-web}"/>
+	</copy>
+	
+	
+</target>
+
+<target name="package-war" description="costruisce il war della web app" depends="compile-all, _create-manifests, replace-placeholders">
+	<delete dir="${archives-target}/${web-module-name}.war" failonerror="false" />
+	<war basedir="${src-web-target}" destfile="${archives-target}/${web-module-name}.war" 
+	     webxml="${src-web-target}/WEB-INF/web.xml" manifest="${web-manifest-dir}/MANIFEST.MF"
+	     compress="${flag-compress}" >
+		<classes dir="${classes}" />
+		<lib dir="${build.lib}/runtime"/>
+	</war>
+</target>
+
+<target name="replace-context-path" description="Replace context-path">
+	<if>
+		<equals arg1="${target.fornitore}" arg2="fin" />
+		<then>
+		 	<echo message="*******************" />
+		 	<echo message="Pacchetto per test fornitor fin" />
+		 	<echo message="*******************" />
+			<copy file="${conf}/ear/META-INF/application.xml" tofile="${conf-target}/ear/META-INF/application.xml" />
+			<echo message=" sostituire ${context-path} con ${context-path-tst-fin}" />
+				<replace file="${conf-target}/ear/META-INF/application.xml" token="/${context-path}" value="/${context-path-tst-fin}"/>
+		</then>
+	</if>
+
+</target>	
+	
+	
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: package-ear                                # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="package-ear" description="costruisce l'ear" depends="init, compile-all, _create-manifests, package-war">
+	<delete file="${archives-target}/${web-module-name}.ear"/>
+	
+	<antcall target="replace-context-path"/>
+	
+	<ear compress="${flag-compress}" destfile="${archives-target}/${web-module-name}.ear" 
+		 appxml="${conf-target}/ear/META-INF/application.xml" manifest="${ear-manifest-dir}/MANIFEST.MF">
+		<fileset dir="${conf-target}/ear"/>
+		<fileset dir="${archives-target}">
+			<include name="${web-module-name}.war" />
+		</fileset>
+	</ear>
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: package-all                                # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="package-all" depends="init" description="esegue il packaging di ogni componente del prodotto">
+<antcall target="package-ear" />
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: distribution                               # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="distribution" description="Costruisce il tar per la distribuzione." depends="package-all">
+<delete failonerror="no">
+	<fileset dir="${dist-target}" includes="**/*.*" />
+</delete>
+<tar tarfile="${dist-target}/${tar-outfilename}" longfile="warn">
+	<tarfileset dir="${archives-target}">
+		<include name="${web-module-name}.ear" />
+	</tarfileset>
+</tar>
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: clean-dist                                 # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="clean-dist" description="Rimuove la cartella delle distribuzioni.">
+<delete dir="${dist}" />
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: clean-classes                              # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="clean-classes" description="Rimuove la cartella dei sorgenti compilati.">
+<delete dir="${build}/classes" />
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # target: _clean-lib                                        # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="clean-lib" description="cancella librerie e cache">
+<delete dir="${cache}" />
+<delete dir="${build.lib}" />
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: clean-archives                             # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="clean-archives" description="Rimuove la cartella degli archivi (war, ear, ...).">
+<delete dir="${build}/archives" />
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: clean-temp                                 # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="clean-temp" description="Rimuove la cartella dei files temporanei di build.">
+<delete dir="${temp}" />
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: clean-all                                  # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="clean-all" description="Rimuove tutte le cartelle temporanee." depends="clean-lib, clean-dist, clean-archives, clean-classes, clean-temp" />
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: show-vars                                  # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="show-vars" depends="init" description="Visualizza tutte le variabili impostate nei file di properties e/o da linea di comando">
+<echo message="*****************************************" />
+<echo message="********  ${product-name} environment  *******" />
+<echo message="*****************************************" />
+<echo message="Runtime :" />
+<echo message="JAVA_HOME = ${env.JAVA_HOME}" />
+<echo message="JAVA_HOME_CLIENT = ${env.JAVA_HOME_CLIENT}" />
+<echo message="JAVA_HOME_SERVER = ${env.JAVA_HOME_SERVER}" />
+<echo message="ANT_HOME = ${env.ANT_HOME}" />
+<echo message="IVY_VERSION = ${env.IVY_VERSION}" />
+<echo message="" />
+<echo message="Classpath :" />
+<echo message="CLASS_PATH = ${classpath}" />
+<echo message="" />
+<echo message="" />
+<echo message="Application :" />
+<echo message="VERSION = ${product-version}" />
+<echo message="" />
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: about                                      # -->
+<!-- ############################################################# -->
+<!-- -->
+<target name="about" description="Visualizza l'elenco dei target pubblici dello script.">
+<loadproperties srcFile="buildfiles/build.properties" />
+<loadfile property="about" srcFile="buildfiles/about.txt" />
+<echo message=" ${about}" />
+</target>
+
+<!-- -->
+<!-- ############################################################# -->
+<!-- # public target: about-custom                               # -->
+	<!-- ############################################################# -->
+	<!-- -->
+	<target name="about-custom" description="Visualizza l'elenco di tutti i target, pubblici e privati (equivalente a 'ant -projecthelp')">
+		<loadproperties srcfile="buildfiles/build.properties" />
+		<loadfile property="about-custom" srcfile="buildfiles/about-custom.txt" />
+		<echo message="${about-custom}" />
+		<java classname="org.apache.tools.ant.Main">
+			<arg value="-projecthelp" />
+		</java>
+	</target>
+
+	<target name="deployLocal" depends="clean-classes, clean-temp, default">
+		<copy file="D:/ProgettiEclipse/siac/finApplication/target/build/archives/local/${web-module-name}.ear" todir="D:/jboss-eap-6.0/standalone/deployments" />
+	</target>
+	
+	<!--
+	<target name="_generate-jpa-model" depends="init, load-dependencies, _create-tree-structure">
+		<mkdir dir="target/classesgen"/>
+		<javac debug="${flag-debug}" debuglevel="lines,vars,source" fork="true"
+					   optimize="${flag-optimize}" destdir="target/classesgen" listfiles="yes"
+					   verbose="true" srcdir="${src-java}">
+			<classpath>
+				<fileset dir="${build.lib}">
+					<include name="**/*.jar"/>
+				</fileset>
+				<pathelement path="src/main/resources" />
+			</classpath>
+			<compilerarg line="-processor org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor"/>
+			<compilerarg line="-AormXml=jpaorm/orm-OperationExecution.xml"/>
+			<compilerarg line="-AaddGeneratedAnnotation=true"/>
+			<compilerarg line="-AfullyAnnotationConfigured=false"/>
+			<compilerarg line="-Adebug=true"/>
+			<include name="it/csi/stackjee6sel/archtest/model/*"/>
+			<compilerarg value="-proc:only"/>
+		</javac>
+	</target>
+-->
+	
+	
+</project>

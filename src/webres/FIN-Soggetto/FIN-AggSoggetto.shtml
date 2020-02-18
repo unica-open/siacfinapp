@@ -1,0 +1,163 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Inserimento nuovo soggetto</li>
+    </ul> 
+    </div>	
+	</div>
+    <div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+         <ul class="nav nav-tabs">
+    <li class="active">
+    <a href="FIN-AggSoggetto.shtml">Soggetto</a>
+    </li>
+  <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+    <li><a href="FIN-AggSedi.shtml">Sedi Secondarie</a></li>
+    <li><a href="BIL_AggPagamenti.shtml">Modalit&agrave; pagamento</a></li>
+    </ul>
+     
+              <div id="MyWizard" class="wizard">
+					<ul class="steps">
+						<li data-target="#step1" class="active"><span class="badge  badge-success">1</span>Anagrafica<span class="chevron"></span></li>
+						<li data-target="#step2" class="complete"><span class="badge  badge-success">2</span>Recapiti<span class="chevron"></span></li>
+						<!--<li data-target="#step3"><span class="badge">3</span>Salva<span class="chevron"></span></li> -->
+						<!--<li data-target="#step4"><span class="badge">4</span>Salva<span class="chevron"></span></li> -->
+					</ul>
+				</div>
+				<div class="step-content">
+					<div class="step-pane active" id="step1">
+
+		<h3>Codice Soggetto: 012345 (VALIDO dal 01/01/2013) </h3>     
+		
+		 
+        <!--#include virtual="sogg_anagrafica.html" -->		
+                <!--#include virtual="sogg_anagrafica2.html" -->		
+                                          
+             <p><input class="btn" type="button" value="indietro"/>   <a class="btn btn-link" href="">annulla</a><a href="FIN-AggSoggetto2.shtml" class="btn btn-primary pull-right">prosegui</a> </p>
+             </div>
+				</div>
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

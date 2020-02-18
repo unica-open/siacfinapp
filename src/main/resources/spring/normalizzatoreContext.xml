@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+                           
+    <context:property-placeholder location="classpath:spring/*.properties" />
+    
+    <bean abstract="true" id="abstractNormalizzatore" class="it.csi.siac.siacfinapp.frontend.ui.model.Normalizzatore">
+    	<property name="idField" value="id"/>
+    	<property name="matchedField" value="codice"/>
+    	<property name="forceNull" value="false"/>
+    	<property name="forceEmpty" value="false"/>
+    	<property name="codificaClass" value="it.csi.siac.siacfinser.model.codifiche.CodificaFin"/>
+    </bean>
+    
+    <bean abstract="true" id="abstractCodificaExtNormalizzatore" parent="abstractNormalizzatore">
+<!--     	<property name="matchedField" value="codice"/> -->
+    	<property name="codificaClass" value="it.csi.siac.siacfinser.model.codifiche.CodificaExtFin"/>
+    </bean>
+    
+    <bean id="recapitoContattiNormalizzatore" parent="abstractNormalizzatore" scope="singleton">
+    	<property name="modelClass" value="it.csi.siac.siacfinapp.frontend.ui.model.soggetto.RecapitoModel"/>
+    	<property name="outputClass" value="it.csi.siac.siacfinser.model.soggetto.Contatto"/>
+<!--     	<property name="modelTranslationList" value="listaRecapitoModo"/> -->
+    	<property name="outputField" value="descrizione"/>
+<!--     	<property name="outputTranslatedField" value="idTipoContatto"/> -->
+    	<property name="outputTranslatedField" value="contattoCodModo"/>
+    	<property name="modelFields" value="numeroTelefono,numeroCellulare,numeroFax,pec,email,sitoWeb,contatto"/>
+    	<property name="translationFields" value="telefono,cellulare,fax,PEC,email,sito,soggetto"/>
+    	<property name="others">
+    		<map>
+				<entry key="checkAvviso" value="avviso" />
+			</map>
+    	</property>
+    </bean>
+    
+</beans>

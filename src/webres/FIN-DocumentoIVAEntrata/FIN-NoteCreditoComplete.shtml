@@ -1,0 +1,323 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+	<ul class="breadcrumb">
+		<li><a href="../">Home</a> <span class="divider">></span></li>
+		<li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+		<li class="active">Note credito documenti di riferimento</li>
+    </ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" -->   	 
+			<h3>FAT 2013/39/132829 - SORIS - Società riscossione S.p.A.</h3>
+			<ul class="nav nav-tabs">
+				<li><a href="FIN-AggDocumentiIVAComplete.shtml">Dati iva</a></li>
+				<li class="active"><a href="FIN-NoteCreditoComplete.shtml" >Note credito iva</a></li>
+			</ul>
+
+			<fieldset class="form-horizontal">
+				<h4><span class="num_result">19527</span> Risultati trovati</h4>
+					<table class="table table-hover tab_left" summary="....">
+						<thead>
+							<tr>
+								<th scope="col">Documento</th>
+								<th scope="col">Data</th>
+								<th scope="col">Stato</th>
+								<th scope="col">Soggetto</th>
+								<th class="tab_Right" scope="col">Importo</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>2013/NCD/12345</td>
+								<td>15/01/2013</td>
+								<td><a data-content="Emesso" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">EM</a></td>
+								<td>148801-EQUITALIA SERVIZI</td>
+								<td class="tab_Right">14.500,00</td>
+							</tr>
+							
+							<tr>
+								<td>2013/NCD/67890</td>
+								<td>23/03/2013</td>
+								<td><a data-content="Parzialmente emesso" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">PE</a></td>
+								<td>132829-SORIS</td>
+								<td class="tab_Right">500,25</td>
+							</tr>	
+							
+						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="4">Totale</th>
+								<th class="tab_Right">15.000,25</th>
+							</tr>
+						</tfoot>
+					</table>
+					
+					<div class="row pagination_conth">
+						<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+							<div class="span6">                               
+								<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+									<ul>
+										<li><a href="#">« inizio</a></li>
+										<li><a href="#">« prec</a></li>
+										<li class="disabled"><a href="#">1</a></li>
+										<li class="active"><a href="#">2</a></li>
+										<li><a href="#">3</a></li>
+										<li><a href="#">4</a></li>
+										<li><a href="#">5</a></li>
+										<li><a href="#">succ »</a></li>
+										<li><a href="#"> fine »</a></li>
+									</ul>
+								</div>
+										
+							</div>  
+					</div>
+					
+					<br>
+
+					<table class="table">
+						<tbody>
+							<tr id="txt_Left">
+								<th class="borderBottomLight"><h4>Importo totale note di credito</h4></th>
+								<td class="tab_Right"><input type="text" class="span10" name="impNotaCreditoIva" id="impNotaCreditoIva" value="000.000,00" disabled="disabled"></td>
+							</tr>
+
+							<tr>
+								<th class="borderBottomLight"><h4>Importo da dedurre su quote rilevanti iva</h4></th>
+								<td class="tab_Right"><input type="text" class="span10" name="impDedurreQuoteRilevIva" id="impDedurreQuoteRilevIva" value="000.000,00"></td>
+							</tr>
+						  </tbody>
+					</table>
+					
+					<br>
+					<h4 class="step-pane">Dati iva</h4>
+					<fieldset>	
+						<div class="control-group">
+							<label class="control-label" for="NumReg">N. registrazione *</label>								
+								<div class="controls">
+									<input id="NumReg" class="lbTextSmall span2 " type="text" value="" name="NumReg" required />
+									<span class="alRight">
+										<label class="radio inline" for="DataReg">Data registrazione *</label>
+									</span>
+									<input id="DataReg" class="lbTextSmall span2 " type="text" value=""  name="DataReg" required />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="tipoReg">Tipo registrazione *</label>								
+								<div class="controls">
+									<select id="tipoReg" class="span6" required >
+										<option value="">01 - NORMALE</option>
+										<option value="">02 - INTRASTAT</option>
+									</select>
+							</div>
+						</div>	
+						
+						<div class="control-group">
+							<label class="control-label" for="tipoRegIva">Tipo registro iva *</label>								
+								<div class="controls">
+									<select id="tipoRegIva" class="span6" required >
+										<option value="">Vendite iva immediata</option>
+										<option value="">Vendite iva esigibilità differita</option>
+										<option value="">Corrispettivi</option>
+									</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="Attivita">Attività  </label>								
+								<div class="controls">
+									<select id="Attivita" class="span6" >
+										<option>xxxx</option>
+										<option>xxxx</option>
+									</select>
+									<span class="alRight">
+										<label class="radio inline" for="RilIRAP">Rilevante IRAP</label>
+									</span>
+									<input id="RilIRAP" type="checkbox" value=""  name="RilIRAP" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="tipoRegIva">Registro  *</label>								
+								<div class="controls">
+									<select id="tipoRegIva" class="span6" required >
+										<option value="">xxxx</option>
+										<option value="">xxxx</option>
+									</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="proProvv">Protocollo provvisorio </label>								
+								<div class="controls">
+									<input id="proProvv" class="lbTextSmall span2 " type="text" value=""  name="proProvv"  />
+									<span class="alRight">
+										<label class="radio inline" for="proData">In data </label>
+									</span>
+									<input id="proData" class="lbTextSmall span2" type="text" value=""  name="proData" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="proDef">Protocollo definitivo </label>								
+								<div class="controls">
+									<input id="proDef" class="lbTextSmall span2 " type="text" value=""  name="proDef"  />
+									<span class="alRight">
+										<label class="radio inline" for="proDefData">In data </label>
+									</span>
+									<input id="proDefData" class="lbTextSmall span2" type="text" value=""  name="proDefData" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="Descrizione">Descrizione </label>								
+								<div class="controls">
+									<textarea id="Descrizione" rows="2" cols="15" class="input-medium span9" type="text" value="" name="Descrizione"></textarea>
+							</div>
+						</div>
+					
+					<p><a class="btn btn-primary" data-toggle="collapse" data-target="#aggMovIva">movimenti iva</a></p>  
+                                           
+					<div id="aggMovIva" class="collapse">
+						<div class="accordion_info"> 
+							<div class="step-pane active" id="step1"> 
+									<!--#include virtual="include/tableMovIVA.html" -->
+									<p>
+										<a class="btn btn-secondary" data-toggle="collapse" data-target="#NewMovIVA" >inserisci nuovo movimento iva</a>
+									</p>
+		
+									<!--#include virtual="include/movimentoIva.html" -->	
+							</div>
+	
+							<div class="clear"></div>
+
+						</div>    
+					</div>
+			</fieldset>
+
+			</fieldset>
+
+				
+			<!--#include virtual="include/modal.html" --> 
+			<div class="Border_line"></div>
+			<p class="margin-medium">
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> 
+				<a class="btn btn-secondary" href="">annulla</a>
+				<a class="btn btn-primary pull-right" href="">salva</a> 				
+			</p>     
+  
+
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

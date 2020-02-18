@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	    http://www.springframework.org/schema/beans/spring-beans.xsd
+	    http://www.springframework.org/schema/context
+	    http://www.springframework.org/schema/context/spring-context.xsd
+	    http://www.springframework.org/schema/util
+	    http://www.springframework.org/schema/util/spring-util.xsd">
+
+    	<!-- 
+		Permette l'uso delle Annotations per la definizione dei beans di Spring. Il package é impostato
+		fino a 'siacbilapp' in quanto vogliamo non avere conflitti con i varii ITF injettati come jar.
+	 -->
+	<context:component-scan base-package="it.csi.siac.siacfinapp" />
+	<context:component-scan base-package="it.csi.siac.siaccommonapp" />
+	<context:component-scan base-package="it.csi.siac.siacfinbasegengsaapp" />
+	<context:component-scan base-package="it.csi.siac.siacfingenapp" />
+	
+	<!-- 
+		Aggancia al contesto di Spring le properties che si trovano nei file 
+		di properties della cartella spring sotto il classpath. I valori potranno 
+		essere referenziati sia nei file di configurazione che da codice tramite 
+		l'annotation @Value, con la sintassi ${property.name} 
+	-->
+	<context:property-placeholder location="classpath:spring/*.properties" />
+	
+	
+	<bean id="loginHandlerBean"
+		class="${sso.loginHandler}"
+		scope="session">
+	</bean>
+
+	<bean id="sessionHandlerBean"
+		  class="it.csi.siac.siaccommonapp.handler.session.SessionHandler" scope="session">
+		  <property name="sessionParameterClass" 
+		   value="it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter" />
+   </bean>
+	
+	
+	<bean id="ttlCacheCodifiche" class="java.lang.Long" scope="singleton">
+		<constructor-arg type="long" value="${ttlCache.codifiche}"/>
+	</bean>
+
+</beans>

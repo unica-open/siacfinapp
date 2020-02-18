@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="liquidazioneDefault" extends="default, json-default" abstract="true">
+		<!-- Package per la definizione delle estensioni comuni a tutti i varii packages di Struts2 e per la definizione centralizzata dello stack degli interceptors. -->
+		<interceptors>
+
+			<!-- Interceptor di log prima e a termine dell'invocazione -->
+			<interceptor name="logInterceptor" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+
+			<!-- Interceptor per la gestione degli errori di conversione <interceptor name="siacConversionErrorInterceptor" class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" /> -->
+
+			<!-- Interceptor per la gestione dei breadcrumb -->
+			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+				<param name="defaultRewindMode">AUTO</param>
+				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+
+			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
+			<interceptor name="redirectMessage" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.RedirectMessageInterceptor" />
+
+			<interceptor-stack name="myStack">
+				<!-- Default Stack -->
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="actionData" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="redirectMessage" />
+				<interceptor-ref name="chain" />
+				<interceptor-ref name="scopedModelDriven" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="multiselect" />
+				<interceptor-ref name="staticParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+				</interceptor-ref>
+
+				<!-- Injettato nello stack per la gestione degli errori di conversioneS <interceptor-ref name="siacConversionErrorInterceptor"/> -->
+
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+				</interceptor-ref>
+				<interceptor-ref name="debugging" />
+
+				<!-- Interceptor per breadcrumb -->
+				<interceptor-ref name="breadCrumbs" />
+
+
+				<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
+
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack" />
+	</package>
+
+	<!-- Gestione navigazione per il modulo liquidazione -->
+	<package namespace="/" extends="liquidazioneDefault" name="liquidazione">
+		<action name="inserisciLiquidazioneStep1" class="inserisciLiquidazioneStep1Action">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciLiquidazioneStep2</result>
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>				
+		</action>
+		  
+		<action name="inserisciLiquidazioneStep2" class="inserisciLiquidazioneStep2Action">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep3Aggiorna</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="proceed" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+		</action>	
+		
+		<action name="inserisciLiquidazioneStep3Aggiorna" class="inserisciLiquidazioneStep3AggiornaAction">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="salva" type="redirectAction">
+				<param name="actionName">consultaLiquidazione</param>
+				<param name="anno">${annoLiquidazioneConsulta}</param>
+				<param name="numero">${numeroLiquidazioneConsulta}</param>				
+			</result>
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>		
+			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>	
+		</action>	
+		
+		<action name="ricercaLiquidazione" class="ricercaLiquidazioneAction">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		
+		<action name="elencoLiquidazioni" class="elencoLiquidazioniAction">
+			<result name="success">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
+			<result name="input">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
+			<!-- <result name="gotoErroreRicerca">/jsp/liquidazione/ricercaLiquidazione.jsp</result> -->
+			<result name="gotoErroreRicerca" type="redirectAction">ricercaLiquidazione</result>
+			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>			
+		</action>
+		
+		<action name="consultaLiquidazione" class="consultaLiquidazioneAction">
+			<result name="success">/jsp/liquidazione/consultaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/consultaLiquidazione.jsp</result>			
+		</action>
+	  
+		<action name="annullaLiquidazione" class="annullaLiquidazioneAction">
+			<result name="success" type="redirectAction">
+			  <param name="actionName">elencoLiquidazioni</param>
+			</result>  
+			<result name="input">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">	
+				<param name="actionName">elencoLiquidazioni</param>
+				<!--param name="numeroLiquidazione">${numeroLiquidazione}</param>
+				<param name="annoLiquidazione">${annoLiquidazione}</param-->
+			</result>
+			
+	  	</action>
+		  
+	</package>
+	
+	
+
+</struts>

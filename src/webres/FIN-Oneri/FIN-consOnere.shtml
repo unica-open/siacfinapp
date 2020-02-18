@@ -1,0 +1,415 @@
+<!--   ================== inclusione HEAD ==================== -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+<!--   ================== / fine inclusione HEAD ====================-->
+
+  </head>
+  <body>                       
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+      <li class="active">Consulta onere</li>
+    </ul> 
+  </div>	
+</div>
+
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+      <form method="get" action="#">
+        <!--#include virtual="include/alertErrorSuccess.html" -->
+        
+		<h3>Consulta tipo onere 1040-IRPEF RITENUTE LAVORO AUTONOMO (IRPEF)</h3>
+				
+		<div class="step-content">	   
+		<div class="step-pane active" id="step1">
+			<fieldset class="form-horizontal">
+			
+			<h4 class="step-pane">Elenco oneri</h4>
+			
+			<table class="table table-hover tab_left" summary="...." >
+				<thead>
+					<tr>
+						<th>Data inizio</th>
+						<th>Data fine</th>
+						<th>Aliquota a carico soggetto</th>
+						<th>Aliquota a carico Ente</th>
+						<th>Quadro 770</th>
+						<th>Causale 770</th>
+						<th>Attività onere</th>					
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>11/06/2014</td>
+						<td>18/09/2014</td>
+						<td>xxxx</td>
+						<td>xx</td>
+						<td>xxx</td>
+						<td>
+							<select class="span12" name="causale770">
+								<option value="1">Q- Attività previdenziale</option>
+								<option value="2">X- xxxxxx</option>
+								<option value="3">A- Sed dictum tincidunt nibh, eu commodo tellus mattis eu </option>
+								<option value="4">F- Vivamus in urna et quam pharetra lobortis</option>
+								<option value="5">N- xxxxxx xxxxxxxx</option>
+								<option value="6">U- xxxxxx xx xxxxx xxxxxxxx</option>
+							</select>
+						</td>
+						<td>
+							<select class="span12" name="attivitaOnere">
+								<option value="1">Q- Attività previdenziale</option>
+								<option value="2">X- xxxxxx</option>
+								<option value="3">A- Sed dictum tincidunt nibh, eu commodo tellus mattis eu </option>
+								<option value="4">F- Vivamus in urna et quam pharetra lobortis</option>
+								<option value="5">N- xxxxxx xxxxxxxx</option>
+								<option value="6">U- xxxxxx xx xxxxx xxxxxxxx</option>
+							</select>
+						</td>
+					</tr>				
+					<tr>
+						<td>04/07/2014</td>
+						<td>18/09/2014</td>
+						<td>xxxx</td>
+						<td>xx</td>
+						<td>xxx</td>
+						<td>
+							<select class="span12" name="causale770">
+								<option value="1">Q- Attività previdenziale</option>
+								<option value="2">X- xxxxxx</option>
+								<option value="3">A- Sed dictum tincidunt nibh, eu commodo tellus mattis eu </option>
+								<option value="4">F- Vivamus in urna et quam pharetra lobortis</option>
+								<option value="5">N- xxxxxx xxxxxxxx</option>
+								<option value="6">U- xxxxxx xx xxxxx xxxxxxxx</option>
+							</select>
+						</td>
+						<td>
+							<select class="span12" name="attivitaOnere">
+								<option value="1">Q- Attività previdenziale</option>
+								<option value="2">X- xxxxxx</option>
+								<option value="3">A- Sed dictum tincidunt nibh, eu commodo tellus mattis eu </option>
+								<option value="4">F- Vivamus in urna et quam pharetra lobortis</option>
+								<option value="5">N- xxxxxx xxxxxxxx</option>
+								<option value="6">U- xxxxxx xx xxxxx xxxxxxxx</option>
+							</select>
+						</td>
+						
+					</tr>			
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+			
+			<div class="row pagination_conth">
+				<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+				<div class="span6">                               
+					<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+						<ul>
+							<li><a href="#">« inizio</a></li>
+							<li><a href="#">« prec</a></li>
+							<li class="disabled"><a href="#">1</a></li>
+							<li class="active"><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+							<li><a href="#">succ »</a></li>
+							<li><a href="#"> fine »</a></li>
+						</ul>
+					</div>
+							
+				</div>  
+			</div>
+
+			<!--  dettaglio onere -->
+			
+			<div class="accordion" id="accordionImputazioniEN">  
+                <div class="accordion-group">                
+                    <div class="accordion-heading">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionImputaEN" href="#ImputaEN">
+                   Dettaglio imputazioni contabili entrata<span class="icon">&nbsp;</span>
+                    </a>
+                    </div>
+                    
+            		<div id="ImputaEN" class="accordion-body collapse">
+                        <div class="accordion-inner">	
+							
+							<h4>Elenco accertamenti associati</h4>							
+							<table class="table table-hover tab_left" >
+								<thead>
+									<tr>
+										<th class="span2">Data inizio</th>
+										<th class="span2">Data fine</th>
+										<th>Capitolo</th>
+										<th>Accertamento</th>
+										<th>Descrizione</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>04/07/2014</td>
+										<td>18/09/2014</td>
+										<td>2014/11</td>
+										<td>xxxxx</td>
+										<td>xxxxx xxxxxxxxx xxxxxxxxx</td>
+									</tr>				
+									<tr>
+										<td>11/07/2014</td>
+										<td>18/09/2014</td>
+										<td>2014/11</td>
+										<td>xxxxx</td>
+										<td>xxxxx xxxxxxxxx xxxxxxxxx</td>
+									</tr>
+									<tr>
+										<td>01/09/2014</td>
+										<td>18/09/2014</td>
+										<td>2014/11</td>
+										<td>xxxxx</td>
+										<td>xxxxx xxxxxxxxx xxxxxxxxx</td>
+									</tr>		
+								</tbody>
+							</table>
+							
+							<div class="row pagination_conth">
+								<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+								<div class="span6">                               
+									<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+										<ul>
+											<li><a href="#">« inizio</a></li>
+											<li><a href="#">« prec</a></li>
+											<li class="disabled"><a href="#">1</a></li>
+											<li class="active"><a href="#">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">4</a></li>
+											<li><a href="#">5</a></li>
+											<li><a href="#">succ »</a></li>
+											<li><a href="#"> fine »</a></li>
+										</ul>
+									</div>
+											
+								</div>  
+							</div>	
+							
+                        </div>
+                	</div>                    
+              	</div> 				
+			</div>
+			
+			<div class="accordion" id="accordionImputazioniSP">  
+                <div class="accordion-group">                
+                    <div class="accordion-heading">
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordionImputaSP" href="#ImputaSP">
+                   Dettaglio imputazioni contabili spesa<span class="icon">&nbsp;</span>
+                    </a>
+                    </div>
+                    
+            		<div id="ImputaSP" class="accordion-body collapse">
+                        <div class="accordion-inner">
+
+							<h4>Elenco impegno associati</h4>							
+							<table class="table table-hover tab_left" >
+								<thead>
+									<tr>
+										<th class="span2">Data inizio</th>
+										<th class="span2">Data fine</th>
+										<th>Capitolo</th>
+										<th>Impegno</th>
+										<th>Descrizione</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>04/07/2014</td>
+										<td>18/09/2014</td>
+										<td>2014/11</td>
+										<td>xxxxx</td>
+										<td>xxxxx xxxxxxxxx xxxxxxxxx</td>
+									</tr>				
+									<tr>
+										<td>11/07/2014</td>
+										<td>18/09/2014</td>
+										<td>2014/11</td>
+										<td>xxxxx</td>
+										<td>xxxxx xxxxxxxxx xxxxxxxxx</td>
+									</tr>
+									<tr>
+										<td>01/09/2014</td>
+										<td>18/09/2014</td>
+										<td>2014/11</td>
+										<td>xxxxx</td>
+										<td>xxxxx xxxxxxxxx xxxxxxxxx</td>
+									</tr>		
+								</tbody>
+							</table>
+							
+							<div class="row pagination_conth">
+								<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+								<div class="span6">                               
+									<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+										<ul>
+											<li><a href="#">« inizio</a></li>
+											<li><a href="#">« prec</a></li>
+											<li class="disabled"><a href="#">1</a></li>
+											<li class="active"><a href="#">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">4</a></li>
+											<li><a href="#">5</a></li>
+											<li><a href="#">succ »</a></li>
+											<li><a href="#"> fine »</a></li>
+										</ul>
+									</div>
+											
+								</div>  
+							</div>
+
+
+							<h4>Dettaglio xxxx</h4>							
+							<table class="table table-hover tab_left" >
+								<thead>
+									<tr>
+										<th class="span2">Data inizio</th>
+										<th class="span2">Data fine</th>
+										<th>Soggetto</th>
+										<th>Descrizione</th>
+										<th>Codice fiscale</th>
+										<th>Sede</th>
+										<th>Modalità di pagamento</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>04/07/2014</td>
+										<td>23/09/2014</td>
+										<td>xxxxx</td>
+										<td>xxxxxxxx xxxxxxxxx xxxxx</td>
+										<td>13144855544</td>
+										<td><a href="#" data-trigger="hover" rel="popover" data-placement="top" data-content="via don borio, 5" data-original-title="indirizzo">sede 1</a></td>
+										<td><a href="#" data-trigger="hover" rel="popover" data-placement="top" data-content="IBAN ITI2a0000000089012 " data-original-title="IBAN">CB - Conto corrente bancario</a></td>
+									</tr>				
+									<tr>
+										<td>11/07/2014</td>
+										<td>04/10/2014</td>
+										<td>xxxxx</td>
+										<td>xxxxxxxx xxxxxxxxx xxxxx</td>
+										<td>462444997644</td>
+										<td><a href="#" data-trigger="hover" rel="popover" data-placement="top" data-content="via della consolata, 6" data-original-title="indirizzo">concessionaria 3</a></td>
+										<td><a href="#" data-trigger="hover" rel="popover" data-placement="top" data-content="1200- istituo AAAA " data-original-title="cessione">CC - cessione credito</a></td>
+									</tr>
+									<tr>
+										<td>01/09/2014</td>
+										<td>09/11/2014</td>
+										<td>xxxxx</td>
+										<td>xxxxxxxx xxxxxxxxx xxxxx</td>
+										<td>3646668244</td>
+										<td><a href="#" data-trigger="hover" rel="popover" data-placement="top" data-content="via della consolata, 6" data-original-title="indirizzo">concessionaria 3</a></td>
+										<td>Contanti</td>
+									</tr>		
+								</tbody>
+							</table>
+							
+							<div class="row pagination_conth">
+								<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+								<div class="span6">                               
+									<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+										<ul>
+											<li><a href="#">« inizio</a></li>
+											<li><a href="#">« prec</a></li>
+											<li class="disabled"><a href="#">1</a></li>
+											<li class="active"><a href="#">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">4</a></li>
+											<li><a href="#">5</a></li>
+											<li><a href="#">succ »</a></li>
+											<li><a href="#"> fine »</a></li>
+										</ul>
+									</div>
+											
+								</div>  
+							</div>	
+							
+								
+                        </div>
+                	</div>                    
+              	</div> 				
+			</div>
+
+            </fieldset>
+			
+		</div>
+		</div>
+		<!--#include virtual="include/modal.html" -->
+		
+		<p class="margin-medium">
+			<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> 
+		</p>       
+			  
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+    <li><a href="../../pagine">Fin</a> <span class="divider">></span></li>
+    <li class="active">Ricerca Soggetto</li>
+    </ul> 
+    </div>	
+	</div>
+ 
+    <div class="container-fluid">
+<div class="row-fluid">
+<div class="span12 ">
+
+<div class="contentPage">  <form method="get" action="#">
+      <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Attenzione!!</strong><br /> Messaggio di feedback negativo
+        </div>
+        <div class="alert alert-warning">
+    		<button type="button" class="close" data-dismiss="alert">&times;</button>
+   				
+            <strong>Attenzione!!</strong><br />
+
+			Messaggio di tipo segnalazione
+
+    	</div>
+        
+        
+          
+             
+
+<h3>Ricerca Soggetto</h3>
+<p>&Egrave; necessario inserire almeno un criterio di ricerca.</p>
+
+       
+      
+<fieldset class="form-horizontal">
+
+           <div class="control-group">
+                <label class="control-label" for="codfisc">Codice</label>
+                <div class="controls">
+                	<input id="codfisc" name="codfisc" class="span1" type="text"/>
+ 
+				<span class="al">
+				<label class="radio inline" for="iva">Codice fiscale</label>
+                <input id="iva" name="iva" class="span2" type="text"/>
+				</span>
+ 
+				<span class="al">
+				<label class="radio inline" for="iva">Partita IVA</label>
+                <input id="iva" name="iva" class="span2" type="text"/>
+				</span>
+ 			  
+			  </div>
+          </div>
+
+		 <div class="control-group">
+                <label class="control-label">Denominazione</label>
+                 <div class="controls">
+                 	
+                        <input id="denom" name="codfisc" class="span5" type="text"/>
+                        
+              </div>
+          </div>
+		  
+
+          <div class="control-group">
+                <label class="control-label" for="ente">Tipo soggetto</label>
+				 <div class="controls">
+                	 <select id="ente" name="ente" class="span2"><option>&nbsp;</option><option>pubblico e privato</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>
+ 				
+				<span class="al">
+				<label class="radio inline" for="den">Natura giuridica</label>
+                <select id="den" name="den" class="span2"><option>&nbsp;</option><option>xxxx</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>
+				</span>
+				
+				</div>
+          </div>
+			
+			
+	      <div class="control-group">
+                <label class="control-label" for="ente">Stato soggetto</label>
+				 <div class="controls">
+                	 <select id="ente" name="stato" class="span2"><option>&nbsp;</option><option>xxxx</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>
+ 				
+         
+                <span class="al">
+				       <label class="radio inline">  Sesso </label>
+                     <label class="radio inline">
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="checked">
+                        M
+                     </label>
+                     <label class="radio inline">
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        F
+                     </label>
+				
+               </span>
+
+			 </div>
+          </div>
+			
+         <div class="control-group">
+
+          <label class="control-label" for="Nazione">Nazione</label>
+              <div class="controls">
+                	 <select id="Nazione" name="Nazione" class="span2"><option>&nbsp;</option><option>maschio</option><option>femmina</option></select>
+               <span class="al">
+                     <label class="radio inline" for="Comune">Comune di Nascita</label>
+             
+     			   <input id="Comune" name="Comune" class="min" type="text" class="span2"/> Provincia: xxxx
+                 </span>
+          	 </div>
+          </div>
+           
+          
+           <div class="control-group">
+                <label class="control-label" for="classif">Classificatore</label>
+				 <div class="controls">
+                	 <select id="classif" name="classif" class="selectpicker" multiple title='Scegli il tipo di classificazione'><option>&nbsp;</option><option>x0</option><option>x1</option><option>x2</option><option>x3</option><option>x4</option></select>
+ 				</div>
+          </div>
+           	
+
+	
+
+
+       </fieldset>
+          
+          
+  
+         
+       
+
+                                                    
+                                                   
+<p><input class="btn" type="button" value="indietro"/>   <a class="btn btn-link" href="">annulla</a><a href="../Fin-Soggetto/FIN_risricSoggetto.shtml" class="btn btn-primary pull-right">cerca</a> </p>
+</form>
+</div>	
+</div>	
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

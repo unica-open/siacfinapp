@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="soggettoDefault" extends="default, json-default" abstract="true">
+		<!-- 
+			Package per la definizione delle estensioni comuni a tutti i varii packages di Struts2 e per la definizione
+			centralizzata dello stack degli interceptors.
+		-->
+	    <interceptors>
+		
+			<!-- Interceptor di log prima e a termine dell'invocazione -->
+			<interceptor name="logInterceptor" 
+				class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+
+			<!--  Interceptor per la gestione degli errori di conversione 
+			<interceptor name="siacConversionErrorInterceptor" 
+				class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" />
+			-->	
+			
+			<!-- Interceptor per la gestione dei breadcrumb --> 
+			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+  				<param name="defaultRewindMode">AUTO</param>
+  				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+
+			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
+			<interceptor name="redirectMessage" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.RedirectMessageInterceptor" />
+							
+			<interceptor-stack name="myStack">
+				<!-- Default Stack -->
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias"/>
+				<interceptor-ref name="servletConfig"/>
+				<interceptor-ref name="i18n"/>
+	            <interceptor-ref name="actionData"/>
+				<interceptor-ref name="prepare"/>
+	            <interceptor-ref name="redirectMessage"/>
+				<interceptor-ref name="chain"/>
+				<interceptor-ref name="scopedModelDriven"/>
+				<interceptor-ref name="modelDriven"/>
+				<interceptor-ref name="fileUpload"/>
+				<interceptor-ref name="checkbox"/>
+				<interceptor-ref name="multiselect"/>
+				<interceptor-ref name="staticParams"/>
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+				</interceptor-ref>
+				
+				<!-- Injettato nello stack per la gestione degli errori di conversioneS 
+				<interceptor-ref name="siacConversionErrorInterceptor"/>
+				-->
+				
+				<interceptor-ref name="validation">
+                    <param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+					<param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+				</interceptor-ref>
+				<interceptor-ref name="debugging"/>
+				
+				<!-- Interceptor per breadcrumb --> 
+				<interceptor-ref name="breadCrumbs"/>
+				
+				
+				<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
+				
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack" />
+	</package>
+	
+	<!-- Gestione navigazione per il modulo soggetto -->
+	<package namespace="/" extends="soggettoDefault" name="soggetto">
+		<action name="ricercaSoggetto" class="ricercaSoggettoAction">
+			<result name="success">/jsp/soggetto/ricercaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/ricercaSoggetto.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">elencoSoggetti</result>	
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">gestioneClassiSoggetto</result>	
+				
+		</action>
+		
+		<action name="gestioneClassiSoggetto" class="gestioneClassiSoggettoAction">
+			<result name="success">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
+			</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			
+		</action>
+								
+		<action name="elencoSoggetti" class="elencoSoggettiAction">
+			<result name="success">/jsp/soggetto/elencoSoggetti.jsp</result>
+			<result name="input">/jsp/soggetto/elencoSoggetti.jsp</result>
+			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
+		</action>
+		
+		<action name="consultaSoggetto" class="consultaSoggettoAction">
+			<result name="success">/jsp/soggetto/consultaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/consultaSoggetto.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+		</action>
+		
+		<action name="inserisciSoggetto" class="inserisciSoggettoAction">
+			<result name="success">/jsp/soggetto/step1Soggetto.jsp</result>
+			<result name="input">/jsp/soggetto/step1Soggetto.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciContatti</result>
+		</action>
+		<action name="inserisciContatti" class="inserisciContattiAction">
+			<result name="success">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="input">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggetto</result>
+			<result name="salva" type="redirectAction">salvaSoggetto</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+	    <action name="modalitaPagamentoSoggetto" class="modalitaPagamentoSoggettoAction"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <action name="validaModalitaPagamento" class="validaModalitaPagamentoAction">
+	    	<result name="success">/jsp/soggetto/validaModalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/validaModalitaPagamento.jsp</result>
+			<result name="backMod" type="chain">modalitaPagamentoSoggetto</result>
+	    </action>
+	    
+		<action name="salvaSoggetto" class="salvaSoggettoAction">
+			<result name="success">/jsp/soggetto/step3Salva.jsp</result>
+			<result name="indietroStep2" type="redirectAction">inserisciContatti</result>					
+		</action>
+		
+<!-- 		<action name="vaiAggiornaSoggetto" class="aggiornaSoggettoAction" method="arrivoDaBtn"> -->
+<!-- 			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result> -->
+<!-- 		</action> -->
+		
+		<action name="aggiornaSoggetto" class="aggiornaSoggettoAction">
+			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapiti</result>
+			<result name="sedi" type="redirectAction">aggiornaSediSecondarie</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggetto</result>	
+		</action>
+		
+		<action name="aggiornaRecapiti" class="aggiornaRecapitiAction">
+			<result name="success">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+
+		<action name="aggiornaSediSecondarie" class="aggiornaSediSecondarieAction">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+	   
+	    <action name="validaSoggetto" class="validaSoggettoAction">
+			<result name="success">/jsp/soggetto/validaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/validaSoggetto.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+		</action>
+		<action name="collegaSoggetti" class="collegaSoggettiAction">
+			<result name="success">/jsp/soggetto/collegaSoggetti.jsp</result>
+			<result name="input">/jsp/soggetto/collegaSoggetti.jsp</result>
+		</action>
+	 <!-- 
+		<action name="aggiornaCapUscitaPrevisione" class="capUscitaPrevisioneAction">
+			<result name="success">/jsp/capUscitaPrevisione/aggCapUscPrev.jsp</result>
+			<result name="aggiornaCapUscitaPrevisione" 
+				type="redirectAction">aggiornaCapUscitaPrevisione</result>
+		</action>
+		<action name="ricercaCapUscitaPrevisione" class="ricercaCapUscitaPrevisioneAction">
+			<result name="success">/jsp/capUscitaPrevisione/ricCapUscPrev.jsp
+			</result>
+			<result name="risultatiRicercaCapUscitaPrevisione" type="redirectAction">risultatiRicercaCapUscitaPrevisione
+			</result>
+		</action>
+		<action name="risultatiRicercaCapUscitaPrevisione" class="risultatiRicercaCapUscitaPrevisioneAction">
+			<result name="success">/jsp/capUscitaPrevisione/risRicCapUscPrev.jsp
+			</result>
+		</action>
+  	 -->
+  	 
+		<action name="gestioneClassi" class="gestioneClassiAction">
+ 			<result name="input">/jsp/soggetto/gestioneClassi.jsp</result>
+			<result name="success">/jsp/soggetto/gestioneClassi.jsp</result>			
+			<result name="done" type="redirectAction">gestioneClassi</result>			
+		</action>
+		
+<!-- 
+		<action name="modificaClassi" class="modificaClasseAction">
+			<result name="input">/jsp/soggetto/modificaClasse.jsp</result>
+			<result name="success">/jsp/soggetto/modificaClasse.jsp</result>
+			<result name="gotoGestioneClassi" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+			</result>
+		</action>
+ -->
+   	 
+	 </package>
+</struts>		

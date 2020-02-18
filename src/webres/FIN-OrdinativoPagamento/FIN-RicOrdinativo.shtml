@@ -1,0 +1,231 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+
+</head>
+<body>
+  
+		<!-- NAVIGAZIONE -->
+		<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>   
+		<ul id="sommario" class="nascosto">
+			<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+		</ul>
+		<!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+  
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+		  <li><a href="../">Home</a> <span class="divider">></span></li>
+		  <li><a href="../index.shtml">xxxxx</a> <span class="divider">></span></li>
+		  <li class="active">Ricerca ordinativi di pagamento</li>
+		</ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">
+    
+			<form class="form-horizontal">
+			
+				<!--#include virtual="include/alertErrorSuccess.html" --> 
+				<h3>Ricerca Ordinativi di Pagamento</h3>
+				<p>È necessario inserire almeno un criterio di ricerca.</p>					
+				<div class="step-content">	
+					<div class="step-pane active" id="step1"> 
+					<p class="margin-medium"><a class="btn btn-primary pull-right" href="FIN-risricOrdinativo.shtml">cerca</a> </p>
+					<br>
+
+					<h4 class="step-pane">Ordinativo</h4>
+					<fieldset class="form-horizontal">
+
+						<div class="control-group">
+							<label class="control-label"> Numero</label>
+							<div class="controls">
+								<span class="al">
+									<label class="radio inline" for="perDA">Da</label>
+								</span>
+								<input type="text" name="perDA" value="" class="lbTextSmall span2" id="perDA" />
+								<span class="al">
+									<label for="perA" class="radio inline">A</label>
+								</span>
+								<input type="text" name="perA" value="" class="lbTextSmall span2" id="perA" />
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="">Data emissione </label>
+							<div class="controls">
+								<span class="al">
+									<label for="dataDa" class="radio inline">Da</label>
+								</span>
+								<input type="text" name="dataDa" value="" class="lbTextSmall span2" id="dataDa" />
+								<span class="al">
+									<label for="dataA" class="radio inline">A</label>
+								</span>
+								<input type="text" name="dataA" value="" class="lbTextSmall span2" id="dataA" />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="distinta">Distinta</label>
+							<div class="controls">
+							  <select id="distinta" name="distinta" class="span4"><option> </option></select>  
+							  <span class="alRight">
+								<label class="radio inline" for="ctTesoriere">Conto del tesoriere </label>
+							  </span>
+							  <select id="ctTesoriere" name="ctTesoriere" class="span4"><option> </option></select>  
+							</div>
+						</div>
+
+						<div class="control-group">
+							<div class="control-label">Stato operativo</div>
+							<div class="controls">
+								<select name="statoOperativoSP" id="statoOperativoSP" class="span4">
+									<option>Incompleto</option>
+									<option>xxxxx</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<div class="control-label">Data trasmissione OIL</div>
+							<div class="controls">
+								<input type="text" name="dataOil" value="" class="lbTextSmall span2" id="dataOil" />
+							</div>
+						</div>
+				
+						<h4 class="step-pane">Liquidazione</h4>
+						<fieldset class="form-horizontal">
+
+							<div class="control-group">
+								<label class="control-label">Anno</label>
+								<div class="controls">
+									<input type="text" name="liqAnno" value="" class="lbTextSmall span2" id="liqAnno" />
+									<span class="al">
+										<label for="liqNum" class="radio inline">Numero</label>
+									</span>
+									<input type="text" name="liqNum" value="" class="lbTextSmall span2" id="liqNum" />
+								</div>
+							</div>
+						</fieldset>
+						
+						<h4 class="step-pane">Mutuo</h4>
+						<div class="control-group">
+							<label class="control-label" for="mutuo">Numero mutuo</label>
+							<div class="controls">
+								<input type="text" name="mutuo" value="" class="lbTextSmall span2" id="mutuo" />
+							</div>
+						</div>								
+					</fieldset>
+				
+					<!--#include virtual="include/impegno.html" --> 
+					<!--#include virtual="include/capitolo.html" -->
+					<!--#include virtual="include/provvedimento.html" -->
+					<!--#include virtual="include/soggetto.html" -->
+					
+					<!--#include virtual="include/modal.html" -->
+      
+					</div>
+				</div>
+					
+				<p class="margin-medium">
+					<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+					<a href="#" class="btn btn-secondary">annulla</a>
+					<a class="btn btn-primary pull-right" href="FIN-RisricOrdinativo.shtml">cerca</a> 
+				</p>     
+  
+
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

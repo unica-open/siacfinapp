@@ -1,0 +1,360 @@
+﻿   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>
+
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p> 
+	  <ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	  </ul>
+
+  <hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+  
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../index.shtml">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+			<li class="active">Aggiorna Documenti iva spesa</li>
+		</ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+
+    <div class="span12 contentPage">
+    
+        <form method="get" action="#" class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" --> 
+			<h3>FAT 2013/39/132829 - SORIS - Società riscossione S.p.A.</h3>
+			<h4>Stato: xxxxxx - Valido dal: xx/xx/xxxx</h4>			
+				<ul class="nav nav-tabs">
+					<li><a href="FIN-aggDocIvaSpesa.shtml">Documenti iva spesa</a></li>
+					<li class="active"><a href="FIN-aggDatiIVA.shtml" >Dati iva</a></li>
+				</ul>
+				
+				<fieldset class="form-horizontal">
+					<div class="step-pane active" id="DatiAngrafica">
+					
+						<!-- accordion -->
+						<div class="accordion" >
+							<div class="accordion-group">
+								<div class="accordion-heading">
+									<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#DatiAngrafica" href="#DatiAngraficaTAB">Dati principali<span class="icon">&nbsp;</span></a>
+								</div>
+							
+								
+								<div id="DatiAngraficaTAB" class="accordion-body collapse">
+									<div class="accordion-inner">
+
+										<fieldset class="form-horizontal">	
+											<div class="boxOrSpan2">
+												<div class="boxOrInLeft">
+													<p>Dati anagrafica</p>
+													<ul class="htmlelt">	
+														<li>
+															<dfn>Data emissione</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Data scadenza</dfn> 
+															<dl>xxx</dl>
+														</li>
+														<li>
+															<dfn>Codice fiscale</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Partita iva</dfn> 
+															<dl>xxxx</dl>
+														</li>
+														<li>
+															<dfn>Descrizione</dfn> 
+															<dl>xxxxxx</dl>
+														</li>
+														<li>
+															<dfn>Sede secondaria</dfn> 
+															<dl>xxxxxx xxxxxxxxxxxxxxx</dl>
+														</li>
+													</ul>
+												</div>
+																
+												<div class="boxOrInRight">
+													<p>Importi</p>
+													<ul class="htmlelt">
+														<li>
+															<dfn>Importo totale documento</dfn> 
+															<dl>999.000,00</dl>
+														</li>
+														<li>
+															<dfn>Importo non rilevante iva</dfn> 
+															<dl>999.000,00</dl>
+														</li>
+														<li>
+															<dfn>Importo rilevante iva</dfn> 
+															<dl>999.000,00</dl>
+														</li>
+													</ul>
+												</div>				
+											
+											</div>
+
+										</fieldset >
+										
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						<!-- end accordion -->
+						
+					</div>	
+							
+					<h4 class="step-pane">Dati iva</h4>
+						<div class="control-group">
+							<span class="control-label">Inserimento dati iva</span>
+							<div class="controls">
+								<label class="radio inline">
+									<input type="radio" name="optionsRadiosDocIva" id="optionsRadiosDocIva-complete" value="complete" />
+									Su intero documento
+								</label>
+								<label class="radio inline">
+									<input type="radio" name="optionsRadiosDocIva" id="optionsRadiosDocIva-detail" value="detail" />
+									Sui singoli dettagli del documento (quote) 
+								</label>
+							</div>
+						</div>
+						
+						<div id="DocComplete" style="display:none">
+							<div class="control-group">
+								<label class="control-label" for="NumReg">Registrazione iva</label>								
+								<div class="controls">
+									<input id="NumReg" class="lbTextSmall span1 " type="text" value="" name="NumReg" placeholder="Anno" />
+									<span class="alRight">
+										<label class="radio inline" for="DataReg">/</label>
+									</span>
+									<input id="DataReg" class="lbTextSmall span2 " type="text" value="" name="DataReg" />
+								</div>
+							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="ImpTotMovIva">Importo totale movimenti iva</label>								
+								<div class="controls">
+									<input id="ImpTotMovIva" class="lbTextSmall span2 " type="text" value="" name="ImpTotMovIva" />
+								</div>
+							</div>
+							
+							<p id="DocSelect">
+							<span class="pull-right">
+								<a href="../FIN-DocumentoIVASpesa/FIN-InsDocumentiIVAComplete.shtml" class="btn btn-primary">inserisci documento iva di spesa</a>    
+							</span>
+							</p>
+							
+						</div>
+						
+						<div id="DocDetail" style="display:none">
+							<h4>Elenco quote rilevanti iva</h4>
+								<table class="table table-hover tab_left" summary="...." >
+									<thead>
+										<tr>
+											<th class="span1">Numero</th>
+											<th>Impegno</th>
+											<th>Capitolo</th>
+											<th>Attivit&agrave; iva</th>
+											<th>Registrazione iva</th>
+											<th class="tab_Right">Importo quota</th>
+											<th class="tab_Right">Importo totale movimenti iva</th>
+											<th class="tab_Right span1">&nbsp;</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>1</td>
+											<td>2013-2013-12345</td>
+											<td>2013-420-1-1</td>
+											<td>-</td>
+											<td>-</td>
+											<td class="tab_Right">15,00</td>
+											<td class="tab_Right">5,00</td>	
+											<td class="tab_Right">
+												<div class="btn-group">
+													<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+													<ul class="dropdown-menu pull-right">
+														<li><a href="../FIN-DocumentoIVASpesa/FIN-InsDocumentiIVADetail.shtml">inserisci</a></li>
+													</ul>
+												</div>
+											</td>								
+										</tr>
+										<tr>
+											<td>2</td>
+											<td>2013-2013-678</td>
+											<td>2013-420-1-2</td>
+											<td>02 - Cultura</td>
+											<td>xxxxxxx</td>
+											<td class="tab_Right">620,00</td>
+											<td class="tab_Right">20,00</td>
+											<td class="tab_Right">
+												<div class="btn-group">
+													<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+													<ul class="dropdown-menu pull-right">
+														<li><a href="../FIN-DocumentoIVASpesa/FIN-AggDocumentiIVADetail.shtml">aggiorna</a></li>
+													</ul>
+												</div>
+											</td>	
+										</tr>
+									</tbody>
+								</table>
+								
+								<div class="row pagination_conth">
+									<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+										<div class="span6">                               
+											<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+												<ul>
+													<li><a href="#">« inizio</a></li>
+													<li><a href="#">« prec</a></li>
+													<li class="disabled"><a href="#">1</a></li>
+													<li class="active"><a href="#">2</a></li>
+													<li><a href="#">3</a></li>
+													<li><a href="#">4</a></li>
+													<li><a href="#">5</a></li>
+													<li><a href="#">succ »</a></li>
+													<li><a href="#"> fine »</a></li>
+												</ul>
+											</div>
+													
+										</div>  
+								</div>
+							
+						</div>
+				
+					<div class="clear"></div>	
+					<br>	
+					<div class="Border_line"></div>
+						
+				</fieldset>
+				
+				<!--#include virtual="include/modal.html"-->
+				<p>
+					<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+				</p>
+		
+           
+        </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+<script>
+	
+		$(function() { 
+		
+        var btnCheckIva=$('input[name=optionsRadiosDocIva]');
+        $(btnCheckIva).click( function() {
+			var optRadIVA=$(this).filter(':checked').val();
+			
+			if(optRadIVA=="detail"){
+				$('#DocComplete').hide();
+				$('#DocDetail').show();			
+		   
+			}else{
+				$('#DocDetail').hide();
+				$('#DocComplete').show();
+
+			}
+        });
+	
+	});	
+
+</script>
+
+
+</body>
+</html>

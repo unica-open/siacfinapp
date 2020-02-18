@@ -1,0 +1,79 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<porta-delegata name="SSOBART.AUDITING">
+	<services>
+		<service name="SSOBARTPepAuth" public-interface-class="it.csi.ssobart.pepauth.interfacecsi.PepAuth">
+			<operations>
+
+				<operation name="getLivelloAuthAndIDProviderForApplInPortale"
+					type="synch-call">
+					<param-list>
+						<param name="cod_applicazione" type="java.lang.String" />
+						<param name="cod_portale" type="java.lang.String" />
+					</param-list>
+					<ret-val type="it.csi.ssobart.pepauth.dto.Auth" />
+				</operation>
+
+				<operation name="findApplicationForPortal" type="synch-call">
+					<param-list>
+						<param name="cod_portale" type="java.lang.String" />
+					</param-list>
+					<ret-val type="java.lang.String[]" />
+				</operation>
+
+				<operation name="findInformationForApplication" type="synch-call">
+					<param-list>
+						<param name="cod_appl" type="java.lang.String" />
+						<param name="cod_portale" type="java.lang.String" />
+					</param-list>
+					<ret-val type="it.csi.ssobart.pepauth.dto.PepAuthAppl" />
+				</operation>
+
+				<operation name="findInformationForPortal" type="synch-call">
+					<param-list>
+						<param name="cod_portale" type="java.lang.String" />
+					</param-list>
+					<ret-val type="it.csi.ssobart.pepauth.dto.Portale" />
+				</operation>
+
+				<operation name="findInformationForApplicationsInPortale"
+					type="synch-call">
+					<param-list>
+						<param name="cod_appl" type="java.lang.String" />
+						<param name="cod_portale" type="java.lang.String" />
+					</param-list>
+					<ret-val type="it.csi.ssobart.pepauth.dto.PepAuthAppl[]" />
+				</operation>
+
+
+			</operations>
+		</service>
+	</services>
+
+	<config>
+		<url-pa>multi://${ssobart.multi}</url-pa>
+		<pluggable-pd-list chooser-class="it.csi.csi.porte.FixedDelegateChooser">
+			<pluggable-pd name="ssobarts.PepAuthPA"
+				class="it.csi.csi.porte.ejb.PortaDelegataEJB" url-pa="ssobarts/SSOBARTPepAuthPA">
+
+				<properties>
+					<property name="java.naming.provider.url" value="${ssobart.java.naming.provider.url}" />
+					<property name="java.naming.factory.initial" value="weblogic.jndi.WLInitialContextFactory" />
+					<!-- <property name="csi.auth.jaas.client.class" value="it.csi.csi.porte.ejb.jaas.weblogic.WeblogicJAASNativeClient" 
+						/> <property name="csi.auth.basic" value="/" /> -->
+				</properties>
+
+			</pluggable-pd>
+
+
+		</pluggable-pd-list>
+		<queue-manager url="" />
+	</config>
+</porta-delegata>
+
+
+
+
+

@@ -1,0 +1,71 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+	<h4>Dettagli disposizione</h4>
+	<fieldset class="form-horizontal">
+		
+		<div class="control-group">
+			<label class="control-label">Divisa *</label>
+			<div class="controls">
+				<select id="codiceDivisa" name="codiceDivisa" class="span2" required>
+					<option value="">xxxxx</option>
+					<option value="">xxxx</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label">Causale pagamento *</label>
+				<div class="controls">
+					<input id="CausalePagamentoEstero" name="CausalePagamentoEstero" class="span9" type="text" value="" required />
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="SpeseEcommissioni">Spese e commissioni</label>
+				<div class="controls">
+					<select id="SpeseEcommissioni" name="SpeseEcommissioni" class="span9" >
+						<option value="" >BEN</option>
+						<option value="" >OUR</option>
+						<option value="" >SHA</option>
+					</select>
+			</div>
+		</div>
+		
+	</fieldset>
+	
+	<h4>Modalit&agrave; di pagamento</h4>
+	<fieldset class="form-horizontal">
+	
+	<div class="control-group">
+		<label class="control-label">Tipologia</label>
+		<div class="controls">
+		  <label class="radio inline"><input type="radio" name="radioTipologia" id="radioBonifico" value="bonifico" checked="checked">Bonifico</label>
+		  <label class="radio inline"><input type="radio" name="radioTipologia" id="radioAssegno" value="assegno">Assegno</label>
+		  <label class="radio inline"><input type="radio" name="radioTipologia" id="radioAltro" value="altro">Altro</label>
+		  <span id="ModAssegno" class="alRight marginLeft2">
+				<select name="modConsegna" value="" id="modConsegna" style="display:none">
+					<option value="">Da consegnare</option>
+					<option value="">Da spedire</option>
+				</select>
+			</span>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" >Istruzioni particolari</label>
+		<div class="controls">
+			<textarea id="istrPartPagamentoEstero" name="istrPartPagamentoEstero" rows="2" cols="15" class="span9" type="text" value=""></textarea>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<label class="control-label">Esecutore diverso da Titolare</label>
+			<div class="controls">
+				<input id="checkEsecutoreTitolare" name="checkEsecutoreTitolare" type="checkbox" value="" />
+		</div>
+	</div>
+
+	</fieldset>  
+

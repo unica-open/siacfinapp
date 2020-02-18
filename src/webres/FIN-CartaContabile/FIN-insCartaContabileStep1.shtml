@@ -1,0 +1,153 @@
+
+<!-- ***************** inclusione head portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+</head>
+<body>                       
+	<!-- NAVIGAZIONE -->
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- ***************** inclusione Banner portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--#include virtual="../navbarLogin.html" -->
+
+
+<!-- ***************** inclusione Banner applicativo *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+
+
+	<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">xxxx</a> <span class="divider">></span></li>
+			<li class="active">Inserimento carta contabile</li>
+		</ul> 
+	</div>	
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage">    
+				
+				<form class="form-horizontal">
+					<!--#include virtual="include/alertErrorSuccess.html" -->
+					<h3>Inserimento carta contabile</h3>
+					
+					
+					<div id="MyWizard" class="wizard">
+						<ul class="steps">
+							<li data-target="#step1" class="active"><span class="badge">1</span>Dati testata<span class="chevron"></span></li>
+							<li data-target="#step2"><span class="badge">2</span>Dettaglio<span class="chevron"></span></li>
+						</ul>
+					</div>
+					
+					<div class="step-content">
+						<div class="step-pane active" id="step1">  
+							<!--#include virtual="include/provvedimento.html" -->
+							
+							<h4 class="step-pane">Dati carta</h4>	
+							<fieldset class="form-horizontal">
+
+								<div class="control-group">
+									<label class="control-label">Pagamento in valuta estera</label>
+									<div class="controls">
+										<input id="optionsPagamentoEstero" name="optionsPagamentoEstero" type="checkbox" value=""  />
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label">Descrizione *</label>								
+									<div class="controls">
+										<textarea id="DescrizioneCartaContabile"  name="DescrizioneCartaContabile" rows="1" cols="15" class="span9" type="text" value="" required></textarea>
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label">Causale </label>
+									<div class="controls">
+										<input id="CausaleCartaContabile" name="CausaleCartaContabile" class="span9" type="text" value="" />
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label">Motivo urgenza </label>
+									<div class="controls">
+										<input id="MotivoUrgenzaCartaContabile" name="MotivoUrgenzaCartaContabile" class="span9" type="text" value="" />
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label">Note </label>
+									<div class="controls">
+										<textarea id="NoteCartaContabile" name="NoteCartaContabile" rows="2" cols="15" class="span9" type="text" value="" ></textarea>
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label">Data esecuzione pagamento</label>
+									<div class="controls">
+										<input id="DataValutaCartaContabile" name="DataValutaCartaContabile" class="span2 datepicker" type="text" value="" >
+										<span class="alRight">
+											<label class="radio inline">Data scadenza</label>
+										</span>
+										<input id="DataScadenzaCartaContabile" name="DataScadenzaCartaContabile" class="span2 datepicker" type="text" value="">
+									</div>
+								</div>
+								
+								<div class="accordion" id="AccpagEstero" style="display:none">
+									<div class="accordion-group">
+										<div class="accordion-heading">    
+											<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#AccpagEstero" href="#PagamValEstera">Pagamenti valuta estera<span class="icon">&nbsp;</span></a>
+										</div>
+										<div id="PagamValEstera" class="accordion-body collapse">
+											<div class="accordion-inner">  
+												<!--#include virtual="include/valutaEstera.html" -->  	
+
+											</div>
+										</div>
+									</div>
+								</div> 
+		
+							</fieldset>
+						</div>
+					</div>
+					
+					<!--#include virtual="include/modal.html" -->
+					<p class="margin-medium">
+						<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+						<a class="btn btn-secondary" href="">annulla</a>    
+						<span class="pull-right">
+							<a class="btn btn-primary" href="FIN-insCartaContabileStep2.shtml">prosegui</a>
+							<a class="btn btn-primary" href="">salva</a>
+						</span>					
+					</p>       
+			
+				</form>
+				
+		</div>		  
+	</div>	 
+</div>	
+<!-- ***************** inclusione footer portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+<!--#include virtual="include/scriptCarta.html" -->
+
+
+</body>
+</html>

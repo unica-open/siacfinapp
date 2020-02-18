@@ -1,0 +1,140 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>
+<body>  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+      <li class="active">Aggiornamento subimpegno</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">
+    <h3>Impegno 2013/12300 - Acquisto scrivanie per Anagrafe - 100.000,00</h3>
+    <ul class="nav nav-tabs">
+        <li>
+        <!--a href="FIN-AggImpegno.shtml#">Impegno</a-->
+        <a class="conferma" rel="FIN-AggImpegno.shtml">Impegno</a>
+        
+        </li>
+        <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+        <li  class="active"><a href="#">Subimpegni</a></li>
+        <li><a class="conferma" rel="FIN-Modifiche.shtml">Modifiche</a></li>
+        <li><a href="#" rel="#">Mutui</a></li>
+        <li><a href="#" rel="#">Accertamenti</a></li>
+      </ul>
+      <form class="form-horizontal">    
+         <h4>Subimpegno - Totale: 14.338,98 - Disponibile a subimpegnare: 85.661,02</h4>
+        <div id="MyWizard" class="wizard">
+					<ul class="steps">
+						<li data-target="#step1" class="active"><span class="badge">1</span>Dati subimpegno<span class="chevron"></span></li>
+						<li data-target="#step2" ><span class="badge">2</span>Classificazioni<span class="chevron"></span></li>
+						<!--<li data-target="#step3"><span class="badge">3</span>Salva<span class="chevron"></span></li> -->
+						<!--<li data-target="#step4"><span class="badge">4</span>Salva<span class="chevron"></span></li> -->
+					</ul>
+				</div>
+        <div class="step-content">
+          <div class="step-pane active" id="step1">
+        		<br/>
+            <h4>Subimpegno: 1 - Descrizione - Disponibile a liquidare:XXXXXX </h4>                                                
+            <!--#include virtual="include/provvedimento_subimp.html" -->                                  
+            <!--#include virtual="include/soggetto_subimp.html" -->             
+                <!--     TABELLE       RIEPILOGO   con azioni -->              
+            <!--#include virtual="include/datiEntita_subimp.html" -->            
+<!-- Modal -->
+            <!--#include virtual="include/modal.html" --> 
+            <!-- Fine Modal -->                                        
+            <p><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   <a class="btn btn-secondary" href="">annulla</a><span class="pull-right"><a class="btn btn-primary" href="FIN-Subimpegno.shtml">Salva</a><span class="nascosto"> | </span> <a class="btn btn-primary" href="FIN-AggSubimpegno2.shtml">Prosegui</a></span> </p>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+	  
+				<div class="accordion" id="collAn">
+					<div class="accordion-group">
+					  <div class="accordion-heading">    
+						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#collAn" href="#collAnagrafica">
+						 Anagrafica Predisposizione<span class="icon">&nbsp;</span>
+						</a>
+					  </div>
+					  <div id="collAnagrafica" class="accordion-body collapse">
+					  
+						<div class="accordion-inner">
+
+								<div class="control-group">
+									<label class="control-label" for="ragSoc">Ragione Sociale</label>
+									<div class="controls">
+										<input id="ragSoc" name="ragSoc" class="span9" type="text" />                                      
+									</div>
+								</div>
+								
+								<div class="control-group">
+										<label class="control-label" for="Cognome">Cognome e Nome</label>
+										<div class="controls">
+											<input id="Cognome" name="Cognome" class="span3" type="text" placeholder="cognome" required />
+										
+										<span class="al">
+										<input id="Nome" name="Nome" class="span4" type="text" placeholder="nome" required />
+										</span>
+										<span class="alLeft">
+										<label class="radio inline">
+										<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" /> Maschio
+										</label>
+										<label class="radio inline">
+										<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2" />Femmina
+										</label>
+										</span>
+									  </div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label" for="CodFisc">Codice fiscale</label>
+									<div class="controls">
+									  <input id="CodFisc" name="CodFisc" class="span3" type="text"  value=""/>  
+									  <span class="alRight">
+										<label class="radio inline" for="parIVA">Partita IVA </label>
+									  </span>
+									  <input id="parIVA" name="parIVA" class="span4" type="text"  value=""/>                     
+									</div>
+								</div>
+
+
+								<h5 class="subTitle">Dati Indirizzo</h5>
+
+								<div class="control-group">
+									<label class="control-label" for="Stato2">Stato\Comune</label>
+									<div class="controls">
+										<select id="Stato2" name="Stato2" class="span3">
+											<option>italia</option>
+											<option>estero</option>
+										</select>
+										<span class="al">
+										</span>
+										<input id="comune" name="comune" class="lbTextSmall span3" type="text" placeholder="comune"> Provincia: xxxx				
+									</div>
+								</div>    
+
+								<div class="control-group">
+									<label class="control-label" for="Sedime">Indirizzo</label>
+									<div class="controls">
+										<input id="Sedime" name="Sedime" class="lbTextSmall span9" type="text" placeholder="nome via - n. civico - C.A.P." >           
+									</div>
+								</div>
+								
+								<h5 class="subTitle">Dati aggiuntivi</h5>
+								
+								<div class="control-group">
+									<label class="control-label" for="Nascita">Data di Nascita</label>
+									<div class="controls">
+										<input id="Nascita" name="Nascita" class="min required span2 datepicker" placeholder="data" type="text">
+									</div>
+								</div>
+								
+								<div class="control-group">
+									<label class="control-label" for="Stato2">Stato\Comune</label>
+									<div class="controls">
+										<select id="Stato2" name="Stato2" class="span3">
+											<option>italia</option>
+											<option>estero</option>
+										</select>
+									<input id="comune" name="comune" class="lbTextSmall span3" type="text" placeholder="comune"> Provincia: xxxx
+								
+									</div>
+								</div>
+								 
+								<div class="control-group">
+									<label class="control-label" for="Codice">Email</label>
+									<div class="controls">
+									  <input id="Codice" name="Codice" class="span5" type="text"  value=""/>  
+									  <span class="al">
+										<label class="radio inline" for="classe">Telefono </label>
+									  </span>
+									  <input id="Codice" name="Codice" class="span3" type="text"  value=""/>                     
+									</div>
+								</div>
+								<!-- accordion modalita pagamento -->
+								  
+									<div class="accordion" id="modP">
+										<div class="accordion-group">
+										  <div class="accordion-heading">    
+											<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#modP" href="#modPago">
+											 Modalità pagamento<span class="icon">&nbsp;</span>
+											</a>
+										  </div>
+										  <div id="modPago" class="accordion-body collapse">
+										  
+											<div class="accordion-inner">
+
+											<div class="control-group">
+												<label class="control-label" for="intestazioneCC">Intestazione conto</label>
+												<div class="controls">
+												<input id="intestazioneCC" name="intestazioneCC" type="text" class="span9 datepicker" placeholder="conto">
+												</div>
+											</div>
+											
+											<div class="control-group">
+												<label class="control-label" for="ABI">ABI </label>
+												<div class="controls">
+												<input id="ABI" name="ABI" class="span3" type="text" placeholder="ABI"  value=""/>
+												<span class="al">
+													<label class="radio inline" for="CAB">CAB </label>
+												</span>
+												<input id="CAB" name="CAB" class="span3" placeholder="CAB" type="text"  value=""/>
+												</div>
+											</div>
+											
+											<div class="control-group">
+												<label class="control-label" for="CodIban">IBAN</label>
+												<div class="controls">
+												  <input id="CodIban" name="CodIban" class="span4" type="text" value=""/>              
+												</div>
+											</div>
+											  
+											<div class="control-group">
+												<label class="control-label" for="CodBIC">BIC</label>
+												<div class="controls">
+												  <input id="CodBIC" name="CodBIC" class="span4 datepicker" type="text"  value=""/>            
+												</div>
+											</div>
+											
+											<div class="control-group">
+												<label class="control-label" for="CC">Conto corrente</label>
+												<div class="controls">
+												  <input id="CC" name="CC" class="span4 datepicker" type="text"  value=""/>            
+												</div>
+											</div>
+
+											  
+											<div class="control-group">
+												<label class="control-label" for="Quietanzante">Quietanzante</label>
+												<div class="controls">
+												  <input id="Quietanzante" name="Quietanzante" class="span5" type="text" placeholder="denominazione" value=""/> 
+												  <input id="Quietanzante" name="Quietanzante" class="span4" type="text" placeholder="codice fiscale" value=""/>           
+												</div>
+											</div>
+											  
+											
+								
+											  
+										</div>
+									  </div>
+									</div>
+									</div>
+									  
+				  
+				 
+							
+								<!-- end accordion -->
+						  
+					</div>
+				  </div>
+				</div>
+				</div>
+			 
+
+				

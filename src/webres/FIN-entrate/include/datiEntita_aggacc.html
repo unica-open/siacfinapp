@@ -1,0 +1,70 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<h4>Dati accertamento</h4>
+<fieldset class="form-horizontal margin-large">
+      
+  <div class="control-group">
+    <label class="control-label" for="descrizione">Descrizione </label>
+    <div class="controls">
+      <input id="descrizione" name="descrizione" class="span9"  type="text"/>     
+    </div>
+  </div>
+
+ <!-- SOLO IN AGGIORNAMENTO -->
+  <div class="control-group">
+    <label class="control-label" for="importo">Importo *</label>
+    <div class="controls">
+      <input id="importo" name="importo" class="span2 required" type="text" required/>
+      <span class="al">
+        <label class="radio inline" for="importoIN">Importo iniziale</label>
+      </span>
+	   <input id="importoIN" name="importoIN" value="XXXXXX" class="span2  type="text"/>
+      
+    </div>
+  </div>  
+  <div class="control-group">
+    <label class="control-label" for="scadenza">Scadenza </label>
+    <div class="controls">
+      <input id="scadenza" class="lbTextSmall span2 datepicker" type="text" value="" name="scadenza"/>
+    </div>
+  </div>
+  <!-- FINE SOLO IN AGGIORNAMENTO -->  
+  <div class="control-group">
+    <label class="control-label" for="progetto">Progetto</label>
+      <div class="controls">
+      <input id="progetto" class="lbTextSmall span2" type="text" value="" name="progetto"/>
+
+     </div>
+    </div>
+  <div class="control-group">
+    <span class="control-label">Da riaccertamento</span>
+    <div class="controls">
+      <label class="radio inline">
+      <input type="radio" name="optionsRadios_riacc" id="optionsRadios1" value="si">
+      si
+      </label>
+      <label class="radio inline">
+      <input type="radio" name="optionsRadios_riacc" id="optionsRadios2" value="no" checked="checked">
+      no
+      </label>
+      <!-- CAMPI VISIBILI SE RADIOBUTTON SI=CHECKED -->       
+      <span class="riaccVisible">
+      &nbsp; <input id="annoIR" name="annoIR" class="span1 " placeholder="Anno" value="" type="text"/>&nbsp;
+      <input id="numeroIR" class="lbTextSmall span2 " placeholder="Numero" value="" type="text" name="numeroIR"/>
+      </span>
+      <!-- FINE CAMPI VISIBILI -->      
+    </div>
+  </div>
+  
+   <div class="control-group">
+    <div class="control-label">Accertamento di origine</div>
+    <div class="controls">
+      <input id="annoIO" name="annoIO" placeholder="Anno" value="" class="span1" type="text"/>&nbsp;
+
+      <input id="origine3" class="lbTextSmall span2" placeholder="Numero" type="text" value="" name="origine3"/>
+    </div>
+  </div>
+
+</fieldset>

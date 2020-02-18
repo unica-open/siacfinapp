@@ -1,0 +1,260 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+	<div class="span12">
+	<ul class="breadcrumb">
+		<li><a href="../">Home</a> <span class="divider">></span></li>
+		<li><a href="../index.shtml">Xxxxx</a> <span class="divider">></span></li>
+		<li class="active">Risultati di ricerca documenti iva di entrata</li>
+    </ul> 
+    </div>	
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid">
+
+    <div class="span12 contentPage">
+    
+        <form class="form-horizontal">
+			<!--#include virtual="include/alertErrorSuccess.html" -->   	 
+			<h3>Risultati di ricerca documenti iva di entrata</h3>
+
+			<fieldset class="form-horizontal">
+				<h4 class="step-pane"><span class="num_result">19527</span> Risultati trovati</h4>
+				<table class="table table-hover tab_left" summary="....">
+							<thead>
+								<tr>
+									<th scope="col">Documento</th>
+									<th scope="col" class="span1">intra</th>
+									<th scope="col">Soggetto</th>
+									<th scope="col">Registrazione iva</th>
+									<th scope="col">Tipo registrazione iva</th>
+									<th scope="col">Attività iva</th>
+									<th scope="col">Registro iva</th>
+									<th scope="col">Protocollo provv.</th>
+									<th scope="col">Protocollo def.</th>
+									<th scope="col" class="tab_Right">&nbsp; </th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><a data-content="01/02/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data">2013/FAT/12345</a></td>
+									<td>si</td>
+									<td>148801-EQUITALIA SERVIZI</td>								
+                                    <td>2013-304</td>
+                                    <td>acquisti iva immediata</td>
+                                    <td>01 - Istruzione</td>
+                                    <td>01 - Attività non separate</td>
+                                    <td><a data-content="09/04/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data Prot. provv.">11</a></td>
+									<td><a data-content="15/02/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data Prot. def.">45</a></td>
+									<td class="tab_Right">
+										<div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="FIN-AggDocumentiIVAComplete.shtml">aggiorna</a></li>
+												<li><a href="FIN-consDocumentiIVAComplete.shtml">consulta </a></li>
+											</ul>
+                              			</div>
+									</td>
+								</tr>
+								
+								<tr>
+									<td><a data-content="02/05/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data">2013/FAT/45326</a></td>
+									<td>no</td>
+									<td>47629-SORIS</td>		
+                                    <td>2013-548</td>
+                                    <td>acquisti ad esigibilità differita</td>
+                                    <td>02 - Cultura</td>
+                                    <td>01 - Attività non separate</td>
+                                    <td><a data-content="15/05/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data Prot. provv.">14</a></td>
+									<td><a data-content="04/07/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data Prot. def.">25</a></td>
+									<td class="tab_Right">
+										<div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="FIN-AggDocumentiIVADetail.shtml">aggiorna</a></li>
+												<li><a href="FIN-consDocumentiIVADetail.shtml">consulta </a></li>
+											</ul>
+                              			</div>
+									</td>
+								</tr>
+								<tr>
+									<td><a data-content="11/06/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data">2013/NCD/8967</a></td>
+									<td>si</td>
+									<td>47629-SORIS</td>		
+                                    <td>2013-3566</td>
+                                    <td>acquisti ad esigibilità differita</td>
+                                    <td>02 - Istruzione</td>
+                                    <td>01 - Attività non separate</td>
+                                    <td><a data-content="15/05/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data Prot. provv.">19</a></td>
+									<td><a data-content="04/07/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data Prot. def.">12</a></td>
+									<td class="tab_Right">
+										<div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="FIN-NoteCreditoDetail.shtml">aggiorna</a></li>
+												<li><a href="FIN-consNoteCreditoDetail.shtml">consulta </a></li>
+											</ul>
+                              			</div>
+									</td>
+								</tr>
+								<tr>
+									<td><a data-content="18/06/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data">2013/NCD/35651</a></td>
+									<td>si</td>
+									<td>47629-SORIS</td>
+                                    <td>2013-55332</td>
+                                    <td>acquisti ad esigibilità differita</td>
+                                    <td>02 - Istruzione</td>
+                                    <td>01 - Attività non separate</td>
+                                    <td><a data-content="15/05/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data Prot. provv.">21</a></td>
+									<td><a data-content="04/07/2013" rel="popover" data-trigger="hover" href="#" data-original-title="Data Prot. def.">15</a></td>
+									<td class="tab_Right">
+										<div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+											<ul class="dropdown-menu pull-right">
+												<li><a href="FIN-NoteCreditoComplete.shtml">aggiorna</a></li>
+												<li><a href="FIN-consNoteCreditoComplete.shtml">consulta </a></li>
+											</ul>
+                              			</div>
+									</td>
+								</tr>
+								
+							</tbody>
+							<tfoot>
+							</tfoot>
+						</table>
+						
+						<div class="row pagination_conth">
+							<div id="risultatiricerca_info" class="span6">1 - 10 di 50 risultati</div>   
+								<div class="span6">                               
+									<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+										<ul>
+											<li><a href="#">« inizio</a></li>
+											<li><a href="#">« prec</a></li>
+											<li class="disabled"><a href="#">1</a></li>
+											<li class="active"><a href="#">2</a></li>
+											<li><a href="#">3</a></li>
+											<li><a href="#">4</a></li>
+											<li><a href="#">5</a></li>
+											<li><a href="#">succ »</a></li>
+											<li><a href="#"> fine »</a></li>
+										</ul>
+									</div>
+											
+								</div>  
+						</div>
+			</fieldset>
+
+				
+			<!--#include virtual="include/modal.html" --> 
+			<div class="Border_line"></div>
+			<p class="margin-medium">
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+			</p>     
+  
+
+      </form>
+    </div>
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

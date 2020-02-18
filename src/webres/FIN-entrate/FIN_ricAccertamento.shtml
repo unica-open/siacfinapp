@@ -1,0 +1,208 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--       
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>
+<body>  
+
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">xxxx</a> <span class="divider">></span></li>
+      <li class="active">Ricerca Accertamento</li>
+    </ul> 
+  </div>	
+</div>
+ 
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">        
+        <form method="get" action="#" class="form-horizontal">         
+         <h3>Ricerca Accertamento</h3>
+		   <!--#include virtual="include/alertErrorSuccess.html" -->
+         
+          <p>&Egrave; necessario inserire almeno un criterio di ricerca.</p>            
+          <div class="step-content">
+          <div class="step-pane active" id="step1"> <br/>
+          <p><a href="FIN-RisRicAccertamenti.shtml" class="btn btn-primary pull-right">cerca</a></p> <br/>
+          <h4>Accertamento</h4>
+          <fieldset class="form-horizontal">  
+            <div class="control-group">
+              <label class="control-label" for="anno">Anno</label>
+              <div class="controls">  
+                <input id="anno" class="lbTextSmall span1" type="text" value="" name="anno"/>
+                <span class="al">
+                  <label class="radio inline" for="numero">Numero </label>
+                </span>
+                <input id="numero" class="lbTextSmall span2" type="text" value="" name="numero"/>  
+                <span class="al">
+                  <label class="radio inline" for="stato">Stato</label>                
+                </span>
+                <select id="stato" name="stato" class="span3"><option>&nbsp;</option></select>  
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="piano"><abbr title="Piano dei Conti">P.d.C.</abbr> finanziario <a class="tooltip-test" title="selezionare prima il macroaggregato"><i class="icon-info-sign">&nbsp;<span class="nascosto">selezionare prima il macroaggregato</span></i></a></label>
+              <div class="controls">					        
+                <a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">seleziona il Piano dei Conti</a>
+                <!-- Modal -->
+                <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                    <h3 id="myModalLabel">Piano dei Conti</h3>
+                  </div>
+                  <div class="modal-body">
+                    <ul id="treePDC" class="ztree"></ul>
+                  </div>
+                  <div class="modal-footer">
+                    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+                  </div>              
+                </div>
+                <!-- fine modale-->				                                     
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="progetto">Progetto</label>
+              <div class="controls">					        
+                <input id="opera" class="lbTextSmall span2" type="text" value="" name="opera"/>                                  
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="piano">Competenza</label>
+              <div class="controls">
+                <label class="radio inline">
+                <input type="radio" name="stRad" id="tutti" value="option1" checked="checked">
+                Tutti
+                </label>
+                <label class="radio inline">
+                <input type="radio" name="stRad" id="residui" value="option2">
+                Residui
+                </label>
+                <label class="radio inline">
+                <input type="radio" name="stRad" id="competenza" value="option3">
+                Correnti
+                </label>
+                <label class="radio inline">
+                <input type="radio" name="stRad" id="futuri" value="option2">
+                Futuri
+                </label>
+              </div>
+            </div>   
+			
+			<div class="control-group">
+              <div class="control-label">Accertamento riaccertato</div>
+				<div class="controls">
+					<input id="annoIO" name="annoIO" value="Anno" class="span1" type="text"/>&nbsp;
+					<input id="origine3" class="lbTextSmall span2" value="Numero" type="text" value="" name="origine3"/>
+				</div>
+            </div>
+            <div class="control-group">
+              <div class="control-label">Accertamento di origine</div>
+              <div class="controls">
+                <input id="annoIO" name="annoIO" value="Anno" class="span1" type="text"/>&nbsp;
+          
+                <input id="origine3" class="lbTextSmall span2" value="Numero" type="text" value="" name="origine3"/>
+              </div>
+            </div>		
+            
+          </fieldset>  
+          <!--#include virtual="include/capitolo.html" -->      
+          <!--#include virtual="include/provvedimento.html" -->            
+          <h4>Soggetto - ...</h4>
+          <!--#include virtual="include/soggetto_ricerca.html" -->   
+			  
+          <!-- Modal -->
+          <!--#include virtual="include/modal.html" --> 
+          <!-- Fine Modal --> 
+           </div>
+		  </div> 
+          <p class="margin-medium"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   <a class="btn btn-secondary" href="">annulla</a><a href="../Fin-entrate/FIN-RisRicAccertamenti.shtml" class="btn btn-primary pull-right">cerca</a> </p>
+         
+        </form>     	
+    </div>	
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

@@ -1,0 +1,241 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+
+  <body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>
+     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+    <div class="navbarLogin">
+     
+        <div class="container-fluid"><p class="login-text pull-left">Esercizio 2013 EC - Esercizio Provvisorio con carimento bilancio di previsione</p>
+                 <p class="login-text pull-right">
+             Mario Rossi <a href="#" class="navbar-link">x</a>
+            </p>
+          
+        
+        </div>
+   
+    </div>
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+
+<div class="row-fluid">
+ <div class="span12">
+ <ul class="breadcrumb">
+    <li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+    <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+    <li class="active">Risultati di ricerca Impegni</li>
+    </ul> 
+    </div>	
+	</div>
+ 
+    <div class="container-fluid">
+<div class="row-fluid">
+<div class="span12 ">
+
+<div class="contentPage">  <form method="get" action="#">
+      <div class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Attenzione!!</strong><br /> Messaggio di feedback negativo
+        </div>
+        <div class="alert alert-warning">
+    		<button type="button" class="close" data-dismiss="alert">&times;</button>
+   				
+            <strong>Attenzione!!</strong><br />
+
+			Messaggio di tipo segnalazione
+
+    	</div>
+        
+        
+          
+             
+
+<h3>Risultati di ricerca Impegni</h3>
+
+ <h3><span class="num_result">19527</span> Risultati trovati</h3>                           
+<!--     TABELLE       RIEPILOGO   con azioni -->
+<table class="table table-hover" summary="...." >
+
+								<thead>
+								  <tr>
+								    <th scope="col">Anno</th>
+									<th scope="col">Numero</th>
+									<th scope="col">Descrizione</th>
+									<th scope="col">Capitolo</th>
+                                    <th scope="col">Stato</th>
+									<th scope="col">Provvedimento</th>
+									<th scope="col">Importo</th>
+									<th scope="col">Azioni </th>
+								  </tr>
+								</thead>
+								<tbody>
+ <tr>
+   <td>2011</td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>xxxxxxxxx xxxx</td>
+                                    <!--<td>ggggggg</td> -->
+									<td>000004/001/03</td>
+                                    <td>yyy yyyy</td>
+									<td>xxxxxxxxxxxxxxx</td>
+									<td>xxxxxxx</td>
+									<td><div class="btn-group">
+                                            <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+                                                <ul class="dropdown-menu pull-right">
+                                                   <li><a href="#">aggiorna</a></li>
+                                                 <li><a href="#">annulla</a></li>
+                                                  <li><a href="#">definisci </a></li>
+                                                </ul>
+                              			</div><!-- /btn-group -->                                    </td>
+								  </tr>
+                                  <tr>
+   <td>2012</td>
+									<td>xxxxxxxxx xxxx</td>
+                                    <td>xxxxxxxxx xxxx</td>
+                                    <!--<td>ggggggg</td> -->
+									<td>000004/001/03</td>
+                                    <td>                                        </td>
+									<td>xxxxxxxxxxxxxxx</td>
+									<td>xxxxxxx</td>
+									<td><div class="btn-group">
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+									  <ul class="dropdown-menu pull-right">
+                                          <li><a href="#">aggiorna</a></li>
+									    <li><a href="#">annulla</a></li>
+									    <li><a href="#">definisci </a></li>
+								      </ul>
+									  </div>
+									    <!-- /btn-group -->                                    </td>
+                                  </tr>
+								 <tr>
+   <td> 2013</td>
+									<td>xxxxxxxxx xxxx</td>
+                                     <td>xxxxxxxxx xxxx</td>
+                                   <!--<td>ggggggg</td> -->
+									<td>000004/001/03</td>
+                                    <td>yyy yyyy</td>
+									<td>xxxxxxxxxxxxxxx</td>
+									<td>xxxxxxx</td>
+									<td><div class="btn-group">
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
+									  <ul class="dropdown-menu pull-right">
+                                          <li><a href="#">aggiorna</a></li>
+									    <li><a href="#">annulla</a></li>
+									    <li><a href="#">definisci </a></li>
+								      </ul>
+									  </div>
+									    <!-- /btn-group -->                                    </td>
+								 </tr>
+                                  </tbody>
+                                  </table>
+    <!-- Modal -->
+    <!--/modale elimina -->
+    <!-- Modal -->
+    <!--/modale annulla -->
+          <p class="marginLarge"> <a href="javascript:history.go(-1)" class="btn">indietro</a>   </p>  	                                 
+  
+         
+       
+
+                                                    
+                                                   
+        
+</form>
+</div>	
+</div>	
+</div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

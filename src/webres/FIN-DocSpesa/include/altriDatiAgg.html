@@ -1,0 +1,97 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+	<div class="accordion" id="altriDatiAgg">
+					<div class="accordion-group">
+					  <div class="accordion-heading">    
+						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#altriDatiAgg" href="#altriDatiAggTAB">
+						 Altri dati<span class="icon">&nbsp;</span>
+						</a>
+					  </div>
+					  <div id="altriDatiAggTAB" class="accordion-body collapse">
+						<div class="accordion-inner">   
+							
+							
+					<fieldset class="form-horizontal">
+					
+						<div class="control-group">
+							<label class="control-label">Provvisorio di Cassa</label>
+							<div class="controls">
+								<span class="alRight">
+								<label class="radio inline" for="numero">Numero</label>
+								</span>
+									<input id="numero" name="numero" class="lbTextSmall span2" type="text" value="30" >
+								<span class="alRight">
+									<label class="radio inline" for="data">Data</label>
+								</span>
+									<input id="data" name="data" class="lbTextSmall span2" type="text" value="13/05/2013" />
+							</div>
+						</div>
+						
+						<div class="control-group"> 
+							<label class="control-label">Avviso</label>						
+							<div class="controls">
+								<select class="">
+									<option>SI-TESORIERE</option>
+									<option> SI-ALTRO</option>
+									<option>NO</option>
+								</select>
+								<label class="radio inline">Ordinativo singolo</label>
+									<input type="checkbox" id="inlineCheckbox2" value="option2"> 	
+								<label class="radio inline">Esproprio</label>
+									<input type="checkbox" id="inlineCheckbox3" value="option3"> 
+									<span class="alRight">
+										<div class="radio inline collapse_alert" for="iva"><span class="icon-warning-sign icon-red alRight">&nbsp;</span>AVVISO: &lt; valore campo derivato &gt; </div>
+									</span>
+							</div>
+							
+						</div>
+	
+						<div class="control-group">
+							<label for="fondo" class="control-label">Note al tesoriere</label>
+							<div class="controls input-append ">
+								<select id="fondo" class="span9">
+									<option>xxx</option>
+									<option>xxx</option>
+									<option>3</option>
+									<option>4</option>
+									<option>5</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Commissioni *</label>
+							<div class="controls">
+								<select id="commissioni" class="span9" >
+									<option value="">xxxx 0</option>
+									<option value="">xxx 1</option>
+									<option value="">xxx 2</option>
+								</select>	
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="causaleM">Causale ordinativo *</label>
+							<div class="controls">
+								<input id="causaleM" class="lbTextSmall span9" type="text" value=""/>
+							</div>
+						</div>
+		
+						<div class="control-group">
+							<label for="Note" class="control-label">Note</label>
+							<div class="controls">
+								<textarea rows="3" cols="15" id="Note" class="span10"></textarea>
+							</div>
+						</div>
+
+					</fieldset>
+					
+						
+
+						</div>
+					  </div>
+					</div>
+			</div>
+			

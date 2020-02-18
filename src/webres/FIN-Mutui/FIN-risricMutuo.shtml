@@ -1,0 +1,193 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>
+<body>  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../../pagine">Home</a> <span class="divider">></span></li>
+      <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+      <li class="active">Risultati di ricerca Mutui</li>
+    </ul> 
+  </div>	
+</div> 
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 ">
+      <div class="contentPage">
+	  <form method="get" action="#">
+		<!--#include virtual="include/alertErrorSuccess.html" -->
+	   
+		<h3>Elenco mutui</h3>		
+		<h4><span class="num_result">19527</span> Risultati trovati</h4>
+		
+				<table class="table table-hover tab_left" summary="...." >
+					<thead>
+						<tr>                        
+							<th scope="col">Nr. mutuo</th>
+							<th scope="col">Istituto mutuante</th>
+							<th scope="col">Tipo mutuo</th>
+							<th scope="col">Data inizio</th>
+							<th scope="col">Stato</th>
+							<th scope="col" class="tab_Right">Importo attuale</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>                        								  
+							<td><a data-content="mutuo 1..." rel="popover" data-trigger="hover" href="#" data-original-title="Descrizione">837 </a></td>
+							<td>012345 - Banca XXXX</td>
+							<td>Riscossione completa</td>
+							<td>01/01/2013</td>
+							<td><a data-content="Definitivo " rel="popover" data-trigger="hover" href="#" data-original-title="Stato">D</a></td>
+							<td class="tab_Right">125.000</td>
+							<td class="tab_Right">
+								<div class="btn-group">
+									<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"></span></button>
+									<ul class="dropdown-menu pull-right">                              
+										<li><a href="FIN-GestMutuo.shtml"  class="aggiornaButton" id="numId1" >voci mutuo</a></li>
+										<li><a href="FIN-AggMutuo.shtml"  class="aggiornaButton" id="numId1" >aggiorna</a></li>
+										<li><a href="FIN-consMutuo.shtml" >consulta</a></li>
+										<li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+									</ul>
+								</div>
+							</td>
+						</tr>
+						<tr>                      									  
+							<td><a data-content="mutuo 2..." rel="popover" data-trigger="hover" href="#" data-original-title="Descrizione">713 </a></td>
+							<td>012345 - Banca XXXX</td>
+							<td>Avanz. lavori</td>
+							<td>01/01/2012</td>
+							<td><a data-content="Annullato " rel="popover" data-trigger="hover" href="#" data-original-title="Stato">A</a></td>
+							<td class="tab_Right">93.000</td>
+							<td class="tab_Right">
+								<div class="btn-group">
+									<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni <span class="caret"> </span></button>
+									<ul class="dropdown-menu pull-right">
+										<li><a href="FIN-GestMutuo.shtml"  class="aggiornaButton" id="numId1" >voci mutuo</a></li>
+										<li><a href="FIN-AggMutuo.shtml"  class="aggiornaButton" id="numId1" >aggiorna</a></li>
+										<li><a href="FIN-consMutuo.shtml" >consulta</a></li>								
+										<li><a href="#msgAnnulla"  data-toggle="modal">annulla</a></li>
+									</ul>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+					</tfoot>
+				</table>
+				<div class="row pagination_conth">
+					  <div id="risultatiricerca_info2" class="span6">1 - 10 di 28 risultati</div>   
+					  <div class="span6">                               
+						<div id="paginazione2" class="dataTables_paginate paging_bootstrap pagination">
+						  <ul>
+							<li><a href="#">&laquo; inizio</a></li>
+							<li><a href="#">&laquo; prec</a></li>
+							<li><a href="#">1</a></li>
+							<li class="active"><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">4</a></li>
+							<li><a href="#">5</a></li>
+							<li><a href="#">succ &raquo;</a></li>
+							<li><a href="#"> fine &raquo;</a></li>              
+						  </ul>
+						</div>         
+					  </div>  
+				</div>
+			<p><a class="btn"  href="FIN-InsMutuo.shtml">inserisci mutuo</a></p>  
+			
+			<!-- Modal -->
+				<!--#include virtual="include/modal.html" --> 
+			<!-- Fine Modal -->
+			<div class="Border_line"></div>
+			<p> <a href="javascript:history.go(-1)" class="btn">indietro</a>   </p>  	                                 
+      </form>
+      </div>	
+    </div>	
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+    <div class="accordion" id="datiAtto">
+		<div class="accordion-group">
+			<div class="accordion-heading">    
+			<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#datiAtto" href="#altridatiAtto">
+                Altri dati<span class="icon">&nbsp;</span>
+			</a>
+			</div>
+			
+			<div id="altridatiAtto" class="accordion-body collapse">
+                <div class="accordion-inner"> 
+                  <fieldset class="form-horizontal">   
+                    <br>
+					
+					<div class="control-group">
+						<label class="control-label">Responsabile contabile</label>
+						<div class="controls">   
+							<input id="respContabile"  name="respContabile" class="span6" type="text" value="" />              
+						</div>
+                    </div>
+					
+					<div class="control-group">
+						<label class="control-label">Annotazioni</label>
+						<div class="controls">   
+							<textarea rows="2" cols="15" id="annotazioniResp" name="annotazioniResp" class="span9"></textarea>
+						</div>
+                    </div>
+					
+                    <div class="control-group">
+						<label class="control-label">Responsabile amministrativo</label>
+						<div class="controls">   
+							<input id="responsabileAmm" name="responsabileAmm" class="span6" type="text" value=""  />
+						</div>
+                    </div>
+					
+					<div class="control-group">
+						<label class="control-label">Pratica numero</label>
+						<div class="controls">   
+							<input id="praticaNum" name="praticaNum" class="span6" type="text" value="" />                        
+						</div>
+                    </div>
+					
+                    <div class="control-group">
+						<label class="control-label">Altri allegati</label>
+						<div class="controls">   
+							<input id="altriAllegati" name="altriAllegati" class="span6" type="text" value="" />            
+						</div>
+                    </div>
+					
+                    <div class="control-group">
+						<label class="control-label">Note in Allegato</label>
+						<div class="controls">   
+							<textarea rows="3" cols="15" id="NoteDati" name="NoteDati" class="span9"></textarea>           
+						</div>
+                    </div>
+					
+					<div class="control-group">
+						<label class="control-label">Contiene dati sensibili</label>
+						<div class="controls">   
+							<input type="checkbox" id="campiSensibili" name="campiSensibili" value=""  />            
+						</div>
+                    </div>
+					
+                  </fieldset> 
+                </div>
+			</div>
+		</div>
+    </div>

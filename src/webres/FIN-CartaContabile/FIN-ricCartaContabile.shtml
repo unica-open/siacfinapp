@@ -1,0 +1,176 @@
+
+<!-- ***************** inclusione head portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+</head>
+<body>                       
+	<!-- NAVIGAZIONE -->
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- ***************** inclusione Banner portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--#include virtual="../navbarLogin.html" -->
+
+
+<!-- ***************** inclusione Banner applicativo *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+
+	<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+			<li><a href="../">Home</a> <span class="divider">></span></li>
+			<li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+			<li class="active">Ricerca Carta Contabile</li>
+		</ul> 
+	</div>	
+</div>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage"> 
+		
+		  <form method="get" action="#">  
+			<!--#include virtual="include/alertErrorSuccess.html" -->
+			
+			<h3>Ricerca Carta Contabile</h3>
+			<p>È necessario inserire almeno un criterio di ricerca.</p>
+			
+			<div class="step-content">
+				<div class="step-pane active" id="step1">
+					
+					<p class="margin-medium"><a class="btn btn-primary pull-right" href="FIN-risRicCartaContabile.shtml">cerca</a></p>
+					<br>
+					<h4>Dati carta</h4>
+					
+					<fieldset class="form-horizontal">	
+						<div class="control-group">
+							<label class="control-label">Numero carta </label>
+							<div class="controls">  
+								<span class="al">
+									<label class="radio inline">Da </label>
+								</span>
+								<input id="NumeroCartaContabileDa" name="NumeroCartaContabileDa" class="span2 datepicker" type="text" value="" />  
+								<span class="al">
+									<label class="radio inline">A</label>                
+								</span>
+								<input id="NumeroCartaContabileA" name="NumeroCartaContabileA" class="span2 datepicker" type="text" value="" />  
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Data scadenza </label>
+							<div class="controls">  
+								<span class="al">
+									<label class="radio inline">Da</label>
+								</span>
+								<input id="ScadenzaCartaContabileDa" name="ScadenzaCartaContabileDa" class="span2 datepicker" type="text" value="" />  
+								<span class="al">
+									<label class="radio inline" for="ScadenzaCartaContabileA">A</label>                
+								</span>
+								<input id="ScadenzaCartaContabileA" name="ScadenzaCartaContabileA" class="span2 datepicker" type="text" value="" />  
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Stato</label>
+							<div class="controls">
+								<select id="StatoCartaContabile" name="StatoCartaContabile" class="span4" />
+									<option value="">Provvisorio</option>
+									<option value="">Completo</option>
+									<option value="">Trasmesso</option>
+									<option value="">Annullato</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Descrizione</label>
+							<div class="controls">
+								<textarea id="DescrizioneCartaContabile" name="DescrizioneCartaContabile" rows="1" cols="15" class="span9" type="text" value="" ></textarea>
+							</div>
+						</div>
+						
+						<!--#include virtual="include/provvedimento.html" -->  
+									
+						
+						<div class="accordion" id="ImpContaRicCartaContabile">
+							<div class="accordion-group">
+								
+								<div class="accordion-heading">    
+									<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#ImpContaRicCartaContabile" href="#ImputazionContRigaMovimento">Imputazioni contabili<span class="icon">&nbsp;</span></a>
+								</div>
+								
+								<div id="ImputazionContRigaMovimento" class="accordion-body collapse">
+									<div class="accordion-inner">              
+										<!--#include virtual="include/capitolo.html" -->
+										<!--#include virtual="include/impegno.html" -->
+										<!--#include virtual="include/soggetto.html" -->
+									</div>
+								</div>
+								
+							</div>
+						</div>
+						
+						
+					</fieldset>
+						
+					 
+
+				</div>
+			</div>
+			  
+			<!--#include virtual="include/modal.html" -->  
+			<p class="margin-medium">
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>
+				<a class="btn btn-secondary" href="#">annulla</a> 
+				<span class="pull-right">
+					<a class="btn btn-primary" href="FIN-risRicCartaContabile.shtml">cerca</a>
+				</span>
+			</p>       
+			  
+		  </form>
+		  
+		  
+		</div>
+	</div>	 
+</div>	
+
+<!-- ***************** inclusione footer portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+<script>
+	$(function() { 
+		
+        var btnCheckPagEstero=$('input[name=optionsPagamentoEstero]');
+		var valSelect="false"
+        $(btnCheckPagEstero).click( function() {
+			if(valSelect == "false"){
+				$('.wizadRigaMovimento').show();
+				$('.stepPagEstero').show();
+				valSelect="true";
+			}else{
+				$('.wizadRigaMovimento').hide();
+				$('.stepPagEstero').hide();
+				valSelect="false";
+			}
+		});
+	});
+</script>
+
+</body>
+</html>

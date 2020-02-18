@@ -1,0 +1,150 @@
+
+<!-- ***************** inclusione head portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+
+</head>
+<body>                       
+	<!-- NAVIGAZIONE -->
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- ***************** inclusione Banner portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--#include virtual="../navbarLogin.html" -->
+
+
+<!-- ***************** inclusione Banner applicativo *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+
+	<a name="A-contenuti" title="A-contenuti"></a>
+</div>
+
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="breadcrumb">
+		<li><a href="../">Home</a> <span class="divider">></span></li>
+		<li><a href="../index.shtml">XXXX</a> <span class="divider">></span></li>
+		<li class="active">Inserisci nuova riga da movimento</li>
+		</ul> 
+	</div>	
+</div>
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12 contentPage"> 
+		
+		  <form method="get" action="#">  
+			<!--#include virtual="include/alertErrorSuccess.html" -->
+			<h3>Carta 2014/23568 - Carta contabile per anticipo fatture</h3>
+			
+			<div id="MyWizard" class="wizard wizadRigaMovimento" style="display:none">
+				<ul class="steps">
+					<li data-target="#rigaContabileMov1" class="active"><span class="badge">1</span>Riga carta<span class="chevron"></span></li>
+					<li data-target="#rigaContabileMov2"><span class="badge">2</span>Pagamento estero<span class="chevron"></span></li>
+				</ul>
+			</div>
+			
+			<div class="step-content">
+				<div class="step-pane active" id="step1">
+
+					<h4>Dati Riga</h4>
+					
+					<fieldset class="form-horizontal">	
+						<div class="control-group">
+							<label class="control-label">Conto del tesoriere *</label>
+							<div class="controls">
+								<select id="ContoTesoriere" name="ContoTesoriere" class="span6" required >
+									<option value="">xxxxxxxxxxx</option>
+									<option value="">xxxxxxxxxxx</option>
+								</select>
+							</div>
+						</div>
+						</fieldset>
+						
+						<h4>Estremi pagamento</h4>
+						<fieldset class="form-horizontal">
+						<div class="control-group">
+							<label class="control-label" >Data esecuzione *</label>
+							<div class="controls">
+								<input id="DataEsecuzioneRigaMovimento" name="DataEsecuzioneRigaMovimento" class="span2 datepicker" type="text" value="" required />
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Importo *</label>
+							<div class="controls">
+								<input id="ImportoRigaCarta" name="ImportoRigaCarta" class="span2" type="text" value="" required />
+								<span class="radio inline">Importo estero</span>
+								<span class="radio inline alRight" id="valueEstero" name="valueEstero">$</span>
+								<input id="ImportoRigaEstero" class="span2" type="text" value="" name="ImportoRigaEstero" />
+								
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Descrizione *</label>
+							<div class="controls">
+								<textarea id="DescrizioneRigaMovimento" name="DescrizioneRigaMovimento" rows="1" cols="15" class="span9" type="text" value="" required ></textarea>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">Note</label>
+							<div class="controls">
+								<textarea id="NoteRigaMovimento" name="NoteRigaMovimento" rows="2" cols="15" class="span9" type="text" value="" ></textarea>
+							</div>
+						</div>
+						
+						<div class="accordion" id="soggetto2">
+							<div class="accordion-group">
+								<div class="accordion-heading">    
+									<a class="accordion-toggle" data-toggle="collapse" data-parent="#soggetto2" href="#ImputazionContRigaMovimento">Imputazioni contabili<span class="icon">&nbsp;</span></a>
+								</div>
+								<div id="ImputazionContRigaMovimento" class="accordion-body collapse in">
+									<div class="accordion-inner">              
+										<!--#include virtual="include/impegno.html" -->
+										<!--#include virtual="include/soggetto.html" -->
+										<!--#include virtual="include/sediSecondarie.html" -->
+										<!--#include virtual="include/modalitaPagamento.html" -->  
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</fieldset>  
+
+				</div>
+			</div>
+			  
+			<!--#include virtual="include/modal.html" -->  
+			<p class="margin-medium">
+				<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>
+				<a class="btn btn-secondary" href="#">annulla</a> 
+				<span class="pull-right">
+					<a class="btn btn-primary" href="FIN-insCartaContabileStep2.shtml">inserisci riga</a>
+				</span>
+			</p>       
+			  
+		  </form>
+		  
+		</div>
+	</div>	 
+</div>	
+<!-- ***************** inclusione footer portale *****************  -->
+
+<!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+<!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+
+</body>
+</html>

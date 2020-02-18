@@ -1,0 +1,796 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+<!--modale impegno -->
+<div id="guidaImpegno" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guidaImpegnoLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="nostep-pane">Seleziona impegno</h4>					             
+	</div>
+    <div class="modal-body">        
+		<fieldset class="form-horizontal">        		 
+        <div class="control-group">
+          <label class="control-label" for="Tipo2">Anno *</label>
+          <div class="controls">
+            <input id="Tipo2" class="lbTextSmall span2" type="text" value="" name="Tipo2" />
+            <span class="al">
+            <label class="radio inline" for="Anno2">Numero *</label>
+            </span>
+            <input id="Anno2" class="lbTextSmall span2" type="text" value="" name="Anno2"/>  
+			<span class="al">
+			<a class="btn btn-primary pull-right"><i class="icon-search icon"></i>cerca&nbsp;</a>  
+			</span>		
+          </div>
+        </div>
+
+        
+      </fieldset>
+        <h4>Elenco elementi trovati</h4>   
+        <table class="table table-hover tab_left"  summary="...." >
+          <thead>
+            <tr>
+				<th scope="col"></th>
+				<th scope="col">Numero Subimpegno</th>
+				<th scope="col">Descrizione</th>
+				<th scope="col">Soggetto</th>
+				<th scope="col" class="tab_Right">Importo</th>
+				<th scope="col" class="tab_Right">Disponibilit&agrave; a liquidare</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td> <input type="radio" name="file_3" id="file_3" /></td>
+              <td><label for="file_3">1</label></td>
+              <td>lotto 1</td>
+              <td>csi piemonte</td>
+              <td class="tab_Right">1.000,00</td>
+              <td class="tab_Right">200,00</td>
+            </tr>
+            <tr>
+              <td> <input type="radio" name="file_3" id="file_2" /></td>
+              <td><label for="file_2">2</label></td>
+              <td>lotto 2</td>
+              <td> regione piemonte</td>
+              <td class="tab_Right">640,00</td>
+              <td class="tab_Right">340,00</td>
+            </tr>
+            <tr>
+              <td> <input type="radio" name="file_3" id="file_1" /></td>
+              <td><label for="file_1">3</label></td>
+              <td>lotto 3</td>
+              <td>01010203</td>
+              <td class="tab_Right">870,00</td>
+              <td class="tab_Right">600,00</td>
+            </tr>
+          </tbody>
+        </table> 
+        <div class="row pagination_conth">
+          <div id="risultatiricerca_info2" class="span5">1 - 10 di 28 risultati</div>   
+          <div class="span7">                               
+            <div id="paginazione2" class="pagination pagination-right">
+              <ul>
+                <li><a href="#">&laquo; inizio</a></li>
+                <li><a href="#">&laquo; prec</a></li>
+                <li class="disabled"><a href="#">1</a></li>
+                <li class="active"><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">succ &raquo;</a></li>
+                <li><a href="#"> fine &raquo;</a></li>
+              </ul>
+            </div>
+          </div>  
+        </div>  
+		<div class="Border_line"></div>
+		
+		 <div class="accordion" id="mutui">
+                <div class="accordion-group">
+                  <div class="accordion-heading">          
+                    <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#mutui" href="#mutuiTAB">
+                    Mutuo<span class="icon">&nbsp;</span></a>
+                  </div>
+                  <div id="mutuiTAB" class="accordion-body collapse">
+                    <div class="accordion-inner">     
+							<table class="table table-hover tab_left" summary="...." >
+							  <thead>
+								<tr>
+								    <th scope="col"></th>
+									<th scope="col">Numero Mutuo</th>
+								    <th scope="col">Descrizione</th>
+								    <th scope="col">Istituto Mutuante</th>
+								    <th scope="col" class="tab_Right">Importo Voce</th>
+								    <th scope="col" class="tab_Right">Disponibilit&agrave; a liquidare</th>
+								</tr>
+							  </thead>
+							  <tbody>
+								<tr>
+								   <td> <input type="radio" name="file_3" id="file_1" /></td>
+								   <td><label for="file_1">3</label></td>
+								   <td>xxxxx</td>
+								   <td>01010XXXXX</td>
+								   <td class="tab_Right">870,00</td>
+								   <td class="tab_Right">600,00</td>
+								</tr>
+								<tr>
+								   <td> <input type="radio" name="file_3" id="file_1" /></td>
+								   <td><label for="file_2">3</label></td>
+								   <td>xxxxx</td>
+								   <td>01010XXXXX</td>
+								   <td class="tab_Right">870,00</td>
+								   <td class="tab_Right">600,00</td>
+								</tr>
+							  </tbody>
+							</table> 
+							<div class="row pagination_conth">
+							  <div id="risultatiricerca_info2" class="span5">1 - 10 di 28 risultati</div>   
+							  <div class="span7">                               
+								<div id="paginazione2" class="pagination pagination-right">
+								  <ul>
+									<li><a href="#">&laquo; inizio</a></li>
+									<li><a href="#">&laquo; prec</a></li>
+									<li class="disabled"><a href="#">1</a></li>
+									<li class="active"><a href="#">2</a></li>
+									<li><a href="#">3</a></li>
+									<li><a href="#">4</a></li>
+									<li><a href="#">5</a></li>
+									<li><a href="#">succ &raquo;</a></li>
+									<li><a href="#"> fine &raquo;</a></li>
+								  </ul>
+								</div>
+							  </div>  
+							</div>  
+					
+                    </div>
+                  </div>
+                </div>
+              </div> 
+    
+	</div>   
+  <div class="modal-footer">
+  <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+  </div>
+</div>
+<!-- end modal -->    
+
+					  
+<!--modale soggetto -->
+<div id="guidaSog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guidaSogLabel" aria-hidden="true">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="nostep-pane">Seleziona soggetto</h4>	  
+		<p> E' possibile associare all'impegno un soggetto o una classe di soggetti</p>		 
+	</div>
+	<div class="modal-body">
+    
+    <fieldset class="form-horizontal">
+      <div id="campiRicercaSog" class="accordion-body collapse in">
+      <div class="control-group">
+        <label class="control-label" for="Codice">Codice</label>
+        <div class="controls">
+          <input id="Codice" name="Codice" class="span3" type="text"/>
+          <label class="radio inline" for="codfisc">Codice Fiscale</label>  
+          <input id="codfisc" name="codfisc" class="span4" type="text"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="iva">Partita IVA</label>
+        <div class="controls">
+          <input id="iva" name="iva" class="span3" type="text"/>  
+          <label class="radio inline">Denominazione</label> <input type="text" name="optionsRadios" id="optionsRadios1" class="span4">
+        </div>
+      </div> 
+      <div class="control-group">
+        <label class="control-label" for="classif">Classificatore</label>
+        <div class="controls">
+          <select id="classif" name="classif" class="span3">
+			  <option>x0</option>
+			  <option>x1</option>
+			  <option>x2</option>
+			  <option>x3</option>
+			  <option>x4</option>
+		  </select>      
+          
+        </div>
+      </div>     	 
+    
+      </div>
+      <a class="accordion-toggle btn btn-primary pull-right" data-toggle="collapse" data-parent="#guidaCap" href="#campiRicercaSog"><i class="icon-search icon"></i>cerca&nbsp;<span class="icon"> </span></a>
+    </fieldset>
+    <h4>Elenco soggetti</h4>     
+
+    <table class="table table-hover tab_left">
+      <thead>
+        <tr>
+            <th scope="col"></th>
+			<th scope="col" >Codice</th>
+			<th scope="col">Codice fiscale</th>
+			<th class="header headerSortDown">Partita IVA</th>
+			<th scope="col">Denominazione</th>
+			<th scope="col">Stato</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td> <input type="radio" name="file_3d" id="file_3" /></td>
+          <td><label for="file_3">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>yyy yyyy</td>
+        </tr>
+        <tr>
+          <td> <input type="radio" name="file_3" id="file_2" /></td>
+          <td><label for="file_2">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>valido</td>
+        </tr>
+        <tr>
+          <td> <input type="radio" name="file_3" id="file_1" /></td>
+          <td><label for="file_1">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>yyy yyyy</td>
+        </tr>
+      </tbody>
+    </table>      
+    <div class="row pagination_conth">
+      <div id="risultatiricerca_info" class="span4">1 - 10 di 28 risultati</div>   
+      <div class="span8">                               
+        <div id="paginazione" class="pagination pagination-right">  
+          <ul>
+            <li><a href="#">&laquo; inizio</a></li>
+            <li><a href="#">&laquo; prec</a></li>
+            <li class="disabled"><a href="#">1</a></li>
+            <li class="active"><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>   
+            <li><a href="#">succ &raquo;</a></li>
+            <li><a href="#"> fine &raquo;</a></li>
+          </ul>
+
+        </div>
+      </div>  
+    </div>
+          
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+  </div>
+</div>
+<!--/modale soggetto -->
+
+ 
+<!--modale provvedimento -->
+<div id="guidaProv" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guidaProvLabel" aria-hidden="true">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="nostep-pane">Seleziona provvedimento</h4>
+		<p>&Egrave; necessario inserire oltre all'anno almeno il numero atto oppure il tipo atto </p>	
+	</div>
+	
+	<div class="modal-body">		             
+      <fieldset class="form-horizontal">        		 
+        <div id="campiRicercaProv" class="accordion-body collapse in">
+        <div class="control-group">
+          <label class="control-label" for="anno">Anno *</label>
+          <div class="controls">   
+            <input id="anno" class="lbTextSmall span2" type="text" value="" name="anno" />
+            <span class="al">
+              <label class="radio inline" for="numero">Numero</label>
+            </span>
+            <input id="numero" class="lbTextSmall span2" type="text" value="" name="numero"/>      
+            <span class="al">
+              <label class="radio inline" for="tipo">Tipo</label>
+            </span>
+            <select id="tipo" class="lbTextSmall span3"><option> </option><option>Delibera</option><option>Determina</option><option>Movimento Interno</option></select>
+          </div>
+        </div>
+        <div class="control-group">      
+          <label class="control-label">Struttura Amministrativa</label>
+          <div class="controls">                    
+            <div class="accordion span9" class="struttAmm">
+              <div class="accordion-group">
+                <div class="accordion-heading">    
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmm" href="#3b">
+                  Seleziona la Struttura amministrativa</a>
+                </div>
+                <div id="3b" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                   <ul class="ztree treeStruttAmm"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="Oggetto">Oggetto</label>
+			<div class="controls">
+				<input id="Oggetto" class="lbTextSmall span9" type="text" value="" name="Oggetto" />
+			</div>
+        </div>
+        </div>
+      <a class="accordion-toggle btn btn-primary pull-right" data-toggle="collapse" data-parent="#guidaProv" href="#campiRicercaProv"><i class="icon-search icon"></i>cerca&nbsp;<span class="icon"> </span></a>  
+      </fieldset>
+      <h4>Elenco provvedimenti trovati</h4>   
+      <table class="table table-hover tab_left">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+			<th scope="col">Anno</th>
+            <th scope="col">Numero</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Oggetto</th>
+            <th scope="col"><abbr title="Struttura Amministrativa Responsabile">Strutt Amm Resp</abbr></th>
+            <th scope="col">Stato</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td> <input type="radio" name="file_33" id="file_33d" /></td>									  
+            <td>2013</td>
+            <td>230</td>
+            <td>determina</td>
+            <td>oggetto determina 1</td>
+            <td>dir 01</td>
+            <td>provvisorio</td>
+          </tr>
+          <tr>
+            <td> <input type="radio" name="file_33" id="file_33c" /></td>									  
+            <td>2013</td>
+            <td>456</td>
+            <td>determina</td>
+            <td>oggetto determina 2</td>
+            <td>dir 02</td>
+            <td>provvisorio</td>
+          </tr>
+        </tbody>
+        <tfoot>
+        </tfoot>
+      </table> 
+      <div class="row pagination_conth">
+        <div id="risultatiricerca_info2" class="span5">1 - 10 di 28 risultati</div>   
+        <div class="span7">                               
+          <div id="paginazione2" class="pagination pagination-right">
+            <ul>
+              <li><a href="#">&laquo; inizio</a></li>
+              <li><a href="#">&laquo; prec</a></li>
+              <li class="disabled"><a href="#">1</a></li>
+              <li class="active"><a href="#">2</a></li>
+              <li><a href="#">3</a></li>
+              <li><a href="#">4</a></li>
+              <li><a href="#">5</a></li>
+              <li><a href="#">succ &raquo;</a></li>
+              <li><a href="#"> fine &raquo;</a></li>
+            </ul>
+          </div>
+        </div>  
+      </div>             
+    </div>   
+  <div class="modal-footer">
+	<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+  </div>
+</div>
+<!--/modale provvedimento -->
+   
+ 
+	
+ <!-- Modal -->
+	<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+            
+              <div class="modal-body">
+                <div class="alert alert-error">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <p><strong>Attenzione!</strong></p>
+                  <p><strong>Elmento selezionato:.....</strong></p>
+                  <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+                <button class="btn btn-primary">si, prosegui</button>
+              </div>
+	</div>  
+<!--/modale elimina -->
+
+<!-- Modal -->
+	<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+              <div class="modal-body">
+                <div class="alert alert-error">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <p><strong>Attenzione!</strong></p>
+                  <p><strong>Elmento selezionato:.....</strong></p>
+                  <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+                <button class="btn btn-primary">si, prosegui</button>
+              </div>
+	</div>  
+<!--/modale annulla --> 
+
+
+<!-- Modal aggProvvisorioCassa -->
+<div id="aggProvvisorioCassa" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="aggProvvisorioCassaLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4>Regolarizzazione provvisorio </h4>
+	</div>
+	<div class="modal-body">       
+		<fieldset class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label" for="num1">Numero</label>
+			<div class="controls">    
+				<input id="num1" class="lbTextSmall span2" type="text" value="" name="num1"  placeholder="xxxxxxxx" disabled="disabled" />	
+				<span class="alRight">
+					<input id="num1" class="lbTextSmall span2" type="text" value="" name="num1"  placeholder="xxxxx" disabled="disabled" />	
+				</span>
+			</div>
+		</div>
+	  
+		<div class="control-group">
+			<label class="control-label" for="OggCassa">Oggetto</label>
+			<div class="controls">    
+				<input id="OggCassa" class="lbTextSmall span9" type="text" value=""  placeholder="xxx xxxxx"  name="OggCassa" disabled="disabled" />	  
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="creditoreCassa">Creditore</label>
+			<div class="controls">    
+				<input id="creditoreCassa" class="lbTextSmall span9" type="text" value=""  placeholder="xxxxxxxx" name="creditoreCassa" disabled="disabled" />	  
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="impCassa">Importo</label>
+			<div class="controls">                         
+				<input id="impCassa" class="lbTextSmall span3" type="text" value=""  placeholder="xxx,xxx,xx" name="impCassa" />   
+				<span class="alRight">
+					<label class="radio inline" for="impReCassa">Da regolarizzare</label>
+				</span>
+				<input id="impReCassa" class="lbTextSmall span3" type="text" value=""  placeholder="xxxxxxxx" name="impReCassa" disabled="disabled" />
+			</div>
+		</div>
+		
+	</fieldset>
+
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+	</div>
+</div> 
+<!--end Modal --->
+
+
+<!-- Modal dettQuoteCredito -->
+<div id="dettQuoteCredito" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="dettQuoteCreditoLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4>Dettaglio quote</h4>
+		
+	</div>
+	<div class="modal-body"> 
+		<h4>Totale Note: 15.000,25 </h4>	
+			<table class="table table-hover tab_left" summary="....">
+				<thead>
+					<tr id="txt_Left">
+						<th scope="col">Numero</th>
+						<th scope="col">Impegno</th>
+						<th scope="col">Provvedimento</th>
+						<th scope="col">Liquidazione</th>
+						<th scope="col">Ordinativo</th>
+						<th class="tab_Right" scope="col">Importo da dedurre</th>
+						<th class="tab_Right" scope="col">Importo</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><label for="anno_1">1</label></td>
+						<td>2013-2013-12345</td>
+						<td>2013/12345/DG/017</td>
+						<td>2013-680</td>
+						<td>2013-380</td>
+						<td class="tab_Right"><input id="impDed" name="impDed" class="lbTextSmall span8" type="text" value="10,00"/></td>
+						<td class="tab_Right">100,00</td>
+					</tr>
+					
+					<tr>
+						<td><label for="anno_2"></label>2</td>
+						<td>2013-2013-678 </td>
+						<td>2013/67890/DL/018</td>
+						<td>2013-678</td>
+						<td>2013-907</td>
+						<td class="tab_Right"><input id="impDed" name="impDed" class="lbTextSmall span8" type="text" value=""/></td>
+						<td class="tab_Right">50,00</td>
+					</tr>	
+					<tr>
+						<td><label for="anno_2"></label>3</td>
+						<td>xxxx-xxx-xx </td>
+						<td>xxxx/xxxxxxx/xx/xxx</td>
+						<td>xxxx-xxx</td>
+						<td>xxxx-xxx</td>
+						<td class="tab_Right"><input id="impDed" name="impDed" class="lbTextSmall span8" type="text" value=""/></td>
+						<td class="tab_Right">XX0,00</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>			
+						<th colspan="5">Totali</th>
+						<th class="tab_Right">10,00</th>
+						<th class="tab_Right">150,00</th>
+					</tr>
+						
+				</tfoot>
+			</table>
+			<div class="row pagination_conth">
+				<div id="risultatiricerca_info" class="span6">1 - 5 di 16 risultati</div>   
+					<div class="span6">                               
+						<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+							<ul>
+								<li><a href="#">« prec</a></li>
+								<li class="disabled"><a href="#">1</a></li>
+								<li class="active"><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#">succ »</a></li>
+							</ul>
+						</div>
+								
+					</div>  
+			</div>
+		<p><a class="btn btn-secondary ">applica</a></p>
+	</div>
+	<div class="modal-footer">	
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+	</div>
+</div> 
+<!--end Modal --->
+
+
+<!-- Modal dettQuote -->
+<div id="dettQuote" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="dettQuoteLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4>Dettaglio quote</h4>
+	</div>
+	<div class="modal-body">       
+			<table class="table table-hover tab_left" summary="....">
+				<thead>
+					<tr id="txt_Left">
+						<th scope="col">Numero</th>
+						<th scope="col">Impegno</th>
+						<th scope="col">Provvedimento</th>
+						<th scope="col">Liquidazione</th>
+						<th scope="col">Ordinativo</th>
+						<th class="tab_Right" scope="col">Importo</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><label for="anno_1">1</label></td>
+						<td>2013-2013-12345</td>
+						<td>2013/12345/DG/017</td>
+						<td>680</td>
+						<td>2013-380</td>
+						<td class="tab_Right">100,00</td>
+					</tr>
+					
+					<tr>
+						<td><label for="anno_2"></label>2</td>
+						<td>2013-2013-678 </td>
+						<td>2013/67890/DL/018</td>
+						<td>678</td>
+						<td>2013-907</td>
+						<td class="tab_Right">50,00</td>
+					</tr>	
+					<tr>
+						<td><label for="anno_2"></label>3</td>
+						<td>xxxx-xxx-xx </td>
+						<td>xxxx/xxxxxxx/xx/xxx</td>
+						<td>xxx</td>
+						<td>xxxx-xxx</td>
+						<td class="tab_Right">XX0,00</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>			
+						<th colspan="5">Totali quote</th>
+						<th class="tab_Right">150,00</th>
+					</tr>
+						
+				</tfoot>
+			</table>
+			<div class="row pagination_conth">
+				<div id="risultatiricerca_info" class="span6">1 - 5 di 16 risultati</div>   
+					<div class="span6">                               
+						<div id="paginazione" class="dataTables_paginate paging_bootstrap pagination">				
+							<ul>
+								<li><a href="#">« prec</a></li>
+								<li class="disabled"><a href="#">1</a></li>
+								<li class="active"><a href="#">2</a></li>
+								<li><a href="#">3</a></li>
+								<li><a href="#">succ »</a></li>
+							</ul>
+						</div>
+								
+					</div>  
+			</div>
+			
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">chiudi</button>
+	</div>
+</div> 
+<!--end Modal --->
+
+
+<!-- Modal dettRitenute -->
+<div id="dettRitenute" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="dettRitenuteLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4>Dettaglio ritenute</h4>
+	</div>
+	<div class="modal-body"> 
+	<h4>Inserimento: xx/xx/xxxx (*********) - Ultima modifica: xx/xx/xxxx (*********)</h4>
+	
+		<div class="boxOrSpan2">
+				<div class="boxOrInLeft">
+					<p>Onere/Ritenute</p>
+					<ul class="htmlelt">
+						<li>
+							<dfn>Natura Onere</dfn> 
+							<dl>xxxx</dl>
+						</li>
+						<li>
+							<dfn>Codice Tributo</dfn> 
+							<dl>xxxx</dl>
+						</li>
+						<li>
+							<dfn>Imponibile</dfn> 
+							<dl>xxx</dl>
+						</li>
+						<li>
+							<dfn>Aliquota a carico soggetto</dfn> 
+							<dl>xxxx,xx</dl>
+						</li>
+						<li>
+							<dfn>Aliquota a carico Ente</dfn> 
+							<dl>xxxx,xx</dl>
+						</li>
+						<li>
+							<dfn>Importo a carico soggetto</dfn> 
+							<dl>xxxxxxxx</dl>
+						</li>
+						<li>
+							<dfn>Importo a carico Ente</dfn> 
+							<dl>xxx</dl>
+						</li>
+					
+					</ul>					
+				</div>
+								
+				<div class="boxOrInRight">
+					<p>Altri Dati</p>
+					<ul class="htmlelt">
+						<li>
+							<dfn>Attività</dfn> 
+							<dl>xxxx xxxx xxx</dl>
+						</li>
+						<li>
+							<dfn>Periodo</dfn> 
+							<dl><b>Dal: </b>xxxxx<span class="alLeft"><b>Al: </b>xxxxx</span></dl>
+						</li>
+						<li>
+							<dfn>Quadro 770</dfn> 
+							<dl>xxxxx</dl>
+						</li>
+						<li>
+							<dfn>Causale 770</dfn> 
+							<dl>xxxx</dl>
+						</li>
+						<li>
+							<dfn>Ordinativo</dfn> 
+							<dl>xxxxx</dl>
+						</li>
+						
+					</ul>	
+				</div>				
+			
+			</div>
+		
+
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">chiudi</button>
+	</div>
+</div> 
+<!--end Modal --->
+
+<!-- modal aggRitenuta -->
+<div id="aggRitenuta" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="aggRitenutaLabel" aria-hidden="true">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4>Aggiorna onere</h4>
+	</div>
+	<div class="modal-body"> 
+		
+		<fieldset class="form-horizontal">
+			<div class="control-group">
+				<label class="control-label" for="num1">Imponibile</label>
+				<div class="controls">    
+					<input id="num1" class="lbTextSmall span3" type="text" value="" name="num1"  placeholder="2.000,00"  />	
+
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="AliqSogg">Aliquota a carico soggetto</label>
+				<div class="controls">    
+					<input id="AliqSogg" class="lbTextSmall span3" type="text" value="" name="AliqSogg"  placeholder="100,00" disabled="disabled" />
+					<span class="alRight">
+						<label class="radio inline" for="AliqEnte">Aliquota a carico Ente</label>
+					</span>
+					<input id="AliqEnte" class="lbTextSmall span3" type="text" value="" name="AliqEnte"  placeholder="20,00"  disabled="disabled" />
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="impSogg">Importo a carico soggetto</label>
+				<div class="controls">    
+					<input id="impSogg" class="lbTextSmall span3" type="text" value="" name="impSogg"  placeholder="xxxxx" />
+					<span class="alRight">
+						<label class="radio inline" for="impEnte">Importo a carico Ente</label>
+					</span>
+					<input id="impEnte" class="lbTextSmall span3" type="text" value="" name="impEnte"  placeholder="xxxxx" />
+				</div>
+			</div>
+			
+			
+			<div class="control-group">
+				<label class="control-label" for="Att">Attività</label>
+				<div class="controls"> 
+					<select class="span5">
+						<option>Q- Attività previdenziale</option>
+						<option>X- xxxxxx</option>
+						<option>X- xxxxxx</option>
+					</select>				
+					<span class="alRight">
+						<label class="radio inline" for="attDal">Dal</label>
+					</span>
+					<input id="attDal" class="lbTextSmall span2" type="text" value="" name="attDal"  placeholder="06/03/2014" />
+					<span class="alRight">
+						<label class="radio inline" for="attAl">Al</label>
+					</span>
+					<input id="attAl" class="lbTextSmall span2" type="text" value="" name="attAl"  placeholder="31/12/2014" />
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="c770">Causale 770</label>
+				<div class="controls"> 
+					<select id="c770" class="span9">
+						<option>Prestazione di lavoro autonomo</option>
+						<option>xxxx</option>
+						<option>xxxx</option>
+					</select>					
+				</div>
+			</div>			
+			
+		</fieldset>
+		
+		
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+	</div>
+</div> 
+<!-- end  -->
+
+
+    

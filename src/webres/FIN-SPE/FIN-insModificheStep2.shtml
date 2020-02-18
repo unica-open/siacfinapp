@@ -1,0 +1,189 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+</head>
+<body>
+  
+  <!-- NAVIGAZIONE -->
+  <p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+  <ul id="sommario" class="nascosto">
+    <li><a href="#A-contenuti">Salta ai contenuti</a></li>
+  </ul>
+  <!-- /NAVIGAZIONE -->
+  <hr />
+<div class="container-fluid-banner">
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+
+
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<!--   TABELLE       RIEPILOGO    -->
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../">Xxxxx</a> <span class="divider">></span></li>
+      <li class="active">Inserimento modifiche</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">  
+    <div class="span12 contentPage">          
+        <h3>Impegno 2013/12300 - Acquisto scrivanie per Anagrafe - 100.000,00</h3> 
+        <ul class="nav nav-tabs">
+        <li><a rel="FIN-AggImpegno.shtml" class="conferma">Impegno</a> </li>
+        <!-- <li><a href="../BIL-UPB/BIL_aggUPBUscPrev.shtml">U.P.B.</a></li> -->
+        <li><!--a href="FIN-SubImpegno.shtml">Subimpegni</a--><a class="conferma" rel="FIN-SubImpegno.shtml">Subimpegno</a></li>
+        <li class="active"><a  href="#">Modifiche</a></li>
+        <!--li><a href="#" rel="#">Mutui</a></li>
+        <li><a href="#" rel="#">Accertamenti</a></li-->
+      </ul>
+      <form class="form-horizontal">
+        <div class="alert alert-error">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Attenzione!!</strong><br /> Messaggio di feedback negativo
+        </div>
+        <div class="alert alert-success">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Attenzione!!</strong><br /> xxxxxxx
+        </div>       
+        <div class="step-content"> 
+          <div class="step-pane active" id="step2">    
+            <h4>Modifica 1 - Subimpegno 1 - XXX - Importo XXXX</h4> 
+            <dl class="dl-horizontal">
+              <dt>Capitolo <a class="tooltip-test" title="Visualizza dettagli" href="#capitoloTab" data-toggle="modal"><i class="icon-info-sign">&nbsp;<span class="nascosto">Visualizza dettagli</span></i></a></dt>
+              <dd>Anno/numero/ueb  - descrizione  - codice della  struttura amministrativo contabile - tipo Finanziamento: xxxx</dd>              
+             </dl>
+
+            <div class="control-group anniPluriennale">
+              <label class="control-label" for="motivo">Anni di pluriennale</label>
+              <div class="controls">
+                <input id="annipluri" name="annipluri" class="span1" type="text" value="1"/>
+                <span class="al">
+                  <label class="radio inline" for="numero3">Totale importi inseriti</label>
+                </span>
+                <input id="totimp" class="lbTextSmall span2" type="text" value="XXXXX" name="totimp" disabled/>  
+              </div>
+            </div>
+            <table summary="riepilogo incarichi" class="table table-hover">    
+              <tr>
+                <th>Anno</th>
+                <th> Importo</th>
+                <th>Data scadenza</th>
+                <th></th>
+              </tr>              
+              <tr>
+                <td><input type="text" id="imp2" class="input-small" value="2014" maxlength="4"/></td>
+                <td><input type="text" id="imp2" class="input-small"/><label for="imp2" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad1" class="input-small"/><label for="scad1" class="nascosto">inserisci data scadenza</label></td>
+                <td><a href="" class="btn btn-secondary">pulisci</a></td>
+              </tr>
+              <tr>
+                <td><input type="text" id="imp2" class="input-small" value="2015" maxlength="4"/></td>
+                <td><input type="text" id="imp2" class="input-small"/><label for="imp2" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad2" class="input-small"/><label for="scad2" class="nascosto">inserisci data scadenza</label>  </td>
+                <td><a href="" class="btn btn-secondary">pulisci</a></td>
+              </tr>
+              <tr>
+                <td><input type="text" id="imp2" class="input-small" value="2016" maxlength="4"/></td>
+                <td><input type="text" id="imp3" class="input-small"/><label for="imp3" class="nascosto">inserisci importo</label></td>
+                <td><input type="text" id="scad3" class="input-small"/><label for="scad3" class="nascosto">inserisci data scadenza</label>  </td>
+                <td><a href="" class="btn btn-secondary">pulisci</a></td>
+              </tr>
+              <tr>
+                <td><input type="text" id="imp2" class="input-small" value="2017" maxlength="4"/></td>
+                <td><input type="text" id="imp4" class="input-small"/><label for="imp4" class="nascosto">inserisci importo</label>  </td>
+                <td><input type="text" id="scad4" class="input-small"/><label for="scad4" class="nascosto">inserisci data scadenza</label></td>
+                <td><a href="" class="btn btn-secondary">pulisci</a></td>
+              </tr>
+             
+            </table>
+          </div>
+        </div>
+        <!--#include virtual="include/modal.html" -->
+        <p class="margin-large"><a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   <a class="btn" href="">annulla</a>    <a class="btn btn-primary pull-right" href="FIN-Modifiche.shtml">salva</a>  </p>     
+      </form>
+    </div>
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+
+</body>
+</html>

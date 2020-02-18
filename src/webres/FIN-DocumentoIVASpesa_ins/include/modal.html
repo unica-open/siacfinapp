@@ -1,0 +1,271 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+			  
+<!--modale soggetto -->
+<div id="guidaSog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guidaSogLabel" aria-hidden="true">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="nostep-pane">Seleziona soggetto</h4>	  
+		<p> E' possibile associare all'impegno un soggetto o una classe di soggetti</p>		 
+	</div>
+	<div class="modal-body">
+    
+    <fieldset class="form-horizontal">
+      <div id="campiRicercaSog" class="accordion-body collapse in">
+      <div class="control-group">
+        <label class="control-label" for="Codice">Codice</label>
+        <div class="controls">
+          <input id="Codice" name="Codice" class="span3" type="text"/>
+          <label class="radio inline" for="codfisc">Codice Fiscale</label>  
+          <input id="codfisc" name="codfisc" class="span4" type="text"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="partitaIva">Partita IVA</label>
+        <div class="controls">
+          <input id="partitaIva" name="partitaIva" class="span3" type="text"/>  
+          <label class="radio inline">Denominazione</label> <input type="text" name="optionsRadios" id="optionsRadios1" class="span4">
+        </div>
+      </div> 
+      <div class="control-group">
+        <label class="control-label" for="classif">Classificatore</label>
+        <div class="controls">
+          <select id="classif" name="classif" class="span3">
+			  <option>x0</option>
+			  <option>x1</option>
+			  <option>x2</option>
+			  <option>x3</option>
+			  <option>x4</option>
+		  </select>      
+          
+        </div>
+      </div>     	 
+    
+      </div>
+      <a class="accordion-toggle btn btn-primary pull-right" data-toggle="collapse" data-parent="#guidaCap" href="#campiRicercaSog"><i class="icon-search icon"></i>cerca&nbsp;<span class="icon"> </span></a>
+    </fieldset>
+    <h4>Elenco soggetti</h4>     
+
+    <table class="table table-hover tab_left">
+      <thead>
+        <tr>
+            <th scope="col"></th>
+			<th scope="col" >Codice</th>
+			<th scope="col">Codice fiscale</th>
+			<th class="header headerSortDown">Partita IVA</th>
+			<th scope="col">Denominazione</th>
+			<th scope="col">Stato</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td> <input type="radio" name="file_3d" id="file_3" /></td>
+          <td><label for="file_3">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>yyy yyyy</td>
+        </tr>
+        <tr>
+          <td> <input type="radio" name="file_3" id="file_2" /></td>
+          <td><label for="file_2">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>valido</td>
+        </tr>
+        <tr>
+          <td> <input type="radio" name="file_3" id="file_1" /></td>
+          <td><label for="file_1">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>yyy yyyy</td>
+        </tr>
+      </tbody>
+    </table>      
+    <div class="row pagination_conth">
+      <div id="risultatiricerca_info" class="span4">1 - 10 di 28 risultati</div>   
+      <div class="span8">                               
+        <div id="paginazione" class="pagination pagination-right">  
+          <ul>
+            <li><a href="#">&laquo; inizio</a></li>
+            <li><a href="#">&laquo; prec</a></li>
+            <li class="disabled"><a href="#">1</a></li>
+            <li class="active"><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>   
+            <li><a href="#">succ &raquo;</a></li>
+            <li><a href="#"> fine &raquo;</a></li>
+          </ul>
+
+        </div>
+      </div>  
+    </div>
+          
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+  </div>
+</div>
+<!--/modale soggetto -->
+
+<!--modale provvedimento -->
+<div id="guidaProv" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guidaProvLabel" aria-hidden="true">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="nostep-pane">Seleziona provvedimento</h4>
+		<p>&Egrave; necessario inserire oltre all'anno almeno il numero atto oppure il tipo atto </p>	
+	</div>
+	
+	<div class="modal-body">		             
+      <fieldset class="form-horizontal">        		 
+        <div id="campiRicercaProv" class="accordion-body collapse in">
+        <div class="control-group">
+          <label class="control-label" for="annoProvv">Anno *</label>
+          <div class="controls">   
+            <input id="annoProvv" class="lbTextSmall span2" type="text" value="" name="annoProvv" />
+            <span class="al">
+              <label class="radio inline" for="numeroProvv">Numero</label>
+            </span>
+            <input id="numeroProvv" class="lbTextSmall span2" type="text" value="" name="numeroProvv"/>      
+            <span class="al">
+              <label class="radio inline" for="tipoProvv">Tipo</label>
+            </span>
+            <select id="tipoProvv" name="tipoProvv" class="lbTextSmall span3">
+				<option value=""> </option>
+				<option value="">Delibera</option>
+				<option value="">Determina</option>
+				<option value="">Movimento Interno</option>
+			</select>
+          </div>
+        </div>
+        <div class="control-group">      
+          <label class="control-label">Struttura Amministrativa</label>
+          <div class="controls">                    
+            <div class="accordion span9" class="struttAmm">
+              <div class="accordion-group">
+                <div class="accordion-heading">    
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmm" href="#3b">Seleziona la Struttura amministrativa</a>
+                </div>
+                <div id="3b" class="accordion-body collapse">
+                  <div class="accordion-inner">
+                   <ul class="ztree treeStruttAmm"></ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="Oggetto">Oggetto</label>
+			<div class="controls">
+				<input id="Oggetto" class="lbTextSmall span9" type="text" value="" name="Oggetto" />
+			</div>
+        </div>
+        </div>
+      <a class="accordion-toggle btn btn-primary pull-right" data-toggle="collapse" data-parent="#guidaProv" href="#campiRicercaProv"><i class="icon-search icon"></i>cerca&nbsp;<span class="icon"> </span></a>  
+      </fieldset>
+      <h4>Elenco provvedimenti trovati</h4>   
+      <table class="table table-hover tab_left">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+			<th scope="col">Anno</th>
+            <th scope="col">Numero</th>
+            <th scope="col">Tipo</th>
+            <th scope="col">Oggetto</th>
+            <th scope="col"><abbr title="Struttura Amministrativa Responsabile">Strutt Amm Resp</abbr></th>
+            <th scope="col">Stato</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td> <input type="radio" name="file_33" id="file_33d" /></td>									  
+            <td>2013</td>
+            <td>230</td>
+            <td>determina</td>
+            <td>oggetto determina 1</td>
+            <td>dir 01</td>
+            <td>provvisorio</td>
+          </tr>
+          <tr>
+            <td> <input type="radio" name="file_33" id="file_33c" /></td>									  
+            <td>2013</td>
+            <td>456</td>
+            <td>determina</td>
+            <td>oggetto determina 2</td>
+            <td>dir 02</td>
+            <td>provvisorio</td>
+          </tr>
+        </tbody>
+        <tfoot>
+        </tfoot>
+      </table> 
+      <div class="row pagination_conth">
+        <div id="risultatiricerca_info2" class="span5">1 - 10 di 28 risultati</div>   
+        <div class="span7">                               
+          <div id="paginazione2" class="pagination pagination-right">
+            <ul>
+              <li><a href="#">&laquo; inizio</a></li>
+              <li><a href="#">&laquo; prec</a></li>
+              <li class="disabled"><a href="#">1</a></li>
+              <li class="active"><a href="#">2</a></li>
+              <li><a href="#">3</a></li>
+              <li><a href="#">4</a></li>
+              <li><a href="#">5</a></li>
+              <li><a href="#">succ &raquo;</a></li>
+              <li><a href="#"> fine &raquo;</a></li>
+            </ul>
+          </div>
+        </div>  
+      </div>             
+    </div>   
+  <div class="modal-footer">
+	<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+  </div>
+</div>
+<!--/modale provvedimento -->
+
+	
+	
+<!-- Modal elimina-->
+	<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+            
+              <div class="modal-body">
+                <div class="alert alert-error">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <p><strong>Attenzione!</strong></p>
+                  <p><strong>Elemento selezionato:.....</strong></p>
+                  <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+                <button class="btn btn-primary">si, prosegui</button>
+              </div>
+	</div>  
+<!--/modale elimina -->
+
+<!-- Modal annulla -->
+<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+		  <div class="modal-body">
+			<div class="alert alert-error">
+			  <button type="button" class="close" data-dismiss="alert">&times;</button>
+			  <p><strong>Attenzione!</strong></p>
+			  <p><strong>Elemento selezionato:.....</strong></p>
+			  <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+			</div>
+		  </div>
+		  <div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+			<button class="btn btn-primary">si, prosegui</button>
+		  </div>
+</div>  
+<!--/modale annulla --> 
+
+
+    

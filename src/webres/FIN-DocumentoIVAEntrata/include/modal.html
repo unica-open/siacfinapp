@@ -1,0 +1,262 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!-- Modal -->
+	<div id="msgElimina" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgEliminaLabel" aria-hidden="true">
+            
+              <div class="modal-body">
+                <div class="alert alert-error">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <p><strong>Attenzione!</strong></p>
+                  <p><strong>Elemento selezionato:.....</strong></p>
+                  <p>Stai per eliminare l'elemento selezionato: sei sicuro di voler proseguire?</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+                <button class="btn btn-primary">si, prosegui</button>
+              </div>
+	</div>  
+<!--/modale elimina -->
+
+<!-- Modal -->
+	<div id="msgAnnulla" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+              <div class="modal-body">
+                <div class="alert alert-error">
+                  <button type="button" class="close" data-dismiss="alert">&times;</button>
+                  <p><strong>Attenzione!</strong></p>
+                  <p><strong>Elemento selezionato:.....</strong></p>
+                  <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+                <button class="btn btn-primary">si, prosegui</button>
+              </div>
+	</div>  
+<!--/modale annulla --> 
+
+<!-- Modal -->
+	<div id="msgDocIntracomunitario" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgDocIntracomunitarioLabel" aria-hidden="true">
+              <div class="modal-body">
+                <div class="alert alert-error">
+                  <button type="button" class="close" data-dismiss="modal" >&times;</button>
+                  <p><strong>Al salvataggio del documento iva intracomunitario verrà inserita anche la corrispondente controregistrazione INTRASTAT nel registro vendite iva immediata</strong></p>
+                
+				  <fieldset>
+					<h5 class="step-pane pull-padding">Compila i campi:</h5>
+				  <br>
+				  <div class="control-group">
+							<label class="control-label" for="tipoRegIva">Tipo registro </label>	
+								<div class="controls">
+									<input type="text" id="tipoRegIva" class="span9" value="xxxxxxx" disabled="disabled" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="tipoDocumentoIva">Tipo documento *</label>	
+								<div class="controls">
+									<select id="tipoDocumentoIva" class="span9" required >
+										<option value="">xxxx</option>
+										<option value="">xxxx</option>
+									</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="Attivita">Attività</label>								
+								<div class="controls">
+									<select id="Attivita" class="span9" >
+										<option>xxxx</option>
+										<option>xxxx</option>
+									</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="tipoRegIva">Registro *</label>								
+								<div class="controls">
+									<select id="tipoRegIva" class="span9" required >
+										<option value="">xxxx</option>
+										<option value="">xxxx</option>
+									</select>
+							</div>
+						</div>
+				  </fieldset>
+				  
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">annulla</button>
+                <button id="confirmDocIntracomunitario" class="btn btn-primary" href="">conferma</button>
+              </div>
+	</div>  
+<!--/modale --> 
+
+
+<!-- Modal -->
+	<div id="msgAggMovimentoIVA" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAggMovimentoIVALabel" aria-hidden="true">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="nostep-pane">Aggiorna movimento iva</h4>	   
+			</div>
+			<div class="modal-body">
+				<fieldset class="form-horizontal"> 
+					<div class="control-group">
+						<label class="control-label" for="AliqIva">Aliquota iva</label>
+						<div class="controls">
+							<input type="text" id="AliqIva" value="xxxxxxx" name="AliqIva" class="span3" disabled="disabled">
+							<span class="alRight">
+							<label class="radio inline" for="percentuale">Percentuale </label>
+							</span>
+							<input id="percentuale" name="percentuale" class="lbTextSmall span2" type="text" value="" disabled="disabled">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="scadenza">Imponibile *</label>
+						<div class="controls">
+							<input id="scadenza" name="scadenza" class="lbTextSmall span3" type="text" value=""  required />
+							<span class="alRight">
+							<label class="radio inline" for="Imposta">Imposta *</label>
+							</span>
+							<input id="Imposta" name="Imposta" class="lbTextSmall span3" type="text" value="" required />	
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="impTotale">Totale *</label>
+						<div class="controls">
+							<input id="impTotale" name="impTotale" class="lbTextSmall span3" type="text" value="" required />													
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="ImpostaDet">Imposta detraibile</label>
+						<div class="controls">
+							<input id="ImpostaDet" class="lbTextSmall span3" type="text" value="" name="ImpostaDet" disabled="disabled">	
+							<span class="alRight">
+							<label class="radio inline" for="ImpostaINdet">Imposta indetraibile</label>
+							</span>
+							<input id="ImpostaINdet" class="lbTextSmall span3" type="text" value="" name="ImpostaINdet" disabled="disabled">														
+						</div>
+					</div>
+							
+				</fieldset>
+									
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+			</div>
+	</div>  
+<!--/modale annulla --> 
+				  
+<!--modale soggetto -->
+<div id="guidaSog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guidaSogLabel" aria-hidden="true">
+	<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		<h4 class="nostep-pane">Seleziona soggetto</h4>	  
+		<p> E' possibile associare all'impegno un soggetto o una classe di soggetti</p>		 
+	</div>
+	<div class="modal-body">
+    
+    <fieldset class="form-horizontal">
+      <div id="campiRicercaSog" class="accordion-body collapse in">
+      <div class="control-group">
+        <label class="control-label" for="Codice">Codice</label>
+        <div class="controls">
+          <input id="Codice" name="Codice" class="span3" type="text"/>
+          <label class="radio inline" for="codfisc">Codice Fiscale</label>  
+          <input id="codfisc" name="codfisc" class="span4" type="text"/>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label" for="iva">Partita IVA</label>
+        <div class="controls">
+          <input id="iva" name="iva" class="span3" type="text"/>  
+          <label class="radio inline">Denominazione</label> <input type="text" name="optionsRadios" id="optionsRadios1" class="span4">
+        </div>
+      </div> 
+      <div class="control-group">
+        <label class="control-label" for="classif">Classificatore</label>
+        <div class="controls">
+          <select id="classif" name="classif" class="span3">
+			  <option>x0</option>
+			  <option>x1</option>
+			  <option>x2</option>
+			  <option>x3</option>
+			  <option>x4</option>
+		  </select>      
+          
+        </div>
+      </div>     	 
+    
+      </div>
+      <a class="accordion-toggle btn btn-primary pull-right" data-toggle="collapse" data-parent="#guidaCap" href="#campiRicercaSog"><i class="icon-search icon"></i>cerca&nbsp;<span class="icon"> </span></a>
+    </fieldset>
+    <h4>Elenco soggetti</h4>     
+
+    <table class="table table-hover tab_left">
+      <thead>
+        <tr>
+            <th scope="col"></th>
+			<th scope="col" >Codice</th>
+			<th scope="col">Codice fiscale</th>
+			<th class="header headerSortDown">Partita IVA</th>
+			<th scope="col">Denominazione</th>
+			<th scope="col">Stato</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td> <input type="radio" name="file_3d" id="file_3" /></td>
+          <td><label for="file_3">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>yyy yyyy</td>
+        </tr>
+        <tr>
+          <td> <input type="radio" name="file_3" id="file_2" /></td>
+          <td><label for="file_2">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>valido</td>
+        </tr>
+        <tr>
+          <td> <input type="radio" name="file_3" id="file_1" /></td>
+          <td><label for="file_1">xxxxx</label></td>
+          <td>xxxxxxxxx xxxx</td>
+          <td>01010203</td>
+          <td>rrrrrrr</td>
+          <td>yyy yyyy</td>
+        </tr>
+      </tbody>
+    </table>      
+    <div class="row pagination_conth">
+      <div id="risultatiricerca_info" class="span4">1 - 10 di 28 risultati</div>   
+      <div class="span8">                               
+        <div id="paginazione" class="pagination pagination-right">  
+          <ul>
+            <li><a href="#">&laquo; inizio</a></li>
+            <li><a href="#">&laquo; prec</a></li>
+            <li class="disabled"><a href="#">1</a></li>
+            <li class="active"><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>   
+            <li><a href="#">succ &raquo;</a></li>
+            <li><a href="#"> fine &raquo;</a></li>
+          </ul>
+
+        </div>
+      </div>  
+    </div>
+          
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
+  </div>
+</div>
+<!--/modale soggetto -->
+

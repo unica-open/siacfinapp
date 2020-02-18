@@ -1,0 +1,137 @@
+   <!--#include virtual="../../ris/servizi/siac/include/head.html" -->
+<!--
+=======================================================================
+											*****************
+											fine inclusione HEAD
+											*****************
+=======================================================================
+-->
+  </head>
+  <body>                       
+	<!-- NAVIGAZIONE -->
+	<p class="nascosto"><a name="A-sommario" title="A-sommario"></a></p>     
+	<ul id="sommario" class="nascosto">
+		<li><a href="#A-contenuti">Salta ai contenuti</a></li>
+	</ul>
+	<!-- /NAVIGAZIONE -->
+	<hr />
+<div class="container-fluid-banner">
+
+<!-- 
+=======================================================================
+											*****************
+											inclusione Banner portale
+											*****************
+=======================================================================
+-->
+     <!--#include virtual="../../ris/servizi/siac/include/portalheader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine ////////inclusione Banner portale
+											*****************
+=======================================================================
+-->
+  <!--#include virtual="../navbarLogin.html" -->
+<!--
+=======================================================================
+											*****************
+											inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+   <!--#include virtual="../../ris/servizi/siac/include/applicationHeader.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione Banner applicativo
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											inclusione login
+											*****************
+=======================================================================
+-->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione login
+											*****************
+=======================================================================
+-->
+  <a name="A-contenuti" title="A-contenuti"></a>
+</div>
+<!--corpo pagina-->
+<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+
+<div class="row-fluid">
+  <div class="span12">
+    <ul class="breadcrumb">
+      <li><a href="../">Home</a> <span class="divider">></span></li>
+      <li><a href="../index.shtml">xxxx</a> <span class="divider">></span></li>
+      <li class="active">Inserimento accertamento</li>
+    </ul> 
+  </div>	
+</div>
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span12 contentPage">    
+			  <form class="form-horizontal">
+				<h3>Inserimento accertamento</h3>
+				<!--#include virtual="include/alertErrorSuccess.html" -->
+				<div id="MyWizard" class="wizard">
+				  <ul class="steps">
+					<li data-target="#step1" class="active"><span class="badge">1</span>Dati accertamento<span class="chevron"></span></li>
+					<li data-target="#step2"><span class="badge">2</span>Classificazioni<span class="chevron"></span></li>
+					<li data-target="#step3"><span class="badge">3</span>Accertamenti pluriennali<span class="chevron"></span></li>
+				</ul>
+				</div>
+				<div class="step-content">
+				  <div class="step-pane active" id="step1">    
+					<!--#include virtual="include/capitolo.html" -->                                            
+					<!--#include virtual="include/provvedimento.html" -->            
+					    
+					<!--#include virtual="include/soggetto.html" -->             
+					<!--#include virtual="include/datiEntita.html" --> 
+					<!--#include virtual="include/modal.html" --> 
+					<!-- Fine Modal -->
+				   </div>
+				</div>
+				<p class="margin-medium">
+					<a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a>   
+					<a class="btn btn-secondary" href="">annulla</a>    <a class="btn btn-primary pull-right" href="FIN-InsAccertamentoStep2.shtml">prosegui</a>  
+				</p>       
+        
+			  </form>
+			
+    </div>
+		  
+  </div>	 
+</div>	
+<!-- 
+=======================================================================
+											*****************
+											inclusione footer portale
+											*****************
+=======================================================================
+-->
+    <!-- Footer
+    ================================================== -->
+  <!--#include virtual="../../ris/servizi/siac/include/portalFooter.html" -->
+
+
+
+  <!--#include virtual="../../ris/servizi/siac/include/javascript.html" -->
+<!--
+=======================================================================
+											*****************
+											fine //////inclusione footer portale
+											*****************
+=======================================================================
+-->
+</body>
+</html>

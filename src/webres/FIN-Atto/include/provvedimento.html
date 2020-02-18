@@ -1,0 +1,48 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+	<h4 class="step-pane">Provvedimento : <span class="datiPagamento">000000/X/XX - .....</h4>
+	<fieldset class="form-horizontal">
+		<div class="control-group">
+			<label class="control-label">Anno *</label>
+			<div class="controls">   
+				<input id="annoProvv" name="annoProvv" class="span1" type="text" value="" required />
+				<span class="al">
+					<label class="radio inline">Numero *</label>
+				</span>
+				<input id="numeroProvv" name="numeroProvv" class="span2" type="text" value="" required /> 
+				<span class="al">
+					<label class="radio inline">Tipo</label>
+				</span>
+				<select id="tipoProvv" name="tipoProvv" class="span4">
+					<option value="">xxxxxxxx </option>
+					<option value="">xxx </option>
+				</select>
+
+				<span class="radio guidata"><a href="#guidaProv" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
+			</div>
+		</div>
+		
+		
+		<div class="control-group">
+			<label class="control-label">Struttura Amministrativa</label>
+			<div class="controls">                    
+				<div class="accordion span8" class="struttAmmAtto">
+				  <div class="accordion-group">
+					<div class="accordion-heading">    
+					  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmmAtto" href="#strAmmTAB">
+					  Seleziona la Struttura amministrativa</a>
+					</div>
+					<div id="strAmmTAB" class="accordion-body collapse">
+					  <div class="accordion-inner">
+					   <ul id="treeStruttAmm2" class="ztree treeStruttAmm"></ul>
+					  </div>
+					</div>
+				  </div>
+				</div>
+			</div>
+		</div>   
+      
+		
+	</fieldset>

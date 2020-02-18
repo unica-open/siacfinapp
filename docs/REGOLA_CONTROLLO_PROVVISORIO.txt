@@ -1,0 +1,6 @@
+'importo (IMPORTOCOLL) che si specifica nella maschera di input 'Regolarizzazione provvisorio (gestione)' deve sottostare a questa regola: 0 < IMPORTOCOLL <= min (IMPDAREG ; DACOLLEGARE)
+altrimenti: Il sistema emette l’errore <FIN_ERR_018 - Importo regolarizzato errato>
+
+IMPDAREG è quello etichettato sul provvisorio come 'da regolarizzare'   
+DACOLLEGARE è TOTORDINATIVO - TOTALE REGOLARIZZATO cioè quanto dell’ordinativo è ancora da collegare ai provvisori 
+IMPORTOCOLL è quanto dell'importo dell'ordinativo sto collegando al provvisorio

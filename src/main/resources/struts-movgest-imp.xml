@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="movgestDefault" extends="default, json-default" abstract="true">
+		<!-- 
+			Package per la definizione delle estensioni comuni a tutti i varii packages di Struts2 e per la definizione
+			centralizzata dello stack degli interceptors.
+		-->
+	    <interceptors>
+		
+			<!-- Interceptor di log prima e a termine dell'invocazione -->
+			<interceptor name="logInterceptor" 
+				class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+
+			<!--  Interceptor per la gestione degli errori di conversione 
+			<interceptor name="siacConversionErrorInterceptor" 
+				class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" />
+			-->	
+			
+			<!-- Interceptor per la gestione dei breadcrumb --> 
+			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+  				<param name="defaultRewindMode">AUTO</param>
+  				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+
+			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
+			<interceptor name="redirectMessage" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.RedirectMessageInterceptor" />
+							
+			<interceptor-stack name="myStack">
+				<!-- Default Stack -->
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias"/>
+				<interceptor-ref name="servletConfig"/>
+				<interceptor-ref name="i18n"/>
+	            <interceptor-ref name="actionData"/>
+				<interceptor-ref name="prepare"/>
+	            <interceptor-ref name="redirectMessage"/>
+				<interceptor-ref name="chain"/>
+				<interceptor-ref name="scopedModelDriven"/>
+				<interceptor-ref name="modelDriven"/>
+				<interceptor-ref name="fileUpload"/>
+				<interceptor-ref name="checkbox"/>
+				<interceptor-ref name="multiselect"/>
+				<interceptor-ref name="staticParams"/>
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+				</interceptor-ref>
+				
+				<!-- Injettato nello stack per la gestione degli errori di conversioneS 
+				<interceptor-ref name="siacConversionErrorInterceptor"/>
+				-->
+				
+				<interceptor-ref name="validation">
+                    <param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+					<param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+				</interceptor-ref>
+				<interceptor-ref name="debugging"/>
+				
+				<!-- Interceptor per breadcrumb --> 
+				<interceptor-ref name="breadCrumbs"/>
+				
+				
+				<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
+				
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack" />
+	</package>
+	
+		<!-- Gestione navigazione per il modulo movgest -->
+	<package namespace="/" extends="movgestDefault" name="movgest">
+		<action name="ricercaImpegno" class="ricercaImpegnoAction">
+			<result name="success">/jsp/movgest/ricercaImpegno.jsp</result>
+			<result name="input">/jsp/movgest/ricercaImpegno.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPdc">/jsp/movgest/include/headerElementoPdcGestisciImpegno.jsp</result>
+			<result name="gotoElencoImpegni" type="redirectAction">elencoImpegni</result>	
+			
+			<!-- SIAC-7032 -->
+			<result name="ricercaProgetto">/jsp/movgest/include/risultatoRicercaElencoProgetti.jsp</result>
+			<result name="ricercaProgettoCronop">/jsp/movgest/include/risultatoRicercaElencoProgettiCronop.jsp</result>
+			
+			<result name="labelProgetto">/jsp/movgest/include/labelProgetto.jsp</result>
+		</action>
+		<action name="elencoImpegni" class="elencoImpegniAction">
+			<result name="success">/jsp/movgest/elencoImpegni.jsp</result>
+			<result name="input">/jsp/movgest/elencoImpegni.jsp</result>
+			<result name="gotoInserisciImpegni" type="redirectAction">inserisceImpegno</result>
+            
+		</action>
+      <action name="inserisceImpegno" class="inserisceImpegnoStep1Action">
+			<result name="success">/jsp/movgest/inserisceImpegnoStep1.jsp</result>
+			<result name="input">/jsp/movgest/inserisceImpegnoStep1.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisceImpegnoStep2</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="esitoInserimentoProvvedimento">/jsp/movgest/include/esitoInserimentoProvvedimento.jsp</result>
+			<result name="clearInserimentoProvvedimento">/jsp/movgest/include/esitoInserimentoProvvedimento.jsp</result>
+			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="ricercaCronop">/jsp/movgest/include/risultatiRicercaCronop.jsp</result>
+			<result name="ricercaProgetto">/jsp/movgest/include/risultatoRicercaElencoProgetti.jsp</result>
+			<result name="ricercaProgettoCronop">/jsp/movgest/include/risultatoRicercaElencoProgettiCronop.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPdc">/jsp/movgest/include/headerElementoPdcGestisciImpegno.jsp</result>
+			<result name="dettaglioVincolo">/jsp/movgest/include/dettaglioVincolo.jsp</result>
+			<result name="dettaglioAvanzoVincolo">/jsp/movgest/include/dettaglioAvanzoVincolo.jsp</result>
+			<result name="ricercaAccPerVincoli">/jsp/movgest/include/risultatoRicercaElencoAcc.jsp</result>
+			<result name="labelProgetto">/jsp/movgest/include/labelProgetto.jsp</result>
+			<result name="dettaglioImportoResiduoAvanzoSelezionato">/jsp/movgest/include/dettaglioImportoResiduoAvanzoSelezionato.jsp</result>
+	  </action>
+	  <action name="inserisceImpegnoStep2" class="inserisceImpegnoStep2Action">
+			<result name="success">/jsp/movgest/inserisceImpegnoStep2.jsp</result>
+			<result name="input">/jsp/movgest/inserisceImpegnoStep2.jsp</result>
+			<result name="conferma">/jsp/movgest/inserisceImpegnoStep2.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisceImpegnoStep3</result>
+			<result name="gotoAggiorna" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="numeroImpegno">${numeroImpegnoStruts}</param>
+				<param name="annoImpegno">${annoImpegnoStruts}</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="gotoContabilitaGenerale" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">inserisceImpegno</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+	  </action>
+       <action name="inserisceImpegnoStep3" class="inserisceImpegnoStep3Action">
+			<result name="success">/jsp/movgest/inserisceImpegnoStep3.jsp</result>
+			<result name="input">/jsp/movgest/inserisceImpegnoStep3.jsp</result>
+			<result name="pulisciCampi">/jsp/movgest/inserisceImpegnoStep3.jsp</result>
+			<result name="gotoAggiorna" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="numeroImpegno">${numeroImpegnoStruts3}</param>
+				<param name="annoImpegno">${annoImpegnoStruts3}</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">inserisceImpegno</result>
+	  </action>
+	
+	  <action name="aggiornaImpegnoStep1" class="aggiornaImpegnoStep1Action">
+			<result name="success">/jsp/movgest/aggiornaImpegnoStep1.jsp</result>
+			<result name="input">/jsp/movgest/aggiornaImpegnoStep1.jsp</result>
+			<result name="prosegui" type="redirectAction">aggiornaImpegnoStep2</result>
+			<result name="salva">/jsp/movgest/aggiornaImpegnoStep1.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result> 
+			 
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="consultaModificheProvvedimento">/jsp/movgest/include/consultaModificheProvvedimento.jsp</result>
+			
+			<result name="esitoInserimentoProvvedimento">/jsp/movgest/include/esitoInserimentoProvvedimento.jsp</result>
+			<result name="clearInserimentoProvvedimento">/jsp/movgest/include/esitoInserimentoProvvedimento.jsp</result>
+			<result name="ricercaCronop">/jsp/movgest/include/risultatiRicercaCronop.jsp</result>
+			
+			<result name="ricercaProgetto">/jsp/movgest/include/risultatoRicercaElencoProgetti.jsp</result>
+			<result name="ricercaProgettoCronop">/jsp/movgest/include/risultatoRicercaElencoProgettiCronop.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="gotoElencoMovimentoSpesa" type="redirectAction">
+				<param name="actionName">elencoMovimentoSpesa</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoSubImpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoInserisciImpegno" type="redirectAction">inserisceImpegno</result>
+			<result name="dettaglioVincolo">/jsp/movgest/include/dettaglioVincolo.jsp</result>
+			<result name="dettaglioAvanzoVincolo">/jsp/movgest/include/dettaglioAvanzoVincolo.jsp</result>
+			<result name="dettaglioImportoResiduoAvanzoSelezionato">/jsp/movgest/include/dettaglioImportoResiduoAvanzoSelezionato.jsp</result>
+			<result name="ricercaAccPerVincoli">/jsp/movgest/include/risultatoRicercaElencoAcc.jsp</result>
+			<result name="dettaglioImportoConVincolo">/jsp/movgest/include/dettaglioAggiornaImportoConVincolo.jsp</result>
+			<result name="inserisceImpegno" type="redirectAction">
+				<param name="actionName">inserisceImpegno</param>
+				<param name="ripetereMovimento">true</param>
+			</result>
+			<result name="labelProgetto">/jsp/movgest/include/labelProgetto.jsp</result>
+			<result name="gotoContabilitaGenerale" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+	  </action>
+	  
+	  <action name="aggiornaImpegnoStep2" class="aggiornaImpegnoStep2Action">
+			<result name="success">/jsp/movgest/aggiornaImpegnoStep2.jsp</result>
+			<result name="input">/jsp/movgest/aggiornaImpegnoStep2.jsp</result>
+			<result name="salva">/jsp/movgest/aggiornaImpegnoStep2.jsp</result>
+			<result name="gotoElencoMovimentoSpesa" type="redirectAction">
+				<param name="actionName">elencoMovimentoSpesa</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoSubImpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiorna" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="gotoContabilitaGenerale" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+	  </action>
+	  
+      <action name="consultaImpegno" class="consultaImpegnoAction">
+      		<param name="tipo">I</param>
+			<result name="success">/jsp/movgest/consultaMovimento.jsp</result>
+			<result name="input">/jsp/movgest/consultaMovimento.jsp</result>		
+			<result name="dettaglioSubPopup">/jsp/movgest/include/dettaglioSubPopUp.jsp</result>	
+			<result name="dettaglioModPopup">/jsp/movgest/include/dettaglioModPopUp.jsp</result>
+			<result name="consultaModificheProvvedimento">/jsp/movgest/include/consultaModificheProvvedimento.jsp</result>
+			<result name="tabellaStorico">/jsp/movgest/include/tabellaStoricoImpegnoAccertamento.jsp</result>
+			<result name="errori">/jsp/include/actionMessagesErrors.jsp</result>
+	  </action>
+
+	  <action name="aggiornaSubimpegno" class="aggiornaSubimpegnoAction">
+			<result name="success">/jsp/movgest/aggiornaSubimpegno.jsp</result>
+			<result name="input">/jsp/movgest/aggiornaSubimpegno.jsp</result>
+			<result name="dettaglioSubPopUp">/jsp/movgest/include/dettaglioSubPopUp.jsp</result>
+			<result name="gotoAggiornaSubimpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="ricaricaDopoInserimento">true</param>
+			</result>
+			<result name="gotoGestioneSubimpegno" type="redirectAction">
+				<param name="actionName">gestioneSubimpegno</param>
+				<param name="inserimentoSubimpegno">${inserimentoSubimpegno}</param>
+				<param name="idSubImpegno">${idSubImpegno}</param>
+			</result>
+			<result name="gotoElencoMovimentoSpesa" type="redirectAction">
+				<param name="actionName">elencoMovimentoSpesa</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaImpegnoStep1" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+	  </action>
+	  
+	  <action name="gestioneSubimpegno" class="gestioneSubimpegnoAction">
+			<result name="success">/jsp/movgest/gestioneSubimpegno.jsp</result>
+			<result name="input">/jsp/movgest/gestioneSubimpegno.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="consultaModificheProvvedimento">/jsp/movgest/include/consultaModificheProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="gotoSubimpegnoStep2" type="redirectAction">gestioneSubimpegnoStep2</result>
+			<result name="gotoAggiornaSubimpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="ricaricaDopoInserimento">true</param>
+			</result>
+			<result name="gotoElencoMovimentoSpesa" type="redirectAction">
+				<param name="actionName">elencoMovimentoSpesa</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaImpegnoStep1" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="aggiornaContemporaneo">/jsp/movgest/include/aggiornaImportoIniziale.jsp</result>
+			<result name="gotoContabilitaGenerale" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+	  </action>
+	  
+	  <action name="gestioneSubimpegnoStep2" class="gestioneSubimpegnoStep2Action">
+	  		<result name="success">/jsp/movgest/gestioneSubimpegnoStep2.jsp</result>
+			<result name="input">/jsp/movgest/gestioneSubimpegnoStep2.jsp</result>
+			<result name="gotoAggiornaSubimpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="ricaricaDopoInserimento">true</param>
+			</result>
+			<result name="gotoElencoMovimentoSpesa" type="redirectAction">
+				<param name="actionName">elencoMovimentoSpesa</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaImpegnoStep1" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="gotoContabilitaGenerale" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+	  </action>
+	  
+	  <action name="elencoMovimentoSpesa" class="elencoMovimentoSpesaAction">
+			<result name="success">/jsp/movgest/modificaSpesa.jsp</result>
+			<result name="input">/jsp/movgest/modificaSpesa.jsp</result>
+			<result name="dettaglioModPopUp">/jsp/movgest/include/dettaglioModPopUp.jsp</result>
+			<result name="gotoSubImpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaAccertamento" type="redirectAction">
+				<param name="actionName">aggiornaAccertamentoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaImpegnoStep1" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+	  </action>
+	  
+	  <action name="inserisciMovSpesaImporto" class="inserisciModificaMovimentoSpesaAction">
+			<result name="success">/jsp/movgest/inserisciModificaSpesaImporto.jsp</result>
+			<result name="input">/jsp/movgest/inserisciModificaSpesaImporto.jsp</result>
+			<result name="gotoElencoModifiche" type="redirectAction">
+				<param name="actionName">elencoMovimentoSpesa</param>
+				<param name="opeazione">true</param>
+			</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciMovSpesaImportoStep2</result>
+			<result name="gotoSubImpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaImpegnoStep1" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="pulsantiSalvaModificaImporto">/jsp/movgest/include/pulsantiSalvaModMovImportoUscita.jsp</result>
+	  </action>
+	  
+	  <action name="inserisciMovSpesaSoggetto" class="inserisciModificaMovimentoSpesaSoggettoAction">
+			<result name="success">/jsp/movgest/inserisciModificaSpesaSoggetto.jsp</result>
+			<result name="input">/jsp/movgest/inserisciModificaSpesaSoggetto.jsp</result>
+			<result name="gotoElencoModifiche" type="redirectAction">
+				<param name="actionName">elencoMovimentoSpesa</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto_modif.jsp</result>
+			<result name="gotoSubImpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaImpegnoStep1" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+	  </action>
+	  
+	  <action name="inserisciMovSpesaImportoStep2" class="inserisciModificaMovimentoSpesaStep2Action">
+	  		<result name="success">/jsp/movgest/inserisciModificaSpesaImportoStep2.jsp</result>
+			<result name="input">/jsp/movgest/inserisciModificaSpesaImportoStep2.jsp</result>
+			<result name="gotoElencoModifiche" type="redirectAction">elencoMovimentoSpesa</result>
+			<result name="gotoSubImpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaImpegnoStep1" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+	  </action>
+	  
+	  <action name="aggiornaMovSpesa" class="aggiornaModificaMovimentoSpesaAction">
+	  		<result name="success">/jsp/movgest/aggiornaModifiche.jsp</result>
+			<result name="input">/jsp/movgest/aggiornaModifiche.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="gotoElencoModifiche" type="redirectAction">elencoMovimentoSpesa</result>
+			<result name="gotoSubImpegno" type="redirectAction">
+				<param name="actionName">aggiornaSubimpegno</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+			<result name="gotoAggiornaImpegnoStep1" type="redirectAction">
+				<param name="actionName">aggiornaImpegnoStep1</param>
+				<param name="forceReload">${forceReload}</param>
+			</result>
+	  </action>
+	  
+	  
+	  <!-- SIAC-6702 -->
+	  <action name="gestisciStoricoImpegnoAccertamentoStep1" class="gestisciStoricoImpegnoAccertamentoStep1Action">
+			<result name="success">/jsp/movgest/gestisciStoricoImpegnoAccertamentoStep1.jsp</result>
+			<result name="input">/jsp/movgest/gestisciStoricoImpegnoAccertamentoStep1.jsp</result>
+			<result name="prosegui" type="redirectAction">gestisciStoricoImpegnoAccertamentoStep2</result>
+			<result name="annulla" type="redirectAction">gestisciStoricoImpegnoAccertamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/include/modalImpegnoContent.jsp</result>
+		</action>
+		
+		<action name="gestisciStoricoImpegnoAccertamentoStep2" class="gestisciStoricoImpegnoAccertamentoStep2Action">
+			<result name="success">/jsp/movgest/gestisciStoricoImpegnoAccertamentoStep2.jsp</result>
+			<result name="input">/jsp/movgest/gestisciStoricoImpegnoAccertamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestisciStoricoImpegnoAccertamentoStep1</result>
+			<result name="refreshStep2" type="redirectAction">
+				<param name="actionName">gestisciStoricoImpegnoAccertamentoStep2</param>
+			</result>
+		</action>
+
+	</package>
+
+</struts>

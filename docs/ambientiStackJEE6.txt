@@ -1,0 +1,298 @@
+BONITA
+http://dev-siacbonita.csi.it:8080/bonita/ 
+user: admin
+pwd: bpm
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Configurazione AMBIENTE SVILUPPO JBOSS 6 
+---------------------------------------------------------------------------------------------------------------------------------------------
+Il dominio deve essere avviato seguendo i passi indicati nella home utente
+Collegarsi via ssh ai server: dev-spjb601-mst01.self.csi.it (master) --
+dev-spjb601-sl01.self.csi.it (slave1)
+con i seguenti parametri per la gestione:
+Utenza Unix Jboss:               dev-jboss601-005
+Password Unix Jboss:             ait5iegh
+Nome Dominio:                    dom005
+Dopo aver deployato un applicativo la visualizzazione sara' possibile tramite i
+seguenti url:
+Url istanza1 ( default ):
+   http://dev-spjb601-sl01.self.csi.it:12010/<applicativo>
+Url istanza2 (se attiva):
+   http://dev-spjb601-sl01.self.csi.it:12110/<applicativo>
+Url istanza3 (se attiva):
+   http://dev-spjb601-sl01.self.csi.it:12210/<applicativo>
+Url istanza4 (se attiva):
+   http://dev-spjb601-sl01.self.csi.it:12310/<applicativo>
+Url istanza5 (se attiva):
+   http://dev-spjb601-sl01.self.csi.it:12410/<applicativo>
+Porte dominio riferite all'istanza1 (per l'istanza2 aggiungere 100 per ottenere
+la relativa porta, per l'istanza3 aggiungere 200 etc..)
+PORTA_HTTP=12010
+PORTA_HTTPS=12002
+PORTA_JACORB=12003
+PORTA_JACORB_SSL=12004
+PORTA_JGROUPS_TCP=12005
+PORTA_JGROUPS_TCPFD=12006
+PORTA_OSGI_HTTP=12007
+PORTA_MESSAGING=12008
+PORTA_MESSAGING_THR=12009
+PORTA_REMOTING=12011
+PORTA_TXN_RECOVERY=12012
+PORTA_TXN_MANAGER=12013
+PORTA_AJP=12014
+PORTA_JGROUPS_UDPFD=12015
+MCAST_PORT_JGROUPS_MPING=12020
+MCAST_PORT_JGROUPS_UDP=12021
+MCAST_PORT_MESSAGING_GRP=12022
+MCAST_PORT_MODCLUSTER=12023
+MCAST_MODCLUSTER_ADDR=231.0.0.6
+-----------------------------------
+
+Avviare prima il domain controller slave
+Start domain:                                     startdomain <nome-dominio>
+Esempio:                                          startdomain dom005
+
+Stop domain:                                      stopdomain <nome-dominio>
+Esempio:                                          stopdomain dom005
+Visualizzazione log domain:                       tail -f log-master/XXX.log
+
+Start istanza:                                    jbossctl dom005 startnode clu01-srv01
+Stop  istanza:                                    jbossctl dom005 stopnode  clu01-srv01
+
+Visualizzazione log istanza:                      tail -f log-clu0X-srv0X/boot.log
+Visualizzazione log istanze:                      tail -f log-clu0X-srv0X/server.log
+
+Deploy pacchetto:                                 jbossctl <nome-dominio> deploy <clu0X-srv0X> <path-assoluto-pacchetto>
+Il pacchetto verra' deployato sull'istanza srv0X 
+jbossctl dom005 deploy clu01-srv01 /home/apps/dev-jboss601-005/siacbilser.ear
+
+
+UnDeploy pacchetto:                               jbossctl <nome-dominio> undeploy <clu0X-srv0X> <nome-pacchetto>
+Il pacchetto verra' undeployato dall'istanza srv0X
+jbossctl dom005 undeploy clu01-srv01 siacbilser.ear
+
+Definizione logger:                               
+jbossctl <nome-dominio> create-log <clu0X-srv0X> <nome-file> <logger> [DEBUG,INFO,WARN,ERROR,ALL]
+jbossctl dom005 create-log clu02-srv02 siacbilser it.csi.siac.siacbilser DEBUG /usr/prod/siac/coto/siacbilser
+
+Cancellazione logger:                             
+jbossctl <nome-dominio> delete-log <clu0X-srv0X> <nome-file> <logger>
+
+Creazione datasource:                             
+jbossctl <nome-dominio> [create-ds-postgresql,create-ds-oracle,create-ds-mysql] <clu0X-srv0X> <nome-datasource> <stringa-connessione-completa> <utente> <password> <alberatura-jndi>
+Il datasource sara' associato all'istanza srv01
+Esempio:                                          
+jbossctl dom005 create-ds-postgresql clu02-srv02 siacDS jdbc:postgresql://tst-domdb46.csi.it:5432/PGDEV02 siac xefai2xa java:jboss/datasources/siacDS
+
+
+Cancellazione datasource:                         
+jbossctl <nome-dominio> delete-ds <clu0X-srv0X> <nome datasource>
+Il datasource sara' disassociato dall'istanza srv0X 
+Esempio:                                          
+jbossctl dom001 delete-ds clu01-srv01 provaXX
+
+Utilizzare la cartella upload come repository dei pacchetti.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+url chiamata ambiente sviluppo mappata su db su siac_t_azione:
+http://dev-www.ruparpiemonte.it/siacbilapp/azioneRichiesta.do
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Configurazione jboss locale
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Per il run standalone.bat
+
+ATTENZIONE: Se in locale si hanno due istanze jboss, una x le applicazioni e l'altra x Bonita, occorre che abbiamo una porta http differente. 
+Quindi se si lascia la 8080 x Bonita, far partire l'istanza delle application sulla porta 8180 (come ora è configurato il cruscotto) come segue:
+
+standalone.bat -Djboss.socket.binding.port-offset=100
+(ho aggiunto la linea di comando set "JAVA_OPTS=%JAVA_OPTS% -Djboss.socket.binding.port-offset=100 nel file standalone.conf.bat in modo da non doverlo esplicitare nello start di jboss a linea di comando, viene caricata nella JAVA_OPTS)
+
+
+La configurazione del data source sta sotto D:\jboss-eap-6.0\standalone\configuration nel file standaolone.xml
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Configurazione jboss test
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Il dominio deve essere avviato seguendo i passi indicati nella home utente
+Collegarsi via ssh ai server: 
+tst-spjb601-mst01.self.csi.it (master) -- tst-spjb601-sl01.self.csi.it (slave1) -- tst-spjb601-sl02.self.csi.it (slave2)
+con i seguenti parametri per la gestione:
+Utenza Unix Jboss:               tst-jboss601-012
+Password Unix Jboss:             eb0aegah
+Nome Dominio:                    dom012
+
+Per attivare un cluster fare la richiesta da self-provisioning (è possibile attiviare sino a 8 nodi x cluster)
+
+Dopo aver deployato un applicativo la visualizzazione sara' possibile tramite i seguenti url:
+
+Url cluster1 ( default ) sul server1:
+   http://tst-spjb601-sl01.self.csi.it:15510/<applicativo>
+Url cluster1 ( default ) sul server2:
+   http://tst-spjb601-sl02.self.csi.it:15510/<applicativo>
+Url cluster2 (se attivo) sul server1:
+   http://tst-spjb601-sl01.self.csi.it:15610/<applicativo>
+Url cluster2 (se attivo) sul server2:
+   http://tst-spjb601-sl02.self.csi.it:15610/<applicativo>
+Url cluster3 (se attivo) sul server1:
+   http://tst-spjb601-sl01.self.csi.it:15710/<applicativo>
+Url cluster3 (se attivo) sul server2:
+   http://tst-spjb601-sl02.self.csi.it:15710/<applicativo>
+Url cluster4 (se attivo) sul server1:
+   http://tst-spjb601-sl01.self.csi.it:15810/<applicativo>
+Url cluster4 (se attivo) sul server2:
+   http://tst-spjb601-sl02.self.csi.it:15810/<applicativo>
+Url cluster5 (se attivo) sul server1:
+   http://tst-spjb601-sl01.self.csi.it:15910/<applicativo>
+Url cluster5 (se attivo) sul server2:
+   http://tst-spjb601-sl02.self.csi.it:15910/<applicativo>
+
+Porte dominio riferite al cluster1 (per il cluster2 aggiungere 100 per ottenere la relativa porta, per il cluster3 aggiungere 200 etc..)
+
+PORTA_HTTP=15510
+PORTA_HTTPS=15502
+PORTA_JACORB=15503
+PORTA_JACORB_SSL=15504
+PORTA_JGROUPS_TCP=15505
+PORTA_JGROUPS_TCPFD=15506
+PORTA_OSGI_HTTP=15507
+PORTA_MESSAGING=15508
+PORTA_MESSAGING_THR=15509
+PORTA_REMOTING=15511
+PORTA_TXN_RECOVERY=15512
+PORTA_TXN_MANAGER=15513
+PORTA_AJP=15514
+PORTA_JGROUPS_UDPFD=15515
+MCAST_PORT_JGROUPS_MPING=15520
+MCAST_PORT_JGROUPS_UDP=15521
+MCAST_PORT_MESSAGING_GRP=15522
+MCAST_PORT_MODCLUSTER=15523
+MCAST_JGROUPS_ADDR=230.0.0.4
+MCAST_MESSAGING_GRP_ADDR=231.0.0.5
+MCAST_MODCLUSTER_ADDR=231.0.0.6
+
+
+
+Script gestione istanze jboss 6.0.1:
+
+1) Avviare prima il domain controller slave. Start domain:                                  
+startdomain <nome-dominio>
+Esempio: startdomain dom012
+
+2) Stop domain:   
+stopdomain <nome-dominio>
+Esempio: stopdomain dom012
+
+3) Visualizzazione log domain: tail -f log-master/XXX.log
+
+4) Start singolo nodo: jbossctl <nome-dominio> startnode <clu0X-srv0X>
+Esempio: jbossctl dom012 startnode clu01-srv01
+
+5) Stop  singolo nodo: jbossctl <nome-dominio> stopnode  <clu0X-srv0X>
+Esempio: jbossctl dom012 stopnode clu01-srv01
+
+6) Visualizzazione log nodo: tail -f log-clu0X-srv0X/boot.log
+   Visualizzazione log nodo: tail -f log-clu0X-srv0X/server.log
+
+7) Deploy pacchetto: jbossctl <nome-dominio> deploy <clu0X-srv0X> <path-assoluto-pacchetto>
+   Il pacchetto verra' deployato sul clusterX
+   Esempio:   jbossctl dom012 deploy clu01-srv01 /home/apps/tst-jboss601-012/upload/siaccorser.ear
+
+8) UnDeploy pacchetto: jbossctl <nome-dominio> undeploy <clu0X-srv0X> <nome-pacchetto>
+   Il pacchetto verra' undeployato dal clusterX
+   Esempio: jbossctl dom012 undeploy clu01-srv01 xxx.war
+
+9) Lista pacchetti deployati: jbossctl <nome-dominio> deploy-list <clu0X-srv0X>
+   Esempio: jbossctl dom012 deploy-list clu01-srv01
+
+10) Info pacchetto deployato: jbossctl <nome-dominio> deploy-info <clu0X-srv0X> <nome-pacchetto>
+    Esempio: jbossctl dom012 deploy-info clu01-srv01 xxx.war
+
+11) Definizione logger: jbossctl <nome-dominio> create-log <clu0X-srv0X> <nome-file> <logger> [DEBUG,INFO,WARN,ERROR,ALL]     /usr/prod/<nome_prodotto>/<linea_cliente>/<unita_di_installazione>
+
+è stato aggiunto il parametro indicante il path di scrittura dei log applicativi in linea con ciò che verrà definito in produzione. Dalla propria home si potrà costruire un link simbolico per poterli leggere. Come indicato nella nota, il cluster dovrà essere attivo nella sua componente di Process Controller / Host Controller.
+
+ *** NOTA *** I nodi applicativi del cluster devono essere entrambi in running mode 
+ Esempio: jbossctl dom012 create-log clu01-srv01 siaccorser it.csi.siac.siaccorser DEBUG /usr/prod/siac/coto/siaccorser 
+          jbossctl dom005 create-log clu01-srv01 siaccruapp it.csi.siac.siaccruapp DEBUG /usr/prod/siac/coto/siaccruapp
+
+12) Definizione logger per stopwatch: jbossctl <nome-dominio> create-log-sw <clu0X-srv0X> <nome-file> <logger> [DEBUG,INFO,WARN,ERROR,ALL]
+    /usr/prod/<nome_prodotto>/<linea_cliente>/<unita_di_installazione>
+
+    *** NOTA *** I nodi applicativi del cluster devono essere entrambi in running mode 
+    Esempio:  jbossctl dom012 create-log-sw clu01-srv01 siacbilser it.csi.sac.siacbilser DEBUG /usr/prod/siac/coto-01/siacbilser
+
+13) Cancellazione logger: jbossctl <nome-dominio> delete-log <clu0X-srv0X> <nome-file> <logger>
+    Esempio: jbossctl dom012 delete-log clu01-srv01 siaccruapp it.csi.siac.siaccorruapp
+	     jbossctl dom005 delete-log clu01-srv01 siaccruapp it.csi.siac.siaccruapp 
+
+14) Creazione datasource: jbossctl <nome-dominio> [create-ds-postgresql,create-ds-oracle,create-ds-mysql] <clu0X-srv0X>
+    <nome-datasource> <stringa-connessione-completa> <utente> <password> <alberatura-jndi> use-ccm=<true/false>
+    Il datasource sara' associato al clusterX
+    Esempio: 
+jbossctl dom012 create-ds-postgresql clu01-srv01 siacDS jdbc:postgresql://tst-domdb47.csi.it:5432/PGTST02 siac_for quara6en java:jboss/datasources/siacDS use-ccm=true
+
+jbossctl dom005 create-ds-postgresql clu01-srv01 siacDS jdbc:postgresql://tst-domdb47.csi.it:5432/PGTST02 siac_test rai1thu4 java:jboss/datasources/siacDS use-ccm=true
+
+jbossctl dom005 create-ds-postgresql clu02-srv02 siacDS jdbc:postgresql://tst-domdb47.csi.it:5432/PGTST02 siac_test rai1thu4 java:jboss/datasources/siacDS use-ccm=true
+
+15) Cancellazione datasource: jbossctl <nome-dominio> delete-ds <clu0X-srv0X> <nome datasource>
+    Il datasource sara' disassociato dal clusterX 
+    Esempio:  jbossctl dom012 delete-ds clu01-srv01 siacDS
+
+14) Lista datasources: jbossctl <nome-dominio> list-ds <clu0X-srv0X>
+    Esempio: jbossctl dom012 list-ds clu01-srv01
+
+15) Info datasource: jbossctl <nome-dominio> info-ds <clu0X-srv0X> <nome datasource>
+    Esempio:   jbossctl dom012 info-ds clu01-srv01 siacDS
+
+16) Kill nodo applicativo:  jbossctl <nome-dominio> kill-node <clu0X-srv0X>
+    Esempio: jbossctl dom012 kill-node clu01-srv01
+
+Utilizzare la cartella upload come repository dei pacchetti.
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+DB TEST POSTGRES 9 *************************** FORNITORE ***************************
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+USER_CONN:    jdbc:postgresql://tst-domdb47.csi.it:5432/PGTST02
+USER_AUTH:    siac_for/quara6en
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Configurazione DB TEST (istanza usata per lo sviluppo)
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+DB TEST POSTGRES 9
+USER_CONN:    jdbc:postgresql://tst-domdb46.csi.it:5432/PGDEV02
+USER_AUTH:    siac/xefai2xa
+
+
+http://docs.oracle.com/cd/E13222_01/wls/docs90/webapp/configurewebapp.html
+
+
+
+http://dev-spjb601-sl01.self.csi.it:12010/siacbilapp/azioneRichiesta.do?azioneRichiesta=23252
+
+
+http://www.giuseppesicari.it/articoli/jboss-web-server/
+
+
+
+

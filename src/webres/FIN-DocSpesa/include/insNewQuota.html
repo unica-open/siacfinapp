@@ -1,0 +1,84 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<div id="insQuota" class="collapse ">
+	<div class="accordion_info">
+	
+		<fieldset class="form-horizontal" id="insQuotaTAB">   
+			<h4 class="step-pane">Dati principali</h4>
+		
+			<fieldset class="form-horizontal">
+			
+				<div class="control-group">
+					<label class="control-label" for="numero">Numero *</label>
+					<div class="controls">
+						<input id="numero" name="numero"  class="lbTextSmall span2" type="text" value="" placeholder="30" disabled="disabled"/>
+						 <span class="alRight">
+						<label class="radio inline" for="importo">Importo *</label>
+						</span>
+						<input id="importo" name="importo" class="lbTextSmall span2" type="text" value=""  placeholder="50,00" required/>
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="scadenza">Data scadenza *</label>
+					<div class="controls">
+						<input id="scadenza" name="scadenza" class="lbTextSmall span2" type="text" value="" placeholder="31/04/2014" required />
+						<span class="alRight">
+						<label class="radio inline" for="dataEsec">Data esecuzione pagamento</label>
+						</span>
+						<input id="dataEsec" class="lbTextSmall span2" type="text" value="03/02/2014" name="dataEsec">		
+					</div>
+				</div>
+				
+				
+				
+				<div class="control-group">
+					<label for="desc" class="control-label">Descrizione *</label>
+					<div class="controls">
+						<textarea rows="1" cols="15" id="desc" value="" class="span10" placeholder="Spese Tares " required ></textarea>
+					</div>
+				</div>
+		
+			<!--#include virtual="include/sediSecondarie.html" -->
+			<!--#include virtual="include/modalitaPagamento.html" -->
+			</fieldset>
+			
+			<!--#include virtual="include/impegno.html" -->
+			
+			<h4 class="step-pane">Dati Iva</h4>
+			<fieldset class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label">Iva :</label>
+					<div class="controls">
+						<span class="alRight">
+						<label class="radio inline" for="rilevante">rilevante </label>
+						</span>
+							<input id="rilevante" name="rilevante"  type="checkbox" value="" />
+						<span class="alRight">
+							<label class="radio inline" for="NumIva">Numero registrazione</label>
+						</span>
+							<input id="NumIva" name="NumIva" class="lbTextSmall span2" type="text" value="" placeholder="xxxxxx" />
+						<span class="alRight">
+							<div class="radio inline collapse_alert" for="iva"><span class="icon-warning-sign icon-red alRight">&nbsp;</span>CAPITOLO RILEVANTE IVA </div>
+						</span>
+					
+					</div>
+				</div>
+			</fieldset>
+			
+			<!--#include virtual="include/provvedimento.html" -->
+			<br>
+			<!--#include virtual="include/altriDati.html" --> 
+			<!--#include virtual="include/decreto.html" -->							
+
+						
+		</fieldset>
+					  
+		<p> 
+			<a class="btn btn-secondary" data-toggle="collapse" data-target="#insQuota" >annulla</a> 
+			<a class="btn btn-primary pull-right " data-toggle="collapse" data-target="#insQuota">salva</a>
+		</p>
+	</div>
+</div>

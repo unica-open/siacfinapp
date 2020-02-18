@@ -1,0 +1,51 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<h4>Movimento</h4>
+
+	<fieldset class="form-horizontal">      
+		<div class="control-group">
+			<label for="consultivo" class="control-label">Tipo</label>
+			<div class="controls">
+			  <label class="radio inline"><input type="radio" name="optTipo" id="tipoEnt" value="ent">Entrata</label>
+			  &nbsp;&nbsp;<label class="radio inline"><input type="radio" name="optTipo" id="tipoSp" value="spe" checked="checked">Spesa</label>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label for="consultivo" class="control-label">Movimento</label>
+			<div class="controls">
+			 <input id="iva" name="iva" class="span1" type="text" placeholder="anno"/> 
+			   <input id="iva" name="iva" class="span1" type="text" placeholder="numero"/>
+			   <input id="iva" name="iva" class="span3" type="text" placeholder="subimpegno/subaccertamento"/>
+			   <span class="radio guidata"><a href="#guidaMovimento" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
+			</div>
+		</div>
+		
+		<div class="control-group datiVisibili">
+			<label for="consultivo" class="control-label">CIG</label>
+			<div class="controls">
+			 <input id="iva" name="iva" class="span3" type="text"/> 
+			  <span class="al">
+				<label class="radio inline" for="numero3">CUP</label>
+			  </span>
+			   <input id="iva" name="iva" class="span3" type="text"/>
+			   <span class="al">
+				<label class="radio inline" for="numero3">Mutuo</label>
+			  </span>
+			   <input id="iva" name="iva" class="span3" type="text" placeholder="numero"/>
+			  
+			</div>
+		</div>
+		  
+		<div class="control-group">
+			<label for="consultivo" class="control-label">Importo in atto *</label>
+			<div class="controls">
+			 <input id="iva" name="iva" class="span2" type="text" required/> 
+			 <div class="radio inline collapse_alert"><span class="icon-chevron-right icon-red alRight"></span>Disponibile 999.000,00 </div>           
+			</div>
+		</div>
+		
+	</fieldset>
+ 

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="provvisorioCassaDefault" extends="default, json-default" abstract="true">
+		<!-- Package per la definizione delle estensioni comuni a tutti i varii packages di Struts2 e per la definizione centralizzata dello stack degli interceptors. -->
+		<interceptors>
+
+			<!-- Interceptor di log prima e a termine dell'invocazione -->
+			<interceptor name="logInterceptor" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+
+			<!-- Interceptor per la gestione degli errori di conversione <interceptor name="siacConversionErrorInterceptor" class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" /> -->
+
+			<!-- Interceptor per la gestione dei breadcrumb -->
+			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+				<param name="defaultRewindMode">AUTO</param>
+				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+
+			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
+			<interceptor name="redirectMessage" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.RedirectMessageInterceptor" />
+
+			<interceptor-stack name="myStack">
+				<!-- Default Stack -->
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="actionData" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="redirectMessage" />
+				<interceptor-ref name="chain" />
+				<interceptor-ref name="scopedModelDriven" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="multiselect" />
+				<interceptor-ref name="staticParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,^struts\..*</param>
+				</interceptor-ref>
+
+				<!-- Injettato nello stack per la gestione degli errori di conversioneS <interceptor-ref name="siacConversionErrorInterceptor"/> -->
+
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">execute, cerca, copia, visualizza, aggiorna</param>
+				</interceptor-ref>
+				<interceptor-ref name="debugging" />
+
+				<!-- Interceptor per breadcrumb -->
+				<interceptor-ref name="breadCrumbs" />
+
+
+				<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
+
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="myStack" />
+	</package>
+
+	<!-- Gestione navigazione per il modulo provvisorio -->
+	<package namespace="/" extends="provvisorioCassaDefault" name="provvisorioCassa">
+	
+	
+	    <action name="aggiornaProvvisorioCassa" class="aggiornaProvvisorioCassaAction" >
+			<result name="success">/jsp/provvisorio/aggiornaProvvisorioCassa.jsp</result>
+			<result name="input">/jsp/provvisorio/aggiornaProvvisorioCassa.jsp</result>
+			
+			<result name="elencoProvvisorioCassa" type="redirectAction">
+				<param name="actionName">elencoProvvisorioCassa</param>
+				<param name="forceReload">true</param>
+			</result>
+			
+			<result name="gotoAggiorna" type="redirectAction">
+				<param name="actionName">aggiornaProvvisorioCassa</param>
+				<param name="numeroProvv">${numeroProvv}</param>
+				<param name="annoProvv">${annoProvv}</param>
+				<param name="tipoProvv">${tipoProvv}</param>
+				<param name="successSalva">${successSalva}</param>
+				<param name="arrivoDaInserimento">No</param>
+			</result>
+		</action>
+		
+        <action name="consultaProvvisorioCassa" class="consultaProvvisorioCassaAction" >
+			<result name="success">/jsp/provvisorio/consultaProvvisorioCassa.jsp</result>
+			<result name="input">/jsp/provvisorio/consultaProvvisorioCassa.jsp</result>
+		</action>
+	
+		<action name="inserisciProvvisorioCassa" class="inserisciProvvisorioCassaAction">
+			<result name="success">/jsp/provvisorio/inserisciProvvisorioCassa.jsp</result>
+			<result name="input">/jsp/provvisorio/inserisciProvvisorioCassa.jsp</result>
+			
+			<result name="gotoAggiorna" type="redirectAction">
+				<param name="actionName">aggiornaProvvisorioCassa</param>
+				<param name="numeroProvv">${numeroProvvStruts}</param>
+				<param name="annoProvv">${annoProvvStruts}</param>
+				<param name="tipoProvv">${tipoProvvStruts}</param>
+				<param name="successSalva">true</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+		</action>
+	
+		<action name="ricercaProvvisorioCassa" class="ricercaProvvisorioCassaAction">
+			<result name="success">/jsp/provvisorio/ricercaProvvisorioCassa.jsp</result>
+			<result name="input">/jsp/provvisorio/ricercaProvvisorioCassa.jsp</result>
+			<result name="gotoElencoProvvisorioCassa" type="redirectAction">elencoProvvisorioCassa</result>
+			<result name="goToRicercaProvvisorioCassa" type="redirectAction">ricercaProvvisorioCassa</result>
+		</action>
+		
+		<action name="elencoProvvisorioCassa" class="elencoProvvisorioCassaAction">
+			<result name="success">/jsp/provvisorio/elencoProvvisorioCassa.jsp</result>
+			<result name="input">/jsp/provvisorio/elencoProvvisorioCassa.jsp</result>
+			<result name="gotoErroreRicerca">/jsp/provvisorio/ricercaProvvisorioCassa.jsp</result>
+			
+			<result name="elencoProvvisorioCassa" type="redirectAction">
+				<param name="actionName">elencoProvvisorioCassa</param>
+      			<param name="${parameterPageName}">${parameterPageValue}</param>
+			</result>
+			
+			
+		</action>		
+		
+				
+	</package>
+
+</struts>

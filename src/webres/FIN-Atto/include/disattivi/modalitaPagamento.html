@@ -1,0 +1,55 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+		<div class="step-pane active" id="modPAG">
+			<div class="accordion" >
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#modPAG" href="#modTAB">
+							Modalit&agrave; pagamento <span class="icon">&nbsp;</span></a>
+						</a>
+					</div>
+				
+					<div id="modTAB" class="accordion-body collapse">
+						<div class="accordion-inner">
+
+							<fieldset class="form-horizontal">				
+								<table class=" table table-hover tab_left" summary="...." >
+									<thead>	
+										<tr>
+											<th></th>
+											<th>Modalit&agrave;</th>
+											<th> <abbr title="progressivo">Associato a</abbr> </th>
+											<th>Stato</th>
+										</tr>						
+									</thead>
+									<tbody>							
+										<tr>
+											<td> <input type="radio" name="mod1" id="mod1" /></td>
+											<td><label for="mod1"><a href="#" data-trigger="hover" rel="popover" title="IBAN" data-content="IBAN ITI2a0000000089012 ">CB - Conto corrente bancario</a></label></td>
+											<td> Soggetto</td>
+											<td>valido</td>
+										</tr>
+										<tr class="newline">
+											<td><input type="radio" name="mod1" id="mod2" /></td>
+											<td><label for="mod2"><a href="#" data-trigger="hover" rel="popover" title="cessione" data-content="1200- istituo AAAA ">CC - cessione credito</a></label></td>
+											<td>Sede secondaria</td>
+											<td>annullato</td>
+										</tr>
+										<tr class="newline">
+											<td><input type="radio" name="mod1" id="mod3" /></td>
+											<td><label for="mod3"> contanti</label></td>
+											<td>soggetto</td>
+											<td>valido</td>
+										</tr>
+									</tbody>
+								</table>
+								
+							</fieldset >
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>	

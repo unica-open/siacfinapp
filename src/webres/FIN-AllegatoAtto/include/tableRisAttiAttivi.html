@@ -1,0 +1,151 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+
+		<table class="table table-hover tab_left dataTable" summary="...." >
+			<thead>
+				<tr>
+					<th><input type="checkbox" onchange="checkAll()" name="chk[]" class="tooltip-test" title="Seleziona tutti" /></th>
+					<th class="span2">Elenco</th>
+					<th class="span1">Stato</th>
+					<th class="span1"></th>
+					<th class="span2">Data trasmissione</th>
+					<th class="tab_Right">Totale spese</th>
+					<th class="tab_Right">Totale entrate</th>
+					<th class="tab_Right">Non validato Spese</th>
+					<th class="tab_Right">Non validato Entrate</th>
+					<th class="tab_Right span1">&nbsp;</th>					
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013-253</td>
+					<td><a data-content="Rifiutato" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">R</a></td>
+					<td>&nbsp;</td> 
+					<td><a data-content="xxxxx xxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Fonte dati">20/01/2013</a></td>
+					<td class="tab_Right">2.000,00</td>
+					<td class="tab_Right">1.000,00</td>
+					<td class="tab_Right">2.000,00</td>
+					<td class="tab_Right">1.000,00</td>
+					<td class="tab_Right">
+						<a class="btn" href="FIN-RisDettValutaAtto.shtml" >dettaglio</a>
+					</td>
+					
+				</tr>
+				
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013-125</td>
+					<td><a data-content="Rifiutato" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">R</a></td>
+					<td><a data-content="Contiene quote a copertura" rel="popover" data-trigger="hover" href="#" data-original-title="Info"><i class="icon-asterisk icon-2x">&nbsp;</i></a></td>
+					<td><a data-content="xxxxx xxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Fonte dati">02/02/2013</a></td>
+					<td class="tab_Right">8.000,00 	</td>
+					<td class="tab_Right">&nbsp;</td>
+					<td class="tab_Right">5.000,00</td>
+					<td class="tab_Right">&nbsp;</td>	
+					<td class="tab_Right">
+						<a class="btn" href="FIN-RisDettValutaAtto.shtml" >dettaglio</a>
+					</td>					
+				</tr>
+				
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013-87</td>
+					<td><a data-content="Completato" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">C</a></td>
+					<td>&nbsp;</td>
+					<td><a data-content="xxxxx xxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Fonte dati">20/03/2013</a></td>
+					<td class="tab_Right">&nbsp;</td>
+					<td class="tab_Right">3.000,00</td>
+					<td class="tab_Right">&nbsp;</td>
+					<td class="tab_Right">3.000,00</td>
+					<td class="tab_Right">
+						<a class="btn" href="FIN-RisDettValutaAtto.shtml" >dettaglio</a>
+					</td>
+					
+				</tr>
+				
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013-44</td>
+					<td><a data-content="Bloccato" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">B</a></td>
+					<td>&nbsp;</td>
+					<td><a data-content="xxxxx xxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Fonte dati">xx/xx/xxxx</a></td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					
+					<td class="tab_Right">
+						<a class="btn" href="FIN-RisDettValutaAtto.shtml" >dettaglio</a>
+					</td>
+					
+				</tr>
+				
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013-34</td>
+					<td><a data-content="Completato" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">C</a></td>
+					<td>&nbsp;</td>
+					<td><a data-content="xxxxx xxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Fonte dati">xx/xx/xxxx</a></td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">
+						<a class="btn" href="FIN-RisDettValutaAtto.shtml" >dettaglio</a>
+					</td>
+					
+				</tr>
+
+				<tr>
+					<td><input type="checkbox" name="fooCheck" value="c1"></td>
+					<td>2013-67</td>
+					<td><a data-content="Bloccato" rel="popover" data-trigger="hover" href="#" data-original-title="Stato">B</a></td>
+					<td>&nbsp;</td>
+					<td><a data-content="xxxxx xxxxx" rel="popover" data-trigger="hover" href="#" data-original-title="Fonte dati">xx/xx/xxxx</a></td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">XX.000,00</td>
+					<td class="tab_Right">
+						<a class="btn" href="FIN-RisDettValutaAtto.shtml" >dettaglio</a>
+					</td>
+					
+				</tr>
+			
+			</tbody>
+			<tfoot>
+				<tr>
+					<th colspan="5">Totali</th>
+					<th class="tab_Right">10.000,00</th>
+					<th class="tab_Right">4.000,00</th>
+					<th class="tab_Right">7.000,00</th>
+					<th class="tab_Right">1.000,00</th>
+					<th class="tab_Right">&nbsp;</th>
+					
+				</tr>
+				
+			</tfoot>
+
+			</table>
+			
+			<div class="row pagination_conth">
+				  <div id="risultatiricerca_info2" class="span6">1 - 50 di 230 risultati</div>   
+				  <div class="span6">                               
+					<div id="paginazione2" class="dataTables_paginate paging_bootstrap pagination">
+					  <ul>
+						<li><a href="#">&laquo; inizio</a></li>
+						<li><a href="#">&laquo; prec</a></li>
+						<li><a href="#">1</a></li>
+						<li class="active"><a href="#">2</a></li>
+						<li><a href="#">3</a></li>
+						<li><a href="#">4</a></li>
+						<li><a href="#">succ &raquo;</a></li>
+						<li><a href="#"> fine &raquo;</a></li>              
+					  </ul>
+					</div>         
+				  </div>  
+			</div> 
+			

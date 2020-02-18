@@ -1,0 +1,80 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+SPDX-License-Identifier: EUPL-1.2
+-->
+	  
+				<div class="accordion" id="modP">
+					<div class="accordion-group">
+					  <div class="accordion-heading">    
+						<a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#modP" href="#modPago">
+						 Modalità pagamento<span class="icon">&nbsp;</span>
+						</a>
+					  </div>
+					  <div id="modPago" class="accordion-body collapse">
+					  
+						<div class="accordion-inner">
+
+						<div class="control-group">
+							<label class="control-label" for="tipoind">Tipo accredito</label>
+							<div class="controls">
+								<select id="tipoind" name="tipoind" class="span4" >
+									  <option href="#inscontocorr" data-toggle="collapse" data-target="#inscontocorr">coordinate bancarie</option>
+									  <option href="#inscontocorr" data-toggle="collapse" data-target="#inscontocorr">conto corrente</option>
+									  <option href="#inscontocorr" data-toggle="collapse" data-target="#inscontocorr">banca Italia</option>
+									  <option href="#inscontante" data-toggle="collapse" data-target="#inscontante">contanti</option>
+									  <option href="#inscessione" data-toggle="collapse" data-target="#inscessione">cessione credito</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="CodIban">IBAN</label>
+							<div class="controls">
+							  <input id="CodIban" name="CodIban" class="span4" type="text" value=""/>              
+							</div>
+						</div>
+						  
+						<div class="control-group">
+							<label class="control-label" for="CodBIC">BIC</label>
+							<div class="controls">
+							  <input id="CodBIC" name="CodBIC" class="span4 datepicker" type="text"  value=""/>            
+							</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="CC">Conto corrente</label>
+							<div class="controls">
+							  <input id="CC" name="CC" class="span4 datepicker" type="text"  value=""/>            
+							</div>
+						</div>
+
+						  
+						<div class="control-group">
+							<label class="control-label" for="Quietanzante">Quietanzante</label>
+							<div class="controls">
+							  <input id="Quietanzante" name="Quietanzante" class="span4" type="text" placeholder="denominazione" value=""/> 
+							  <input id="Quietanzante" name="Quietanzante" class="span4" type="text" placeholder="codice fiscale" value=""/>           
+							</div>
+						</div>
+						  
+						<div class="control-group">
+							<label class="control-label" for="scadenza">Data scadenza</label>
+							<div class="controls">
+							<input id="scadenza" name="scadenza" type="text"  datepicker" placeholder="data"class="span2 datepicker" placeholder="data scadenza"></div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label" for="notee">Note</label>
+							<div class="controls"> 
+							<textarea id="notee" rows="2" cols="15" class="span9" ></textarea>
+							</div>
+						</div>
+			
+						  
+					</div>
+				  </div>
+				</div>
+				</div>
+				  
+				  
+				 
