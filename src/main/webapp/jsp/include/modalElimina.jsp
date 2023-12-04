@@ -16,7 +16,8 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="modal-footer">
 	    <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
 	    <button id="btnEliminazione" class="btn btn-primary">si, prosegui</button>
-	    <s:submit id="btnEliminazioneSubmit" value="si, prosegui" cssClass="btn btn-primary hide freezePagina" method="elimina"/>
+	    <!-- task-131 <s:submit id="btnEliminazioneSubmit" value="si, prosegui" cssClass="btn btn-primary hide freezePagina" method="elimina"/> -->
+	    <s:submit id="btnEliminazioneSubmit" value="si, prosegui" cssClass="btn btn-primary hide freezePagina" action="%{#eliminaAction}"/>
 	</div>
 </div>  
 <!--/modale elimina -->

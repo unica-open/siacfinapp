@@ -46,5 +46,6 @@ SPDX-License-Identifier: EUPL-1.2
 		</div>
 	</div>
 
-	<input type="hidden" value="<s:url method="remodpagamento" />" id="HIDDEN_url_remodpagamento" />
+	<!-- task-131 <input type="hidden" value="<s:url method="remodpagamento" />" id="HIDDEN_url_remodpagamento" /> -->
+	<input type="hidden" value='<s:url action="%{#remodpagamentoAction}" />' id="HIDDEN_url_remodpagamento" />
 	<script src="${jspath}liquidazione/refreshModalitaPagamento.js" type="text/javascript"></script>

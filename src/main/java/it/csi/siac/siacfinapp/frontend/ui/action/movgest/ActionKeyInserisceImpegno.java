@@ -4,6 +4,8 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
+
 /**
  * classe utilizzata per la definizione univoca del modello dati in sessione
  * ed anche per la renderizzazione automatica delle label a seconda
@@ -49,6 +51,19 @@ public class ActionKeyInserisceImpegno extends WizardInserisciMovGestAction {
 	 */
 	public boolean sonoInInserimento(){
 		return true;
+	}
+	
+	@Override
+	//SIAC-7667
+	protected boolean isPerimetroSanitarioCongruenteConGsa(CapitoloImpegnoModel capitolo) {
+		return capitolo.getCodicePerimetroSanitarioSpesa() != null && CODICE_PERIMETRO_SANITARIO_SPESA_GSA.equals(capitolo.getCodicePerimetroSanitarioSpesa());
+	}
+	//SIAC-8674
+	@Override
+	protected boolean caricaListaModificheCollegateAccertamento() {
+		//in inserimento impegno, le modifiche collegate non servono: non ci sono ancora modifiche sull'impegno visto che lo si sta inserendo ora
+		//ed anche l'importo "pending" non può esserci
+		return false;
 	}
 
 }

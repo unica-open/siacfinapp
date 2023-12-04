@@ -25,7 +25,8 @@ SPDX-License-Identifier: EUPL-1.2
 			
 			<div class="Border_line"></div>
 			<p> 
-				<s:submit cssClass="btn btn-primary pull-right" method="confermaCollegaImpegno" value="Conferma" name="Conferma" />
+				<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" method="confermaCollegaImpegno" value="Conferma" name="Conferma" />-->
+				<s:submit cssClass="btn btn-primary pull-right" action="regolazioneCarta_confermaCollegaImpegno" value="Conferma" name="Conferma" />
 			</p>
 		</fieldset>
 		

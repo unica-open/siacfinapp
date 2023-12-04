@@ -30,8 +30,8 @@ SPDX-License-Identifier: EUPL-1.2
 		<div class="row-fluid">
 			<div class="span12 ">
 
-
-<s:form id="gestioneClassi" action="gestioneClassi.do" method="post">
+<%-- SIAC-7952 rimuovo .do dalla action --%>
+<s:form id="gestioneClassi" action="gestioneClassi" method="post">
 
 	<div class="contentPage">
 		
@@ -111,11 +111,14 @@ SPDX-License-Identifier: EUPL-1.2
 					<div class="Border_line"></div>
 					<p>
 						<s:if test="editMode">
-							<s:submit name="modificaClasse" value="Salva classe" method="modificaClasse" cssClass="btn btn-primary pull-left" />
-							<s:submit name="annullaClasse" value="Annulla" method="annullaModifica" cssClass="btn pull-left" />
+							<!-- task-131 <s:submit name="modificaClasse" value="Salva classe" method="modificaClasse" cssClass="btn btn-primary pull-left" /> -->
+							<!-- task-131 <s:submit name="annullaClasse" value="Annulla" method="annullaModifica" cssClass="btn pull-left" /> -->
+							<s:submit name="modificaClasse" value="Salva classe" action="gestioneClassi_modificaClasse" cssClass="btn btn-primary pull-left" />
+							<s:submit name="annullaClasse" value="Annulla" action="gestioneClassi_annullaModifica" cssClass="btn pull-left" />
 						</s:if>
 						<s:else>
-							<s:submit name="aggiungiClasse" value="Crea classe" method="aggiungiClasse" cssClass="btn btn-primary pull-left" />
+							<!-- task-131 <s:submit name="aggiungiClasse" value="Crea classe" method="aggiungiClasse" cssClass="btn btn-primary pull-left" /> -->
+							<s:submit name="aggiungiClasse" value="Crea classe" action="gestioneClassi_aggiungiClasse" cssClass="btn btn-primary pull-left" />
 						</s:else>
 					</p>
 					<br/>

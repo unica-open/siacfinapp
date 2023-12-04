@@ -4,7 +4,7 @@
 */
 package it.csi.siac.siacfingenapp.frontend.ui.action.primanotaintegrata.accertamento;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;

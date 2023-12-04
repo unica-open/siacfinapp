@@ -11,7 +11,6 @@ SPDX-License-Identifier: EUPL-1.2
 			<s:if test="%{annoImpegno != null && annoImpegno != ''}"><s:property value="annoImpegno" default=" "/></s:if>
 			<s:if test="%{numeroImpegno != null && numeroImpegno != ''}">/<s:property value="numeroImpegno" default=" "/></s:if>
 			<s:if test="%{numeroSub != null && numeroSub != ''}">/<s:property value="numeroSub"/></s:if>
-			<s:if test="%{numeroMutuoPopup != null && numeroMutuoPopup != ''}"> - <s:property value="numeroMutuoPopup"/></s:if>
 			<s:if test="%{descrizioneImpegnoPopup != null && descrizioneImpegnoPopup != ''}"> - <s:property value="descrizioneImpegnoPopup"/></s:if>
 		</h4>
 	</s:if>
@@ -33,10 +32,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<label class="radio inline" for="sub">Sub </label>
 			  </span>
 			  <s:textfield id="numeroSub" cssClass="lbTextSmall span2 required" name="numeroSub" onkeyup="return checkItNumbersOnly(event)"></s:textfield>
-			  <span class="al">
-				<label class="radio inline" for="mutuo">Mutuo </label>
-			  </span>
-			  <s:textfield id="numeroMutuo" cssClass="lbTextSmall span2 required" name="numeroMutuoPopup" onkeyup="return checkItNumbersOnly(event)"></s:textfield>
+
 			  <s:if test="ricercaImpegnoStep1Abilitata">
 			  	<span class="radio guidata"><a id="compilazioneGuidataImpegnoStep1" href="#guidaImpegno" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
 			  </s:if>
@@ -59,7 +55,8 @@ SPDX-License-Identifier: EUPL-1.2
 			//}
 			
 			$.ajax({
-                  url: '<s:url method="azzeraModaleImpegno"></s:url>',
+                  //task-131 url: '<s:url method="azzeraModaleImpegno"></s:url>',
+                  url: '<s:url action="inserisciLiquidazioneStep1_azzeraModaleImpegno"></s:url>',
                   type: "GET",
                	  success: function(data){
                   	$("#refreshPopupModal").html(data);

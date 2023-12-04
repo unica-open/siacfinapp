@@ -17,7 +17,8 @@ SPDX-License-Identifier: EUPL-1.2
    </div>
    <div class="modal-footer">
      <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-     <s:submit id="submitSDFBtn" name="btnSalvaConConfermaSDF" value="si, salva" cssClass="btn btn-primary freezePagina" method="salva" data-dismiss="modal"/>
+     <!--task-131 <s:submit id="submitSDFBtn" name="btnSalvaConConfermaSDF" value="si, salva" cssClass="btn btn-primary freezePagina" method="proseguiSalva"/>-->
+     <s:submit id="submitSDFBtn" name="btnSalvaConConfermaSDF" value="si, salva" cssClass="btn btn-primary freezePagina" action="%{#proseguiSalvaAction}"/>
    </div>
 </div>
 
@@ -32,7 +33,8 @@ SPDX-License-Identifier: EUPL-1.2
    </div>
    <div class="modal-footer">
      <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-     <s:submit id="submitSDFDiNuovoDispBtn" name="btnSalvaConConfermaSDFDiNuovoDisp" value="si, salva" cssClass="btn btn-primary freezePagina" method="salva" data-dismiss="modal"/>
+     <!-- task-131 <s:submit id="submitSDFDiNuovoDispBtn" name="btnSalvaConConfermaSDFDiNuovoDisp" value="si, salva" cssClass="btn btn-primary freezePagina" method="proseguiSalva"/> -->
+     <s:submit id="submitSDFDiNuovoDispBtn" name="btnSalvaConConfermaSDFDiNuovoDisp" value="si, salva" cssClass="btn btn-primary freezePagina" action="%{#proseguiSalvaAction}"/>
    </div>
 </div>
 

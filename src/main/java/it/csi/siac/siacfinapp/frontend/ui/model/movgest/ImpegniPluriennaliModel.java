@@ -24,6 +24,11 @@ public class ImpegniPluriennaliModel extends GenericModel {
 	private Date dataScadenzaImpPluriennale;
 	private String dataScadenzaImpPluriennaleString;
 	
+	//SIAC-7349
+	private String componenteImpPluriennaleString;
+	private Integer componenteImpPluriennale;
+	
+	
 	
 	public int getAnnoImpPluriennale() {
 		return annoImpPluriennale;
@@ -56,6 +61,31 @@ public class ImpegniPluriennaliModel extends GenericModel {
 			String dataScadenzaImpPluriennaleString) {
 		this.dataScadenzaImpPluriennaleString = dataScadenzaImpPluriennaleString;
 	}
+	/**
+	 * @return the componenteImpPluriennaleString
+	 */
+	public String getComponenteImpPluriennaleString() {
+		return componenteImpPluriennaleString;
+	}
+	/**
+	 * @return the componenteImpPluriennale
+	 */
+	public Integer getComponenteImpPluriennale() {
+		return componenteImpPluriennale;
+	}
+	/**
+	 * @param componenteImpPluriennaleString the componenteImpPluriennaleString to set
+	 */
+	public void setComponenteImpPluriennaleString(String componenteImpPluriennaleString) {
+		this.componenteImpPluriennaleString = componenteImpPluriennaleString;
+	}
+	/**
+	 * @param componenteImpPluriennale the componenteImpPluriennale to set
+	 */
+	public void setComponenteImpPluriennale(Integer componenteImpPluriennale) {
+		this.componenteImpPluriennale = componenteImpPluriennale;
+	}
+	
 	
 
 }

@@ -20,21 +20,30 @@ import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siacbilser.model.Progetto;
 import it.csi.siac.siacbilser.model.TipoProgetto;
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.model.Informazione;
 import it.csi.siac.siaccorser.model.ServiceResponse;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
+import it.csi.siac.siacfinapp.frontend.ui.action.SoggettoDaCercareEnum;
+import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciModificaMovimentoSpesaModel;
-import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ImpegniPluriennaliModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
+import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegno;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegnoResponse;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSoggettiResponse;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubImpegno;
+import it.csi.siac.siacfinser.model.codifiche.ClasseSoggetto;
+import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesa;
+import it.csi.siac.siacfinser.model.soggetto.Soggetto;
 
 
 @Component
@@ -45,6 +54,10 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 	   	//setto la tipologia di oggetto trattato:
 		oggettoDaPopolare = OggettoDaPopolareEnum.IMPEGNO;
 	}
+	
+	//SIAC-6865
+	@SuppressWarnings("unused")
+	private static final String CODICE_AGGIUDICAZIONE_MOTIVO="AGG";
 	
 	private String minImp;
 	private String maxImp;
@@ -81,8 +94,51 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 	private BigDecimal minImportoSubApp;
 	private BigDecimal maxImportoSubApp;
 	
+	//SIAC-7349
+	private BigDecimal minImportoImpegnoCompApp;
+	private BigDecimal maxImportoImpegnoCompApp;
+	
+	
 	private AttoAmministrativo am;
 	
+	private Boolean flagValido;
+	private Boolean flagSoggettoValido;
+	
+	
+	
+	
+	public Boolean getFlagValido() {
+		return flagValido;
+	}
+
+	public void setFlagValido(Boolean flagValido) {
+		this.flagValido = flagValido;
+	}
+
+	public Boolean getFlagSoggettoValido() {
+		return flagSoggettoValido;
+	}
+
+	public void setFlagSoggettoValido(Boolean flagSoggettoValido) {
+		this.flagSoggettoValido = flagSoggettoValido;
+	}
+
+	public BigDecimal getMinImportoImpegnoCompApp() {
+		return minImportoImpegnoCompApp;
+	}
+
+	public void setMinImportoImpegnoCompApp(BigDecimal minImportoImpegnoCompApp) {
+		this.minImportoImpegnoCompApp = minImportoImpegnoCompApp;
+	}
+
+	public BigDecimal getMaxImportoImpegnoCompApp() {
+		return maxImportoImpegnoCompApp;
+	}
+
+	public void setMaxImportoImpegnoCompApp(BigDecimal maxImportoImpegnoCompApp) {
+		this.maxImportoImpegnoCompApp = maxImportoImpegnoCompApp;
+	}
+
 	private static final long serialVersionUID = 2784367365960444695L;
 	
 	@Override
@@ -97,8 +153,12 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		//Reimputazione:
 		inizializzaReimputazioneInInserimentoNelModel();
 		
+		//SIAC-6997
+		inizializzaElaboraRorReannoInInserimentoNelModel();
+		
 		//invoco il prepare della super classe:
 		super.prepare();
+		
 		
 		//setto il titolo:
 		super.model.setTitolo("Inserisci Modifica Importo");
@@ -109,6 +169,8 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			model.setGestioneModificaDecentratoEFaseROR(true);
 		}else{
 			caricaListaMotivi();
+			//SIAC-7838
+			caricaListaMotiviAgg();
 			model.setGestioneModificaDecentratoEFaseROR(false);
 		}
 			
@@ -120,9 +182,9 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			//ciclo sui sub:
 			for(SubImpegno sub : model.getListaSubimpegni()){				
 				if(sub.getStatoOperativoMovimentoGestioneSpesa().equalsIgnoreCase("D")){
-					if(sub.getNumero() != null){
+					if(sub.getNumeroBigDecimal() != null){
 						//aggiungo il sub alla lista
-						numeroSubImpegnoList.add(String.valueOf(sub.getNumero()));
+						numeroSubImpegnoList.add(String.valueOf(sub.getNumeroBigDecimal()));
 					}	
 				}
 				
@@ -143,6 +205,9 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			tipoImpegnoModificaImportoList.add("Impegno");
 		}
 	
+		//SIAC-6865
+		inizializzaDatiAggiudicazione();
+		
 		
 		//Calcolo importi
 		
@@ -156,25 +221,43 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		// RM JIRA 5371
 		minImportoImpegnoApp = model.getDisponibilitaImpegnoModifica().negate();
 		
+		//SIAC-7349
+		//Per come calcocata questa disponibilit. (valore impegnato - liquidazioni)
+		//il limite sinistro della singola componente equivale a quello dell'impegno
+		//in quanto esso . riferito alla componente stessa
+		minImportoImpegnoCompApp = minImportoImpegnoApp;
+		
+
+		
 		
 		//
 		
-		if(model.getImpegnoInAggiornamento().getAnnoMovimento() < Integer.valueOf(sessionHandler.getAnnoEsercizio())){
+		if(model.getImpegnoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
 			maxImportoImpegnoApp = new BigDecimal(0);
+			//SIAC-7349
+			maxImportoImpegnoCompApp = new BigDecimal(0);
 		} else if(model.getImpegnoInAggiornamento().isFlagDaRiaccertamento()){
 			maxImportoImpegnoApp = new BigDecimal(0);
+			//SIAC-7349
+			maxImportoImpegnoCompApp = new BigDecimal(0);
 		} else {
 			//SIAC-580
 			
 			if(model.getStep1Model().getAnnoImpegno().intValue() == model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() ){
 				// anno corrente
 				maxImportoImpegnoApp = model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getImportiCapitolo().getDisponibilitaImpegnareAnno1();
+				//SIAC-7349 fare in modo di ottenere il valore degli importi capitolo della componente
+				maxImportoImpegnoCompApp = getDisponibilitaModifica(0);
 			}else if(model.getStep1Model().getAnnoImpegno().intValue()  == (model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() +1) ){
 //				anno  +1
 				maxImportoImpegnoApp = model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getImportiCapitolo().getDisponibilitaImpegnareAnno2();
+				//SIAC-7349 fare in modo di ottenere il valore degli importi capitolo della componente
+				maxImportoImpegnoCompApp = getDisponibilitaModifica(1);
 			}else if(model.getStep1Model().getAnnoImpegno().intValue()  == (model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() +2) ){
 //				anno +2
 				maxImportoImpegnoApp = model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getImportiCapitolo().getDisponibilitaImpegnareAnno3();
+				//SIAC-7349 fare in modo di ottenere il valore degli importi capitolo della componente
+				maxImportoImpegnoCompApp = getDisponibilitaModifica(2);
 			
 			//SIAC-6990
 			//si consente l'inserimento delle modifiche solo sui tre anni successivi (inerenti alla disponibilita' massima dei capitoli)
@@ -189,6 +272,13 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		if(minImportoImpegnoApp == null){
 			//pongo a zero
 			minImportoImpegnoApp = new BigDecimal(0);
+			
+		}
+		
+		//SIAC-7349
+		if(minImportoImpegnoCompApp == null){
+			//pongo a zero
+			minImportoImpegnoCompApp = new BigDecimal(0);
 		}
 		
 		if(maxImportoImpegnoApp == null){
@@ -196,16 +286,33 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			maxImportoImpegnoApp = new BigDecimal(0);
 		}
 		
+		//SIAC-7349
+		if(maxImportoImpegnoCompApp == null){
+			//pongo a zero
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		}
+		
 		
 		//GESTIONE FLAG SDF:
 		if(model.getImpegnoInAggiornamento().isFlagSDF()){
 			maxImportoImpegnoApp = new BigDecimal(0);
 		}
-		//
+		
+		//SIAC-7349 importo a zero il maxImportoImpegnoCompApp come fatto in precedenza, a determinate condizioni
+		if(model.getImpegnoInAggiornamento().isFlagSDF()){
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		}
 		
 		if(maxImportoImpegnoApp.compareTo(new BigDecimal(0)) < 0){
 			maxImportoImpegnoApp = new BigDecimal(0);
 		}
+		
+		//SIAC-7349 importo a zero il maxImportoImpegnoCompApp come fatto in precedenza, a determinate condizioni
+		if(maxImportoImpegnoCompApp.compareTo(new BigDecimal(0)) < 0){
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		}
+		
+		
 		
 		//Setto il massimo e i minimo nelle variabili finali:
 		setMaxImp(convertiBigDecimalToImporto(maxImportoImpegnoApp));
@@ -218,19 +325,93 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		setMaxImportoCalcolato(convertiBigDecimalToImporto(maxImportoImpegnoApp));
 		model.setMaxImportoCalcolatoMod(convertiBigDecimalToImporto(maxImportoImpegnoApp));
 		
+		//SIAC-7349
+		model.setMinImportoImpComp(convertiBigDecimalToImporto(minImportoImpegnoCompApp));
+		model.setMaxImportoImpComp(convertiBigDecimalToImporto(maxImportoImpegnoCompApp));
+		
+		//SIAC-7349 non aggiunte e non valorizzati gli attributi nel model -> minImportoCalcolatoCompMod e maxImportoCalcolatoCompMod  
+		//per presunta inutilit.
+		
 		if (StringUtils.isEmpty(getAnniPluriennali())) {
 			setAnniPluriennali("1");
 		}
 				
 	}
 
+	private void inizializzaDatiAggiudicazione() { 
+		model.getMovimentoSpesaModel().setAbilitaGestioneAggiudicazione(!sessionHandler.getFaseBilancio().equals(CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO)  && isImpegnoAbilitatoAdAggiudicazione());
+		model.getMovimentoSpesaModel().setAggiudicazione(null);
+		model.getMovimentoSpesaModel().setSoggettoAggiudicazioneModel(null);
+		model.getMovimentoSpesaModel().setFlagAggiudicazioneSenzaSoggetto(null);
+		model.getMovimentoSpesaModel().setNuovaDescrizioneEventualeImpegnoAggiudicazione(null);
+	}
 	
+
+	/**
+	 * Checks if is impegno abilitato ad aggiudicazione.
+	 * Per essere un impegno abilitato ad una aggiudicazione, deve essere
+	 *  <ul>
+	 *  	<li>Di competenza
+	 *  	<li> In stato Definitivo non liquidabile (senza sub) o in stato definitivo
+     *  </ul>
+	 * @return true, if is impegno abilitato ad aggiudicazione
+	 */
+	private boolean isImpegnoAbilitatoAdAggiudicazione() {
+		Integer annoEsercizio = sessionHandler.getAnnoBilancio();
+		boolean impegnoDiCompetenza = annoEsercizio != null && annoEsercizio.intValue() <= model.getImpegnoInAggiornamento().getAnnoMovimento();
+		if(!impegnoDiCompetenza) {
+			return false;
+		}
+		String statoImpegno= model.getImpegnoInAggiornamento().getDescrizioneStatoOperativoMovimentoGestioneSpesa();
+		//SIAC-8096 si permettono le aggiudicazioni anche su impegni con sub
+//		boolean impegnoSenzaSub = numeroSubImpegnoList == null || numeroSubImpegnoList.isEmpty();
+		
+		return MOVGEST_DEFINITIVO_NON_LIQUIDABILE.equals(statoImpegno) ||  STATO_MOVGEST_DEFINITIVO.equals(statoImpegno);
+	}
+
+	//SIAC-7349 - SR90 - MR - 03/2020 - Metodo per ottenere la disponibilita della componente
+	private BigDecimal getDisponibilitaModifica(int i) {
+
+		if(model.getImportiComponentiCapitolo() == null || model.getImportiComponentiCapitolo().isEmpty()){
+			return BigDecimal.ZERO;	
+		}else{
+			if(i==0){				
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}				
+			}else if(i==1){
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}
+			}else if (i==2){
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}
+			}			
+		}			
+		return BigDecimal.ZERO;	
+	}
+		//SIAC-7349 - End
+
 	/**
 	 * execute della action
 	 */
 	@Override
 	public String execute() throws Exception {
 		setMethodName("execute");
+		
 		tipoImpegno = "Impegno";
 		creaMovGestModelCache();
 		//mi salvo temporaneamente il provvedimento per reimpostarlo nell'impegno e associare il nuovo provv alle sole modifiche
@@ -263,12 +444,12 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 				model.setSubImpegnoSelectedMod(true);
 				
 				for(SubImpegno sub : model.getListaSubimpegni()){
-					if(String.valueOf(sub.getNumero()).equals(getSubSelected())){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equals(getSubSelected())){
 						
 						setImportoAttualeSubImpegno(convertiBigDecimalToImporto(sub.getImportoAttuale()));
 						model.setImportoAttualeSubImpegnoMod(convertiBigDecimalToImporto(sub.getImportoAttuale()));
-						setNumeroSubImpegno(String.valueOf(sub.getNumero()));
-						model.setNumeroSubImpegnoMod(String.valueOf(sub.getNumero()));
+						setNumeroSubImpegno(String.valueOf(sub.getNumeroBigDecimal()));
+						model.setNumeroSubImpegnoMod(String.valueOf(sub.getNumeroBigDecimal()));
 						
 						if(sub.getDisponibilitaImpegnoModifica()==null){
 							sub.setDisponibilitaImpegnoModifica(BigDecimal.ZERO);
@@ -276,7 +457,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 						
 						minImportoSubApp = sub.getDisponibilitaImpegnoModifica().negate();
 						
-						if(model.getImpegnoInAggiornamento().getAnnoMovimento() < Integer.valueOf(sessionHandler.getAnnoEsercizio())){
+						if(model.getImpegnoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
 							maxImportoSubApp = new BigDecimal(0);
 						} else if(model.getImpegnoInAggiornamento().isFlagDaRiaccertamento()){
 							maxImportoSubApp = new BigDecimal(0);
@@ -332,8 +513,14 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 						
 						//Modifica importi richiesta
 						setMaxAnche(convertiBigDecimalToImporto(maxImportoImpegnoApp));
-						model.getMovimentoSpesaModel().setMaxAncheImpegno(maxImportoImpegnoApp);
-						model.setMaxAncheMod(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+						//Commentanto pre SIAC-7349
+						//model.getMovimentoSpesaModel().setMaxAncheImpegno(maxImportoImpegnoApp);
+						
+						//SIAC-7349
+						model.getMovimentoSpesaModel().setMaxAncheImpegno(maxImportoImpegnoCompApp);
+						model.setMaxAncheMod(convertiBigDecimalToImporto(maxImportoImpegnoCompApp));
+						//Commentanto pre SIAC-7349
+						//model.setMaxAncheMod(convertiBigDecimalToImporto(maxImportoImpegnoApp));
 						
 					}
 				}
@@ -400,11 +587,40 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 	
 	public String salvaInternal(boolean byPassDodicesimi){
 		setMethodName("salva");
+		//SIAC-7941
+		model.setErrori(new ArrayList<Errore>());
 		
 		List<Errore> listaErrori = new ArrayList<Errore>();
 		boolean erroreProvvedimento = false;
 		
+		//SIAC-7984 pulisco il dato
+//		if(StringUtils.isNotBlank(getIdTipoMotivo())) {
+//			setIdTipoMotivo(getIdTipoMotivo().trim().replace(",", ""));
+//		}
+		
+		//SIAC-8506
+		controllaLunghezzaMassimaDescrizioneMovimento(getDescrizione(), listaErrori);
+		
+		//SIAC-8781 
 		String tipoMotivo = getIdTipoMotivo();
+		
+		//SIAC-8818 - aggiornamento controllo anche su impegni				
+		// se ROR-REIMP o ROR-REANNO non posso mettere flag reimputazione=No 
+		// se flag reimp a si non posso mettere tipi diversi da REIMP o REANNO 
+		// se flag reimp a si o ROR-REIMP - ROR-REANNO l'importo deve essere minore di 0 (controllo gia presente)
+				
+		String reimputazione = model.getMovimentoSpesaModel().getReimputazione();
+		if (tipoMotivo.equalsIgnoreCase("REIMP") || tipoMotivo.equalsIgnoreCase("REANNO")) {
+				if(WebAppConstants.No.equals(reimputazione)) {		
+					controllaFlagReimp(listaErrori);
+				}
+		} 
+		
+		if (WebAppConstants.Si.equals(reimputazione)) {
+			if (!tipoMotivo.equalsIgnoreCase("REIMP") && !tipoMotivo.equalsIgnoreCase("REANNO")) {
+				controllaIncompatibilitaFlagReimpMotivo(listaErrori);
+			}
+		}
 		
 		//16 FEBBRAIO 2017 - clono i dati che stanno per essere cambiati nel model per ripristinarli in caso di salvataggio andato male:
 		GestisciModificaMovimentoSpesaModel movimentoSpesaModelPrimaDiSalva = clone(model.getMovimentoSpesaModel());
@@ -455,14 +671,18 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			listaErrori = controlloGestisciImpegnoDecentratoPerModifica(listaErrori);
 			
 			//Descrizione
-			if(StringUtils.isEmpty(getIdTipoMotivo())){
+			if(StringUtils.isEmpty(tipoMotivo)){
 				listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Modifica motivo"));
 				model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
 			}
 			
 			checkImportoModificaSuTestata(listaErrori);
 			
+			//SIAC-6586
 			checkDescrizioneROR(listaErrori);
+			
+			//SIAC-6865
+			checkAggiudicazione(listaErrori);
 		
 			erroreProvvedimento = checkProvvedimentoModificaImportoSoggettoMovimentoGestione(model.getStep1ModelCache().getProvvedimento(), model.getStep1Model().getProvvedimento(),"impegno", listaErrori);
 			
@@ -501,13 +721,15 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			//DATI DEL PROVVEDIMENTO DELLA MODIFICA:
 			spesa = settaDatiProvvDalModel(spesa, model.getStep1Model().getProvvedimento());
 			
-	 		spesa.setTipoModificaMovimentoGestione(getIdTipoMotivo());
+	 		spesa.setTipoModificaMovimentoGestione(tipoMotivo);
 			if(getDescrizione()!=null){
 				spesa.setDescrizione(getDescrizione().toUpperCase());
 			}
 			spesa.setTipoMovimento("IMP");
 			
 			settaDatiReimputazioneDalModel(spesa);
+			
+			settaDatiAggiudicazione(spesa);
 				
 			//Inserisco nell impegno che andra nel servizio aggiorna impegno
 			modificheList.add(spesa);
@@ -526,9 +748,15 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 	
 			boolean esito = false; 
 			
-			
 			AggiornaImpegno requestAggiorna = convertiModelPerChiamataServizioInserisciAggiornaModifiche(false);
 			
+			//SIAC-8184
+			if(StringUtils.isNotBlank(model.getMovimentoSpesaModel().getNuovaDescrizioneEventualeImpegnoAggiudicazione())) {
+				requestAggiorna.setDescrizioneEventualeImpegnoAggiudicazione(
+					model.getMovimentoSpesaModel()
+						.getNuovaDescrizioneEventualeImpegnoAggiudicazione().trim()
+				);
+			}
 			
 			if (requestAggiorna.getImpegno().getProgetto() != null) {
 				Progetto progetto = requestAggiorna.getImpegno().getProgetto();
@@ -540,6 +768,20 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 				requestAggiorna.getImpegno().setIdSpesaCronoprogramma(model.getStep1Model().getIdSpesaCronoprogramma());
 			}
 			
+			//SIAC-8811
+			if(StringUtils.isNotBlank(model.getMovimentoSpesaModel().getEventualeNuovoCUPImpegno())) {
+				requestAggiorna.setEventualeNuovoCUPImpegno(model.getMovimentoSpesaModel().getEventualeNuovoCUPImpegno().trim());
+			}
+			
+			if (requestAggiorna.getImpegno().getProgetto() != null) {
+				Progetto progetto = requestAggiorna.getImpegno().getProgetto();
+				
+				progetto.setTipoProgetto(TipoProgetto.GESTIONE);
+				progetto.setBilancio(sessionHandler.getBilancio());
+	
+				requestAggiorna.getImpegno().setIdCronoprogramma(model.getStep1Model().getIdCronoprogramma());
+				requestAggiorna.getImpegno().setIdSpesaCronoprogramma(model.getStep1Model().getIdSpesaCronoprogramma());
+			}
 			
 			requestAggiorna.getImpegno().setByPassControlloDodicesimi(byPassDodicesimi);
 			
@@ -547,7 +789,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			//si invalida l'inserimento della modifica dell'impegno nel primo step se la modifica e' di tipo RIACCERTAMENTO
 			if(!"RIAC".equalsIgnoreCase(tipoMotivo)) {
 				
-				AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna);
+				AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna);
 		
 				model.setProseguiConWarning(false);
 		
@@ -556,10 +798,23 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 				impegnoInAggiornamentoPrimaDiSalva, listaSubPrimaDiSalva);
 		
 				if(!esito){ return INPUT; }
+				
+				if(Boolean.TRUE.equals(model.getMovimentoSpesaModel().getAggiudicazione()) && response.getChiaviLogicheAggiudicazioniInserite() != null && !response.getChiaviLogicheAggiudicazioniInserite().isEmpty()) {
+					List<Informazione> lista = new ArrayList<Informazione>();
+					// Creo la lista delle informazioni
+					String chiavi = org.apache.commons.lang3.StringUtils.join(response.getChiaviLogicheAggiudicazioniInserite(), ", ");
+					Informazione informazione = new Informazione("CRU_CON_2001", "Operazione di inserimento aggiudicazione andata a buon fine. Inserito impegno: " + chiavi );
+					// Imposto l'informazione di sucesso
+					lista.add(informazione);
+					// Imposto la lista in sessione
+					sessionHandler.setParametro(FinSessionParameter.INFORMAZIONI_AZIONE_PRECEDENTE, lista);
+					addPersistentActionMessage(informazione.getTesto());
+				}
+				
 			
 			} else {
 				//SIAC-6990
-				//passo il dato creato al secondo step dove verrà gestita una transazione unica per le varie richieste
+				//passo il dato creato al secondo step dove verr. gestita una transazione unica per le varie richieste
 				model.setImpegnoRequestStep1(requestAggiorna);
 			}
 	
@@ -575,7 +830,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			//SIAC-640/645
 			//pop-up riaccertamento su salva
 			
-			if (getIdTipoMotivo() != null && getIdTipoMotivo().equalsIgnoreCase("RIAC")
+			if (tipoMotivo != null && "RIAC".equalsIgnoreCase(tipoMotivo)
 					&& model.getStep1Model().isCheckproseguiMovimentoSpesa() == true) {
 				listaErrori.add(ErroreFin.RIACCERTAMENTO_AUTOMATICO.getErrore("IMPEGNO"));
 				addErrori(listaErrori);
@@ -583,10 +838,11 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 	
 			}
 			
+			
 			return GOTO_ELENCO_MODIFICHE;
 
 			
-		}  else if(tipoImpegno.equals("SubImpegno") && abbina == null ){
+		}  else if(tipoImpegno.equals("SubImpegno") &&  StringUtils.isBlank(abbina)){
 			
 			//controllo selezione subImpegno
 			if(getSubSelected()==null || StringUtils.isEmpty(getSubSelected())){
@@ -637,7 +893,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			checkDescrizioneROR(listaErrori);
 			
 			
-			if(getIdTipoMotivo()!=null && getIdTipoMotivo().equalsIgnoreCase("RIAC")){
+			if(tipoMotivo!=null && "RIAC".equalsIgnoreCase(tipoMotivo)){
 				listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Selezionare :  Modifica Anche Impegno"));
 				model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
 			}
@@ -659,7 +915,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			List<ModificaMovimentoGestioneSpesa> modificheList = new ArrayList<ModificaMovimentoGestioneSpesa>();
 			
 			for(SubImpegno sub : model.getListaSubimpegni()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					modificheList = sub.getListaModificheMovimentoGestioneSpesa();
 				}
 			}
@@ -687,7 +943,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			//COPIO I DATI DEL PROVVEDIMENTO:
 			spesa = settaDatiProvvDalModel(spesa, model.getStep1Model().getProvvedimento());
 			
-			spesa.setTipoModificaMovimentoGestione(getIdTipoMotivo());
+			spesa.setTipoModificaMovimentoGestione(tipoMotivo);
 			if(getDescrizione()!=null){
 				spesa.setDescrizione(getDescrizione().toUpperCase());
 			}
@@ -698,7 +954,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			
 			List<SubImpegno> nuovaSubImpegnoList = new ArrayList<SubImpegno>();
 			for(SubImpegno sub : model.getListaSubimpegni()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					sub.setImportoAttuale(importoCambiatoSub);
 					sub.setListaModificheMovimentoGestioneSpesa(modificheList);
 				}
@@ -737,7 +993,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			//si invalida l'inserimento della modifica dell'impegno nel primo step se la modifica e' di tipo RIACCERTAMENTO
 			if(!"RIAC".equalsIgnoreCase(tipoMotivo)) {
 				
-				AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna);
+				AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna);
 				model.setProseguiConWarning(false);
 				
 				if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
@@ -762,7 +1018,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 				
 			} else {
 				//SIAC-6990
-				//passo il dato creato al secondo step dove verrà gestita una transazione unica per le varie richieste
+				//passo il dato creato al secondo step dove verr. gestita una transazione unica per le varie richieste
 				model.setImpegnoRequestStep1(requestAggiorna);
 			}
 			
@@ -775,7 +1031,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 
 			//SIAC-640/645
 			//pop-up riaccertamento su salva
-			if (getIdTipoMotivo() != null && getIdTipoMotivo().equalsIgnoreCase("RIAC")
+			if (tipoMotivo != null && "RIAC".equalsIgnoreCase(tipoMotivo)
 					&& model.getStep1Model().isCheckproseguiMovimentoSpesa() == true) {
 				listaErrori.add(ErroreFin.RIACCERTAMENTO_AUTOMATICO.getErrore("IMPEGNO"));
 				addErrori(listaErrori);
@@ -891,7 +1147,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			//salvo in un clone prima che venga ripristinato:
 			ProvvedimentoImpegnoModel provvedimentoModifica = clone(model.getStep1Model().getProvvedimento());
 			
-			spesa.setTipoModificaMovimentoGestione(getIdTipoMotivo());
+			spesa.setTipoModificaMovimentoGestione(tipoMotivo);
 			if(getDescrizione()!=null){
 				spesa.setDescrizione(getDescrizione().toUpperCase());
 			}
@@ -911,7 +1167,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			List<ModificaMovimentoGestioneSpesa> modificheSubList = new ArrayList<ModificaMovimentoGestioneSpesa>();
 			
 			for(SubImpegno sub : model.getListaSubimpegni()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					modificheSubList = sub.getListaModificheMovimentoGestioneSpesa();
 				}
 			}
@@ -942,7 +1198,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			//SETTO IL PROV ANCHE NELLA MODIFICA DEL SUB:
 			spesaSub = settaDatiProvvDalModel(spesaSub, provvedimentoModifica);
 			
-			spesaSub.setTipoModificaMovimentoGestione(getIdTipoMotivo());
+			spesaSub.setTipoModificaMovimentoGestione(tipoMotivo);
 			if(getDescrizione()!=null){
 				spesaSub.setDescrizione(getDescrizione().toUpperCase());
 			}
@@ -953,7 +1209,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			
 			List<SubImpegno> nuovaSubImpegnoList = new ArrayList<SubImpegno>();
 			for(SubImpegno sub : model.getListaSubimpegni()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					//trovato il sub
 					sub.setImportoAttuale(importoCambiatoSub);
 					sub.setListaModificheMovimentoGestioneSpesa(modificheSubList);
@@ -996,7 +1252,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			if(!"RIAC".equalsIgnoreCase(tipoMotivo)) {
 				
 				//richiamo il servizio di aggiornamento:
-				AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna);
+				AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna);
 				model.setProseguiConWarning(false);
 				
 				if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
@@ -1021,7 +1277,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			
 			} else {
 				//SIAC-6990
-				//passo il dato creato al secondo step dove verrà gestita una transazione unica per le varie richieste
+				//passo il dato creato al secondo step dove verr. gestita una transazione unica per le varie richieste
 				model.setImpegnoRequestStep1(requestAggiorna);
 			}
 			
@@ -1034,7 +1290,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 
 			//SIAC-640/645
 			//pop-up riaccertamento su salva
-			if (getIdTipoMotivo() != null && getIdTipoMotivo().equalsIgnoreCase("RIAC")
+			if (tipoMotivo != null && "RIAC".equalsIgnoreCase(tipoMotivo)
 					&& model.getStep1Model().isCheckproseguiMovimentoSpesa() == true) {
 				//errore riaccertamento automatico
 				listaErrori.add(ErroreFin.RIACCERTAMENTO_AUTOMATICO.getErrore("IMPEGNO"));
@@ -1048,6 +1304,141 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		}
 		
 		return GOTO_ELENCO_MODIFICHE;
+	}
+
+	/**
+	 * @param spesa
+	 */
+	private void settaDatiAggiudicazione(ModificaMovimentoGestioneSpesa spesa) {
+		if(!Boolean.TRUE.equals(model.getMovimentoSpesaModel().getAggiudicazione())) {
+			return;
+		}
+		spesa.setFlagAggiudicazione(model.getMovimentoSpesaModel().getAggiudicazione());
+		spesa.setFlagAggiudicazioneSenzaSoggetto(model.getMovimentoSpesaModel().getFlagAggiudicazioneSenzaSoggetto());
+		
+		if(Boolean.TRUE.equals(spesa.getFlagAggiudicazioneSenzaSoggetto())) {
+			return;
+		}
+		String codSoggetto = model.getMovimentoSpesaModel().getSoggettoAggiudicazioneModel().getCodCreditore();
+		
+		if(StringUtils.isNotBlank(codSoggetto)) {
+			spesa.setSoggettoAggiudicazione(new Soggetto());
+			spesa.getSoggettoAggiudicazione().setCodiceSoggetto(codSoggetto);
+			return;
+		}
+		CodificaFin sg =  FinUtility.getById(model.getListaClasseSoggetto(), model.getMovimentoSpesaModel().getSoggettoAggiudicazioneModel().getIdClasse());
+		ClasseSoggetto classeSoggettoAggiudicazione = new ClasseSoggetto();
+		classeSoggettoAggiudicazione.setUid(sg.getUid());
+		classeSoggettoAggiudicazione.setCodice(sg.getCodice());
+		classeSoggettoAggiudicazione.setDescrizione(sg.getDescrizione());
+		spesa.setClasseSoggettoAggiudicazione(classeSoggettoAggiudicazione);
+		
+	}
+
+	/**
+	 * Check aggiudicazione.
+	 *
+	 * @param listaErrori the lista errori
+	 */
+	private void checkAggiudicazione(List<Errore> listaErrori) {
+		//controllo se la modifica sia di tipo aggiudicazione
+		if(!Boolean.TRUE.equals(model.getMovimentoSpesaModel().getAggiudicazione())) {
+			//pulisco tutti i campi relativi all'aggiudicazione
+			model.getMovimentoSpesaModel().setSoggettoAggiudicazioneModel(null);
+			return;
+		}
+		if(WebAppConstants.Si.equals(model.getMovimentoSpesaModel().getReimputazione())) {
+			listaErrori.add(ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore(" reimputazione ed aggiudicazione non possono essere entrambi selezionati."));
+			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+		}
+		//SIAC-7838
+//		if(StringUtils.isNotBlank(getIdTipoMotivo()) && !CODICE_AGGIUDICAZIONE_MOTIVO.equals(getIdTipoMotivo())){
+//			listaErrori.add(ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore("il motivo dell'aggiudicazione deve essere coerente"));
+//			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+//		}
+		
+		//SIAC-8516
+		controllaLunghezzaMassimaDescrizioneMovimento(model.getMovimentoSpesaModel().getNuovaDescrizioneEventualeImpegnoAggiudicazione(), listaErrori);
+		
+		//controllo che si possa avere una aggiudicazione sull'impegno
+		boolean competenzaEDefNoLiq = isImpegnoAbilitatoAdAggiudicazione();
+		if(!competenzaEDefNoLiq ) {
+			//questo non dovrebbe succedere, perche' se l'impegno non e' abilitante non compaiono i campi. 
+			listaErrori.add(ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore("aggiudicazione non consentita per l'impegno"));
+			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+			return;
+		}
+		
+		//controllo che l'importo sia negativo: SIAC-7721
+		if(StringUtils.isBlank(importoImpegnoModImp) || BigDecimal.ZERO.compareTo(convertiImportoToBigDecimal(importoImpegnoModImp)) <= 0) {
+			listaErrori.add(ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore("L'importo di una aggiudicazione deve essere minore di zero"));
+			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+			return;
+		}
+		
+		//controllo i campi del soggetto
+		SoggettoImpegnoModel sogModel = model.getMovimentoSpesaModel().getSoggettoAggiudicazioneModel();
+		
+		if(sogModel == null) {
+			listaErrori.add(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("Soggetto/classe dell'aggiudicazione."));
+			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+		}
+		
+		boolean valorizzataClasseSoggetto = StringUtils.isNotEmpty(sogModel.getIdClasse());
+		boolean valorizzatoCodiceSoggetto = StringUtils.isNotEmpty(sogModel.getCodCreditore());
+		boolean aggiudicazioneSenzaSoggetto = Boolean.TRUE.equals(model.getMovimentoSpesaModel().getFlagAggiudicazioneSenzaSoggetto());
+		
+		boolean valorizzatoAlmenoUnoOTutti = valorizzatoCodiceSoggetto ^ valorizzataClasseSoggetto ^ aggiudicazioneSenzaSoggetto;
+		boolean valorizzatiTutti = valorizzatoCodiceSoggetto && valorizzataClasseSoggetto && aggiudicazioneSenzaSoggetto;
+		boolean valorizzatoSoloUnoDeiTre = valorizzatoAlmenoUnoOTutti && !valorizzatiTutti;
+		if(!valorizzatoSoloUnoDeiTre) {
+			String messaggioDiErrore = !valorizzatoCodiceSoggetto && !valorizzataClasseSoggetto && !aggiudicazioneSenzaSoggetto?
+					"almeno uno di questi deve essere valorizzato" : "valorizzarne solo uno";
+			listaErrori.add(ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore("valori per soggetto, classe soggetto e senza soggetto non coerenti; " + messaggioDiErrore));
+			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+			return;
+		}
+		
+		//se e' valorizzato il codice soggetto, chiamo il servizio per controllare il dato inserito
+		if (valorizzatoCodiceSoggetto) {
+			RicercaSoggettiResponse response = ricercaSoggettoDaServizio(convertiModelPerChiamataServizioRicerca(sogModel));
+			if(response.hasErrori()) {
+				listaErrori.addAll(response.getErrori());
+				model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+				return;
+			}
+			if(response.getSoggetti() == null || response.getSoggetti().isEmpty() || response.getSoggetti().get(0) == null) {
+				listaErrori.add(ErroreCore.ENTITA_NON_TROVATA.getErrore("Soggetto", sogModel.getCodCreditore()));
+				model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+				return;
+			}
+			Soggetto soggettoTrovato = response.getSoggetti().get(0);
+			if(soggettoTrovato.getStatoOperativo() == null || 
+					!(soggettoTrovato.getStatoOperativo().name().equals(CostantiFin.STATO_VALIDO) || soggettoTrovato.getStatoOperativo().name().equals(CostantiFin.STATO_IN_MODIFICA))){
+				
+				String codiceStato = soggettoTrovato.getStatoOperativo() != null? soggettoTrovato.getStatoOperativo().name() : "null"; 
+				listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto=" + sogModel.getCodCreditore(), codiceStato ));
+				model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+				return;
+			}
+			//
+			popolaSoggetto(soggettoTrovato, SoggettoDaCercareEnum.UNO);
+			
+		}
+		
+		//SIAC-8096 blocco l'inserimento di una aggidicazione ('Riduzione e contestuale impegno') se si agisce su un subimpegno
+		if(StringUtils.isNotBlank(getSubSelected()) && "SubImpegno".equals(getTipoImpegno())) {
+			listaErrori.add(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Riduzione e contestuale su impegno non eseguibile su un subimpegno"));
+			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+			return;
+		}
+		
+		//SIAC-8811
+		if(StringUtils.isNotBlank(model.getMovimentoSpesaModel().getEventualeNuovoCUPImpegno())) {
+			if(FinUtility.cupValido(model.getMovimentoSpesaModel().getEventualeNuovoCUPImpegno().trim())==false) {
+				listaErrori.add(ErroreFin.FORMATO_NON_VALIDO_SECONDO.getErrore("CUP"));
+			}
+		}	
 	}
 
 	/**
@@ -1073,7 +1464,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		BigDecimal importoAttualeSub = new BigDecimal(0);
 
 		for(SubImpegno sub : model.getListaSubimpegni()){
-			if(getSubSelected().equals(String.valueOf(sub.getNumero()))){
+			if(getSubSelected().equals(String.valueOf(sub.getNumeroBigDecimal()))){
 				importoAttualeSub = sub.getImportoAttuale();
 				setImportoAttualeSubImpegno(convertiBigDecimalToImporto(importoAttualeSub));
 				model.setImportoAttualeSubImpegnoMod(convertiBigDecimalToImporto(importoAttualeSub));
@@ -1099,7 +1490,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 				if(minoreImpegno == -1 || importoDiInput.compareTo(BigDecimal.ZERO)==0){
 					listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("minimo"));
 					model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
-					break;
+					break; //SIAC-7349 qui va a fare il controllo, se non supera quello dell'impegno padre, esce
 				}
 				if(maggioreImpegno == 1){
 					listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("massimo"));
@@ -1149,17 +1540,17 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		
 		for(SubImpegno sub : model.getListaSubimpegni()){
 			
-			if(getSubSelected().equals(String.valueOf(sub.getNumero()))){
+			if(getSubSelected().equals(String.valueOf(sub.getNumeroBigDecimal()))){
 				setImportoAttualeSubImpegno(convertiBigDecimalToImporto(sub.getImportoAttuale()));
 				model.setImportoAttualeSubImpegnoMod(convertiBigDecimalToImporto(sub.getImportoAttuale()));
 				
-				setNumeroSubImpegno(String.valueOf(sub.getNumero()));
-				model.setNumeroSubImpegnoMod(String.valueOf(sub.getNumero()));
+				setNumeroSubImpegno(String.valueOf(sub.getNumeroBigDecimal()));
+				model.setNumeroSubImpegnoMod(String.valueOf(sub.getNumeroBigDecimal()));
 				
 				BigDecimal importoAttualeSubImpegno = sub.getImportoAttuale();
 				minImportoSubApp = new BigDecimal(0).subtract(importoAttualeSubImpegno);
 				
-				if(sub.getAnnoMovimento() < Integer.valueOf(sessionHandler.getAnnoEsercizio())){
+				if(sub.getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
 					maxImportoSubApp = sub.getImportoAttuale().subtract(importoAttualeSubImpegno);
 				} else if(sub.isFlagDaRiaccertamento()){
 					maxImportoSubApp = sub.getImportoAttuale().subtract(importoAttualeSubImpegno);
@@ -1240,12 +1631,23 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
 		}
 		
-		if(!isRORDaMantenere && (importoModificaSuTestata.compareTo(minImportoImpegnoApp)<0 || isImportoZero)){
+		//SIAC-7349 nuovo valore limite
+//		if(!isRORDaMantenere && (importoModificaSuTestata.compareTo(minImportoImpegnoApp)<0 || isImportoZero)){
+//			listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("minimo"));
+//			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+//		}
+//
+//		if((!isRORDaMantenere && !model.isFlagSuperioreTreAnni() && importoModificaSuTestata.compareTo(maxImportoImpegnoApp) >0)){
+//			listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("massimo"));
+//			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+//		}
+		
+		if(!isRORDaMantenere && (importoModificaSuTestata.compareTo(minImportoImpegnoCompApp)<0 || isImportoZero)){
 			listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("minimo"));
 			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
 		}
 
-		if((!isRORDaMantenere && !model.isFlagSuperioreTreAnni() && importoModificaSuTestata.compareTo(maxImportoImpegnoApp) >0)){
+		if((!isRORDaMantenere && !model.isFlagSuperioreTreAnni() && importoModificaSuTestata.compareTo(maxImportoImpegnoCompApp) >0)){
 			listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("massimo"));
 			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
 		}
@@ -1257,7 +1659,7 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 			Errore errore = getIdTipoMotivo().equalsIgnoreCase("RIAC")? ErroreFin.RIACCERTAMENTO_RESIDUI_MOD_AUM.getErrore("Impegno") : ErroreFin.VALORE_NON_VALIDO.getErrore("importo","(deve essere negativo)");
 			listaErrori.add(errore);
 			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
-		}
+		}		
 	}
 	
 	/**
@@ -1389,6 +1791,9 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		
 		//istanzio la lista degli eventuali errori:
 		List<Errore> listaErrori = new ArrayList<Errore>();
+		
+		//SIAC-8506
+		controllaLunghezzaMassimaDescrizioneMovimento(getDescrizione(), listaErrori);
 		
 		//Controllo dei campi
 		if(tipoImpegno.equalsIgnoreCase("Impegno")){
@@ -1624,6 +2029,11 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 		}
 		
 		return listaErrori;
+	}
+	
+	@Override
+	protected void settaSoggettoSelezionato(SoggettoImpegnoModel soggettoImpegnoModel,SoggettoDaCercareEnum modaleSoggetto){
+		model.getMovimentoSpesaModel().setSoggettoAggiudicazioneModel(soggettoImpegnoModel);
 	}
 	
 	
@@ -1935,5 +2345,5 @@ public class InserisciModificaMovimentoSpesaAction extends ActionKeyAggiornaImpe
 	public void setAbbinaChk(String abbinaChk) {
 		this.abbinaChk = abbinaChk;
 	}
-
+	
 }

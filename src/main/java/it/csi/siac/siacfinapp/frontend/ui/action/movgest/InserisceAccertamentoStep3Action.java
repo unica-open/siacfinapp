@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -85,7 +85,7 @@ public class InserisceAccertamentoStep3Action extends ActionKeyInserisceAccertam
 	}
 	
 	public String salvaPluriennalePrimeNoteEsercizioInCorso() throws Exception {
-		Integer annoEsercio = Integer.valueOf(sessionHandler.getAnnoEsercizio());
+		Integer annoEsercio = sessionHandler.getAnnoBilancio();
 		Integer annoScritturaEconomicoPatrimoniale = annoEsercio;
 		//invoco il metodo centralizzato passando l'annoScritturaEconomicoPatrimoniale:
 		return salvaPluriennaleAccertamento(annoScritturaEconomicoPatrimoniale);

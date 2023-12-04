@@ -4,7 +4,7 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.soggetto;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.InserisciSoggettoModel;
 

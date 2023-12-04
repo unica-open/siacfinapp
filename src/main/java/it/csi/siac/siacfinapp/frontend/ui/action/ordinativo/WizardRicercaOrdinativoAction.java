@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.liquidazione.ImpegnoLiquidazioneModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
@@ -26,13 +27,11 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.CausaleEntrataTendinoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.RicercaOrdinativoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaOrdinativo;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaOrdinativoResponse;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ordinativo.OrdinativoIncasso;
 import it.csi.siac.siacfinser.model.ordinativo.OrdinativoPagamento;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaOrdinativoIncasso;
@@ -64,7 +63,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 		//ente
 		ricercaOrdinativo.setEnte(sessionHandler.getAccount().getEnte());
 		//Anno Esercizio
-		prop.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		prop.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		
 		//numero ordinativo da
 		if(model.getNumeroOrdinativoDa() != null){
@@ -143,11 +142,6 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 		if(model.getNumeroLiquidazione() != null){
 			prop.setNumeroLiquidazione(model.getNumeroLiquidazione());
 		}
-	
-		//numero mutuo
-		if(model.getNumeroMutuo()!=null){
-			prop.setNumeroMutuo(model.getNumeroMutuo());
-		}
 		
 		//anno impegno
 		if(model.getImpegno().getAnnoImpegno()!=null){
@@ -163,11 +157,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 				prop.setNumeroSubImpegno(BigDecimal.valueOf(model.getImpegno().getNumeroSub()));
 			}
 
-			//numero mutuo
-			if(model.getImpegno().getNumeroMutuo()!=null){
-				prop.setNumeroMutuo(BigInteger.valueOf(model.getImpegno().getNumeroMutuo()));
-			}
-		}
+				}
 		
 		//Soggetto
 		if(model.getSoggetto() != null && (!StringUtils.isEmpty(model.getSoggetto().getCodCreditore()))){
@@ -254,7 +244,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 		ricercaOrdinativo.setEnte(sessionHandler.getAccount().getEnte());
 		
 		//Anno Esercizio
-		proi.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		proi.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		
 		//Ordinativo incasso
 		if(model.getNumeroOrdinativoDa() != null){
@@ -425,8 +415,6 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 		model.setNumeroLiquidazione(null);
 		model.setNumeroLiquidazioneString(null);
 		model.setAnnoLiquidazione(null);
-		model.setNumeroMutuo(null);
-		model.setNumeroMutuoString(null);
 		
 		model.setCapitoloSelezionato(false);
 		model.setHasImpegnoSelezionatoXPopup(false);
@@ -464,7 +452,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 		
 		if (model.getResultSize()>0) {
 			for (OrdinativoPagamento ordinativoPagamentoCorr : model.getElencoOrdinativoPagamento()) {
-				ordinativoPagamentoCorr.setCodStatoOperativoOrdinativo(Constanti.statoOperativoOrdinativoEnumToString(ordinativoPagamentoCorr.getStatoOperativoOrdinativo()));
+				ordinativoPagamentoCorr.setCodStatoOperativoOrdinativo(CostantiFin.statoOperativoOrdinativoEnumToString(ordinativoPagamentoCorr.getStatoOperativoOrdinativo()));
 			}
 		}
 		
@@ -493,7 +481,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 		
 		if (model.getResultSize()>0) {  
 			for (OrdinativoIncasso ordinativoIncassoCorr : model.getElencoOrdinativoIncasso()) {
-				ordinativoIncassoCorr.setCodStatoOperativoOrdinativo(Constanti.statoOperativoOrdinativoEnumToString(ordinativoIncassoCorr.getStatoOperativoOrdinativo()));
+				ordinativoIncassoCorr.setCodStatoOperativoOrdinativo(CostantiFin.statoOperativoOrdinativoEnumToString(ordinativoIncassoCorr.getStatoOperativoOrdinativo()));
 			}
 		}
 		
@@ -558,12 +546,12 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 		//Condizioni ricerca - Da-A numOrd
 		if (model.getNumeroOrdinativoDa()!=null && model.getNumeroOrdinativoA()!=null) {
 			if (model.getNumeroOrdinativoDa().compareTo(model.getNumeroOrdinativoA())==1) {
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Numero Ordinativo Da/Numero Ordinativo A","(Numero Ordinativo Da deve essere minore di Numero Ordinativo A)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Numero Ordinativo Da/Numero Ordinativo A","(Numero Ordinativo Da deve essere minore di Numero Ordinativo A)"));
 			}
 		}
 		
 		if (model.getNumeroOrdinativoDa()==null && model.getNumeroOrdinativoA()!=null) {
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Numero Ordinativo Da/Numero Ordinativo A","(Non e' possibile inserire Numero Ordinativo A senza Numero Ordinativo Da)"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Numero Ordinativo Da/Numero Ordinativo A","(Non e' possibile inserire Numero Ordinativo A senza Numero Ordinativo Da)"));
 		}
 		
 		//Condizioni ricerca - Da-A dataOrd
@@ -583,7 +571,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 				try {
 					parsedTimeDa=df.parse(model.getDataEmissioneDa());
 				} catch (ParseException e) {
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Emissione Da",""));				}
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Emissione Da",""));				}
 			}
 
 			if (!StringUtils.isEmpty(model.getDataEmissioneA())) {
@@ -596,29 +584,21 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 				try {
 					parsedTimeA=df.parse(model.getDataEmissioneA());
 				} catch (ParseException e) {
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Emissione A",""));				
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Emissione A",""));				
 				}
 			}
 
 			if (parsedTimeDa==null && parsedTimeA!=null) {
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Emissione Da/Data Emissione A","(Non e' possibile inserire Data Emissione A senza Data Emissione Da)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Emissione Da/Data Emissione A","(Non e' possibile inserire Data Emissione A senza Data Emissione Da)"));
 			}
 			
 			if (parsedTimeDa!=null && parsedTimeA!=null && parsedTimeDa.after(parsedTimeA)) {
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Emissione Da/Data Emissione A","(Data Emissione Da deve essere minore di Data Emissione A)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Emissione Da/Data Emissione A","(Data Emissione Da deve essere minore di Data Emissione A)"));
 			}
 
 		}
 		
-		//Condizioni ricerca - Mutuo
-		if (oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_PAGAMENTO)) {
-			model.setNumeroMutuo(null);
-			if (!StringUtils.isEmpty(model.getNumeroMutuoString())) {
-				noInputData = false;
-				model.setNumeroMutuo(new BigInteger(model
-						.getNumeroMutuoString()));
-			}
-		}
+
 		
 		//Condizioni ricerca - Liquidazioni
 		if (oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_PAGAMENTO)) {
@@ -640,7 +620,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 				}
 
 				if (!(model.getAnnoLiquidazione().compareTo(Integer.valueOf(1900))==1)) {
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Anno Liquidazione","(deve essere maggiore di 1900)"));				
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Anno Liquidazione","(deve essere maggiore di 1900)"));				
 				}
 			}
 		}
@@ -660,7 +640,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 				}
 
 				if (!(model.getImpegno().getAnnoImpegno().compareTo(Integer.valueOf(1900))==1)) {
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Anno Impegno","(deve essere maggiore di 1900)"));				
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Anno Impegno","(deve essere maggiore di 1900)"));				
 				}
 			}
 		}
@@ -680,7 +660,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 				}
 
 				if (!(model.getAnnoAccertamento().compareTo(Integer.valueOf(1900))==1)) {
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Anno Accertamento","(deve essere maggiore di 1900)"));				
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Anno Accertamento","(deve essere maggiore di 1900)"));				
 				}
 			}
 		}
@@ -766,7 +746,7 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 	
 	//Metodi per la profilazione degli ordinativi
 	public boolean isAbilitatoRicMan(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_RICMAN);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_RICMAN);
 	}
 
 	@Override
@@ -831,18 +811,8 @@ public class WizardRicercaOrdinativoAction extends GenericOrdinativoAction<Ricer
 			} else { 
 				model.getImpegno().setNumeroSub(null);
 			}	
-			model.setNumeroMutuoPopup(null);
 			model.setnAnno(null);
 			model.setnImpegno(null);
-			int voceMutuoScelta = model.getRadioVoceMutuoSelezionata();
-			List<VoceMutuo> listaVocMutuo = model.getListaVociMutuo();		
-			if(listaVocMutuo!=null && listaVocMutuo.size()>0){
-				for(int j=0; j<listaVocMutuo.size();j++){
-					if(listaVocMutuo.get(j).getUid()==voceMutuoScelta){
-						model.getImpegno().setNumeroMutuo(Integer.valueOf(listaVocMutuo.get(j).getNumeroMutuo()));
-					}
-				}
-			}
 		}
 		pulisciListeeSchedaPopup();
 		return INPUT;

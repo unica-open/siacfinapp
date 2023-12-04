@@ -131,10 +131,6 @@ SPDX-License-Identifier: EUPL-1.2
 				<dt>Impegno</dt>
 					<dd><s:property value="annoImpegno"/>/<s:property value="numeroImpegno"/><s:if test="%{numeroSub != null && numeroSub != ''}">/</s:if><s:property value="numeroSub"/><s:if test="%{impegno.descrizione != null && impegno.descrizione != ''}"> - </s:if><s:property value="impegno.descrizione"/><s:if test="%{impegno.tipoImpegno.descrizione != null && impegno.tipoImpegno.descrizione != ''}"> - </s:if><s:property value="impegno.tipoImpegno.descrizione"/></dd>
 
-				<s:if test="%{numeroMutuoPopup != null && numeroMutuoPopup != ''}">
-				<dt>Mutuo</dt>
-					<dd><s:property value="numeroMutuoPopup" default=" "/> <s:if test="%{descrizioneMutuoPopup != null && descrizioneMutuoPopup != ''}"> - <s:property value="descrizioneMutuoPopup"/></s:if></dd>
-				</s:if>
 			</dl>
 
 		 <div id="MyWizard" class="wizard">
@@ -145,6 +141,10 @@ SPDX-License-Identifier: EUPL-1.2
 		
         <div class="step-content">	
             <div class="step-pane active" id="step1">	        	
+	        	
+	        	<s:set var="resedeAction" value="%{'inserisciLiquidazioneStep3Aggiorna_resede'}" />	
+	        	<s:set var="remodpagamentoAction" value="%{'inserisciLiquidazioneStep3Aggiorna_remodpagamento'}" />	    
+	        	    
 	        	
 	        	<div id="refreshHeaderSoggetto">	       	
 			       	<s:include value="/jsp/liquidazione/include/headerCreditoreLiquidazioneAggiorna.jsp" /> 		        	
@@ -163,10 +163,16 @@ SPDX-License-Identifier: EUPL-1.2
 	        		<s:include value="/jsp/liquidazione/include/provvedimentoLiquidazione.jsp" />
 	        	</s:else>
 	        	
-	        	
-	        	        	     
+	        	<s:set var="selezionaProvvedimentoAction" value="%{'inserisciLiquidazioneStep3Aggiorna_selezionaProvvedimento'}" />
+		        <s:set var="clearRicercaProvvedimentoAction" value="%{'inserisciLiquidazioneStep3Aggiorna_clearRicercaProvvedimento'}" />	          
+		        <s:set var="ricercaProvvedimentoAction" value="%{'inserisciLiquidazioneStep3Aggiorna_ricercaProvvedimento'}" />	              
 				<s:include value="/jsp/include/modalProvvedimenti.jsp" />			
+				
 				<s:include value="/jsp/liquidazione/include/liquidazione.jsp" />        	
+	        	
+	        	<s:set var="codiceSiopeChangedAction" value="%{'inserisciLiquidazioneStep3Aggiorna_codiceSiopeChanged'}" />
+		        <s:set var="confermaPdcAction" value="%{'inserisciLiquidazioneStep3Aggiorna_confermaPdc'}" />
+		        
 	        	<s:include value="/jsp/include/transazioneElementare.jsp" />
 	        		            	        
 	        </div>            
@@ -177,14 +183,14 @@ SPDX-License-Identifier: EUPL-1.2
 				<s:include value="/jsp/include/indietro.jsp" />
 			</s:if>
 			<s:else>
-				<s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary" />
+				<!-- task-131 <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary" /> -->
+				<s:submit name="indietro" value="indietro" action="inserisciLiquidazioneStep3Aggiorna_indietro" cssClass="btn btn-secondary" />
 			</s:else>
 			
 			
-			<!-- <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary"/> -->
-			<!-- <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary"/> -->
 			<s:submit name="annulla" value="annulla" id="annulla" cssClass="btn btn-secondary"/>				
-			<s:submit name="salva" value="salva" method="salva" cssClass="btn btn-primary pull-right freezePagina" /> 
+			<!-- task-131 <s:submit name="salva" value="salva" method="salva" cssClass="btn btn-primary pull-right freezePagina" /> -->
+			<s:submit name="salva" value="salva" action="inserisciLiquidazioneStep3Aggiorna_salva" cssClass="btn btn-primary pull-right freezePagina" /> 
 		</p>          
           
       </s:form>
@@ -222,14 +228,16 @@ SPDX-License-Identifier: EUPL-1.2
 			var cod = $("#codCreditoreLiquidazione").val();
 			//Carico i dati in tabella "Modalita' di pagamento"		
 			$.ajax({
-				url: '<s:url method="modpagamento"></s:url>',
+				//task-131 url: '<s:url method="modpagamento"></s:url>',
+				url: '<s:url action="inserisciLiquidazioneStep3Aggiorna_modpagamento"/>',
 				type: "GET",
 				data: { id: cod },
 			    success: function(data)  {
 			    	$("#refreshModPagamento").html(data);
 			    	//Carico i dati in tabella "Sedi secondarie"
 					$.ajax({
-						url: '<s:url method="sedisecondarie"></s:url>',
+						//task-131 url: '<s:url method="sedisecondarie"></s:url>',
+						url: '<s:url action="inserisciLiquidazioneStep3Aggiorna_sedisecondarie"/>',
 						type: "GET",
 						data: { id: cod },
 					    success: function(data)  {

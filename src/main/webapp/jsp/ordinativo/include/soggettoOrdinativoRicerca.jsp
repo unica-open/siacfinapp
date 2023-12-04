@@ -7,7 +7,7 @@ SPDX-License-Identifier: EUPL-1.2
 <%@taglib prefix="s" uri="/struts-tags" %>
 <fieldset class="form-horizontal">
   <div class="control-group">
-    <label class="control-label" for="codCreditoreMutuo">Codice </label>
+    <label class="control-label" for="codCreditoremo">Codice </label>
     	<div class="controls">    
 		    <s:if test="hasCodiceSoggetto">
 		    	<s:textfield id="codCreditoreLiquidazione" name="soggetto.codCreditore" cssClass="span2" disabled="true"></s:textfield> 

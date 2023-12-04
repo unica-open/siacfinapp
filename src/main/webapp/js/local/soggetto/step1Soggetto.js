@@ -28,6 +28,11 @@ $(function(){
 			//$('#dataNascita').css('cursor', 'pointer');
 			$("#Sesso").attr("disabled", false);
 			$(".flagSesso").attr("disabled", false);
+			$("#flagIstitutoDiCredito").attr("disabled", true);
+			$("#flagIstitutoDiCredito").val("");
+			$("#istitutoDiCred").hide();
+			$("#flagIstitutoDiCredito").hide();
+			
 			
 		}else if(testoCombo=='PG' || testoCombo=='PGI'){
 			
@@ -49,6 +54,9 @@ $(function(){
 			
 			// riaccendo i campi
 			$("#denominazione").attr("disabled", false);
+			$("#flagIstitutoDiCredito").attr("disabled", false);
+			$("#flagIstitutoDiCredito").show();
+			$("#istitutoDiCred").show();
 			
 		}
 	}
@@ -129,9 +137,12 @@ $(function(){
     
     if (sacUid.length > 0) {
     	var node = zTreeObj.getNodeByParam("uid", sacUid);
-    	zTreeObj.refresh();
-    	zTreeObj.checkNode(node, true, true, true);
-        $('#SPAN_StrutturaAmministrativoContabile').text(node.name);
+    	
+    	if (node != null) {
+	    	zTreeObj.refresh();
+	    	zTreeObj.checkNode(node, true, true, true);
+	        $('#SPAN_StrutturaAmministrativoContabile').text(node.name);
+    	}
     }
 
 

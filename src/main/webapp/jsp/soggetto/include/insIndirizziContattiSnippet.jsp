@@ -92,7 +92,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<span class="al">
 				<!-- <label class="radio inline" for="cap"><acronym title="codice di avviamento postale">\</acronym></label> -->
 				</span>
-				<!-- <input id="cap" name="cap" class="span1" type="text" placeholder="C.A.P." required="required"/>-->
+				<!-- <input id="cap" name="cap" class="span1" type="text" placeholder="C.A.P." required="required"/> -->
 				<s:textfield id="cap" name="indirizzo.cap"
 				 			 onkeyup="return checkItNumbersOnly(event)" 
 				             cssClass="span1" title="C.A.P."  maxlength="5" />   
@@ -107,8 +107,8 @@ SPDX-License-Identifier: EUPL-1.2
                <p>
                   <a class="btn" href="#"  id="annullaInserimentoIndirizzo" >annulla inserimento</a> 
                         		  
-                  <s:submit id="salvaIndirizzo"  name="salvaIndirizzo" value="carica" method="salvaIndirizzo" 
-                        		  cssClass="btn" data-target="#insInd" data-toggle="collapse" />   
+                  <!-- task-131 <s:submit id="salvaIndirizzo"  name="salvaIndirizzo" value="carica" method="salvaIndirizzo" cssClass="btn" /> -->
+                  <s:submit id="salvaIndirizzo"  name="salvaIndirizzo" value="carica" action="%{#salvaIndirizzoAction}" cssClass="btn" />   
                  
                </p>
 
@@ -121,7 +121,8 @@ $(document).ready(function() {
 	autocompleteSedimi();
 	$("#annullaInserimentoIndirizzo").click(function() {
 		$.ajax({
-			url: '<s:url method="pulisciIndirizzi"/>',
+			//task-131 url: '<s:url method="pulisciIndirizzi"/>',
+			url: '<s:url action="%{#pulisciIndirizziAction}"/>',		
 			    success: function(data)  {
 				inserIndirizzo.html(data);
 			}
@@ -141,7 +142,8 @@ $(document).ready(function() {
 	autocompleteSedimi();
 	$("#annullaInserimentoIndirizzo").click(function() {
 		$.ajax({
-			url: '<s:url method="pulisciIndirizzi"/>',
+			//task-131 url: '<s:url method="pulisciIndirizzi"/>',
+			url: '<s:url action="%{#pulisciIndirizziAction}"/>',
 			    success: function(data)  {
 				inserIndirizzo.html(data);
 			}

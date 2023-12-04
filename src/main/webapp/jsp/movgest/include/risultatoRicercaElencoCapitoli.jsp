@@ -112,7 +112,8 @@ SPDX-License-Identifier: EUPL-1.2
 	$(document).ready(function() {
 		$("#visualizzaDettaglioCapitolo").click(function() {
 			$.ajax({
-				url: '<s:url method="visualizzaDettaglioCapitolo"/>',
+				//task-131 url: '<s:url method="visualizzaDettaglioCapitolo"/>',
+				url: '<s:url action="%{#visualizzaDettaglioCapitoloAction}"/>',
 				type: 'POST',
 				data: $(".radioCodiceCapitolo").serialize(),
 				success: function(data) {

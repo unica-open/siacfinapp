@@ -14,7 +14,7 @@ SPDX-License-Identifier: EUPL-1.2
 		
 			<!-- Interceptor di log prima e a termine dell'invocazione -->
 			<interceptor name="logInterceptor" 
-				class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+				class="it.csi.siac.siaccommonapp.interceptor.LogInterceptor" />
 
 			<!--  Interceptor per la gestione degli errori di conversione 
 			<interceptor name="siacConversionErrorInterceptor" 
@@ -22,9 +22,16 @@ SPDX-License-Identifier: EUPL-1.2
 			-->	
 			
 			<!-- Interceptor per la gestione dei breadcrumb --> 
+			<!-- task-131 -->
+			<!-- 
 			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
   				<param name="defaultRewindMode">AUTO</param>
   				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+			-->
+			 <interceptor name="breadCrumbs" class="xyz.timedrain.arianna.plugin.BreadCrumbInterceptor">
+				<param name="defaultRewindMode">AUTO</param>
+				<param name="defaultComparator">xyz.timedrain.arianna.plugin.NameComparator</param>
 			</interceptor>
 
 			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
@@ -37,6 +44,8 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="servletConfig"/>
 				<interceptor-ref name="i18n"/>
 	            <interceptor-ref name="actionData"/>
+					<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
 				<interceptor-ref name="prepare"/>
 	            <interceptor-ref name="redirectMessage"/>
 				<interceptor-ref name="chain"/>
@@ -66,8 +75,6 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="breadCrumbs"/>
 				
 				
-				<!-- Interceptor di log -->
-				<interceptor-ref name="logInterceptor" />
 				
 			</interceptor-stack>
 		</interceptors>
@@ -81,8 +88,24 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="input">/jsp/soggetto/ricercaSoggetto.jsp</result>
 			<result name="gotoElencoSoggetti" type="redirectAction">elencoSoggetti</result>	
 			
-			<result name="gotoGestioneClassiSoggetto" type="redirectAction">gestioneClassiSoggetto</result>	
-				
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">gestioneClassiSoggetto</result>					
+		</action>
+		
+		<!-- task-131 -->
+		<action name="ricercaSoggetto_annulla" class="ricercaSoggettoAction" method="annulla">
+			<result name="success">/jsp/soggetto/ricercaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/ricercaSoggetto.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">elencoSoggetti</result>	
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">gestioneClassiSoggetto</result>					
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaSoggetto_cerca" class="ricercaSoggettoAction" method="cerca">
+			<result name="success">/jsp/soggetto/ricercaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/ricercaSoggetto.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">elencoSoggetti</result>	
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">gestioneClassiSoggetto</result>					
 		</action>
 		
 		<action name="gestioneClassiSoggetto" class="gestioneClassiSoggettoAction">
@@ -94,17 +117,134 @@ SPDX-License-Identifier: EUPL-1.2
 				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
 			</result>
 			
-			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneClassiSoggetto_rimuoviSoggettoDaClasse" class="gestioneClassiSoggettoAction" method="rimuoviSoggettoDaClasse">
+			<result name="success">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
 			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
+			</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneClassiSoggetto_aggiungiSoggettoAllaClasse" class="gestioneClassiSoggettoAction" method="aggiungiSoggettoAllaClasse">
+			<result name="success">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
+			</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneClassiSoggetto_gestisciSelezionata" class="gestioneClassiSoggettoAction" method="gestisciSelezionata">
+			<result name="success">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
+			</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>	
 		</action>
 								
+		<!-- task-131 -->
+		<action name="gestioneClassiSoggetto_ricercaSoggetto" class="gestioneClassiSoggettoAction" method="ricercaSoggetto">
+			<result name="success">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
+			</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneClassiSoggetto_selezionaSoggetto" class="gestioneClassiSoggettoAction" method="selezionaSoggetto">
+			<result name="success">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
+			</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneClassiSoggetto_pulisciRicercaSoggetto" class="gestioneClassiSoggettoAction" method="pulisciRicercaSoggetto">
+			<result name="success">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
+			</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneClassiSoggetto_listaClasseSoggettoChanged" class="gestioneClassiSoggettoAction" method="listaClasseSoggettoChanged">
+			<result name="success">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/gestioneClassiSoggetto.jsp</result>
+			
+			<result name="gotoGestioneClassiSoggetto" type="redirectAction">
+				<param name="actionName">gestioneClassiSoggetto</param>
+				<param name="daSelezioneClasse">${daSelezioneClasse}</param>
+			</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>	
+		</action>
+		
 		<action name="elencoSoggetti" class="elencoSoggettiAction">
 			<result name="success">/jsp/soggetto/elencoSoggetti.jsp</result>
 			<result name="input">/jsp/soggetto/elencoSoggetti.jsp</result>
 			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
 		</action>
 		
+		<!-- task-131 -->
+		<action name="elencoSoggetti_visualizzaDettaglio" class="elencoSoggettiAction" method="visualizzaDettaglio">
+			<result name="success">/jsp/soggetto/elencoSoggetti.jsp</result>
+			<result name="input">/jsp/soggetto/elencoSoggetti.jsp</result>
+			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="elencoSoggetti_gestioneEliminaSoggetto" class="elencoSoggettiAction" method="gestioneEliminaSoggetto">
+			<result name="success">/jsp/soggetto/elencoSoggetti.jsp</result>
+			<result name="input">/jsp/soggetto/elencoSoggetti.jsp</result>
+			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="elencoSoggetti_gestisciAggiornamentoStato" class="elencoSoggettiAction" method="gestisciAggiornamentoStato">
+			<result name="success">/jsp/soggetto/elencoSoggetti.jsp</result>
+			<result name="input">/jsp/soggetto/elencoSoggetti.jsp</result>
+			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
+		</action>
+		
+		
 		<action name="consultaSoggetto" class="consultaSoggettoAction">
+			<result name="success">/jsp/soggetto/consultaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/consultaSoggetto.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="consultaSoggetto_consultaSede" class="consultaSoggettoAction" method="consultaSede">
 			<result name="success">/jsp/soggetto/consultaSoggetto.jsp</result>
 			<result name="input">/jsp/soggetto/consultaSoggetto.jsp</result>
 			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
@@ -115,6 +255,26 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="input">/jsp/soggetto/step1Soggetto.jsp</result>
 			<result name="prosegui" type="redirectAction">inserisciContatti</result>
 		</action>
+		
+		<!-- task-131 -->
+		<action name="inserisciSoggetto_controllaDati" class="inserisciSoggettoAction" method="controllaDati">
+			<result name="success">/jsp/soggetto/step1Soggetto.jsp</result>
+			<result name="input">/jsp/soggetto/step1Soggetto.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciContatti</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciSoggetto_pulisci" class="inserisciSoggettoAction" method="pulisci">
+			<result name="success">/jsp/soggetto/step1Soggetto.jsp</result>
+			<result name="input">/jsp/soggetto/step1Soggetto.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciContatti</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciSoggetto_prosegui" class="inserisciSoggettoAction" method="prosegui">
+			<result name="success">/jsp/soggetto/step1Soggetto.jsp</result>
+			<result name="input">/jsp/soggetto/step1Soggetto.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciContatti</result>
+		</action>
+		
 		<action name="inserisciContatti" class="inserisciContattiAction">
 			<result name="success">/jsp/soggetto/step2Contatti.jsp</result>
 			<result name="input">/jsp/soggetto/step2Contatti.jsp</result>
@@ -123,11 +283,181 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
 			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
 		</action>
-	    <action name="modalitaPagamentoSoggetto" class="modalitaPagamentoSoggettoAction"> 
+		
+		<!-- task-131 -->
+		<action name="inserisciContatti_salvaRecapito" class="inserisciContattiAction" method="salvaRecapito">
+			<result name="success">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="input">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggetto</result>
+			<result name="salva" type="redirectAction">salvaSoggetto</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		
+		<!-- task-131 -->
+		<action name="inserisciContatti_pulisciContatto" class="inserisciContattiAction" method="pulisciContatto">
+			<result name="success">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="input">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggetto</result>
+			<result name="salva" type="redirectAction">salvaSoggetto</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciContatti_annullaIndirizziERecapiti" class="inserisciContattiAction" method="annullaIndirizziERecapiti">
+			<result name="success">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="input">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggetto</result>
+			<result name="salva" type="redirectAction">salvaSoggetto</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciContatti_salva" class="inserisciContattiAction" method="salva">
+			<result name="success">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="input">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggetto</result>
+			<result name="salva" type="redirectAction">salvaSoggetto</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciContatti_salvaIndirizzo" class="inserisciContattiAction" method="salvaIndirizzo">
+			<result name="success">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="input">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggetto</result>
+			<result name="salva" type="redirectAction">salvaSoggetto</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciContatti_pulisciIndirizzi" class="inserisciContattiAction" method="pulisciIndirizzi">
+			<result name="success">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="input">/jsp/soggetto/step2Contatti.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggetto</result>
+			<result name="salva" type="redirectAction">salvaSoggetto</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+				
+		<action name="modalitaPagamentoSoggetto" class="modalitaPagamentoSoggettoAction"> 
 	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
 			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
 	    </action>
+	    
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_ricercaSoggettoModPag" class="modalitaPagamentoSoggettoAction" method="ricercaSoggettoModPag"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_ricercaSoggettoModPagAggiorna" class="modalitaPagamentoSoggettoAction" method="ricercaSoggettoModPagAggiorna"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_ricercaSoggettoModPag_step2" class="modalitaPagamentoSoggettoAction" method="ricercaSoggettoModPag_step2"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_ricercaSoggettoModPag_step2Aggiorna" class="modalitaPagamentoSoggettoAction" method="ricercaSoggettoModPag_step2Aggiorna"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_inserisciModPagCessione" class="modalitaPagamentoSoggettoAction" method="inserisciModPagCessione"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_aggiornaModPagCessione" class="modalitaPagamentoSoggettoAction" method="aggiornaModPagCessione"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_handleTypePayment" class="modalitaPagamentoSoggettoAction" method="handleTypePayment"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_aggiornaModPagContoCorrente" class="modalitaPagamentoSoggettoAction" method="aggiornaModPagContoCorrente"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_inserisciModPagContoCorrente" class="modalitaPagamentoSoggettoAction" method="inserisciModPagContoCorrente"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_inserisciModPagGenerico" class="modalitaPagamentoSoggettoAction" method="inserisciModPagGenerico"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_inserisciModPagContanti" class="modalitaPagamentoSoggettoAction" method="inserisciModPagContanti"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_aggiornaContante" class="modalitaPagamentoSoggettoAction" method="aggiornaContante"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="modalitaPagamentoSoggetto_aggiornaGenerico" class="modalitaPagamentoSoggettoAction" method="aggiornaGenerico"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-155 -->
+	    <action name="modalitaPagamentoSoggetto_panelInsertPayment" class="modalitaPagamentoSoggettoAction" method="panelInsertPayment"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-155 -->
+	    <action name="modalitaPagamentoSoggetto_annullaInserimento" class="modalitaPagamentoSoggettoAction" method="annullaInserimento"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    
+	    
+	    <!-- task-155 -->
+	    <action name="modalitaPagamentoSoggetto_aggiornaMDP" class="modalitaPagamentoSoggettoAction" method="aggiornaMDP"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-155 -->
+	    <action name="modalitaPagamentoSoggetto_annullaModalitaDiPagamento" class="modalitaPagamentoSoggettoAction" method="annullaModalitaDiPagamento"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-155 -->
+	    <action name="modalitaPagamentoSoggetto_bloccaModalitaDiPagamento" class="modalitaPagamentoSoggettoAction" method="bloccaModalitaDiPagamento"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    <!-- task-155 -->
+	    <action name="modalitaPagamentoSoggetto_eliminaMdp" class="modalitaPagamentoSoggettoAction" method="eliminaMdp"> 
+	    	<result name="success">/jsp/soggetto/modalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/modalitaPagamento.jsp</result>
+	    </action>
+	    
+	    
 	    <action name="validaModalitaPagamento" class="validaModalitaPagamentoAction">
+	    	<result name="success">/jsp/soggetto/validaModalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/validaModalitaPagamento.jsp</result>
+			<result name="backMod" type="chain">modalitaPagamentoSoggetto</result>
+	    </action>
+	    
+	    <!-- task-131 -->
+	    <action name="validaModalitaPagamento_validaProposta" class="validaModalitaPagamentoAction" method="validaProposta">
+	    	<result name="success">/jsp/soggetto/validaModalitaPagamento.jsp</result>
+			<result name="input">/jsp/soggetto/validaModalitaPagamento.jsp</result>
+			<result name="backMod" type="chain">modalitaPagamentoSoggetto</result>
+	    </action>
+	    <!-- task-131 -->
+	    <action name="validaModalitaPagamento_rifiutaValidazione" class="validaModalitaPagamentoAction" method="rifiutaValidazione">
 	    	<result name="success">/jsp/soggetto/validaModalitaPagamento.jsp</result>
 			<result name="input">/jsp/soggetto/validaModalitaPagamento.jsp</result>
 			<result name="backMod" type="chain">modalitaPagamentoSoggetto</result>
@@ -137,12 +467,60 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="success">/jsp/soggetto/step3Salva.jsp</result>
 			<result name="indietroStep2" type="redirectAction">inserisciContatti</result>					
 		</action>
+		<!-- task-131 -->
+		<action name="salvaSoggetto_indietroStep2" class="salvaSoggettoAction" method="indietroStep2">
+			<result name="success">/jsp/soggetto/step3Salva.jsp</result>
+			<result name="indietroStep2" type="redirectAction">inserisciContatti</result>					
+		</action>
+		
 		
 <!-- 		<action name="vaiAggiornaSoggetto" class="aggiornaSoggettoAction" method="arrivoDaBtn"> -->
 <!-- 			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result> -->
 <!-- 		</action> -->
 		
 		<action name="aggiornaSoggetto" class="aggiornaSoggettoAction">
+			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapiti</result>
+			<result name="sedi" type="redirectAction">aggiornaSediSecondarie</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggetto</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="aggiornaSoggetto_redirectSedi" class="aggiornaSoggettoAction" method="redirectSedi">
+			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapiti</result>
+			<result name="sedi" type="redirectAction">aggiornaSediSecondarie</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggetto</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaSoggetto_redirectMdp" class="aggiornaSoggettoAction" method="redirectMdp">
+			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapiti</result>
+			<result name="sedi" type="redirectAction">aggiornaSediSecondarie</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggetto</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaSoggetto_annullaAggiornaSoggetto" class="aggiornaSoggettoAction" method="annullaAggiornaSoggetto">
+			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapiti</result>
+			<result name="sedi" type="redirectAction">aggiornaSediSecondarie</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggetto</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaSoggetto_prosegui" class="aggiornaSoggettoAction" method="prosegui">
+			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSoggetto.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapiti</result>
+			<result name="sedi" type="redirectAction">aggiornaSediSecondarie</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggetto</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="aggiornaSoggetto_doExecute" class="aggiornaSoggettoAction" method="doExecute">
 			<result name="success">/jsp/soggetto/aggiornaSoggetto.jsp</result>
 			<result name="input">/jsp/soggetto/aggiornaSoggetto.jsp</result>
 			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapiti</result>
@@ -159,8 +537,195 @@ SPDX-License-Identifier: EUPL-1.2
 			</result>
 			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
 		</action>
-
+		
+		<!-- task-131 -->
+		<action name="aggiornaRecapiti_annullaRecapito" class="aggiornaRecapitiAction" method="annullaRecapito">
+			<result name="success">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="aggiornaRecapiti_salva" class="aggiornaRecapitiAction" method="salva">
+			<result name="success">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="aggiornaRecapiti_salvaRecapito" class="aggiornaRecapitiAction" method="salvaRecapito">
+			<result name="success">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaRecapiti_pulisciContatto" class="aggiornaRecapitiAction" method="pulisciContatto">
+			<result name="success">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaRecapiti_pulisciIndirizzi" class="aggiornaRecapitiAction" method="pulisciIndirizzi">
+			<result name="success">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaRecapiti_salvaIndirizzo" class="aggiornaRecapitiAction" method="salvaIndirizzo">
+			<result name="success">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaRecapiti.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		
 		<action name="aggiornaSediSecondarie" class="aggiornaSediSecondarieAction">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+	    <!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_salvaSede" class="aggiornaSediSecondarieAction" method="salvaSede">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+	   
+	   	<!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_pulisciSede" class="aggiornaSediSecondarieAction" method="pulisciSede">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+	   
+	    <!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_modificaSede" class="aggiornaSediSecondarieAction" method="modificaSede">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+	    <!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_gestioneAnnullaSede" class="aggiornaSediSecondarieAction" method="gestioneAnnullaSede">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+		<!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_gestioneEliminaSede" class="aggiornaSediSecondarieAction" method="gestioneEliminaSede">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_consultaSede" class="aggiornaSediSecondarieAction" method="consultaSede">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+		<!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_validaSede" class="aggiornaSediSecondarieAction" method="validaSede">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+		
+	   <!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_rifiutaSede" class="aggiornaSediSecondarieAction" method="rifiutaSede">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+	   <!-- task-131 -->
+	   	<action name="aggiornaSediSecondarie_doExecute" class="aggiornaSediSecondarieAction" method="doExecute">
+			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
+			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
+			<result name="modifica">/jsp/soggetto/include/salvaSedeSnippet.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="valida">/jsp/soggetto/validaSedeSecondaria.jsp</result>
+		</action>
+		<!-- task-155 -->
+	   	<action name="aggiornaSediSecondarie_gestioneValidaSede" class="aggiornaSediSecondarieAction" method="gestioneValidaSede">
 			<result name="success">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
 			<result name="input">/jsp/soggetto/aggiornaSediSecondarie.jsp</result>
 			<result name="consulta">/jsp/soggetto/include/consultaSedeSnippet.jsp</result>
@@ -180,10 +745,46 @@ SPDX-License-Identifier: EUPL-1.2
 				<param name="ricaricaPagina">true</param>
 			</result>
 		</action>
+		<!-- task-131 -->
+		<action name="validaSoggetto_rifiutaSoggetto" class="validaSoggettoAction" method="rifiutaSoggetto">
+			<result name="success">/jsp/soggetto/validaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/validaSoggetto.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+		</action>
+		<!-- task-131 -->
+		<action name="validaSoggetto_validaSoggetto" class="validaSoggettoAction" method="validaSoggetto">
+			<result name="success">/jsp/soggetto/validaSoggetto.jsp</result>
+			<result name="input">/jsp/soggetto/validaSoggetto.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggetti</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+		</action>
+		
 		<action name="collegaSoggetti" class="collegaSoggettiAction">
 			<result name="success">/jsp/soggetto/collegaSoggetti.jsp</result>
 			<result name="input">/jsp/soggetto/collegaSoggetti.jsp</result>
 		</action>
+		
+		<!-- task-131 -->
+		<action name="collegaSoggetti_annullaRicerca" class="collegaSoggettiAction" method="annullaRicerca">
+			<result name="success">/jsp/soggetto/collegaSoggetti.jsp</result>
+			<result name="input">/jsp/soggetto/collegaSoggetti.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="collegaSoggetti_cerca" class="collegaSoggettiAction" method="cerca">
+			<result name="success">/jsp/soggetto/collegaSoggetti.jsp</result>
+			<result name="input">/jsp/soggetto/collegaSoggetti.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="collegaSoggetti_creaLegame" class="collegaSoggettiAction" method="creaLegame">
+			<result name="success">/jsp/soggetto/collegaSoggetti.jsp</result>
+			<result name="input">/jsp/soggetto/collegaSoggetti.jsp</result>
+		</action>
+				
 	 <!-- 
 		<action name="aggiornaCapUscitaPrevisione" class="capUscitaPrevisioneAction">
 			<result name="success">/jsp/capUscitaPrevisione/aggCapUscPrev.jsp</result>
@@ -208,6 +809,37 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="done" type="redirectAction">gestioneClassi</result>			
 		</action>
 		
+		<!-- task-131 -->
+		<action name="gestioneClassi_aggiungiClasse" class="gestioneClassiAction" method="aggiungiClasse">
+ 			<result name="input">/jsp/soggetto/gestioneClassi.jsp</result>
+			<result name="success">/jsp/soggetto/gestioneClassi.jsp</result>			
+			<result name="done" type="redirectAction">gestioneClassi</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneClassi_annullaModifica" class="gestioneClassiAction" method="annullaModifica">
+ 			<result name="input">/jsp/soggetto/gestioneClassi.jsp</result>
+			<result name="success">/jsp/soggetto/gestioneClassi.jsp</result>			
+			<result name="done" type="redirectAction">gestioneClassi</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneClassi_modificaClasse" class="gestioneClassiAction" method="doModificaClasse">
+ 			<result name="input">/jsp/soggetto/gestioneClassi.jsp</result>
+			<result name="success">/jsp/soggetto/gestioneClassi.jsp</result>			
+			<result name="done" type="redirectAction">gestioneClassi</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneClassi_goEditMode" class="gestioneClassiAction" method="goEditMode">
+ 			<result name="input">/jsp/soggetto/gestioneClassi.jsp</result>
+			<result name="success">/jsp/soggetto/gestioneClassi.jsp</result>			
+			<result name="done" type="redirectAction">gestioneClassi</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneClassi_rimuoviClasse" class="gestioneClassiAction" method="doRimuoviClasse">
+ 			<result name="input">/jsp/soggetto/gestioneClassi.jsp</result>
+			<result name="success">/jsp/soggetto/gestioneClassi.jsp</result>			
+			<result name="done" type="redirectAction">gestioneClassi</result>			
+		</action>	
 <!-- 
 		<action name="modificaClassi" class="modificaClasseAction">
 			<result name="input">/jsp/soggetto/modificaClasse.jsp</result>

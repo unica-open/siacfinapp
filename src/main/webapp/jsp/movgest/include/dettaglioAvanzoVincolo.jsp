@@ -27,13 +27,17 @@ SPDX-License-Identifier: EUPL-1.2
 			</div>
 			
 		</fieldset>	
+		<!-- task-202 -->
+		<s:set var="operazione">${param.aggiornaVincoloOperazione}</s:set>
 		
 		
 	</div>
 	
 	
 	<div class="modal-footer">
-		<s:submit id="btnAggVincolo" name="btnAggVincolo" data-dismiss="modal" aria-hidden="true"  value="conferma" cssClass="btn btn-primary" method="aggiornaAvanzoVincolo"/>
+		<!-- task-131 <s:submit id="btnAggVincolo" name="btnAggVincolo" aria-hidden="true"  value="conferma" cssClass="btn btn-primary" method="aggiornaAvanzoVincolo"/> -->
+		<!-- task-202 -->
+		<s:submit name="btnAggVincolo" id="btnAggVincolo" aria-hidden="true" value="conferma" action="%{#operazione + '_aggiornaAvanzoVincolo'}" cssClass="btn btn-primary" />								
 	</div>
 	
 <script type="text/javascript">

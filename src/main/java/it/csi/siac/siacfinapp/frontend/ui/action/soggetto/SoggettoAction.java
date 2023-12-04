@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import it.csi.siac.siacfinapp.frontend.ui.action.GenericFinAction;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.SoggettoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.SoggettoDaFontiAnagModel;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.SoggettoService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNome;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNomeResponse;
@@ -37,9 +36,6 @@ public abstract class SoggettoAction<M extends SoggettoModel> extends GenericFin
 	@Autowired
 	protected transient SoggettoService soggettoService;
 	
-	protected final static String ABILITAZIONE_INSERIMENTO_DECENTRATO = CodiciOperazioni.OP_SOG_inserisciSoggDec;
-	protected final static String ABILITAZIONE_GESTIONE = CodiciOperazioni.OP_SOG_gestisciSogg;
-	protected final static String ABILITAZIONE_GESTIONE_DECENTRATO = CodiciOperazioni.OP_SOG_gestisciSoggDec;
 	protected final static String GOTO_ELENCO_SOGGETTI = "gotoElencoSoggetti"; 
 	protected final static Integer STATO_VALIDO = 2;
 	protected String methodName;

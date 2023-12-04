@@ -43,8 +43,9 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage"> 
-		
-				<s:form id="mainForm" method="post" action="ricercaDocumentiPerRegolazioneCarta.do">
+				
+				<%-- SIAC-7952 rimuovo .do dalla action --%>
+				<s:form id="mainForm" method="post" action="ricercaDocumentiPerRegolazioneCarta">
 				
 				    
 				
@@ -188,15 +189,21 @@ SPDX-License-Identifier: EUPL-1.2
 					
 					
 					<p class="margin-medium">
-						<s:submit name="annulla" value="annulla" method="annullaRicercaDoc" cssClass="btn btn-secondary" />
+						<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaRicercaDoc" cssClass="btn btn-secondary" /> -->
+						<s:submit name="annulla" value="annulla" action="ricercaDocumentiPerRegolazioneCarta_annullaRicercaDoc" cssClass="btn btn-secondary" /> -->
 <%-- 						<s:include value="/jsp/include/indietro.jsp" /> --%>
-						<s:submit name="indietro" value="indietro" method="indietro" cssClass="btn" />
+						<!-- task-131 <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn" /> -->
+						<s:submit name="indietro" value="indietro" action="ricercaDocumentiPerRegolazioneCarta_indietro" cssClass="btn" />
 						<span class="pull-right">
-							<s:submit name="cerca" value="cerca" method="cercaDocPerCollega" cssClass="btn btn-primary" />
+							<!-- task-131 <s:submit name="cerca" value="cerca" method="cercaDocPerCollega" cssClass="btn btn-primary" /> -->
+							<s:submit name="cerca" value="cerca" action="ricercaDocumentiPerRegolazioneCarta_cercaDocPerCollega" cssClass="btn btn-primary" />
 						</span>
 					</p>  
 					
-					<s:include value="/jsp/include/modalProvvedimenti.jsp" />
+					<s:set var="selezionaProvvedimentoAction" value="%{'ricercaDocumentiPerRegolazioneCarta_selezionaProvvedimento'}" />
+		            <s:set var="clearRicercaProvvedimentoAction" value="%{'ricercaDocumentiPerRegolazioneCarta_clearRicercaProvvedimento'}" />	          
+		        	<s:set var="ricercaProvvedimentoAction" value="%{'ricercaDocumentiPerRegolazioneCarta_ricercaProvvedimento'}" />	          
+		            <s:include value="/jsp/include/modalProvvedimenti.jsp" />
 					
 				</s:form>
 				

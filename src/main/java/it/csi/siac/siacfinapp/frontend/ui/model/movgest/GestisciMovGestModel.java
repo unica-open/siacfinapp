@@ -16,16 +16,18 @@ import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siacbilser.model.CapitoloEntrataGestione;
 import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
 import it.csi.siac.siacbilser.model.Cronoprogramma;
+import it.csi.siac.siacbilser.model.wrapper.ImportiCapitoloPerComponente;
 import it.csi.siac.siaccorser.model.TipologiaGestioneLivelli;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.GestoreTransazioneElementareModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.MovGestModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegno;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaDeiCronoprogrammiCollegatiAlProvvedimento;
 import it.csi.siac.siacfinser.model.Accertamento;
 import it.csi.siac.siacfinser.model.AttoAmministrativoStoricizzato;
 import it.csi.siac.siacfinser.model.Impegno;
+import it.csi.siac.siacfinser.model.StrutturaAmmContabileFlatStoricizzato;
 import it.csi.siac.siacfinser.model.SubAccertamento;
 import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.soggetto.Soggetto;
@@ -57,6 +59,15 @@ public class GestisciMovGestModel extends MovGestModel {
 	private List<SubImpegno> listaTuttiSubimpegniDatiMinimi = new ArrayList<SubImpegno>();
 	private List<SubAccertamento> listaSubaccertamenti = new ArrayList<SubAccertamento>();
 	private List<AttoAmministrativoStoricizzato> listaModificheProvvedimento = new ArrayList<AttoAmministrativoStoricizzato>();
+	//SIAC-6997
+	private List<StrutturaAmmContabileFlatStoricizzato> listaModificheStruttureCompetenti = new ArrayList<StrutturaAmmContabileFlatStoricizzato>();
+	private boolean ricercaTipoROR;
+	
+	//SIAC-7349 MR Start 05/06/2020
+	private BigDecimal disponibilitaComponentePerAnnullaModifiche = BigDecimal.ZERO;
+	
+	
+
 	private MovimentoConsulta subDettaglio = new MovimentoConsulta();
 	
 	//movimento spesa model
@@ -65,6 +76,29 @@ public class GestisciMovGestModel extends MovGestModel {
 	//impegno in aggiornamento
 	private Impegno impegnoInAggiornamento = new Impegno();
 	
+	//accertamento in aggiornamento
+	//impegno in aggiornamento
+	private SubAccertamento subAccertamentoInAggiornamento = new SubAccertamento();
+	
+	public SubAccertamento getSubAccertamentoInAggiornamento() {
+		return subAccertamentoInAggiornamento;
+	}
+
+	public void setSubAccertamentoInAggiornamento(SubAccertamento subAccertamentoInAggiornamento) {
+		this.subAccertamentoInAggiornamento = subAccertamentoInAggiornamento;
+	}
+
+	//Se subimpegno
+	private SubImpegno subimpegnoInAggiornamento = new SubImpegno();
+	
+	public SubImpegno getSubimpegnoInAggiornamento() {
+		return subimpegnoInAggiornamento;
+	}
+
+	public void setSubimpegnoInAggiornamento(SubImpegno subimpegnoInAggiornamento) {
+		this.subimpegnoInAggiornamento = subimpegnoInAggiornamento;
+	}
+
 	//accertamento in aggiornamento
 	private Accertamento accertamentoInAggiornamento = new Accertamento();
 	
@@ -155,11 +189,77 @@ public class GestisciMovGestModel extends MovGestModel {
 	
 	//SIAC-6990
 	private AggiornaImpegno impegnoRequestStep1;
+	
+	//SIAC-6997 Dati riepilogo per cruscotto
+	private BigDecimal importoDaRiaccertare;
+	private BigDecimal importoMassimoDaRiaccertare;
+	private BigDecimal importoModifiche;
+	private BigDecimal residuoEventualeDaMantenere;
+	private String importoMassimoDifferibile;
+	private String importoMassimoCancellabile;
+	private int numeroTotaleModifiche;
+	private Integer uidMovgest;
+	private String codicePdc;
+    //SIAC-7551 - 25/05/2020 - GM - riprendiamo quanto fatto per SIAC-7599 da Vincenzo e riutilizziamo qui per trasportare il dato che arriva dal BE
+	private BigDecimal liquidatoAnnoSuccessivo;
+	private BigDecimal documentiNoLiqAnnoSuccessivo;
+	private BigDecimal incassatoAnnoSuccessivo;
+	private BigDecimal documentiNoIncAnnoSuccessivo;
+	//FINE SIAC-7551
+	
+	//SIAC-7349
+	private List<ImportiCapitoloPerComponente> importiComponentiCapitolo = new ArrayList<ImportiCapitoloPerComponente>();
+	private BigDecimal disponibilitaModificaPerComponente;
+	
+	private String minImportoImpComp;
+	private String maxImportoImpComp;
+	private String nomeComponente;
+	private String tipologiaComponente;
+	
+    
+    //GETTER E SETTER:
+	public BigDecimal getIncassatoAnnoSuccessivo() {
+		return incassatoAnnoSuccessivo;
+	}
 
+	public void setIncassatoAnnoSuccessivo(BigDecimal incassatoAnnoSuccessivo) {
+		this.incassatoAnnoSuccessivo = incassatoAnnoSuccessivo;
+	}
+
+	public BigDecimal getDocumentiNoIncAnnoSuccessivo() {
+		return documentiNoIncAnnoSuccessivo;
+	}
+
+	public void setDocumentiNoIncAnnoSuccessivo(BigDecimal documentiNoIncAnnoSuccessivo) {
+		this.documentiNoIncAnnoSuccessivo = documentiNoIncAnnoSuccessivo;
+	}
+
+	//GETTER E SETTER:
+	public BigDecimal getLiquidatoAnnoSuccessivo() {
+		return liquidatoAnnoSuccessivo;
+	}
+
+	public void setLiquidatoAnnoSuccessivo(BigDecimal liquidatoAnnoSuccessivo) {
+		this.liquidatoAnnoSuccessivo = liquidatoAnnoSuccessivo;
+	}
     
-    //GETTE E SETTER:
+	public BigDecimal getDocumentiNoLiqAnnoSuccessivo() {
+		return documentiNoLiqAnnoSuccessivo;
+	}
     
-    /**
+	public void setDocumentiNoLiqAnnoSuccessivo(BigDecimal documentiNoLiqAnnoSuccessivo) {
+		this.documentiNoLiqAnnoSuccessivo = documentiNoLiqAnnoSuccessivo;
+	}
+
+	public Integer getUidMovgest() {
+		return uidMovgest;
+	}
+
+	public void setUidMovgest(Integer uidMovgest) {
+		this.uidMovgest = uidMovgest;
+	}
+
+	/**
 	 * @return the proseguiConWarning
 	 */
 	public boolean isProseguiConWarning() {
@@ -515,6 +615,21 @@ public class GestisciMovGestModel extends MovGestModel {
 	}
 
 	/**
+	 * @return the listaModificheStruttureCompetenti
+	 */
+	public List<StrutturaAmmContabileFlatStoricizzato> getListaModificheStruttureCompetenti() {
+		return listaModificheStruttureCompetenti;
+	}
+
+	/**
+	 * @param listaModificheStruttureCompetenti the listaModificheStruttureCompetenti to set
+	 */
+	public void setListaModificheStruttureCompetenti(
+			List<StrutturaAmmContabileFlatStoricizzato> listaModificheStruttureCompetenti) {
+		this.listaModificheStruttureCompetenti = listaModificheStruttureCompetenti;
+	}
+
+	/**
 	 * @return the listaModificheProvvedimento
 	 */
 	public List<AttoAmministrativoStoricizzato> getListaModificheProvvedimento() {
@@ -729,8 +844,11 @@ public class GestisciMovGestModel extends MovGestModel {
 	 */
 	public boolean isProvvedimentoDefinitivo() {
 		ProvvedimentoImpegnoModel provvedimento = getStep1Model().getProvvedimento();
-		return provvedimento != null?  Constanti.ATTO_AMM_STATO_DEFINITIVO.equalsIgnoreCase(provvedimento.getStato()) : false;
+		return provvedimento != null?  CostantiFin.ATTO_AMM_STATO_DEFINITIVO.equalsIgnoreCase(provvedimento.getStato()) : false;
 	}
+	
+	
+	
 
 	/**
 	 * @return the statoMovimentoGestioneOld
@@ -767,6 +885,144 @@ public class GestisciMovGestModel extends MovGestModel {
 		this.impegnoRequestStep1 = impegnoRequestStep1;
 	}
 	//
+
+	/**
+	 * @return the ricercaTipoROR
+	 */
+	public boolean isRicercaTipoROR() {
+		return ricercaTipoROR;
+	}
+
+	/**
+	 * @param ricercaTipoROR the ricercaTipoROR to set
+	 */
+	public void setRicercaTipoROR(boolean ricercaTipoROR) {
+		this.ricercaTipoROR = ricercaTipoROR;
+	}
+
+	public BigDecimal getImportoDaRiaccertare() {
+		return importoDaRiaccertare;
+	}
+
+	public void setImportoDaRiaccertare(BigDecimal importoDaRiaccertare) {
+		this.importoDaRiaccertare = importoDaRiaccertare;
+	}
+
+	public BigDecimal getImportoMassimoDaRiaccertare() {
+		return importoMassimoDaRiaccertare;
+	}
+
+	public void setImportoMassimoDaRiaccertare(BigDecimal importoMassimoDaRiaccertare) {
+		this.importoMassimoDaRiaccertare = importoMassimoDaRiaccertare;
+	}
+
+	public BigDecimal getImportoModifiche() {
+		return importoModifiche;
+	}
+
+	public void setImportoModifiche(BigDecimal importoModifiche) {
+		this.importoModifiche = importoModifiche;
+	}
+
+	public BigDecimal getResiduoEventualeDaMantenere() {
+		return residuoEventualeDaMantenere;
+	}
+
+	public void setResiduoEventualeDaMantenere(BigDecimal residuoEventualeDaMantenere) {
+		this.residuoEventualeDaMantenere = residuoEventualeDaMantenere;
+	}
+
+	public String getImportoMassimoDifferibile() {
+		return importoMassimoDifferibile;
+	}
+
+	public void setImportoMassimoDifferibile(String importoMassimoDifferibile) {
+		this.importoMassimoDifferibile = importoMassimoDifferibile;
+	}
+
+	public String getImportoMassimoCancellabile() {
+		return importoMassimoCancellabile;
+	}
+
+	public void setImportoMassimoCancellabile(String importoMassimoCancellabile) {
+		this.importoMassimoCancellabile = importoMassimoCancellabile;
+	}
+
+	public int getNumeroTotaleModifiche() {
+		return numeroTotaleModifiche;
+	}
+
+	public void setNumeroTotaleModifiche(int numeroTotaleModifiche) {
+		this.numeroTotaleModifiche = numeroTotaleModifiche;
+	}
+
+	public String getCodicePdc() {
+		return codicePdc;
+	}
+
+	public void setCodicePdc(String codicePdc) {
+		this.codicePdc = codicePdc;
+	}
+	
+	//SIAC-7349 
+	//FIXME da rimuovere
+	public List<ImportiCapitoloPerComponente> getImportiComponentiCapitolo() {
+		return importiComponentiCapitolo;
+	}
+
+	public void setImportiComponentiCapitolo(List<ImportiCapitoloPerComponente> importiComponentiCapitolo) {
+		this.importiComponentiCapitolo = importiComponentiCapitolo;
+	}
 	
 	
+	//SIAC-7349
+	public BigDecimal getDisponibilitaModificaPerComponente() {
+		return disponibilitaModificaPerComponente;
+	}
+
+	public void setDisponibilitaModificaPerComponente(BigDecimal disponibilitaModificaPerComponente) {
+		this.disponibilitaModificaPerComponente = disponibilitaModificaPerComponente;
+	}
+
+	public String getMinImportoImpComp() {
+		return minImportoImpComp;
+	}
+
+	public void setMinImportoImpComp(String minImportoImpComp) {
+		this.minImportoImpComp = minImportoImpComp;
+	}
+
+	public String getMaxImportoImpComp() {
+		return maxImportoImpComp;
+	}
+
+	public void setMaxImportoImpComp(String maxImportoImpComp) {
+		this.maxImportoImpComp = maxImportoImpComp;
+	}
+
+	public String getNomeComponente() {
+		return nomeComponente;
+	}
+
+	public void setNomeComponente(String nomeComponente) {
+		this.nomeComponente = nomeComponente;
+	}
+
+	public String getTipologiaComponente() {
+		return tipologiaComponente;
+	}
+
+	public void setTipologiaComponente(String tipologiaComponente) {
+		this.tipologiaComponente = tipologiaComponente;
+	}
+
+	public BigDecimal getDisponibilitaComponentePerAnnullaModifiche() {
+		return disponibilitaComponentePerAnnullaModifiche;
+	}
+
+	public void setDisponibilitaComponentePerAnnullaModifiche(BigDecimal disponibilitaComponentePerAnnullaModifiche) {
+		this.disponibilitaComponentePerAnnullaModifiche = disponibilitaComponentePerAnnullaModifiche;
+	}
+
+
 }

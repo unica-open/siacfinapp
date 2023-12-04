@@ -66,8 +66,8 @@ SPDX-License-Identifier: EUPL-1.2
 	   </div>
 	   <div class="modal-footer">
 	     <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-	     <s:submit id="submitBtnEliminaQuota" name="btnEconomia" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaQuotaOrdinativo"/>
-	     
+	     <!-- task-131 <s:submit id="submitBtnEliminaQuota" name="btnEconomia" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaQuotaOrdinativo"/> -->
+		  <s:submit id="submitBtnEliminaQuota" name="btnEconomia" value="si, prosegui" cssClass="btn btn-primary" action="%{#eliminaQuotaOrdinativoAction}"/>	      
 	   </div>
  </div>
   
@@ -86,8 +86,8 @@ SPDX-License-Identifier: EUPL-1.2
 	   </div>
 	   <div class="modal-footer">
 	     <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-	     <s:submit id="submitBtnEliminaProvvisorio" name="btnEconomia" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaProvvisorio"/>
-	     
+	     <!-- task-131 <s:submit id="submitBtnEliminaProvvisorio" name="btnEconomia" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaProvvisorio"/> -->
+	     <s:submit id="submitBtnEliminaProvvisorio" name="btnEconomia" value="si, prosegui" cssClass="btn btn-primary" action="%{#eliminaProvvisorioAction}"/>
 	   </div>
  </div>
  
@@ -134,10 +134,12 @@ SPDX-License-Identifier: EUPL-1.2
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
                 <s:if test="gestioneOrdinativoStep2Model.checkProseguiQuoteIncasso">
-                	<s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="forzaInserisciQuotaAccertamento"/>
+                	<!-- task-131 <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="forzaInserisciQuotaAccertamento"/> -->
+                	<s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" action="%{#forzaInserisciQuotaAccertamentoAction}"/>          
                 </s:if>
                 <s:elseif test="gestioneOrdinativoStep2Model.checkAggiornaQuoteIncasso">
-                	<s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="forzaAggiornaQuotaAccertamento"/>
+                	<!-- task-131 <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="forzaAggiornaQuotaAccertamento"/> -->
+                	<s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" action="%{#forzaAggiornaQuotaAccertamentoAction}"/> 
                 </s:elseif>
               </div>
             </div>  

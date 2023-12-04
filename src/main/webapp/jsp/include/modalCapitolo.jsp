@@ -112,23 +112,54 @@ SPDX-License-Identifier: EUPL-1.2
 
 		</fieldset>
 
+
 		<a class="accordion-toggle btn btn-primary pull-right" id="ricercaGuidataCapitolo" data-toggle="collapse" data-parent="#guidaCap" href="#campiRicerca"> 
 		  <i class="icon-search icon"></i>&nbsp;cerca&nbsp;<span class="icon"></span>
 		</a>
 
-		<div id="gestioneRisultatoRicercaCapitoli" style="clear:both; padding-top:3px;">
+		<!-- SIAC-7349 -->
+		<s:if test="componenteBilancioCapitoloAttivo">
+		 <div id="gestioneRisultatoRicercaCapitoli" style="clear:both; padding-top:3px;">
+		 		<s:include value="/jsp/movgest/include/risultatoRicercaElencoCapitoliComponentiBilancio.jsp" />
+			
+		</div>
+
+		<div id="gestioneVisualizzaCapitoloComponentiBilancio">
+			<s:include value="/jsp/movgest/include/visualizzaCapitoloComponentiBilancio.jsp" />
+		</div>
+		 </s:if>
+		 <s:else>
+		 <div id="gestioneRisultatoRicercaCapitoli" style="clear:both; padding-top:3px;">
 			<s:include value="/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp" />
 		</div>
 
 		<div id="gestioneVisualizzaCapitolo">
 			<s:include value="/jsp/movgest/include/visualizzaCapitolo.jsp" />
 		</div>
+		 </s:else>
+		
 
 	</div>
+	
+	
+	
+	
 	<div class="modal-footer">
-		<s:submit id="cercaCapitoloSubmit" name="cerca" value="conferma"
-			method="selezionaCapitolo" cssClass="btn btn-primary pull-right" />
+		<s:if test="componenteBilancioCapitoloAttivoRicerca">
+<!-- 			SIAC-7739-7743 - inserimento id  -->
+			<!-- task-131 <s:submit  name="cerca" value="conferma" id="cercaCapitoloGeneric" method="selezionaCapitolo" cssClass="btn btn-primary pull-right" />-->
+			<s:submit  name="cerca" value="conferma" id="cercaCapitoloGeneric" action="%{#selezionaCapitoloAction}" cssClass="btn btn-primary pull-right" />
+		
+		</s:if>
+		<s:else>
+			<!--task-131 <s:submit id="cercaCapitoloSubmit" name="cerca" value="conferma" method="selezionaCapitolo" cssClass="btn btn-primary pull-right" /> -->
+			<s:submit id="cercaCapitoloSubmit" name="cerca" value="conferma" action="%{#selezionaCapitoloAction}" cssClass="btn btn-primary pull-right" />
+		</s:else>
+		
+		
+		
 	</div>
+
 </div>
 
 
@@ -146,10 +177,9 @@ SPDX-License-Identifier: EUPL-1.2
 		var url='';
 		//CR - 1839	
 		if(capitolo!='' && articolo!=''){
-			url = '<s:url method="ricercaCapitolo"/>';
-			
+			// task-131 url = '<s:url method="ricercaCapitolo"/>';
+			url = '<s:url action="%{#ricercaCapitoloAction}"/>';
 			$.ajax({
-				//url: '<s:url method="pulisciRicercaCapitolo"/>',
 				url: url,
 				type: 'POST',
 				data: $(".parametroRicercaCapitolo").serialize(),
@@ -159,9 +189,9 @@ SPDX-License-Identifier: EUPL-1.2
 			});
 		}else	{
 			
-			url = '<s:url method="pulisciRicercaCapitolo"/>';
+			//task-131 url = '<s:url method="pulisciRicercaCapitolo"/>';
+			url = '<s:url action="%{#pulisciRicercaCapitoloAction}"/>';
 			$.ajax({
-				//url: '<s:url method="pulisciRicercaCapitolo"/>',
 				url: url,
 				success: function(data)  {
 				    $("#gestioneRisultatoRicercaCapitoli").html(data);
@@ -205,7 +235,8 @@ SPDX-License-Identifier: EUPL-1.2
 			// al click di ricerca sparisce il dettaglio jira-932
 			$("#visDett").hide();
 			$.ajax({
-				url: '<s:url method="ricercaCapitolo"/>',
+				//task-131 url: '<s:url method="ricercaCapitolo"/>',
+				url: '<s:url action="%{#ricercaCapitoloAction}"/>',
 				type: 'POST',
 				data: $(".parametroRicercaCapitolo").serialize() + "&strutturaAmministrativaSelezionata=" + strutturaAmministrativaSelezionata.codice + "&tipoStrutturaAmministrativaSelezionata=" + strutturaAmministrativaSelezionata.tipo + "&pdcSelezionato=" + pdcSelezionato.codice,
 				success: function(data)  {
@@ -213,6 +244,32 @@ SPDX-License-Identifier: EUPL-1.2
 				}
 			});
 		});	
+
+
+
+		
+		//SIAC-7349
+		$("#cercaCapitoloSubmit").click(function() {
+			var isComponenteBilancioAttivo = "${componenteBilancioCapitoloAttivo}";
+			if(typeof isComponenteBilancioAttivo !=='undefined' && isComponenteBilancioAttivo == 'true'){
+				if(typeof $("#listaComponenteBilancioRicerca") ==='undefined' || $("#listaComponenteBilancioRicerca").val()==''){
+					$("#errorComponente").addClass( "alert alert-error" )
+					$("#errorComponente").html('Componente obbligatoria<br>');
+					//SIAC-7739-7743
+					$("#capitolo").val($("#capitoloRicerca").val());
+					$("#articolo").val($("#articoloRicerca").val());
+					var $options = $("#listaComponenteBilancioRicerca > option").clone();
+					$('#listaComponenteBilancio').html('');
+					$('#listaComponenteBilancio').append($options);
+					$('.modal-body').animate({ scrollTop: $(document).height() }, 2500);				
+					return false;
+				}
+
+			}
+		});
+
+		
+		
 	});
 	
 </script>

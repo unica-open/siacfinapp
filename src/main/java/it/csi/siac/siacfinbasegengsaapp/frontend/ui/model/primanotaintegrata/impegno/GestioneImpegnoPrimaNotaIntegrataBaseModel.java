@@ -191,7 +191,7 @@ public abstract class GestioneImpegnoPrimaNotaIntegrataBaseModel extends BaseIns
 		RicercaImpegnoK ricercaImpegnoK = new RicercaImpegnoK();
 		ricercaImpegnoK.setAnnoEsercizio(getAnnoEsercizioInt());
 		ricercaImpegnoK.setAnnoImpegno(impegno.getAnnoMovimento());
-		ricercaImpegnoK.setNumeroImpegno(impegno.getNumero());
+		ricercaImpegnoK.setNumeroImpegno(impegno.getNumeroBigDecimal());
 		
 		req.setpRicercaImpegnoK(ricercaImpegnoK);
 		req.setEnte(ente);
@@ -240,7 +240,7 @@ public abstract class GestioneImpegnoPrimaNotaIntegrataBaseModel extends BaseIns
 	 * @return the numero movimento
 	 */
 	public String  getNumeroMovimento() {
-		return getImpegno() != null ? getImpegno().getNumero().toString() : "0";
+		return getImpegno() != null ? getImpegno().getNumeroBigDecimal().toString() : "0";
 	}
 }
 

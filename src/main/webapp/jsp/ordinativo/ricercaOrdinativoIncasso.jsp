@@ -24,8 +24,8 @@ SPDX-License-Identifier: EUPL-1.2
  <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage">
-    
-			<s:form method="post" action="ricercaOrdinativoIncasso.do" id="ricercaOrdinativoIncasso">
+    		<%-- SIAC-7952 rimuovo .do dalla action --%>
+			<s:form method="post" action="ricercaOrdinativoIncasso" id="ricercaOrdinativoIncasso">
 				<s:hidden name="uidOrdCollegaReversali" />
 			
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
@@ -34,7 +34,10 @@ SPDX-License-Identifier: EUPL-1.2
 				<p>E' necessario inserire almeno un criterio di ricerca.</p>					
 				<div class="step-content">	
 					<div class="step-pane active" id="step1"> 
-					<p class="margin-medium"><s:submit id="cerca2" name="cerca2" value="cerca" method="ricercaOrdinativoIncasso" cssClass="btn btn-primary pull-right" /> </p>
+					<p class="margin-medium">
+						<!-- task-131 <s:submit id="cerca2" name="cerca2" value="cerca" method="ricercaOrdinativoIncasso" cssClass="btn btn-primary pull-right" /> -->
+						<s:submit id="cerca2" name="cerca2" value="cerca" action="ricercaOrdinativoIncasso_ricercaOrdinativoIncasso" cssClass="btn btn-primary pull-right" /> 
+					</p>
 					<br>
 
 					<h4 class="step-pane">Ordinativo</h4>
@@ -126,7 +129,7 @@ SPDX-License-Identifier: EUPL-1.2
 						
 						
 						<div class="control-group">
-							<label class="control-label" for="mutuo">Descrizione</label>
+							<label class="control-label" for="m">Descrizione</label>
 							<div class="controls">
 								<s:textfield id="descrizione" name="model.descrizioneOrdinativo" cssClass="lbTextSmall span2"/>
 							</div>
@@ -208,7 +211,18 @@ SPDX-License-Identifier: EUPL-1.2
 		            <s:hidden id="hiddenPerEscludiAnnullati" name="model.hiddenPerEscludiAnnullati" />
 
 					<!-- Modal -->
+					
+					<s:set var="ricercaCapitoloAction" value="%{'ricercaOrdinativoIncasso_ricercaCapitolo'}" />
+	        		<s:set var="pulisciRicercaCapitoloAction" value="%{'ricercaOrdinativoIncasso_pulisciRicercaCapitolo'}" />
+	        		<s:set var="selezionaCapitoloAction" value="%{'ricercaOrdinativoIncasso_selezionaCapitolo'}" />
+	        		<s:set var="visualizzaDettaglioCapitoloAction" value="%{'ricercaOrdinativoIncasso_visualizzaDettaglioCapitolo'}" />
+	        
 					<s:include value="/jsp/include/modalCapitolo.jsp" />
+					
+					<s:set var="selezionaProvvedimentoAction" value="%{'ricercaOrdinativoIncasso_selezionaProvvedimento'}" />
+		    		<s:set var="clearRicercaProvvedimentoAction" value="%{'ricercaOrdinativoIncasso_clearRicercaProvvedimento'}" />	          
+		    		<s:set var="ricercaProvvedimentoAction" value="%{'ricercaOrdinativoIncasso_ricercaProvvedimento'}" />	                          	
+            
 		            <s:include value="/jsp/include/modalProvvedimenti.jsp" />
 		            <s:include value="/jsp/include/modalSoggetto.jsp" />
 		            <!-- Fine Modal -->
@@ -260,8 +274,11 @@ SPDX-License-Identifier: EUPL-1.2
 					
 				<p class="margin-medium">
 	            <s:include value="/jsp/include/indietro.jsp" /> 
-				<s:submit name="annulla" value="annulla" method="annullaRicercaOrdinativi" cssClass="btn btn-secondary" />
-				<s:submit name="cerca" value="cerca" method="ricercaOrdinativoIncasso" cssClass="btn btn-primary pull-right" /> 
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaRicercaOrdinativi" cssClass="btn btn-secondary" /> -->
+				<!-- task-131 <s:submit name="cerca" value="cerca" method="ricercaOrdinativoIncasso" cssClass="btn btn-primary pull-right" /> --> 
+				<s:submit name="annulla" value="annulla" action="ricercaOrdinativoIncasso_annullaRicercaOrdinativi" cssClass="btn btn-secondary" />
+				<s:submit name="cerca" value="cerca" action="ricercaOrdinativoIncasso_ricercaOrdinativoIncasso" cssClass="btn btn-primary pull-right" /> 
+				
 				</p>     
   
       </s:form>
@@ -334,7 +351,8 @@ $(document).ready(function() {
 		var selezionata = $("#listaTipiCausale").val();
 		
 		$.ajax({
-			url: '<s:url method="tipoCausaleEntrataChanged"></s:url>',
+			// task-131 url: '<s:url method="tipoCausaleEntrataChanged"></s:url>',
+			url: '<s:url action="ricercaOrdinativoIncasso_tipoCausaleEntrataChanged"></s:url>',		
 			type: "GET",
 			data: $(".hiddenGestoreToggle").serialize() + "&selezionata=" + selezionata
 		}).then(function(data)  {

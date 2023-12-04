@@ -6,6 +6,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action.ordinativo;
 
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -46,9 +47,10 @@ public class AnnullaOrdinativoIncassoAction extends WizardRicercaOrdinativoActio
 		
 		//analizzo l'esisto del serivio:
 		if(response.isFallimento()) {
-			//esito negatito
-			if(null!=response.getErrori() && null!=response.getErrori().get(0)){
+			//SIAC-8381 esito negativo
+			if(CollectionUtils.isNotEmpty(response.getErrori())){
 				addPersistentActionError(response.getErrori().get(0).getCodice()+" "+response.getErrori().get(0).getDescrizione());
+				addErrori(response.getErrori());
 			}
 			return "gotoElencoOrdinativoIncasso";
 		}else if(response.hasErrori()){

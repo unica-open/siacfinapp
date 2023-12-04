@@ -27,18 +27,21 @@ SPDX-License-Identifier: EUPL-1.2
 
 <a name="A-contenuti" title="A-contenuti"></a>
 </div>
-<!--corpo pagina-->
-<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
-<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+<%--corpo pagina--%>
+<%--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> --%>
 
 
 <div class="container-fluid">
 <div class="row-fluid">
 <div class="span12 ">
-<div class="contentPage">  
-<s:form id="mainForm" method="post" action="elencoImpegni.do">
-<s:if test="hasActionErrors()">
-<%-- Messaggio di ERROR --%>
+<div class="contentPage">
+<%-- SIAC-7952 rimuovo .do dalla action --%>
+<s:form id="mainForm" method="post" action="elencoImpegni">
+<%-- SIAC-7630 --%>
+<s:include value="/jsp/include/actionMessagesErrors.jsp" />
+<%-- <s:if test="hasActionErrors()">
+Messaggio di ERROR
 	<div class="alert alert-error">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		<strong>Attenzione!!</strong><br>
@@ -48,15 +51,16 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 </s:if>
 <s:if test="hasActionMessages()">
-<%-- Messaggio di WARNING --%>
+Messaggio di WARNING
 	<div class="alert alert-success">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		<ul>
 			<s:actionmessage />
 		</ul>
 	</div>
-</s:if>
+</s:if> --%>
 <h3>Risultati di ricerca Impegni</h3> 
+<%-- SIAC-7952 mantengo il .do per permettere il mantenimento della paginazione --%>
 <display:table name="sessionScope.RISULTATI_RICERCA_IMPEGNI" 
 	class="table tab_left table-hover" 
 	summary="riepilogo impegni" 
@@ -70,7 +74,14 @@ SPDX-License-Identifier: EUPL-1.2
 				<s:property value="%{#attr.ricercaImpegnoID.numero.intValue()}"/>
 			</a>
 		</display:column>
-		
+		<display:column title="">
+			<s:if test="%{#attr.ricercaImpegnoID.hasModificheAggiudicazione}">
+				<a href="#" data-trigger="hover" rel="popover" data-content="Sono presenti riduzioni collegate all'impegno">
+				*
+				</a>
+			</s:if>
+		</display:column>
+		<display:column title="Struttura Comp" ><s:property value="%{#attr.ricercaImpegnoID.strutturaCompetente}"/></display:column>
 		<display:column title="Soggetto">
               <s:if test="%{#attr.ricercaImpegnoID.classeSoggetto == null}">
               	<s:property value="%{#attr.ricercaImpegnoID.soggetto.codiceSoggetto}"/>-<s:property value="%{#attr.ricercaImpegnoID.soggetto.denominazione}"/>
@@ -82,6 +93,8 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		<display:column title="Capitolo"><s:property value="%{#attr.ricercaImpegnoID.capitoloUscitaGestione.annoCapitolo}"/>/<s:property value="%{#attr.ricercaImpegnoID.capitoloUscitaGestione.numeroCapitolo}"/>/<s:property value="%{#attr.ricercaImpegnoID.capitoloUscitaGestione.numeroArticolo}"/>/<s:property value="%{#attr.ricercaImpegnoID.capitoloUscitaGestione.numeroUEB}"/> </display:column>	 
 		<display:column title="Strutt. Amm." property="capitoloUscitaGestione.strutturaAmministrativoContabile.codice" />	 
+		<%-- SIAC 7349 --%>
+		<display:column title="Componente" property="componenteBilancioImpegno.descrizioneTipoComponente"/>
 		<display:column title="Stato" property="descrizioneStatoOperativoMovimentoGestioneSpesa"/>
 		
 		<display:column title="Sub">
@@ -122,7 +135,7 @@ SPDX-License-Identifier: EUPL-1.2
 		</display:column>
 		
 		
-		<!-- SIAC-6929 -->
+		<%-- SIAC-6929 --%>
 		 <display:column title="Blocco Rag.">
 		   <s:if test="%{#attr.ricercaImpegnoID.attoAmministrativo == null || #attr.ricercaImpegnoID.attoAmministrativo.bloccoRagioneria == null }">
               	N/A
@@ -147,8 +160,7 @@ SPDX-License-Identifier: EUPL-1.2
 		    		<ul class="dropdown-menu pull-right" id="ul_action">
 						<s:if test="isAbilitatoAggiornaImpegno(#attr.ricercaImpegnoID.uid)">
 			    			<s:if test="isAbilitato(2, #attr.ricercaImpegnoID.uid)">
-			    			
-				    			<s:url id="aggiornaUrl" action="aggiornaImpegnoStep1.do" escapeAmp="false">
+								<s:url var="aggiornaUrl" action="aggiornaImpegnoStep1" escapeAmp="false">
 					        		<s:param name="annoImpegno" value="%{#attr.ricercaImpegnoID.annoMovimento}" />
 					        		<s:param name="numeroImpegno" value="%{#attr.ricercaImpegnoID.numero}" />
 			                    </s:url>
@@ -158,17 +170,17 @@ SPDX-License-Identifier: EUPL-1.2
 								</s:if>
 	                  		</s:if>
 						</s:if>
-                  		<s:url id="consultaUrl" action="consultaImpegno.do" escapeAmp="false">
+                  		<s:url var="consultaUrl" action="consultaImpegno" escapeAmp="false">
 			        		<s:param name="anno" value="%{#attr.ricercaImpegnoID.annoMovimento}" />
 			        		<s:param name="numero" value="%{#attr.ricercaImpegnoID.numero}" />
 	                    </s:url>
 	                    <s:if test="isAbilitato(1, #attr.ricercaImpegnoID.uid)">
                   		 	<li><a href="<s:property value="%{consultaUrl}"/>">consulta</a></li>
-                  		</s:if>
+						  </s:if>
 
 						<s:if test="isAbilitatoAnnullaImpegno(#attr.ricercaImpegnoID.uid)">
 	                         <s:if test="isAbilitato(3, #attr.ricercaImpegnoID.uid)"> 
-		                         <!-- SIAC-6929 -->
+		                         <%-- SIAC-6929 --%>
 		                         <s:if test="%{#attr.ricercaImpegnoID.attoAmministrativo == null ||  #attr.ricercaImpegnoID.attoAmministrativo.bloccoRagioneria != true}">
 		                         <li>
 		                         	<a id="linkAnnulla_<s:property value="%{#attr.ricercaImpegnoID.uid}"/>_<s:property value="%{#attr.ricercaImpegnoID.numero.intValue()}"/>_<s:property value="%{#attr.ricercaImpegnoID.numero.intValue()}"/>_<s:property value="%{#attr.ricercaImpegnoID.annoMovimento}"/>_<s:property value="%{#attr.ricercaImpegnoID.annoMovimento}"/>" href="#msgAnnulla" data-toggle="modal" class="linkAnnullaImpegno"> 
@@ -193,7 +205,8 @@ SPDX-License-Identifier: EUPL-1.2
         <div class="Border_line"></div>
 			<s:if test="isAbilitatoGestisciImpegno() || isAbilitatoGestisciImpegnoDec()">
 				<s:if test="isFaseBilancioAbilitata()"> 
-					<s:submit name="inserisci" value="inserisci impegno" method="inserisciImpegni" cssClass="btn btn-secondary" />
+					<!-- task-131 <s:submit name="inserisci" value="inserisci impegno" method="inserisciImpegni" cssClass="btn btn-secondary" /> -->
+					<s:submit name="inserisci" value="inserisci impegno" action="elencoImpegni_inserisciImpegni" cssClass="btn btn-secondary" />
 				</s:if>	
 			</s:if>	
 		</p>
@@ -206,7 +219,28 @@ SPDX-License-Identifier: EUPL-1.2
         <s:hidden id="numeroImpegnoDaPassare" name="numeroImpegnoDaPassare"/>
         
 
-        
+        <s:set var="selezionaProvvedimentoAction" value="%{'elencoImpegni_selezionaProvvedimento'}" />
+        <s:set var="clearRicercaProvvedimentoAction" value="%{'elencoImpegni_clearRicercaProvvedimento'}" />	          
+        <s:set var="ricercaProvvedimentoAction" value="%{'elencoImpegni_ricercaProvvedimento'}" />	          
+        <s:set var="eliminaAction" value="%{'elencoImpegni_elimina'}" />	  
+        <s:set var="selezionaProvvedimentoInseritoAction" value="%{'elencoImpegni_selezionaProvvedimentoInserito'}" />	
+		<s:set var="inserisciProvvedimentoAction" value="%{'elencoImpegni_inserisciProvvedimento'}" />	
+	    
+	    <s:set var="annullaImpegnoAction" value="%{'elencoImpegni_annullaImpegno'}" />	
+	      
+	    <s:set var="gestisciForwardAction" value="%{'elencoImpegni_gestisciForward'}" />
+		<s:set var="siSalvaAction" value="%{'elencoImpegni_siSalva'}" />	 
+		<s:set var="siProseguiAction" value="%{'elencoImpegni_siProsegui'}" />	
+		<s:set var="annullaSubImpegnoAction" value="%{'elencoImpegni_annullaSubImpegno'}" />	 
+		<s:set var="annullaSubAccertamentoAction" value="%{'elencoImpegni_annullaSubAccertamento'}" />	 
+		<s:set var="annullaMovGestSpesaAction" value="%{'elencoImpegni_annullaMovGestSpesa'}" />	 
+		<s:set var="eliminaSubImpegnoAction" value="%{'elencoImpegni_eliminaSubImpegno'}" />	 
+		<s:set var="eliminaSubAccertamentoAction" value="%{'elencoImpegni_eliminaSubAccertamento'}" />
+		<s:set var="forzaProseguiAction" value="%{'elencoImpegni_forzaProsegui'}" />	          
+		<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'elencoImpegni_forzaSalvaPluriennaleAccertamento'}" />	          
+		<s:set var="salvaConByPassDodicesimiAction" value="%{'elencoImpegni_salvaConByPassDodicesimi'}" />	          
+		
+		
         <s:include value="/jsp/movgest/include/modal.jsp" />
         <p class="marginLarge"> 
   	   		<s:include value="/jsp/include/indietro.jsp" />

@@ -59,7 +59,8 @@ $(document).ready(function() {
 	$("#linkConsultaModificheProvvedimento").click(function() {
 		
 		$.ajax({
-			url: '<s:url method="consultaModificheProvvedimento"/>',
+			//task-131 url: '<s:url method="consultaModificheProvvedimento"/>',
+			url: '<s:url action="%{#consultaModificheProvvedimentoAction}"/>',
 			type: 'POST',
 			success: function(data)  {
 				$("#modConsultaModificheProvvedimento").html(data);

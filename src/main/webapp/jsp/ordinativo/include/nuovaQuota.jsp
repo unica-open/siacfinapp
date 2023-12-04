@@ -32,7 +32,6 @@ SPDX-License-Identifier: EUPL-1.2
 			                	<s:property	value="%{#attr.listaLiquidOrdinativiId.impegno.annoMovimento}" />/<s:property value="%{#attr.listaLiquidOrdinativiId.impegno.numero.intValue()}" /> 
 			                </s:elseif>
 		                </display:column>
-		                <display:column title="Mutuo" property="numeroMutuo" />
 		                
 		                <display:column title="Provvedimento">
 		                	<s:property	value="%{#attr.listaLiquidOrdinativiId.attoAmministrativoLiquidazione.anno}" />/<s:property	value="%{#attr.listaLiquidOrdinativiId.attoAmministrativoLiquidazione.numero}" />/
@@ -120,7 +119,8 @@ SPDX-License-Identifier: EUPL-1.2
 		function ricaricaTE () {
 			var selectiondata = this.value;
 	        $.ajax({
-				url: '<s:url method="ricaricaTEByIdLiquidazione"></s:url>',
+				//task-131 url: '<s:url method="ricaricaTEByIdLiquidazione"></s:url>',
+				url: '<s:url action="%{#ricaricaTEByIdLiquidazioneAction}"/>',				
 				type: "POST",
 				data: $(".liquidazioneOrdinativo").serialize(), 
 			    success: function(data)  {

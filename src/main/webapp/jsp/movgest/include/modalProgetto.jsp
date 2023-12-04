@@ -77,8 +77,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 	
 	<div class="modal-footer">
-		<s:submit cssClass="btn btn-primary" data-dismiss="modal"
-			aria-hidden="true" value="Conferma" method="selezionaProgetto"></s:submit>
+		<!-- task-131 <s:submit cssClass="btn btn-primary" aria-hidden="true" value="Conferma" method="selezionaProgetto"></s:submit> -->
+		<s:submit cssClass="btn btn-primary" aria-hidden="true" value="Conferma" action="%{#selezionaProgettoAction}"></s:submit>
 	</div>
 </div>
 
@@ -92,21 +92,20 @@ SPDX-License-Identifier: EUPL-1.2
 		var url='';
 		
 		if(codice!=''){
-			url = '<s:url method="ricercaProgetto"/>';
-			
+			//task-131 --> url = '<s:url method="ricercaProgetto"/>';
+			url = '<s:url action="%{#ricercaProgettoAction}"/>';
 			$.ajax({
-				
 				url: url,
 				type: 'POST',
 				data: $(".parametroRicercaProgetto").serialize(),
 				success: function(data)  {
-					console.log(data)
 				    $("#gestioneRisultatoRicercaProgetti").html(data);
 				}
 			});
 		}else	{
 			$.ajax({
-				url: '<s:url method="pulisciRicercaProgetto"/>',
+				//task-131 --> url: '<s:url method="pulisciRicercaProgetto"/>',
+				url: '<s:url action="%{#pulisciRicercaProgettoAction}"/>',
 			    success: function(data)  {
 				    $("#gestioneRisultatoRicercaProgetti").html(data);
 				}
@@ -128,18 +127,19 @@ SPDX-License-Identifier: EUPL-1.2
 			}
 
 			// SIAC-7032
-			var codiceProgetto = $('HIDDEN_StrutturaAmministrativoContabileCodiceProgetto').val()
+			// TASK-267
+			//var codiceProgetto = $('HIDDEN_StrutturaAmministrativoContabileCodiceProgetto').val()
+			//initRicercaGuidataProgetto(codiceProgetto);
 			
-			initRicercaGuidataProgetto(codiceProgetto);
-			
-// 			$.ajax({
-// 				url: '<s:url method="ricercaProgetto"/>',
-// 				type: 'POST',
-// 				data: $(".parametroRicercaProgetto").serialize(),
-// 			    success: function(data)  {
-// 				    $("#gestioneRisultatoRicercaProgetti").html(data);
-// 				}
-// 			});
+			$.ajax({
+				//task-131 --> url: '<s:url method="ricercaProgetto"/>',
+				url: '<s:url action="%{#ricercaProgettoAction}"/>',
+				type: 'POST',
+				data: $(".parametroRicercaProgetto").serialize(),
+			    success: function(data)  {
+				    $("#gestioneRisultatoRicercaProgetti").html(data);
+				}
+			});			
 		});	
 	});
 	

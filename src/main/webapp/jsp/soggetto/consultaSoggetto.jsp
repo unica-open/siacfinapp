@@ -31,8 +31,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-        <s:form id="consultaSoggetto" action="consultaSoggetto.do" method="post">
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form id="consultaSoggetto" action="consultaSoggetto" method="post">
         
         <h3 class="step-pane">Soggetto <s:property value="dettaglioSoggetto.codiceSoggetto"/> - <s:property value="dettaglioSoggetto.denominazione"/> </h3>
         
@@ -91,7 +91,16 @@ SPDX-License-Identifier: EUPL-1.2
 			    <dfn>Tipo soggetto</dfn>
 			    <dl><s:property value="dettaglioSoggetto.tipoSoggetto.soggettoTipoDesc"/>&nbsp;</dl>
 			    </li>
-			    
+			    <li>
+			    <!-- task-6 -->
+			    <dfn>Istituto di credito</dfn>
+			    <s:if test="dettaglioSoggetto.tipoSoggetto.soggettoTipoCode != 'PF' && dettaglioSoggetto.tipoSoggetto.soggettoTipoCode != 'PFI'">
+					<dl><s:property value="convertiBooleanToString(dettaglioSoggetto.flagIstitutoDiCredito)"/>&nbsp;</dl>
+				</s:if>
+				<s:else>
+					<dl><s:property value=""/>&nbsp;</dl>
+				</s:else>
+			    </li>
 			    <li>
 			    <dfn>Natura giuridica</dfn>
 			    <dl><s:property value="dettaglioSoggetto.naturaGiuridicaSoggetto.soggettoTipoDesc"/>&nbsp;</dl>
@@ -138,7 +147,8 @@ SPDX-License-Identifier: EUPL-1.2
 			    </li>
 			    <li>
 			    <dfn>Stato/Provincia/Comune</dfn>
-			    <dl><s:property value="dettaglioSoggetto.comuneNascita.nazioneDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.regioneDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.codiceBelfiore"/>&nbsp;</dl>
+			    <!-- task-215 -->
+			    <dl><s:property value="dettaglioSoggetto.comuneNascita.nazioneDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.provinciaDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.codiceBelfiore"/>&nbsp;</dl>
 			    </li>
 			    <li>
 			    <dfn>Note</dfn>
@@ -825,7 +835,8 @@ $(document).ready(function() {
 	$(".consultaSedeSecondaria").click(function() {
 		var id = $(this).attr("id").split("_");
 		$.ajax({
-			url: '<s:url  method="consultaSede"/>',
+			//task-131 url: '<s:url  method="consultaSede"/>',
+			url: '<s:url action="consultaSoggetto_consultaSede"/>',
 			data: { uidSedeSecondaria: id[1], 'dettaglioSoggetto.codiceSoggetto': '<s:property value="dettaglioSoggetto.codiceSoggetto"/>' },
 			success: function(data)  {
 				consSede.html(data);

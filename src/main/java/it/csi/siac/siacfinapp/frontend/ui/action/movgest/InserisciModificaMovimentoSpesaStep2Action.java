@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.ws.RespectBinding;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -28,7 +26,6 @@ import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ImpegniPluriennaliModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinActionUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
-import it.csi.siac.siacfinser.frontend.webservice.MovimentoGestioneService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegno;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegnoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceImpegni;
@@ -150,7 +147,7 @@ public class InserisciModificaMovimentoSpesaStep2Action extends ActionKeyAggiorn
 				modificaImportoImpegnoSuAnniSuccessivi.setAnnoBilancio(model.getAnnoImpegno());
 				
 				ModificaImportoImpegnoSuAnniSuccessiviResponse response = 
-						movimentoGestionService.modificaImportoImpegnoSuAnniSuccessivi(modificaImportoImpegnoSuAnniSuccessivi);
+						movimentoGestioneFinService.modificaImportoImpegnoSuAnniSuccessivi(modificaImportoImpegnoSuAnniSuccessivi);
 				
 				if(response.isFallimento() || response.getErrori().size() > 0) {
 					debug(methodName, "Errore nella risposta del servizio");
@@ -217,7 +214,7 @@ public class InserisciModificaMovimentoSpesaStep2Action extends ActionKeyAggiorn
 	 * @return
 	 */
 	private boolean analizzaResponse(InserisceImpegniResponse response){
-		log.debug("analizzaResponse", JAXBUtility.marshall(response));
+	//	log.debug("analizzaResponse", JAXBUtility.marshall(response));
 		
 		boolean fallimento = false;
 		
@@ -236,7 +233,7 @@ public class InserisciModificaMovimentoSpesaStep2Action extends ActionKeyAggiorn
 				int i = 0;
 				for(Impegno app : accList){
 					if(i != 0){
-						addPersistentActionMessage("FIN_INF_0070, Movimento inserito ( movimento=Impegno, anno = " + app.getAnnoMovimento() +  ", numero= "+ app.getNumero() +" )");
+						addPersistentActionMessage("FIN_INF_0070, Movimento inserito ( movimento=Impegno, anno = " + app.getAnnoMovimento() +  ", numero= "+ app.getNumeroBigDecimal() +" )");
 					}
 					i++;
 				}
@@ -310,7 +307,7 @@ public class InserisciModificaMovimentoSpesaStep2Action extends ActionKeyAggiorn
 			//eseguo l'aggiornamento
 			if(!(listaPluriennali != null && listaPluriennali.size() > 0)) {
 				//Inserisco La modifica di spesa
-				AggiornaImpegnoResponse responseModificaMovimentoSpesa = movimentoGestionService.aggiornaImpegno(requestAggiorna);
+				AggiornaImpegnoResponse responseModificaMovimentoSpesa = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna);
 				if(responseModificaMovimentoSpesa.isFallimento() || (responseModificaMovimentoSpesa.getErrori() != null && responseModificaMovimentoSpesa.getErrori().size() > 0)){
 					debug(methodName, "Errore nella risposta del servizio");
 					addErrori(methodName, responseModificaMovimentoSpesa);
@@ -342,7 +339,7 @@ public class InserisciModificaMovimentoSpesaStep2Action extends ActionKeyAggiorn
 				modificaImportoImpegnoSuAnniSuccessivi.setInserisciImpegniRequest(inserisceImp);
 				
 				ModificaImportoImpegnoSuAnniSuccessiviResponse response = 
-						movimentoGestionService.modificaImportoImpegnoSuAnniSuccessivi(modificaImportoImpegnoSuAnniSuccessivi);
+						movimentoGestioneFinService.modificaImportoImpegnoSuAnniSuccessivi(modificaImportoImpegnoSuAnniSuccessivi);
 				
 				if(response.isFallimento() || response.getErrori().size() > 0) {
 					debug(methodName, "Errore nella risposta del servizio");
@@ -481,7 +478,7 @@ public class InserisciModificaMovimentoSpesaStep2Action extends ActionKeyAggiorn
 	//Funzione per il controllo della disponibilita' del capitolo sugli importi degli impegni pluriennali
 	private boolean controlloImportiImpegniPlur(int annoImpegnoPlur, BigDecimal importoPlur){
 		boolean erroreImporti = false;
-		Integer annoEsercio = Integer.valueOf(sessionHandler.getAnnoEsercizio());
+		Integer annoEsercio = sessionHandler.getAnnoBilancio();
 		Integer annoImpegnoPlurInt=Integer.valueOf(annoImpegnoPlur);
 		
 	    if (annoImpegnoPlurInt != null && annoImpegnoPlurInt.compareTo(annoEsercio + 2) <= 0) {

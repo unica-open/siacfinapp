@@ -44,7 +44,8 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="row-fluid">
 		<div class="span12 contentPage"> 
 		
-				<s:form id="mainForm" method="post" action="regolazioneCarta.do">
+				<%-- SIAC-7952 rimuovo .do dalla action --%>
+				<s:form id="mainForm" method="post" action="regolazioneCarta">
 				
 				    
 				
@@ -213,8 +214,8 @@ SPDX-License-Identifier: EUPL-1.2
 						<p>
 						
 							<a class="btn btn-primary" id="collImpegnoARef" data-toggle="collapse" data-target="#collImpegno">Collega impegno</a>
-							<s:submit name="Collega documento" value="Collega documento" method="collegaDocumento" cssClass="btn btn-primary" />
-							
+							<!-- task-131 <s:submit name="Collega documento" value="Collega documento" method="collegaDocumento" cssClass="btn btn-primary" /> -->
+							<s:submit name="Collega documento" value="Collega documento" action="regolazioneCarta_collegaDocumento" cssClass="btn btn-primary" />	
 						</p>
 						
 						<div class="clear"></div>
@@ -228,6 +229,11 @@ SPDX-License-Identifier: EUPL-1.2
 						<s:include value="/jsp/include/indietro.jsp" />
 						<a id="consolidaReg" data-toggle="modal" href="#consolidaRegModal"  class="btn btn-primary pull-right" >consolida regolarizzazione</a>
 					</p>  
+					
+					<s:set var="confermaImpegnoCartaAction" value="%{'regolazioneCarta_confermaImpegnoCarta'}" />			
+            		<s:set var="pulisciRicercaImpegnoAction" value="%{'regolazioneCarta_pulisciRicercaImpegno'}" />	          
+            		<s:set var="ricercaGuidataImpegnoAction" value="%{'regolazioneCarta_ricercaGuidataImpegno'}" />	          
+         
 					<s:include value="/jsp/carta/include/modalImpegnoCarta.jsp" />
 					
 					<!-- Modal elimina -->
@@ -245,7 +251,8 @@ SPDX-License-Identifier: EUPL-1.2
 						</div>
 						<div class="modal-footer">
 							<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-							<s:submit id="submitBtn" name="btnEliminaDocumentoCollegato" value="si, prosegui" cssClass="btn btn-primary" method="eliminaDocumentoCollegato"/>
+							<!-- task-131 <s:submit id="submitBtn" name="btnEliminaDocumentoCollegato" value="si, prosegui" cssClass="btn btn-primary" method="eliminaDocumentoCollegato"/> -->
+							<s:submit id="submitBtn" name="btnEliminaDocumentoCollegato" value="si, prosegui" cssClass="btn btn-primary" action="regolazioneCarta_eliminaDocumentoCollegato"/>							
 						</div>
 					</div>  
 					<!--/modale elimina -->
@@ -262,7 +269,9 @@ SPDX-License-Identifier: EUPL-1.2
 						</div>
 						<div class="modal-footer">
 							<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-							<s:submit cssClass="btn btn-primary" method="consolidaRegolarizzazione" value="consolida regolarizzazione" name="consolida" />
+							<!-- task-131 <s:submit cssClass="btn btn-primary" method="consolidaRegolarizzazione" value="consolida regolarizzazione" name="consolida" /> -->
+							<s:submit cssClass="btn btn-primary" action="regolazioneCarta_consolidaRegolarizzazione" value="consolida regolarizzazione" name="consolida" />
+							
 						</div>
 					</div>  
 <!-- 					/modale Consolida Regolarizzazione -->
@@ -329,7 +338,8 @@ $(document).ready(function() {
 	$(".linkAggiornaRiga").click(function() {
 // 		var supportId = $(this).attr("id").split("_");
 		$.ajax({
-			url: '<s:url method="dettaglioAggiornaImportoRegolarizzazione"/>',
+			//task-131 url: '<s:url method="dettaglioAggiornaImportoRegolarizzazione"/>',
+			url: '<s:url action="regolazioneCarta_dettaglioAggiornaImportoRegolarizzazione"/>',
 			type: 'POST',
 			data: $(".linkAggiornaRiga").serialize() + "&tripletta=" + $(this).attr("id"),
 		    success: function(data)  {

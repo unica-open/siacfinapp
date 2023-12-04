@@ -20,10 +20,9 @@ import it.csi.siac.siacfinapp.frontend.ui.model.liquidazione.RicercaLiquidazione
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazioniResponse;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaLiquidazione;
 
 public class WizardRicercaLiquidazioneAction extends GenericPopupAction<RicercaLiquidazioneModel> {
@@ -47,9 +46,6 @@ public class WizardRicercaLiquidazioneAction extends GenericPopupAction<RicercaL
 		model.setSoggetto(new SoggettoImpegnoModel());
 		model.setCapitolo(new CapitoloImpegnoModel());
 		model.setImpegno(new ImpegnoLiquidazioneModel());
-		model.setNumeroMutuo(null);
-		model.setNumeroMutuoString(null);
-		model.setNumeroMutuoImpegnoString(null);
 		model.setNumeroLiquidazione(null);
 		model.setNumeroLiquidazioneString(null);
 		model.setAnnoLiquidazione(null);
@@ -80,8 +76,8 @@ public class WizardRicercaLiquidazioneAction extends GenericPopupAction<RicercaL
 		ricercaLiquidazioni.setEnte(sessionHandler.getAccount().getEnte());
 		
 		//Anno Esercizio
-		prl.setAnnoBilancio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
-		prl.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		prl.setAnnoBilancio(sessionHandler.getAnnoBilancio());
+		prl.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		
 		//COPIAMO DEL CAMPO HIDDEN PER VIA DEL CHECKBOX CHE PERDE IL VALORE:
 		model.setEscludiAnnullati(model.getHiddenPerEscludiAnnullati());
@@ -100,11 +96,7 @@ public class WizardRicercaLiquidazioneAction extends GenericPopupAction<RicercaL
 			prl.setNumeroLiquidazione(model.getNumeroLiquidazione());
 		}
 	
-		//mutuo
-		if(model.getNumeroMutuo()!=null){
-			prl.setNumeroMutuo(model.getNumeroMutuo());
-		}
-		
+	
 		//Anno Impegno
 		if(model.getImpegno().getAnnoImpegno()!=null){
 			prl.setAnnoImpegno(model.getImpegno().getAnnoImpegno());
@@ -117,11 +109,6 @@ public class WizardRicercaLiquidazioneAction extends GenericPopupAction<RicercaL
 			//numero sub
 			if(model.getImpegno().getNumeroSub()!=null){
 				prl.setNumeroSubImpegno(BigDecimal.valueOf(model.getImpegno().getNumeroSub()));
-			}
-
-			//numero mutuo
-			if(model.getImpegno().getNumeroMutuo()!=null){
-				prl.setNumeroMutuo(BigDecimal.valueOf(model.getImpegno().getNumeroMutuo()));
 			}
 		}
 		
@@ -190,7 +177,7 @@ public class WizardRicercaLiquidazioneAction extends GenericPopupAction<RicercaL
 		}
 		
 		//Setto il tipo di ricerca:
-		prl.setTipoRicerca(Constanti.TIPO_RICERCA_DA_LIQUIDAZIONE);
+		prl.setTipoRicerca(CostantiFin.TIPO_RICERCA_DA_LIQUIDAZIONE);
 		
 		//setto il paramentro nella request:
 		ricercaLiquidazioni.setParametroRicercaLiquidazione(prl);
@@ -199,7 +186,9 @@ public class WizardRicercaLiquidazioneAction extends GenericPopupAction<RicercaL
 		String keyRicercaLiquidazioniID = (new ParamEncoder("ricercaLiquidazioniID")).encodeParameterName(TableTagParameters.PARAMETER_PAGE);
 		if(model.isFromAnnulla() && model.getNumeroPaginaElenco()>0){
 			//da annulla
-			getRequest().put(keyRicercaLiquidazioniID, Integer.toString(model.getNumeroPaginaElenco()));
+			//task-131
+			//getRequest().put(keyRicercaLiquidazioniID, model.getNumeroPaginaElenco());
+			
 		} 
 		addNumAndPageSize(ricercaLiquidazioni,"ricercaLiquidazioniID");
 		model.setNumeroPaginaElenco(ricercaLiquidazioni.getNumPagina());
@@ -307,19 +296,9 @@ public class WizardRicercaLiquidazioneAction extends GenericPopupAction<RicercaL
 			} else { 
 				model.getImpegno().setNumeroSub(null);
 			}	
-			model.setNumeroMutuoPopup(null);
 			model.setnAnno(null);
 			model.setnImpegno(null);
-			int voceMutuoScelta = model.getRadioVoceMutuoSelezionata();
-			List<VoceMutuo> listaVocMutuo = model.getListaVociMutuo();		
-			if(listaVocMutuo!=null && listaVocMutuo.size()>0){
-				for(int j=0; j<listaVocMutuo.size();j++){
-					if(listaVocMutuo.get(j).getUid()==voceMutuoScelta){
-						model.getImpegno().setNumeroMutuo(Integer.valueOf(listaVocMutuo.get(j).getNumeroMutuo()));
-						model.setNumeroMutuoImpegnoString(listaVocMutuo.get(j).getNumeroMutuo());
-					}
-				}
-			}
+
 		}
 		pulisciListeeSchedaPopup();
 		return INPUT;

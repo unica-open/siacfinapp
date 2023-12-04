@@ -7,6 +7,8 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,42 +20,53 @@ import it.csi.siac.siacattser.frontend.webservice.msg.RicercaProvvedimento;
 import it.csi.siac.siacattser.frontend.webservice.msg.RicercaProvvedimentoResponse;
 import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siacattser.model.ric.RicercaAtti;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaDettaglioTipoComponenteImportiCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaDettaglioTipoComponenteImportiCapitoloResponse;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaPuntualeProgetto;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaPuntualeProgettoResponse;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaVincolo;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaVincoloResponse;
 import it.csi.siac.siacbilser.model.Capitolo;
 import it.csi.siac.siacbilser.model.CapitoloEntrataGestione;
+import it.csi.siac.siacbilser.model.CategoriaCapitoloEnum;
 import it.csi.siac.siacbilser.model.Cronoprogramma;
 import it.csi.siac.siacbilser.model.ImportiCapitolo;
 import it.csi.siac.siacbilser.model.Progetto;
 import it.csi.siac.siacbilser.model.SiopeSpesa;
 import it.csi.siac.siacbilser.model.StatoOperativoProgetto;
 import it.csi.siac.siacbilser.model.TipoCapitolo;
+import it.csi.siac.siacbilser.model.TipoComponenteImportiCapitolo;
 import it.csi.siac.siacbilser.model.TipoProgetto;
 import it.csi.siac.siacbilser.model.Vincolo;
 import it.csi.siac.siacbilser.model.VincoloCapitoli;
+import it.csi.siac.siaccommon.util.CoreUtil;
+import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabile;
+import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabileResponse;
 import it.csi.siac.siaccorser.model.AzioneConsentita;
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.model.ParametroConfigurazioneEnteEnum;
 import it.csi.siac.siaccorser.model.ServiceResponse;
 import it.csi.siac.siaccorser.model.StrutturaAmministrativoContabile;
-import it.csi.siac.siaccorser.model.TipologiaGestioneLivelli;
+import it.csi.siac.siaccorser.model.TipologiaClassificatore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siaccorser.model.paginazione.ListaPaginata;
 import it.csi.siac.siaccorser.model.paginazione.ParametriPaginazione;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
+import it.csi.siac.siacfinapp.frontend.ui.exception.ImportoDeltaException;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.DettaglioVincoloModel;
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ErroreMovGestModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciMovGestModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProgettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
+import it.csi.siac.siacfinapp.frontend.ui.util.ComparaVincoli;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.EsistenzaProgetto;
 import it.csi.siac.siacfinser.frontend.webservice.msg.EsistenzaProgettoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamenti;
@@ -68,6 +81,7 @@ import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestione;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestione.StatoOperativoModificaMovimentoGestione;
 import it.csi.siac.siacfinser.model.movgest.VincoloImpegno;
 import it.csi.siac.siacfinser.model.ric.RicercaAccertamento;
 import it.csi.siac.siacfinser.model.ric.RicercaAccertamentoK;
@@ -85,15 +99,19 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	protected static final String GOTO_AGGIORNA_SUBACCERTAMENTO = "gotoAggiornaSubaccertamento";
 	protected static final String GOTO_CONTABILITA_GENERALE = "gotoContabilitaGenerale";
 	
-	protected final static String ABILITAZIONE_GESTIONE = CodiciOperazioni.OP_SPE_gestisciImpegno;
-	protected final static String ABILITAZIONE_GESTIONE_DECENTRATO = CodiciOperazioni.OP_SPE_gestisciImpegnoDecentrato;
-	protected final static String ABILITAZIONE_GESTIONE_DECENTRATO_P = CodiciOperazioni.OP_SPE_gestisciImpegnoDecentratoP;
+	protected final static String ABILITAZIONE_GESTIONE = AzioneConsentitaEnum.OP_SPE_gestisciImpegno.getNomeAzione();
+	protected final static String ABILITAZIONE_GESTIONE_DECENTRATO = AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentrato.getNomeAzione();
+	protected final static String ABILITAZIONE_GESTIONE_DECENTRATO_P = AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentratoP.getNomeAzione();
+	
+	//siAC-7677
+	protected final static String CODICE_PERIMETRO_SANITARIO_SPESA_GSA="4";
+	protected final static String CODICE_PERIMETRO_SANITARIO_ENTRATA_GSA="2";
 	
 	protected boolean inserimentoSubimpegno;
 	protected Integer idSubImpegno;
 	private GestisciImpegnoStep1Model oggetto= new GestisciImpegnoStep1Model();
 	
-	
+	protected static final String SI = "Si";
 	protected static final String MOVGEST_PROVVISORIO = "PROVVISORIO";
 	protected static final String STATO_MOVGEST_DEFINITIVO = "DEFINITIVO";
 	protected static final String MOVGEST_DEFINITIVO_NON_LIQUIDABILE = "DEFINITIVO NON LIQUIDABILE";
@@ -155,8 +173,63 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
  	//SIAC-6000
  	protected static final String GO_TO_GEN = "gotoContabilitaGenerale";
  	//
+
+ 	//SIAC-7349
+ 	protected TipoComponenteImportiCapitolo tipoComponenteImportiCapitolo = null;
  	
- 	/**
+ 	//SIAC-7349
+ 	public TipoComponenteImportiCapitolo getTipoComponenteImportiCapitolo() {
+ 		if(tipoComponenteImportiCapitolo == null){
+ 			if(model.getStep1Model()!= null && model.getStep1Model().getCapitolo()!= null &&
+ 					model.getStep1Model().getCapitolo().getComponenteBilancioUid()!= null){
+ 				RicercaDettaglioTipoComponenteImportiCapitolo reqTcic = new RicercaDettaglioTipoComponenteImportiCapitolo();
+ 				reqTcic.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+ 				reqTcic.setDataOra(new Date());
+ 				reqTcic.setRichiedente(sessionHandler.getRichiedente());
+ 				tipoComponenteImportiCapitolo = new TipoComponenteImportiCapitolo();
+ 				tipoComponenteImportiCapitolo.setUid(model.getStep1Model().getCapitolo().getComponenteBilancioUid());
+ 				reqTcic.setTipoComponenteImportiCapitolo(tipoComponenteImportiCapitolo);
+ 				RicercaDettaglioTipoComponenteImportiCapitoloResponse res1 = tipoComponenteImportiCapitoloService.ricercaDettaglioTipoComponenteImportiCapitolo(reqTcic);
+ 				tipoComponenteImportiCapitolo = res1.getTipoComponenteImportiCapitolo();
+ 			}
+ 		}
+ 		return tipoComponenteImportiCapitolo;
+	}
+
+ 	//SIAC-7349
+	public void setTipoComponenteIMportiCapitolo(TipoComponenteImportiCapitolo tipoComponenteIMportiCapitolo) {
+		this.tipoComponenteImportiCapitolo = tipoComponenteIMportiCapitolo;
+	}
+
+	//SIAC-8506
+	protected void controllaLunghezzaMassimaDescrizioneMovimento(String str) {
+		if(CoreUtil.isLengthGreatherThan(str, 500)) {
+			addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("descrizione", "lunghezza parametro superiore ai 500 caratteri consentiti"));
+		}
+	}
+
+	//SIAC-8506
+	protected void controllaLunghezzaMassimaDescrizioneMovimento(String str, List<Errore> listaErrori) {
+		if(CoreUtil.isLengthGreatherThan(str, 500)) {
+			listaErrori.add(ErroreCore.FORMATO_NON_VALIDO.getErrore("descrizione", "lunghezza parametro superiore ai 500 caratteri consentiti"));
+		}
+	}
+	
+	//SIAC-8781
+	protected void controllaImmodificabilitaTipoMotivoReimp(List<Errore> listaErrori) {
+		listaErrori.add(ErroreGEN.OPERAZIONE_NON_CONSENTITA.getErrore("modifica motivo non consentita"));	
+	}
+	//SIAC-8781
+	protected void controllaFlagReimp(List<Errore> listaErrori) {
+		listaErrori.add(ErroreGEN.OPERAZIONE_NON_CONSENTITA.getErrore("flag reimputazione non impostabile a 'No' per il motivo indicato"));	
+	}
+	
+	//SIAC-8781
+	protected void controllaIncompatibilitaFlagReimpMotivo(List<Errore> listaErrori) {
+		listaErrori.add(ErroreGEN.OPERAZIONE_NON_CONSENTITA.getErrore("modifica motivo incompatibile con flag reimputazione impostato a 'Si'"));	
+	}
+	
+	/**
  	 * Metodo che mette a fattor comune la gestione del fallimento della registrazione della prima nota.
  	 * 
  	 * Da richiamare dopo aver richiamato il servizio che ci si aspetta che debba valorizzare UidDaCompletare.
@@ -299,11 +372,11 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		String codifica = null;
 		if (stato != null && !"".equalsIgnoreCase(stato)) {
 			if (MOVGEST_PROVVISORIO.equalsIgnoreCase(stato)) {
-				codifica = Constanti.MOVGEST_STATO_PROVVISORIO;
+				codifica = CostantiFin.MOVGEST_STATO_PROVVISORIO;
 			} else if (STATO_MOVGEST_DEFINITIVO.equalsIgnoreCase(stato)) {
-				codifica = Constanti.MOVGEST_STATO_DEFINITIVO;
+				codifica = CostantiFin.MOVGEST_STATO_DEFINITIVO;
 			} else if (MOVGEST_DEFINITIVO_NON_LIQUIDABILE.equalsIgnoreCase(stato)) {
-				codifica = Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE;
+				codifica = CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE;
 			} 
 		}
 		return codifica;
@@ -319,8 +392,8 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 			 listaErrori.add(ErroreCore.PARAMETRO_ERRATO.getErrore("Anno Capitolo "));
 		}
 		if(model.getStep1Model().getAnnoImpegno()!= null && !(model.getStep1Model().getAnnoImpegno()>1900)){
-		    	 listaErrori.add(ErroreCore.PARAMETRO_ERRATO.getErrore(model.getLabels().get(LABEL_OGGETTO_GENERICO),model.getStep1Model().getAnnoImpegno().toString(), "> 1900" ));
-		    }
+	    	 listaErrori.add(ErroreCore.PARAMETRO_ERRATO.getErrore(model.getLabels().get(LABEL_OGGETTO_GENERICO),model.getStep1Model().getAnnoImpegno().toString(), "> 1900" ));
+	    }
 		if(model.getStep1Model().getProvvedimento().getAnnoProvvedimento()!= null && !(model.getStep1Model().getProvvedimento().getAnnoProvvedimento()>1900)){
 	    	 listaErrori.add(ErroreCore.PARAMETRO_ERRATO.getErrore("Anno Provvedimento ", model.getStep1Model().getProvvedimento().getAnnoProvvedimento().toString(), "> 1900"));
 	    }
@@ -349,11 +422,11 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	protected String convertiCodificaToStato(String codifica) {
 		String stato = null;
 		if (codifica != null && !"".equalsIgnoreCase(codifica)) {
-			if (Constanti.MOVGEST_STATO_PROVVISORIO.equalsIgnoreCase(codifica)) {
+			if (CostantiFin.MOVGEST_STATO_PROVVISORIO.equalsIgnoreCase(codifica)) {
 				stato = MOVGEST_PROVVISORIO;
-			} else if (Constanti.MOVGEST_STATO_DEFINITIVO.equalsIgnoreCase(codifica)) {
+			} else if (CostantiFin.MOVGEST_STATO_DEFINITIVO.equalsIgnoreCase(codifica)) {
 				stato = STATO_MOVGEST_DEFINITIVO;
-			} else if (Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equalsIgnoreCase(codifica)) {
+			} else if (CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equalsIgnoreCase(codifica)) {
 				stato = MOVGEST_DEFINITIVO_NON_LIQUIDABILE;
 			} 
 		}
@@ -362,11 +435,12 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 
 	protected void ricaricaValoriDefaultStep1(){
 		if (sessionHandler.getAnnoEsercizio() != null && !"".equalsIgnoreCase(sessionHandler.getAnnoEsercizio())) {
-			model.getStep1Model().getCapitolo().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
-			model.getCapitoloRicerca().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
-			model.getStep1Model().setAnnoImpegno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+			model.getStep1Model().getCapitolo().setAnno(sessionHandler.getAnnoBilancio());
+			model.getCapitoloRicerca().setAnno(sessionHandler.getAnnoBilancio());
+			model.getStep1Model().setAnnoImpegno(sessionHandler.getAnnoBilancio());
 		}
 		model.getStep1Model().setRiaccertato(WebAppConstants.No);
+		model.getStep1Model().setReanno(WebAppConstants.No);
 		model.getStep1Model().setSoggettoDurc(WebAppConstants.No);
 		model.getStep1Model().setPluriennale(WebAppConstants.No);
 		model.getStep1Model().setFlagFattura(WebAppConstants.No);
@@ -448,7 +522,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	 */
 	private RicercaPuntualeProgetto requestRicercaProgettoPerCodiceChanged(String codice) {
 		RicercaPuntualeProgetto ricercaPuntualeProgetto = null;
-		if(codice!=null && !StringUtils.isEmpty(codice)){
+		if(codice != null && !StringUtils.isEmpty(codice)){
 			ricercaPuntualeProgetto = new RicercaPuntualeProgetto();
 			ricercaPuntualeProgetto.setRichiedente(sessionHandler.getRichiedente());
 			Progetto progetto = new Progetto();
@@ -534,15 +608,19 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 
 				if(impegno != null && impegno.getUid() > 0){
 					
-					if(impegno.getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_PROVVISORIO) &&
+					if(impegno.getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_PROVVISORIO) &&
 							impegno.getAttoAmministrativo()!=null 
 							&& Boolean.TRUE.equals(impegno.getAttoAmministrativo().getParereRegolaritaContabile())){
 						//impegno e' provvisorio  e il provvedimento a lui collegato (se esiste) ha FlagParereRegolarita a TRUE
 						return false;
 					}
 					
-					isAbilitato=controlloSACUtenteDecentratoCapUscitaGest(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentrato, impegno.getCapitoloUscitaGestione());
+					isAbilitato=controlloSACUtenteDecentratoCapUscitaGest(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentrato.getNomeAzione(), impegno.getCapitoloUscitaGestione());
 				}
+				
+				//SIAC-7804, revertato con SIAC-7977
+				//mi assicuro che se l'impegno e' decentrato si possa modificare il provvedimento solo se questo e' PROVVISORIO
+//				isAbilitato = isAbilitato && "PROVVISORIO".equals(impegno.getDescrizioneStatoOperativoMovimentoGestioneSpesa());
 			}
 		}
 	
@@ -564,8 +642,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		
 		if(isAbilitatoGestisciImpegno()){
 			
-			if(isAbilitatoGestisciImpegnoDecentratoP()){
-				
+			if(isAbilitatoGestisciImpegnoDecentratoP()){		
 				if(isBilancioAttualeInPredisposizioneConsuntivo() &&
 					isAbilitatoGestisciImpegnoRiaccertato()){
 						isAbilitato = true;
@@ -574,7 +651,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 					
 					if(oggettoDaPopolareImpegno() || oggettoDaPopolare.equals(OggettoDaPopolareEnum.SUBIMPEGNO)){
 						
-						if(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_PROVVISORIO))
+						if(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_PROVVISORIO))
 							return isAbilitato = true;
 					}
 				}
@@ -583,7 +660,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 			
 			isAbilitato = true;
 		} 
-		
+
 		return isAbilitato;
 		
 	}
@@ -632,14 +709,14 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 
 				if(accertamento != null && accertamento.getUid()>0){
 					
-					if(accertamento.getStatoOperativoMovimentoGestioneEntrata().equals(Constanti.MOVGEST_STATO_PROVVISORIO) &&
+					if(accertamento.getStatoOperativoMovimentoGestioneEntrata().equals(CostantiFin.MOVGEST_STATO_PROVVISORIO) &&
 							accertamento.getAttoAmministrativo()!=null 
 							&& Boolean.TRUE.equals(accertamento.getAttoAmministrativo().getParereRegolaritaContabile())){
 						//impegno e' provvisorio  e il provvedimento a lui collegato (se esiste) ha FlagParereRegolarita a TRUE
 						return false;
 					}
 					
-					isAbilitato=controlloSACUtenteDecentratoCapUscitaGest(CodiciOperazioni.OP_ENT_gestisciAccertamentoDecentrato, accertamento.getCapitoloEntrataGestione());
+					isAbilitato=controlloSACUtenteDecentratoCapUscitaGest(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoDecentrato.getNomeAzione(), accertamento.getCapitoloEntrataGestione());
 				}
 			}
 		}
@@ -649,11 +726,12 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	
 	
 	public boolean isAzioneDecentrato(){		
-		return sessionHandler.getAzione().getNome().endsWith("Decentrato"); 
+		return sessionHandler.getAzione().getNome().endsWith("Decentrato") || isDecentrato(); 
 	}
 
 	
 	//Soggetto Decentrato
+	@SuppressWarnings("deprecation")
 	public boolean isSoggettoDecentrato(){
 		return isAzioneAbilitata(ABILITAZIONE_GESTIONE_DECENTRATO);
 	}
@@ -661,69 +739,89 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	
 	//Metodi per la profilazione degli impegni
 	public boolean isAbilitatoGestisciImpegno(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegno);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegno);
 	}
 	
 	//abilitazione aggiorna impegno gsa
 	public boolean isAbilitatoAggiornaImpegnoGSA(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_aggiornaImpegnoGSA);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_aggiornaImpegnoGSA);
 	}
 	
 	//Metodi per la profilazione degli impegni
 	public boolean isAbilitatoGestisciParere(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciParere);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciParere);
 	}
 	
 	public boolean isAbilitatoGestisciImpegnoDec(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentrato);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentrato);
 	}
 
 	public boolean isAbilitatoGestisciImpegnoDecentratoP(){
 		
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentratoP);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentratoP);
 	}
 	
 	public boolean isAbilitatoGestisciAccertamentoDecentratoP(){
 		
-		return isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamentoDecentratoP);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoDecentratoP);
 	}
 	
 	
 	public boolean isAbilitatoGestisciImpegnoRiaccertato(){
 		
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoRIACC);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoRIACC);
 	}
 	
 	public boolean isAbilitatoGestisciAccertamentoRiaccertato(){
 		
-		return isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamentoRIACC);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoRIACC);
 	}
 
 
 	public boolean isAbilitatoLeggiImpegno(){
-		return isAzioneAbilitata(CodiciOperazioni.LEGGI_IMP);
+		return isAzioneConsentita(AzioneConsentitaEnum.LEGGI_IMP);
 	}
 	
 	public boolean isEsistenzaSoggettoOClasse(){
 		return esistenzaSoggettoOClasse();
 	}
 	
+	//siac-6997 ror impegno
+	public boolean isAbilitatoImpegnoRORdecentrato(){
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestImpRORdecentrato);
+	}
+	//SIAC-7988
+	public boolean isAbilitatoImpegnoRORdecentratoEFaseBilancioPredisposizioneConsuntivo(){
+		return isAbilitatoImpegnoRORdecentrato() 
+				&& CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO.equals(sessionHandler.getFaseBilancio());
+	}
+	
+	//siac-6997 ror accertamento
+	public boolean isAbilitatoAccertamentoRORdecentrato(){
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestAccRORdecentrato);
+	}
+	//SIAC-7988
+	public boolean isAbilitatoAccertamentoRORdecentratoEFaseBilancioPredisposizioneConsuntivo(){
+		return isAbilitatoAccertamentoRORdecentrato() 
+				&& CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO.equals(sessionHandler.getFaseBilancio());
+	}
+	
 	//Metodi per la profilazione degli accertamenti
 	public boolean isAbilitatoGestisciAccertamento(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamento);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestisciAccertamento);
 	}
 	
 	//abilitazione aggiorna accertamento gsa
 	public boolean isAbilitatoAggiornaAccertamentoGSA(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_ENT_aggiornaAccertamentoGSA);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_aggiornaAccertamentoGSA);
 	}
 	
 	public boolean isAbilitatoGestisciAccertamentoDec(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamentoDecentrato);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoDecentrato);
 	}
 	
 	public boolean isAbilitatoLeggiAccertamento(){
-		return isAzioneAbilitata(CodiciOperazioni.LEGGI_ACC);
+		return isAzioneConsentita(AzioneConsentitaEnum.LEGGI_ACC);
 	}
 
 	public boolean isInserimentoSubimpegno() {
@@ -747,6 +845,15 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		if (oggettoDaPopolare.equals(OggettoDaPopolareEnum.IMPEGNO) || oggettoDaPopolare.equals(OggettoDaPopolareEnum.ACCERTAMENTO)) {
 			model.getStep1Model().setCapitolo(supportCapitolo);
 			model.getStep1Model().setCapitoloSelezionato(true);
+			//SIAC-6997
+			if(supportCapitolo != null && supportCapitolo.getUidStruttura() != null){
+				//if(model.getStep1Model().getStrutturaSelezionataCompetente() == null || (model.getStep1Model().getStrutturaSelezionataCompetente() != null && model.getStep1Model().getStrutturaSelezionataCompetente().equals(""))){
+					model.getStep1Model().setStrutturaSelezionataCompetente(String.valueOf(supportCapitolo.getUidStruttura()));
+					model.getStep1Model().setStrutturaSelezionataCompetenteDesc(supportCapitolo.getCodiceStrutturaAmministrativa() + "-" + supportCapitolo.getDescrizioneStrutturaAmministrativa());
+				//}
+				//SIAC-7476: non bisogna puntare più all'elenco delle SAC in sessione, ma richiamare apposito servizio di ricerca (probabilmente cachato)
+				//recuperaDescrizioneStrutturaCompetente();
+			}
 			teSupport.setPianoDeiConti(null);
 		} else if (oggettoDaPopolare.equals(OggettoDaPopolareEnum.SUBIMPEGNO) || oggettoDaPopolare.equals(OggettoDaPopolareEnum.SUBACCERTAMENTO)) {
 			model.getStep1ModelSubimpegno().setCapitolo(supportCapitolo);
@@ -792,13 +899,12 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		model.getStep1Model().setProgettoSelezionato(true);
 	}
 	
-	
 	@Override
 	protected void popolaProgetto(Progetto p) {
 		super.popolaProgetto(p);
 		model.getStep1Model().setProgetto(p.getCodice());
 	}
-
+	
 	@Override
 	protected void popolaCronoprogramma(Cronoprogramma c) {
 		model.getStep1Model().setCronoprogramma(c.getCodice());
@@ -824,34 +930,46 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		iModel.setStato(currentProvvedimento.getStato());
 	}
 	
+	
 	//setta un nuovo soggetto, nel momento in cui, dalla prima pagina, si sceglie di associare all'impegno/accertamento un soggetto tramite classe
 	protected void controlloSoggettoSelezionatoEClasse(){
-		if(model.getStep1Model().getSoggetto().getIdClasse()!= null && !"".equalsIgnoreCase(model.getStep1Model().getSoggetto().getIdClasse()) ){
-			String tmpClasse= model.getStep1Model().getSoggetto().getClasse();
-			String tmpIdClasse= model.getStep1Model().getSoggetto().getIdClasse();
-			String tmpClasseDesc = model.getStep1Model().getSoggetto().getClasseDesc();
-			model.getStep1Model().setSoggetto(new SoggettoImpegnoModel());
-			model.getStep1Model().getSoggetto().setClasse(tmpClasse);
-			model.getStep1Model().getSoggetto().setIdClasse(tmpIdClasse);
-			model.getStep1Model().getSoggetto().setClasseDesc(tmpClasseDesc);
-		}
+			
+			//SIAC-8844
+			if(model.getStep1Model().getSoggetto().getCodCreditore()!= null && !"".equalsIgnoreCase(model.getStep1Model().getSoggetto().getCodCreditore())) {
+				String tmpCodCreditore= model.getStep1Model().getSoggetto().getCodCreditore();
+				model.getStep1Model().setSoggetto(new SoggettoImpegnoModel());
+				model.getStep1Model().getSoggetto().setCodCreditore(tmpCodCreditore);
+			} 
+			
+			//task-51
+			//if(model.getStep1Model().getSoggetto().getIdClasse() != null && !"".equalsIgnoreCase(model.getStep1Model().getSoggetto().getIdClasse()) ){
+			if(model.getStep1Model().getSoggetto().getClasse()!= null && !"".equalsIgnoreCase(model.getStep1Model().getSoggetto().getClasse()) ){
+				String tmpClasse= model.getStep1Model().getSoggetto().getClasse();
+				//String tmpIdClasse= model.getStep1Model().getSoggetto().getIdClasse();
+				String tmpClasseDesc = model.getStep1Model().getSoggetto().getClasseDesc();
+				model.getStep1Model().setSoggetto(new SoggettoImpegnoModel());
+				model.getStep1Model().getSoggetto().setClasse(tmpClasse);
+				//model.getStep1Model().getSoggetto().setIdClasse(tmpIdClasse);
+				model.getStep1Model().getSoggetto().setClasseDesc(tmpClasseDesc);
+			}
 	}
+	
 	
 	//Inserisce la descrizione della classe Soggetto
 	protected void inserisciDescClasseSoggettoAggiorna(){
-    if(model.getStep1Model().getSoggetto().getClasse() != null && !"".equalsIgnoreCase(model.getStep1Model().getSoggetto().getClasse()) ){
-    	
-    	for(CodificaFin cod:model.getListaClasseSoggetto()){
-    		if(cod.getCodice().equals(model.getStep1Model().getSoggetto().getClasse())){
-    			model.getStep1Model().getSoggetto().setClasse(cod.getCodice());
-    		}
-    		
-    		if(cod.getCodice().equalsIgnoreCase(model.getStep1Model().getSoggetto().getClasse())){
-    			model.getStep1Model().getSoggetto().setClasseDesc(cod.getDescrizione());
-    			break;
-    		}
-    	}
-    }
+	    if(model.getStep1Model().getSoggetto().getClasse() != null && !"".equalsIgnoreCase(model.getStep1Model().getSoggetto().getClasse()) ){
+	    	
+	    	for(CodificaFin cod : model.getListaClasseSoggetto()){
+	    		if(cod.getCodice().equals(model.getStep1Model().getSoggetto().getClasse())){
+	    			model.getStep1Model().getSoggetto().setClasse(cod.getCodice());
+	    		}
+	    		
+	    		if(cod.getCodice().equalsIgnoreCase(model.getStep1Model().getSoggetto().getClasse())){
+	    			model.getStep1Model().getSoggetto().setClasseDesc(cod.getDescrizione());
+	    			break;
+	    		}
+	    	}
+	    }
 	}
 	
 	
@@ -901,20 +1019,32 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		rac.setEnte(sessionHandler.getEnte());
 		rac.setRichiedente(sessionHandler.getRichiedente());
 		RicercaAccertamentoK rK = new RicercaAccertamentoK();
-		rK.setAnnoAccertamento(model.getStep1Model().getAnnoAccertamentoVincolo());
-		rK.setNumeroAccertamento(new BigDecimal(model.getStep1Model().getNumeroAccertamentoVincolo().intValue()));
-		rK.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
-		rac.setpRicercaAccertamentoK(rK);
-		
-		
-		resp = movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(rac);
-		
+		//task-47
+		Integer annoAccertamento = model.getStep1Model().getAnnoAccertamentoVincolo()!= null ?model.getStep1Model().getAnnoAccertamentoVincolo():(model.getStep1Model().getListaVincoliImpegno() != null ? (model.getStep1Model().getListaVincoliImpegno().size() > 0 ? (model.getStep1Model().getListaVincoliImpegno().get(0).getAccertamento() != null? model.getStep1Model().getListaVincoliImpegno().get(0).getAccertamento().getAnnoMovimento():null):null):null);
+		BigDecimal nroAccertamento = model.getStep1Model().getNumeroAccertamentoVincolo()!= null ? new BigDecimal(model.getStep1Model().getNumeroAccertamentoVincolo()):(model.getStep1Model().getListaVincoliImpegno() != null ? (model.getStep1Model().getListaVincoliImpegno().size() > 0 ? (model.getStep1Model().getListaVincoliImpegno().get(0).getAccertamento() != null? model.getStep1Model().getListaVincoliImpegno().get(0).getAccertamento().getNumeroBigDecimal():null):null):null);
+		if (annoAccertamento != null && nroAccertamento != null) {
+			rK.setAnnoAccertamento(annoAccertamento);
+			rK.setNumeroAccertamento(nroAccertamento);
+			rK.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
+			//SIAC-8674
+			rac.setCaricalistaModificheCollegate(caricaListaModificheCollegateAccertamento());
+			rac.setpRicercaAccertamentoK(rK);
+			
+			
+			resp = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(rac);
+		}
 		return resp;
 		
 	}
 	
+	protected boolean caricaListaModificheCollegateAccertamento() {
+		return true;
+	}
+
 	public String aggiungiVincolo() throws Exception {
-		
+		//SIAC-7872
+		cleanErrori();
+		//FINE SIAC-7872
 		String tipoVincolo = model.getStep1Model().getTipoVincolo();	
 		if(SCELTA_ACCERTAMENTO.equals(tipoVincolo)){
 			return aggiungiVincoloAccertamento();
@@ -932,17 +1062,17 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		model.getStep1Model().setInserisciVincoloBtn(false);
 		
 		// controlla dati
-		if(null==model.getStep1Model().getAnnoAccertamentoVincolo()){
+		if(null == model.getStep1Model().getAnnoAccertamentoVincolo()){
 			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno accertamento vincolo "));
-		}else{
+		}/*else{
 			
 			// l'anno dell'accertamento non può essere successivo all'anno impegno
 			if(model.getStep1Model().getAnnoAccertamentoVincolo() > model.getStep1Model().getAnnoImpegno()){
 				listaErrori.add(ErroreFin.ACCERTAMENTO_NON_VALIDO.getErrore());
 			}
-		}
+		}*/
 		
-		if(null==model.getStep1Model().getNumeroAccertamentoVincolo()){
+		if(null == model.getStep1Model().getNumeroAccertamentoVincolo()){
 			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero accertamento vincolo "));
 		}
 			
@@ -964,51 +1094,25 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 			return INPUT;
 		}
 	
-		Accertamento accertamentoPerChiave = null;
-		
-		// se non arrivo da compilazione guidata
-		if(model.getStep1Model().getAccertamentoPerVincolo()==null){
+		Accertamento accertamentoPerChiave = getAccertamentoVincolo();
+		if(accertamentoPerChiave == null)
+			return INPUT;
+
+		//SIAC-7349 - SIAC-8487 - task-39
+		Errore errore = this.checkVincoloComponente(accertamentoPerChiave);
+		if(errore != null){
+			listaErrori.add(errore);
+			addErrori(listaErrori);
+			return INPUT;
+		}	
 				
-		
-			// ricerca accertamento per chiave
-			RicercaAccertamentoPerChiaveOttimizzatoResponse resp = executeRicercaAccertamentoPerChiaveOttimizzato();
-			//qua va fatto il controllo
-			
-			
-			
-			if(resp==null || resp.isFallimento()){
-				// apro il tab vincolo
-				model.getStep1Model().setApriTabVincoli(true);
-				// apro anche il tab di inserimento dati vincolo
-				model.getStep1Model().setInserisciVincoloBtn(true);
-				debug(methodName, "Errore nella risposta del servizio");
-				if(resp.getAccertamento()==null && (resp.getErrori()==null || resp.getErrori().isEmpty())){
-					addErrore(ErroreFin.MOV_NON_ESISTENTE.getErrore("Accertamento"));
-				}else{
-					addErrori(methodName, resp);
-				}
-				return INPUT;
-			}
-			accertamentoPerChiave = resp.getAccertamento();
-
-		}else{
-			// arrivo da compilazione guidata
-			accertamentoPerChiave = model.getStep1Model().getAccertamentoPerVincolo();
-
+		//SIAC-7308 - SIAC-7830
+		ErroreMovGestModel nonConsentito = verificaAccertamentoVincolo(accertamentoPerChiave);
+		if(nonConsentito != null){
+			listaErrori.add(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore(nonConsentito.getDescrizione()));//SIAC-7830
+			addErrori(listaErrori);
+			return INPUT;
 		}
-		
-		//SIAC-7308
-//		Boolean nonConsentito = verificaAccertamentoVincolo(accertamentoPerChiave);
-//		if(nonConsentito){
-//
-//			listaErrori.add(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Vincolo non consentito"));
-//			addErrori(listaErrori);
-//			return INPUT;
-//		}
-		
-		
-		
-		
 		
 		// controlli sulle disponibilita
 		if(accertamentoPerChiave.getDisponibilitaUtilizzare().compareTo(model.getStep1Model().getImportoVincolo())<0){
@@ -1016,7 +1120,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		}
 
 		// stato annullato
-		if(accertamentoPerChiave.getStatoOperativoMovimentoGestioneEntrata().equals(Constanti.MOVGEST_STATO_ANNULLATO)){
+		if(accertamentoPerChiave.getStatoOperativoMovimentoGestioneEntrata().equals(CostantiFin.MOVGEST_STATO_ANNULLATO)){
 			addErrore(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("Accertamento", "annullato"));
 		}
 		
@@ -1030,24 +1134,108 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		
 		// ricerca andata a buon fine
 		// AGGIUNGO ALLA LISTA:
-		aggiungiAListaVincoliImpegno(accertamentoPerChiave, null, model.getStep1Model().getImportoVincolo());
-		
-		// se tutto ok cancello i valori del form
-		// e apro il tab vincolo
-		this.annullaValoriVincolo();
+		//aggiungiAListaVincoliImpegno(accertamentoPerChiave, null, model.getStep1Model().getImportoVincolo());
 		
 		// calcolo i totali
-		this.calcolaTotaliUtilizzabile();
+		boolean controlliSuperati = this.calcolaTotaliUtilizzabile();
 		// trappo eventuali errori nei calcoli totali
 		if(hasActionErrors()){
 			return INPUT;
 		}
 		
+		if(controlliSuperati){
+			aggiungiAListaVincoliImpegno(accertamentoPerChiave, null, model.getStep1Model().getImportoVincolo());
+		}
+		
+		// se tutto ok cancello i valori del form
+		// e apro il tab vincolo
+		this.annullaValoriVincolo();
+				
 		// sposta l'ancora all'altezza dei vincoli
 		model.getStep1Model().setPortaAdAltezzaVincoli(true);
-		
+		calcolaTestataVincoli();
 		return SUCCESS;
 	}
+
+	protected Accertamento getAccertamentoVincolo() throws Exception {
+		Accertamento accertamentoPerChiave = null;
+		
+		// se non arrivo da compilazione guidata
+		if(model.getStep1Model().getAccertamentoPerVincolo() == null){
+						
+			// ricerca accertamento per chiave
+			RicercaAccertamentoPerChiaveOttimizzatoResponse resp = executeRicercaAccertamentoPerChiaveOttimizzato();
+			
+			if(resp == null) {
+				return null;
+			} else if (resp.isFallimento()){
+				// apro il tab vincolo
+				model.getStep1Model().setApriTabVincoli(true);
+				// apro anche il tab di inserimento dati vincolo
+				model.getStep1Model().setInserisciVincoloBtn(true);
+				debug(methodName, "Errore nella risposta del servizio");
+				if(resp.getAccertamento()==null && (resp.getErrori()==null || resp.getErrori().isEmpty())){
+					addErrore(ErroreFin.MOV_NON_ESISTENTE.getErrore("Accertamento"));
+				}else{
+					addErrori(methodName, resp);
+				}
+				//return INPUT;
+			} else {
+				accertamentoPerChiave = resp.getAccertamento();
+			}
+		}else{
+			// arrivo da compilazione guidata
+			accertamentoPerChiave = model.getStep1Model().getAccertamentoPerVincolo();
+
+		}
+		return accertamentoPerChiave;
+	}
+	
+	//SIAC-7349 - SIAC-8487
+	protected Errore checkVincoloComponente(Accertamento accertamento){
+		Errore errore = null;
+		
+		if(getTipoComponenteImportiCapitolo() == null || getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo() == null){
+			return ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Componente");
+		}
+		
+		switch (getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo()) {
+			case FPV: 
+				errore = isAnnoMovimentoMaggioreOUgualeAdAnnoImpegno(accertamento.getAnnoMovimento()) ? 
+					ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Vincolo non consentito: anno di accertamento deve essere antecedente all'anno impegno") : null; //SIAC-7830
+				break;
+			case AVANZO: 
+				errore = isAnnoMovimentoMaggioreOUgualeAdAnnoImpegno(accertamento.getAnnoMovimento()) ? 
+					ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Vincolo non consentito: anno di accertamento deve essere antecedente all'anno impegno") : null; //SIAC-7830
+				break;
+			case FRESCO: 
+				errore = isAnnoMovimentoDiversoDaAnnoImpegno(accertamento.getAnnoMovimento()) ? 
+					ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Vincolo non consentito: anno di accertamento deve essere uguale all'anno impegno") : null; //SIAC-7830
+				break;
+			default: 
+				break;
+		}
+		
+		// task-39: l'anno accertamento del vincolo deve essere >= anno bilancio a prescindere dalla componente
+		errore = !isAnnoMovimentoMaggioreOUgualeAdAnnoBilancio(accertamento.getAnnoMovimento())? 
+		ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Vincolo non consentito: anno di accertamento deve essere maggiore o uguale all'anno di bilancio") : errore;		
+		
+		return errore;
+	}
+	
+	private boolean isAnnoMovimentoMaggioreOUgualeAdAnnoImpegno(int annoMovimento) {
+		return annoMovimento > 0 && annoMovimento >= model.getStep1Model().getAnnoImpegno();
+	}
+
+	private boolean isAnnoMovimentoDiversoDaAnnoImpegno(int annoMovimento) {
+		return annoMovimento > 0 && annoMovimento != model.getStep1Model().getAnnoImpegno();
+	}
+	
+	// task-39
+	private boolean isAnnoMovimentoMaggioreOUgualeAdAnnoBilancio(int annoMovimento){
+		return annoMovimento > 0 && annoMovimento >= sessionHandler.getAnnoBilancio();
+	} 
+	
 	
 	private String aggiungiAvanzovincolo() throws Exception {
 		
@@ -1087,6 +1275,12 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		if(importoDigitato.compareTo(residuoAvanzo)>0){
 			listaErrori.add(ErroreFin.DISPONIBILITA_INSUFFICIENTE.getErrore("gestione vincolo", "a collegare"));
 		}
+		//SIAC-7349 - SIAC-8487
+		boolean result = this.verificaAvanzoVincolo(avanzovincoloSelezionato);
+		if(!result){
+			//cammbiare msg
+			listaErrori.add(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Vincolo non consentito: scelta FPV/Avanzo non compatibile con componente selezionata o non presente."));
+		}
 		
 		if(!listaErrori.isEmpty()){
 			// apro il tab vincolo
@@ -1118,11 +1312,85 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		if(hasActionErrors()){
 			return INPUT;
 		}
-		
+		calcolaTestataVincoli();
 		// sposta l'ancora all'altezza dei vincoli
 		model.getStep1Model().setPortaAdAltezzaVincoli(true);
 		
 		return SUCCESS;
+	}
+	
+	//SIAC-7349 - SIAC-8487
+	private boolean verificaAvanzoVincolo(Avanzovincolo avanzovincoloSelezionato){
+		boolean result = true;
+		
+		if(getTipoComponenteImportiCapitolo() == null) {
+			return result; 
+		}
+		
+		if(getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo() == null){
+			return false;
+		}
+		
+		String codiceAvanzoVincolo = avanzovincoloSelezionato.getTipoAvanzovincolo().getCodice();
+		
+		switch (getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo()) {
+			case FRESCO:
+				result = isNotTipoAvanzoVincoloFPV(codiceAvanzoVincolo) || isNotTipoAvanzoVincoloAAM(codiceAvanzoVincolo);
+				break;
+			case AVANZO:
+				result = isNotTipoAvanzoVincoloFPV(codiceAvanzoVincolo);
+				break;
+			case FPV:
+				result = isNotTipoAvanzoVincoloAAM(codiceAvanzoVincolo) || isTipoAvanzoVincoloAAM(codiceAvanzoVincolo) && isAnnoMovimentoSuperioreABilancio();
+				break;
+			case DA_ATTRIBUIRE:
+				break;
+			default:
+				result = false;
+				break;
+		}
+			
+//		//SIAC-7349 Inizio CM 05/06/2020 Aggiunto if per gestire nullPointerException dovuta alla mancanza di componente associata al capitolo
+//		if(getTipoComponenteImportiCapitolo() != null) {
+//		//SIAC-7349 Fine CM 05/06/2020
+//			if(getTipoComponenteImportiCapitolo() != null && getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo() != null){
+//				if(getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo().name().equalsIgnoreCase(MacrotipoComponenteImportiCapitolo.FRESCO.name()) || 
+//					getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo().name().equalsIgnoreCase(MacrotipoComponenteImportiCapitolo.AVANZO.name())){	
+//					if(avanzovincoloSelezionato.getTipoAvanzovincolo().getCodice().startsWith("FPV")){
+//						result = false;
+//					}
+//				}
+//				if(getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo().name().equalsIgnoreCase(MacrotipoComponenteImportiCapitolo.FRESCO.name()) || 
+//					getTipoComponenteImportiCapitolo().getMacrotipoComponenteImportiCapitolo().name().equalsIgnoreCase(MacrotipoComponenteImportiCapitolo.FPV.name())){	
+//					if(avanzovincoloSelezionato.getTipoAvanzovincolo().getCodice().equalsIgnoreCase("AAM")){
+//						result = false;
+//					}
+//				}
+//			}else{
+//				result = false;
+//			}
+//		}//SIAC-7349 Fine CM 05/06/2020
+		return result;
+	}
+	
+	private boolean isTipoAvanzoVincoloFPV(String codiceAvanzoVincolo) {
+		return StringUtils.isNotBlank(codiceAvanzoVincolo) && codiceAvanzoVincolo.startsWith("FPV");
+	}
+
+	private boolean isNotTipoAvanzoVincoloFPV(String codiceAvanzoVincolo) {
+		return !isTipoAvanzoVincoloFPV(codiceAvanzoVincolo);
+	}
+
+	private boolean isTipoAvanzoVincoloAAM(String codiceAvanzoVincolo) {
+		return StringUtils.isNotBlank(codiceAvanzoVincolo) && codiceAvanzoVincolo.equalsIgnoreCase(CategoriaCapitoloEnum.AAM.getCodice());
+	}
+
+	private boolean isNotTipoAvanzoVincoloAAM(String codiceAvanzoVincolo) {
+		return !isTipoAvanzoVincoloAAM(codiceAvanzoVincolo);
+	}
+	
+	private boolean isAnnoMovimentoSuperioreABilancio() {
+		return  model.getStep1Model().getAnnoImpegno() > creaOggettoBilancio().getAnno();
 	}
 	
 	private void aggiungiAListaVincoliImpegno(Accertamento accertamentoSelezionato, Avanzovincolo avanzovincoloSelezionato, BigDecimal importoDigitato){
@@ -1133,13 +1401,17 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		if(accertamentoSelezionato!=null){
 			//caso accertamento
 			BigDecimal dispUtilizzare = accertamentoSelezionato.getDisponibilitaUtilizzare();
-			BigDecimal dispUtilizzareNew = dispUtilizzare.subtract(importoDigitato);
+			BigDecimal dispUtilizzareNew = BigDecimal.ZERO;
+			if(dispUtilizzare != null)
+				dispUtilizzareNew = dispUtilizzare.subtract(importoDigitato);
 			//setto il nuovo disponibile a utilizzare:
 			accertamentoSelezionato.setDisponibilitaUtilizzare(dispUtilizzareNew);
 		} else if (avanzovincoloSelezionato !=null){
 			//caso avanzo vincolo
 			BigDecimal dispAvanzoVincolo = avanzovincoloSelezionato.getDisponibileAvanzovincolo();
-			BigDecimal dispNew = dispAvanzoVincolo.subtract(importoDigitato);
+			BigDecimal dispNew = BigDecimal.ZERO;
+			if(dispAvanzoVincolo != null)
+				dispNew = dispAvanzoVincolo.subtract(importoDigitato);
 			//setto il nuovo disponibile avanzo vincolo:
 			avanzovincoloSelezionato.setDisponibileAvanzovincolo(dispNew);
 		}
@@ -1211,7 +1483,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		if(model.getStep1Model().getListaVincoliImpegno()!=null && !model.getStep1Model().getListaVincoliImpegno().isEmpty()){
 			for (VincoloImpegno vincoloImp : model.getStep1Model().getListaVincoliImpegno()) {
 				if(vincoloImp.getAccertamento()!=null && vincoloImp.getAccertamento().getAnnoMovimento() == annoAcc.intValue() &&
-				   vincoloImp.getAccertamento().getNumero().equals(numeroAcc) ){
+				   vincoloImp.getAccertamento().getNumeroBigDecimal().equals(numeroAcc) ){
 					vincolo = vincoloImp;
 					break;
 				}
@@ -1243,14 +1515,14 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		Integer annoAcc = new Integer(getAnnoAccDaPassare());
 		
 		VincoloImpegno vincoloDaEliminare = trovaVincoloInDataTableByAccertamento(annoAcc, numeroAcc);
-		if(null!=vincoloDaEliminare){
+		
+		// ricalcola i totali dopo aver eliminato
+		boolean controlliSuperati = calcolaTotaliUtilizzabile();
+		
+		if(null != vincoloDaEliminare && controlliSuperati){
 			// allora lo tolgo dalla lista
 			model.getStep1Model().getListaVincoliImpegno().remove(vincoloDaEliminare);
 		}
-		
-		// ricalcola i totali dopo aver eliminato
-		calcolaTotaliUtilizzabile();
-		
 		// sposta l'ancora all'altezza dei vincoli
 		model.getStep1Model().setPortaAdAltezzaVincoli(true);
 		
@@ -1302,9 +1574,10 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		BigDecimal numeroAcc = new BigDecimal(model.getStep1Model().getDettaglioVincolo().getNumeroAccertamento());
 		Integer annoAcc = new Integer(model.getStep1Model().getDettaglioVincolo().getAnnoAccertamento());
 		
+		// ricalcola i totali dopo aver eliminato
+		boolean controlliSuperati = calcolaTotaliUtilizzabile();
 		VincoloImpegno vincoloImp = trovaVincoloInDataTableByAccertamento(annoAcc, numeroAcc);
-		
-		if(vincoloImp!=null){
+		if(vincoloImp != null && controlliSuperati){
 			BigDecimal nuovoImporto = model.getStep1Model().getDettaglioVincolo().getImportoDaAggiornare();
 			BigDecimal vecchioImporto = vincoloImp.getImporto();
 			
@@ -1317,10 +1590,10 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		
 			vincoloImp.setImporto(model.getStep1Model().getDettaglioVincolo().getImportoDaAggiornare());
 		}
-		
-		// ricalcola i totali dopo aver eliminato
-		calcolaTotaliUtilizzabile();
+		if(controlliSuperati)
+			controlliSuperati = calcolaTotaliUtilizzabile();
 		// sposta l'ancora all'altezza dei vincoli
+		calcolaTestataVincoli();
 		model.getStep1Model().setPortaAdAltezzaVincoli(true);
 		return SUCCESS;
 	}
@@ -1436,7 +1709,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 				dvm.setImportoDaAggiornareFormattato(convertiBigDecimalToImporto(vincoloDaAggiornare.getImporto()));
 			}
 			dvm.setAnnoAccertamento(String.valueOf(vincoloDaAggiornare.getAccertamento().getAnnoMovimento()));
-			dvm.setNumeroAccertamento(String.valueOf(vincoloDaAggiornare.getAccertamento().getNumero()));
+			dvm.setNumeroAccertamento(String.valueOf(vincoloDaAggiornare.getAccertamento().getNumeroBigDecimal()));
 		}
 		
 		// setto iol dettaglio
@@ -1450,7 +1723,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 			for (VincoloImpegno vincoloImp : model.getStep1Model().getListaVincoliImpegno()) {
 				if(vincoloImp.getAccertamento()!=null){
 					if(vincoloImp.getAccertamento().getAnnoMovimento() == accertamento.getAnnoMovimento() &&
-							   vincoloImp.getAccertamento().getNumero().equals(accertamento.getNumero()) ){
+							   vincoloImp.getAccertamento().getNumeroBigDecimal().equals(accertamento.getNumeroBigDecimal()) ){
 						addErrore(ErroreFin.MOVGEST_GIA_PRESENTE.getErrore("Accertamento"));
 						break;
 					}
@@ -1472,7 +1745,39 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		}
 	}
 	
-	protected void calcolaTotaliUtilizzabile(){
+	//SIAC-7349 - GM - 14/07/2020
+	protected void calcolaTestataVincoli(){
+		BigDecimal totaleVincoli = BigDecimal.ZERO;
+		BigDecimal totaleDaCollegare = BigDecimal.ZERO;
+		
+		if(model.getStep1Model().getListaVincoliImpegno() != null)
+			for (VincoloImpegno vincoloImpegno : model.getStep1Model().getListaVincoliImpegno()) 
+				totaleVincoli = totaleVincoli.add(vincoloImpegno.getImporto());
+		
+		Impegno impegno = model.getImpegnoInAggiornamento();
+		if(impegno != null && impegno.getListaModificheMovimentoGestioneSpesa() != null && !impegno.getListaModificheMovimentoGestioneSpesa().isEmpty())
+			for(int j =  0; j < impegno.getListaModificheMovimentoGestioneSpesa().size(); j++)
+				if(!impegno.getListaModificheMovimentoGestioneSpesa().get(j).isElaboraRorReanno() &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).isReimputazione() && 
+					!(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getStatoOperativoModificaMovimentoGestione().name().equals(StatoOperativoModificaMovimentoGestione.ANNULLATO.name())) &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld() != null &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().compareTo(BigDecimal.ZERO) < 0)
+					totaleDaCollegare = totaleDaCollegare.add(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().abs());
+		
+		//al totale da collegare aggiungo l'importo dell'impegno
+		if(model.getStep1Model().getImportoFormattato() != null && !model.getStep1Model().getImportoFormattato().equals("0") && !model.getStep1Model().getImportoFormattato().equals(""))
+			totaleDaCollegare = totaleDaCollegare.add(convertiImportoToBigDecimal(model.getStep1Model().getImportoFormattato()));
+		
+		//ed infine sottraggo l'importo totale dei vincoli
+		totaleDaCollegare = totaleDaCollegare.subtract(totaleVincoli);
+		
+		//setto i valori sul model
+		model.getStep1Model().setTotaleImportoDaCollegare(totaleDaCollegare);
+		model.getStep1Model().setTotaleImportoVincoli(totaleVincoli);
+	}
+	
+	protected boolean calcolaTotaliUtilizzabile(){
+		boolean result = true;
 		if(model.getStep1Model().getListaVincoliImpegno()==null || model.getStep1Model().getListaVincoliImpegno().isEmpty()){
 			// non ci sono righe
 			model.getStep1Model().setTotaleImportoDaCollegare(BigDecimal.ZERO);
@@ -1482,44 +1787,141 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 			BigDecimal totaleVincoli = BigDecimal.ZERO;
 			BigDecimal totaleDaCollegare = BigDecimal.ZERO;
 			for (VincoloImpegno vincoloImpegno : model.getStep1Model().getListaVincoliImpegno()) {
-				
 				totaleVincoli = totaleVincoli.add(vincoloImpegno.getImporto());
-				
 			}
-			
 			// totale da collegare = importo impegno - totale vincoli
 			if(model.getStep1Model().getImportoFormattato() == null || 
-				       model.getStep1Model().getImportoFormattato().equals("0") ||
-				       model.getStep1Model().getImportoFormattato().equals("")){
-				       // se non c'e'
-				 	   addErrore(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Importo "+model.getLabels().get(LABEL_OGGETTO_GENERICO)));
+				model.getStep1Model().getImportoFormattato().equals("0") ||
+				model.getStep1Model().getImportoFormattato().equals("")){
+			    // se non c'e'
+				addErrore(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Importo "+model.getLabels().get(LABEL_OGGETTO_GENERICO)));
+				result = false;
 			}else{
 				// ho tutti i valori e posso fare i calcoli
 				totaleDaCollegare = convertiImportoToBigDecimal(model.getStep1Model().getImportoFormattato()).subtract(totaleVincoli);
 			}
-			
-			if(totaleDaCollegare.compareTo(BigDecimal.ZERO)<0){
-				addErrore(ErroreFin.TOT_COLLEGA_VINCOLO.getErrore(""));
-			}
-			
+			/*if(totaleDaCollegare.compareTo(BigDecimal.ZERO)<0){
+				//SIAC-7349 (CONTABILIA-225) - 08/06/2020 - GM:
+				boolean visualizzaMsgErrore = this.visualizzaMsgPerVerificaImpegnoModifichePerControlloVincoli(totaleVincoli, model.getImpegnoInAggiornamento());
+				if(visualizzaMsgErrore){
+					addErrore(ErroreFin.TOT_COLLEGA_VINCOLO.getErrore(""));
+					result = false;
+				}
+			}*/
 			// sono in aggiornamento impegno
 			if(model.isOperazioneAggiorna()){
-				
 				//SE Impegno.StatoOperativo = DEFINITIVO  e  TOTALEVINC <   Impegno.sommaLiquidazioniDoc    	
-				if(!model.getStep1Model().getDescrizioneStatoOperativoMovimento().equals(Constanti.STATO_PROVVISORIO)){
+				if(!model.getStep1Model().getDescrizioneStatoOperativoMovimento().equals(CostantiFin.STATO_PROVVISORIO)){
 					if(totaleVincoli.compareTo(model.getSommaLiquidazioneDoc())<0){
 						addErrore(ErroreFin.MOV_VINCOLATO_LIQUIDATO.getErrore(""));
+						result = false;
 					}
 				}
 				
-				
+				///SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM: mostrare il residuo delle modifiche di un accertamento che rimane da collegare
+				BigDecimal vincoliDiCuiPending = BigDecimal.ZERO;
+				try{
+					vincoliDiCuiPending = calcolaDiCuiPending(model.getImpegnoInAggiornamento());
+				}catch(ImportoDeltaException e){
+					addErrore(ErroreFin.IMPORTO_DELTA_VINCOLI.getErrore(""));
+					result = false;
+				}
+				Collections.sort(model.getStep1Model().getListaVincoliImpegno(), Collections.reverseOrder(new ComparaVincoli()));
+				for (VincoloImpegno vincoloImpegno : model.getStep1Model().getListaVincoliImpegno()) {
+					if(vincoloImpegno.getAccertamento() != null && 
+						(vincoloImpegno.getAccertamento().getListaModificheMovimentoGestioneSpesaCollegata() == null || 
+						(vincoloImpegno.getAccertamento().getListaModificheMovimentoGestioneSpesaCollegata() != null && 
+						vincoloImpegno.getAccertamento().getListaModificheMovimentoGestioneSpesaCollegata().isEmpty()))){
+						if(vincoliDiCuiPending.compareTo(BigDecimal.ZERO) > 0){
+							int comparing = vincoliDiCuiPending.compareTo(vincoloImpegno.getImporto()); 
+							if(comparing >= 0){
+								//diCUiPending > importoVincolo
+								vincoliDiCuiPending = vincoliDiCuiPending.subtract(vincoloImpegno.getImporto());
+								vincoloImpegno.setDiCuiPending(vincoloImpegno.getImporto());
+							}else if (comparing < 0){
+								//diCUiPending < importoVincolo
+								vincoloImpegno.setDiCuiPending(vincoliDiCuiPending);
+								vincoliDiCuiPending = BigDecimal.ZERO;
+							}
+						}
+					}
+				}
+				//END SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM
 			}
-						
 			model.getStep1Model().setTotaleImportoDaCollegare(totaleDaCollegare);
 			model.getStep1Model().setTotaleImportoVincoli(totaleVincoli);
 		}
+		return result;
 	}
 
+	//SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM: mostrare il residuo delle modifiche di un accertamento che rimane da collegare/
+	private BigDecimal calcolaDiCuiPending(Impegno impegno) throws ImportoDeltaException{
+		BigDecimal vincoliDiCuiPending = BigDecimal.ZERO;
+		BigDecimal totPrimoValore = BigDecimal.ZERO;
+		BigDecimal totSecondoValore = BigDecimal.ZERO;
+		if(impegno.getListaModificheMovimentoGestioneSpesa() != null && !impegno.getListaModificheMovimentoGestioneSpesa().isEmpty()){
+			for(int j =  0; j < impegno.getListaModificheMovimentoGestioneSpesa().size(); j++){
+				if(!impegno.getListaModificheMovimentoGestioneSpesa().get(j).isElaboraRorReanno() &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).isReimputazione() && 
+					!(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getStatoOperativoModificaMovimentoGestione().name().equals(StatoOperativoModificaMovimentoGestione.ANNULLATO.name())) &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld() != null &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().compareTo(BigDecimal.ZERO) < 0){
+					//PRENDO SEMPRE IL VALORE DELLA MODIFICA COME PRIMO STEP
+					totPrimoValore = totPrimoValore.add(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().abs());
+					BigDecimal importoDeltaVincolo = impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoDeltaVincolo();
+					if(importoDeltaVincolo != null && importoDeltaVincolo.compareTo(BigDecimal.ZERO) > 0){
+						if(importoDeltaVincolo.compareTo(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().abs()) > 0){
+							throw new ImportoDeltaException("Errore nel calcolo di importo delta vincoli");
+						}else
+							totPrimoValore = totPrimoValore.subtract(importoDeltaVincolo);
+					}
+					if(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata() != null &&
+						!impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata().isEmpty()){
+						for(int k =  0; k < impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata().size(); k++){
+							totSecondoValore = totSecondoValore.add(
+								impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata().get(k).getImportoCollegamento()
+							);
+						}
+					}
+					//QUESTO E' IL VALORE DA RIPARTIRE SUI VINCOLI DI TIPO ACCERTAMENTO CHE NON HANNO MODIFICHE GIA' COLLEGATE
+					vincoliDiCuiPending = totPrimoValore.subtract(totSecondoValore);				}
+			}
+		}
+		return vincoliDiCuiPending;
+	}
+	//END SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM
+		
+	//SIAC-7349 (CONTABILIA-225) - 08/06/2020 - GM
+	protected boolean visualizzaMsgPerVerificaImpegnoModifichePerControlloVincoli(BigDecimal totaleImportoVincoli, Impegno impegno){
+		if(totaleImportoVincoli != null && totaleImportoVincoli.compareTo(BigDecimal.ZERO) == 0){
+			return false;
+		}
+		BigDecimal totaleImpegnoPiuModifiche = BigDecimal.ZERO;
+		BigDecimal totaleModifiche = BigDecimal.ZERO;
+		if(impegno.getListaModificheMovimentoGestioneSpesa() != null && !impegno.getListaModificheMovimentoGestioneSpesa().isEmpty()){
+			for(int j =  0; j < impegno.getListaModificheMovimentoGestioneSpesa().size(); j++){
+				if(!impegno.getListaModificheMovimentoGestioneSpesa().get(j).isElaboraRorReanno() &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).isReimputazione() && 
+					(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata() == null ||
+					(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata() != null && 
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata().isEmpty())) && 
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld() != null &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().abs().compareTo(BigDecimal.ZERO) > 0){
+					totaleModifiche = totaleModifiche.add(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().abs());
+				}
+			}
+		}
+		if(impegno.getImportoAttuale() != null)
+			if(totaleModifiche.compareTo(BigDecimal.ZERO) > 0){
+				totaleImpegnoPiuModifiche = impegno.getImportoAttuale().add(totaleModifiche);
+			}else 
+				totaleImpegnoPiuModifiche = impegno.getImportoAttuale();
+			if(totaleImportoVincoli != null && totaleImportoVincoli.compareTo(totaleImpegnoPiuModifiche) == 0){
+				return false;
+			}
+		return true; 
+	}
+		
 	public String annullaValoriVincolo() throws Exception {
 		
 		model.getStep1Model().setAnnoAccertamentoVincolo(null);
@@ -1539,7 +1941,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		//dati avanzo vincolo:
 		model.getStep1Model().setImportoAvanzoVincoloFormattato("");	
 		initSceltaAccertamentoAvanzoList();
-		
+		calcolaTestataVincoli();
 		return SUCCESS;
 	}
 	
@@ -1581,6 +1983,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		    	rp.setNumeroImpegno(Integer.valueOf(model.getStep1Model().getAccertamentoRicerca().getNumeroAccertamento()));
 	    	}
 	    	rp.setFlagDaRiaccertamento(WebAppConstants.No);
+	    	//rp.setFlagDaReanno(WebAppConstants.No);
 	    	
 	    	// numero capitolo
 	    	if(null!=model.getStep1Model().getAccertamentoRicerca().getNumeroCapitolo() &&
@@ -1610,7 +2013,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	    	
 	    	ra.setpRicercaAccertamento(rp);
 	    	
-	    	RicercaAccertamentiResponse resp = movimentoGestionService.ricercaAccertamenti(ra);
+	    	RicercaAccertamentiResponse resp = movimentoGestioneFinService.ricercaAccertamenti(ra);
 	    	
 	    	
 	    	if(resp!=null && resp.isFallimento()){
@@ -1635,7 +2038,10 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	public String selezionaAccPerVincolo() throws Exception {
 		
 		if(StringUtils.isEmpty(getRadioCodiceAccPerVincoli())){
-			addActionError("Elemento non selezionato");
+			//addActionError("Elemento non selezionato");
+			//SIAC-7815
+			cleanErrori();
+			addErrore(ErroreFin.ELEMENTO_NON_SELEZIONATO.getErrore());
 		}
 		
 		// apro il tab vincolo
@@ -1651,13 +2057,13 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 			
 			for (Accertamento accertamento : model.getStep1Model().getListaAccPerVincoli()) {
 				if(accertamento.getUid() == Integer.valueOf(getRadioCodiceAccPerVincoli())){
-					if(accertamento.getStatoOperativoMovimentoGestioneEntrata().equalsIgnoreCase(Constanti.MOVGEST_STATO_ANNULLATO)){
+					if(accertamento.getStatoOperativoMovimentoGestioneEntrata().equalsIgnoreCase(CostantiFin.MOVGEST_STATO_ANNULLATO)){
 						// stato annullato
 						addErrore(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("Accertamento", "annullato"));
 					}else{
 						// ok
 						model.getStep1Model().setAnnoAccertamentoVincolo(accertamento.getAnnoMovimento());
-						model.getStep1Model().setNumeroAccertamentoVincolo(accertamento.getNumero().intValue());
+						model.getStep1Model().setNumeroAccertamentoVincolo(accertamento.getNumeroBigDecimal().intValue());
 						RicercaAccertamentoPerChiaveOttimizzatoResponse respKAcc = executeRicercaAccertamentoPerChiaveOttimizzato();
 						if(null!=respKAcc && !respKAcc.isFallimento()){
 							model.getStep1Model().setAccertamentoPerVincolo(respKAcc.getAccertamento());
@@ -1681,6 +2087,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	 * @param 
 	 * @return
 	 */
+	@SuppressWarnings({ "rawtypes", "unlikely-arg-type" })
 	protected ListaPaginata<VincoloCapitoli> getVincoliCapitoloSpesa(CapitoloImpegnoModel cap){
 		  ListaPaginata<VincoloCapitoli> listaVincoli = null;
 		  if(cap!=null){
@@ -1715,7 +2122,8 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		List<VincoloCapitoli> vincoliConFlagTrasferimentiVincolati = new ArrayList<VincoloCapitoli>();
 		if(listaVincoliSpesa!=null && !listaVincoliSpesa.isEmpty()){
 			for (VincoloCapitoli vincoloCapitoli : listaVincoliSpesa){
-				if(vincoloCapitoli!=null && vincoloCapitoli.getFlagTrasferimentiVincolati().booleanValue()){
+				//BUG FIX - CM - aggiunto && vincoloCapitoli.getFlagTrasferimentiVincolati() != null controllo per evitare nullpointerexception in caso di test del 02/07/2020 in collaudo fatto da Antonella
+				if(vincoloCapitoli!=null && vincoloCapitoli.getFlagTrasferimentiVincolati() != null && vincoloCapitoli.getFlagTrasferimentiVincolati().booleanValue()){
 					vincoliConFlagTrasferimentiVincolati.add(vincoloCapitoli);
 				}
 			}
@@ -1731,14 +2139,18 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		ep.setRichiedente(sessionHandler.getRichiedente());
     	ep.setBilancio(sessionHandler.getBilancio());
     	ep.setCodiceTipoProgetto(TipoProgetto.GESTIONE.getCodice());
+    
     	
 		esistenzaResp = genericService.cercaProgetto(ep);
     	
 		if(esistenzaResp!=null && esistenzaResp.getEsito().toString().equalsIgnoreCase("FALLIMENTO")){
     		if(!esistenzaResp.isEsisteProgetto()){
     			
-    			addPersistentActionError("Il valore del progetto " +model.getStep1Model().getProgetto()+ " non e' consentito: " + esistenzaResp.getErrori().get(0).getCodice() + " -" + esistenzaResp.getErrori().get(0).getDescrizione());
-    			esistenzaResp.setErrori(new ArrayList<Errore>());
+    			//SIAC-7942
+    			List<Errore> errori = new ArrayList<Errore>();
+    			errori.add(ErroreCore.ENTITA_NON_TROVATA_SINGOLO_MSG.getErrore("Il valore del progetto " + model.getStep1Model().getProgetto()));
+//    			addPersistentActionError("Il valore del progetto " +model.getStep1Model().getProgetto()+ " non e' consentito: " + esistenzaResp.getErrori().get(0).getCodice() + " -" + esistenzaResp.getErrori().get(0).getDescrizione());
+    			esistenzaResp.setErrori(errori);
     		}
     	}
     	return esistenzaResp;
@@ -1785,7 +2197,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	
 	// se false abilita la check, se true disabilita
 	public boolean abilitaParereFinanziario() {
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegno) && 
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegno) && 
 				!isEnteAbilitatoParereFinanziario()
 				) {
 			return Boolean.TRUE;
@@ -1804,25 +2216,40 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	 * hanno una struttura amministrativa della sanita'
 	 */
 	protected void pilotaFlagSanita(){
-		if(isEnteAbilitatoGestioneGsa()){
-			String codiceStrutturaAmministrativaCapitolo = model.getStep1Model().getCapitolo().getCodiceStrutturaAmministrativa();
-			String codiceStrutturaAmministrativaProvvedimento = model.getStep1Model().getProvvedimento().getCodiceStrutturaAmministrativa();
-			String codiceGsa = getCodiceLivelloByTipo(TipologiaGestioneLivelli.GESTIONE_GSA);
-			if(codiceGsa!=null){
-				boolean poniASi = false;
-				if(codiceStrutturaAmministrativaCapitolo!=null && codiceStrutturaAmministrativaCapitolo.startsWith(codiceGsa)){
-					poniASi = true;
-				} else if(codiceStrutturaAmministrativaProvvedimento!=null && codiceStrutturaAmministrativaProvvedimento.startsWith(codiceGsa)) {
-					poniASi = true;
-				}
-				if(poniASi){
-					model.getStep1Model().setFlagAttivaGsa(WebAppConstants.Si);
-				}
-			}
+		//SIAC-7677
+		if(!isEnteAbilitatoGestioneGsa()){
+			return;
 		}
+		if(isPerimetroSanitarioCongruenteConGsa(model.getStep1Model().getCapitolo())) {
+			model.getStep1Model().setFlagAttivaGsa(WebAppConstants.Si);
+		}
+		
+//		if(isEnteAbilitatoGestioneGsa()){ 
+//			
+//			model.getStep1Model().getCapitolo().getCodicePerimetroSanitarioSpesa();
+//			String codiceStrutturaAmministrativaCapitolo = model.getStep1Model().getCapitolo().getCodiceStrutturaAmministrativa();
+//			String codiceStrutturaAmministrativaProvvedimento = model.getStep1Model().getProvvedimento().getCodiceStrutturaAmministrativa();
+//			String codiceGsa = getCodiceLivelloByTipo(TipologiaGestioneLivelli.GESTIONE_GSA);
+//			if(codiceGsa!=null){
+//				boolean poniASi = false;
+//				if(codiceStrutturaAmministrativaCapitolo!=null && codiceStrutturaAmministrativaCapitolo.startsWith(codiceGsa)){
+//					poniASi = true;
+//				} else if(codiceStrutturaAmministrativaProvvedimento!=null && codiceStrutturaAmministrativaProvvedimento.startsWith(codiceGsa)) {
+//					poniASi = true;
+//				}
+//				if(poniASi){
+//					model.getStep1Model().setFlagAttivaGsa(WebAppConstants.Si);
+//				}
+//			}
+//		}
 		//
 	}
 	
+	protected boolean isPerimetroSanitarioCongruenteConGsa(CapitoloImpegnoModel capitolo) {
+		return false;
+	}
+
+
 	protected boolean compilatoProvvedimento(){
 		if(model.getStep1Model().getProvvedimento()!=null
 				&& model.getStep1Model().getProvvedimento().getUid()!=null &&
@@ -1874,14 +2301,10 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	}
 	
 	protected <SR extends ServiceResponse> boolean presenteSoloErroreDispDodicesimi(SR response){
-		boolean presenteSoloErroreDispDodicesimi = false;
-		if(response.getErrori() != null && response.getErrori().size() == 1){
-			Errore errore = response.getErrori().get(0);
-			if("Impegno: disponibilit&agrave; dodicesimi &egrave; insufficiente.".equalsIgnoreCase(errore.getDescrizione())){
-				presenteSoloErroreDispDodicesimi = true;
-			}
-		}
-		return presenteSoloErroreDispDodicesimi;
+		//SIAC-7985
+		return response.getErrori() != null && response.getErrori().size()==1 
+				&& response.verificatoErrore(ErroreFin.DISPONIBILITA_INSUFFICIENTE_DODICESIMI.getCodice());
+		
 	}
 	
 	protected List<Errore> controlloObbligatorietaProgetto(List<Errore> listaErrori){
@@ -1946,8 +2369,9 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 									codiceVincolo = "codice vincolo null";
 								}
 								if(!codiciGiaSegnati.contains(codiceVincolo)){
-									if(isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegno)){
-										addPersistentActionWarning(ErroreFin.CAPITOLO_ENTR_NON_IN_VINCOLO.getErrore(codiceVincolo).getCodice() +" "+ErroreFin.CAPITOLO_ENTR_NON_IN_VINCOLO.getErrore(codiceVincolo).getDescrizione());	
+									if(isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegno)){
+										addPersistentActionWarning(ErroreFin.CAPITOLO_ENTR_NON_IN_VINCOLO.getErrore(codiceVincolo).getCodice() +" "+
+												ErroreFin.CAPITOLO_ENTR_NON_IN_VINCOLO.getErrore(codiceVincolo).getDescrizione());	
 									} else {
 										addErrore(ErroreFin.CAPITOLO_ENTR_NON_IN_VINCOLO.getErrore(codiceVincolo));
 										trovatiErrori = true;
@@ -2113,6 +2537,7 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		this.uidAvanzoVincoloPerAggiorna = uidAvanzoVincoloPerAggiorna;
 	}
 	
+	
 	//CONTROLLO VINCOLO 6929
 	
 //	private Boolean verificaAccertamentoVincoloOLD(Accertamento accertamento){
@@ -2168,8 +2593,9 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	 * SIAC-7299
 	 * Inserimento nuove regole per il vincolo con accertamento
 	 * 
+	 * SIAC-7830 modifica gestione messaggi di errore
 	 */
-	protected boolean verificaAccertamentoVincolo(Accertamento accertamento){
+	protected ErroreMovGestModel verificaAccertamentoVincolo(Accertamento accertamento){
 		
 		/*
 		 *  l'impegno è PROVVISORIO collegato a una proposta di determina (atto di STILO)
@@ -2180,51 +2606,128 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 		 */
 		
 		//RICAVARE IL PROVVEDIMENTO
-		if( model.getStep1Model().getProvvedimento() != null && MOVGEST_PROVVISORIO.equals(model.getStep1Model().getProvvedimento().getStato()) &&
-				model.getStep1Model().getProvvedimento().getUid()!=null
-				&& model.getStep1Model().getProvvedimento().getUid().intValue()!=0 ){
-				//CEHCK STILO
-				if(model.getStep1Model().getProvvedimento().getProvenienza()!= null ){
-					String provenienzaLower = model.getStep1Model().getProvvedimento().getProvenienza().toLowerCase();
-					if(provenienzaLower.contains(PROVENIENZA_STILO.toLowerCase())){
-						//CHECK SU ACCERTAMENTO
-						if(accertamento == null || accertamento.getAttoAmministrativo()== null){
-							return true;
-						}else{
-							if(MOVGEST_PROVVISORIO.equals(accertamento.getDescrizioneStatoOperativoMovimentoGestioneEntrata())
-									&& accertamento.getAttoAmministrativo() != null && accertamento.getAttoAmministrativo().getUid()!=0
-									&& model.getStep1Model().getProvvedimento().getUid().intValue()!= accertamento.getAttoAmministrativo().getUid()
-									){
-								return true;
-			}
-						}
-						
-						
-						
-					}
-			}
-		}
-		return false;
-	
+//		if( model.getStep1Model().getProvvedimento() != null && MOVGEST_PROVVISORIO.equals(model.getStep1Model().getProvvedimento().getStato()) &&
+//				model.getStep1Model().getProvvedimento().getUid()!=null
+//				&& model.getStep1Model().getProvvedimento().getUid().intValue()!=0 ){
+//				//CEHCK STILO
+//				if(model.getStep1Model().getProvvedimento().getProvenienza()!= null ){
+//					String provenienzaLower = model.getStep1Model().getProvvedimento().getProvenienza().toLowerCase();
+//					if(provenienzaLower.contains(PROVENIENZA_STILO.toLowerCase())){
+//						//CHECK SU ACCERTAMENTO
+//						if(accertamento == null || accertamento.getAttoAmministrativo()== null){
+//							return true;
+//						}else{
+//							if(MOVGEST_PROVVISORIO.equals(accertamento.getDescrizioneStatoOperativoMovimentoGestioneEntrata())
+//									&& accertamento.getAttoAmministrativo() != null && accertamento.getAttoAmministrativo().getUid()!=0
+//									&& model.getStep1Model().getProvvedimento().getUid().intValue()!= accertamento.getAttoAmministrativo().getUid()
+//									){
+//								return true;
+//			}
+//						}
+//						
+//						
+//						
+//					}
+//			}
+//		}
+//		return false;
 		
+		//implementazione alternativa
+		//RICAVARE IL PROVVEDIMENTO
+		ErroreMovGestModel res = null; 
+		if((model.getStep1Model().getProvvedimento() == null || 
+			(model.getStep1Model().getProvvedimento() != null && 
+				(model.getStep1Model().getProvvedimento().getUid()==null || (model.getStep1Model().getProvvedimento().getUid() != null && model.getStep1Model().getProvvedimento().getUid().intValue()==0))
+			)) || 
+			(accertamento.getAttoAmministrativo() == null || (accertamento.getAttoAmministrativo() != null && accertamento.getAttoAmministrativo().getUid()==0)) 
+		){
+			//res = true; //errore -  non inserire vincolo
+			res = new ErroreMovGestModel();
+			res.setDescrizione("Accertamento o Impegno sprovvisto di provvedimento");
+			res.setCodice("IAV");
+			
+		}else {
+			if( model.getStep1Model().getProvvedimento() != null && 
+					MOVGEST_PROVVISORIO.equals(model.getStep1Model().getProvvedimento().getStato()) &&
+					model.getStep1Model().getProvvedimento().getUid()!=null && 
+					model.getStep1Model().getProvvedimento().getUid().intValue()!=0 ){
+					//CEHCK STILO
+
+					if(model.getStep1Model().getProvvedimento().getProvenienza()!= null ){
+						
+						String provenienzaLower = model.getStep1Model().getProvvedimento().getProvenienza().toLowerCase();
+						
+						if(provenienzaLower.contains(PROVENIENZA_STILO.toLowerCase())){
+							//CHECK SU ACCERTAMENTO
+							if(accertamento == null || accertamento.getAttoAmministrativo()== null){
+								
+								//res = true;
+								res = new ErroreMovGestModel();
+								res.setDescrizione("Impegno e accertamento presentano provvedimento diverso");
+								res.setCodice("IAV");
+							}else{
+
+								if(MOVGEST_PROVVISORIO.equals(accertamento.getDescrizioneStatoOperativoMovimentoGestioneEntrata())
+										&& accertamento.getAttoAmministrativo() != null && accertamento.getAttoAmministrativo().getUid()!=0
+										&& model.getStep1Model().getProvvedimento().getUid().intValue()!= accertamento.getAttoAmministrativo().getUid()){
+									//res = true;
+									res = new ErroreMovGestModel();
+									res.setDescrizione("Impegno e accertamento presentano provvedimento diverso");
+									res.setCodice("IAV");
+								}
+							}
+						}
+					}
+			}	
+		}
+		
+		return res;
+
+
+//		//altra implementazione per correzione bug: 
+		
+//		Integer uidProvvImp = (!model.getStep1Model().getProvvedimento().equals(null) && model.getStep1Model().getProvvedimento().getUid().equals(null)) ? 0 : model.getStep1Model().getProvvedimento().getUid();
+//		int uidProvvVincAcc = accertamento.getAttoAmministrativo().equals(null) ? 0 : accertamento.getAttoAmministrativo().getUid(); 
+//		
+//
+//	    if(model.getStep1Model().getProvvedimento() == null || 
+//			(model.getStep1Model().getProvvedimento() != null && uidProvvImp.equals(0))) { //da semplificare
+//	    	
+//	    	res = true; //il vincolo non si può inserire
+//	    }else{
+//	    	if(accertamento.getAttoAmministrativo() == null || 
+//	    			(accertamento.getAttoAmministrativo() != null && accertamento.getAttoAmministrativo().getUid()==0)) {
+//	    		
+//	    		res = true; //il vincolo non si può inserire
+//	    	}else {
+//	    		if(model.getStep1Model().getProvvedimento().getProvenienza()!= null ){
+////		    		String provenienzaLowerAcc = model.getStep1Model().getProvvedimento().getProvenienza().toLowerCase();
+//		    		String provenienzaLowerAcc = "stilo";
+//			    	if(MOVGEST_PROVVISORIO.equals(model.getStep1Model().getProvvedimento().getStato()) && 
+//			    			MOVGEST_PROVVISORIO.equals(accertamento.getDescrizioneStatoOperativoMovimentoGestioneEntrata()) && 
+//			    			provenienzaLowerAcc.contains(PROVENIENZA_STILO.toLowerCase())) {
+//						
+//			    		//ENTRAMBI PROVVISORI E VINCOLO DI ACCERTAMENTO COLLEGATO AD UNA PROPOSTA DI DETERMINA
+//						if(uidProvvImp.intValue() != uidProvvVincAcc) {
+//							
+//							res = true; //non inserire il vincolo
+//						}else {
+//							res = false; //inserisci il vincolo
+//						}
+//					}else {
+//						res = false; //inserisci il vincolo perchè nel caso di uno dei due DEFINITIVO il vincolo si può sempre inserire
+//					}
+//	    		}else {
+//	    			res = false; //inserisci il vincolo
+//	    		}
+//
+//	    	}
+//	    }
+//	    return res;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	//FIXME - da migliorare
-	private boolean areDeterminaOrPropostaDetermina(String tipoProvvedimento, String tipoAccertamento ){
-		
-		if(tipoProvvedimento.equals("PDD") && tipoAccertamento.equals("PDD")){
-			return true;
-		}else{
-			return false;
-		}
-		
+	protected boolean areDeterminaOrPropostaDetermina(String tipoProvvedimento, String tipoAccertamento ){
+		return tipoProvvedimento.equals("PDD") && tipoAccertamento.equals("PDD"); 
 	}
 	
 	@Override
@@ -2237,4 +2740,92 @@ public class WizardGenericMovGestAction extends MovGestAction<GestisciMovGestMod
 	protected void setSoggettoSelezionatoDue(SoggettoImpegnoModel soggettoImpegnoModel) {
 		// Auto-generated method stub
 	}
+	
+	protected void isSACStrutturaCompetente(List<Errore> listaErrori) {
+		//istanzio la request per il servizio:
+		LeggiStrutturaAmminstrativoContabile request = new LeggiStrutturaAmminstrativoContabile();
+		request.setAnno(sessionHandler.getAnnoBilancio());
+		request.setIdEnteProprietario(sessionHandler.getEnte().getUid());
+		request.setRichiedente(sessionHandler.getRichiedente());
+		//invoco il servizio:
+		LeggiStrutturaAmminstrativoContabileResponse response = classificatoreService.leggiStrutturaAmminstrativoContabile(request);
+		List<StrutturaAmministrativoContabile> lista = response.getListaStrutturaAmmContabile();
+		if(model.getStep1Model().getStrutturaSelezionataCompetente() != null && lista != null && !lista.isEmpty() ){
+			if(StringUtils.isEmpty(model.getStep1Model().getStrutturaSelezionataCompetente())) {
+				Errore errore = ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Struttura Competente ");
+				if(listaErrori != null)
+					listaErrori.add(errore);
+				else
+					addErrore(errore);
+			}else {
+				Errore errore = ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Il valore del parametro Struttura Competente non &eacute consentito: deve essere un SETTORE ");
+				//devo filtrare l'elenco per codice
+				for(int j = 0; j < lista.size(); j++){
+					if(lista.get(j).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())) {
+						if(!lista.get(j).getTipoClassificatore().getCodice().equals(TipologiaClassificatore.CDC.name())){
+							if(listaErrori != null)
+								listaErrori.add(errore);
+							else
+								addErrore(errore);
+							break;
+						}else model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getCodice() +"-"+lista.get(j).getDescrizione());
+					}else if(lista.get(j).getSubStrutture() != null && !lista.get(j).getSubStrutture().isEmpty()){
+						for(int k = 0; k < lista.get(j).getSubStrutture().size(); k++){
+							if(lista.get(j).getSubStrutture().get(k).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())){
+								if(!lista.get(j).getSubStrutture().get(k).getTipoClassificatore().getCodice().equals(TipologiaClassificatore.CDC.name())){
+									if(listaErrori != null)
+										listaErrori.add(errore);
+									else
+										addErrore(errore);
+									break;
+								}else model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getSubStrutture().get(k).getCodice() +"-"+lista.get(j).getSubStrutture().get(k).getDescrizione());
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	//SIAC-6997
+	protected void recuperaDescrizioneStrutturaCompetente() {
+		//istanzio la request per il servizio:
+		LeggiStrutturaAmminstrativoContabile request = new LeggiStrutturaAmminstrativoContabile();
+		request.setAnno(sessionHandler.getAnnoBilancio());
+		request.setIdEnteProprietario(sessionHandler.getEnte().getUid());
+		request.setRichiedente(sessionHandler.getRichiedente());
+		//invoco il servizio:
+		LeggiStrutturaAmminstrativoContabileResponse response = classificatoreService.leggiStrutturaAmminstrativoContabile(request);
+		List<StrutturaAmministrativoContabile> lista = response.getListaStrutturaAmmContabile();
+		if(lista != null && !lista.isEmpty() && model.getStep1Model().getStrutturaSelezionataCompetente() !=null && !model.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+			if(lista.size() > 1){
+				for(int j = 0; j < lista.size(); j++){
+					if(lista.get(j).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())) {
+						model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getCodice() +"-"+lista.get(j).getDescrizione());
+						break;
+					}else{
+						if(lista.get(j).getSubStrutture() != null && !lista.get(j).getSubStrutture().isEmpty()){
+							for(int k = 0; k < lista.get(j).getSubStrutture().size(); k++){
+								if(lista.get(j).getSubStrutture().get(k).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())){
+									model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getSubStrutture().get(k).getCodice() +"-"+lista.get(j).getSubStrutture().get(k).getDescrizione());
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+	//SIAC-8825
+	public boolean isObbligatorioPerimetroSanitario() {
+		return Boolean.TRUE.equals(Boolean.parseBoolean(getParametroConfigurazioneEnte(
+				ParametroConfigurazioneEnteEnum.IMPEGNO_OBBLIGO_CAPITOLI_PERIMETRO_SANITARIO)));
+	}
+
+	
+
+	
 }

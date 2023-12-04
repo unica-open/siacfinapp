@@ -47,8 +47,10 @@ public class IndirizzoModel  extends SoggettoModel{
 	//comune
 	private String comune;
 	
-	//id comune
-	private String idComune;
+	//codice istat comune
+	private String codiceIstatComune;
+	
+	private Integer comuneUid;
 	
 	//sigla provincia
 	private String siglaProvincia;
@@ -165,11 +167,25 @@ public class IndirizzoModel  extends SoggettoModel{
 	public void setTipoIndizzoDesc(String tipoIndizzoDesc) {
 		this.tipoIndizzoDesc = tipoIndizzoDesc;
 	}
-	public String getIdComune() {
-		return idComune;
+	public String getCodiceIstatComune() {
+		return codiceIstatComune;
 	}
-	public void setIdComune(String idComune) {
-		this.idComune = idComune;
+	public void setCodiceIstatComune(String codiceIstatComune) {
+		this.codiceIstatComune = codiceIstatComune;
+	}
+
+	/**
+	 * @return the comuneUid
+	 */
+	public Integer getComuneUid() {
+		return comuneUid;
+	}
+
+	/**
+	 * @param comuneUid the comuneUid to set
+	 */
+	public void setComuneUid(Integer comuneUid) {
+		this.comuneUid = comuneUid;
 	}
 	
 

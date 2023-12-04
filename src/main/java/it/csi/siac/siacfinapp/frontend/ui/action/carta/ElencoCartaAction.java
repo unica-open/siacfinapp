@@ -5,11 +5,12 @@
 package it.csi.siac.siacfinapp.frontend.ui.action.carta;
 
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfin2ser.model.DocumentoSpesa;
 import it.csi.siac.siacfin2ser.model.StatoOperativoDocumento;
 import it.csi.siac.siacfin2ser.model.SubdocumentoSpesa;
@@ -18,8 +19,7 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaCartaContabile;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaCartaContabileResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AnnullaCartaContabile;
@@ -67,7 +67,6 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 			setClearPagina(true);
 		}
 		
-		//se e' presente la paginazione nell'elenco dei mutui allora la mantengo in sessione
 		if(presenzaPaginazione(ServletActionContext.getRequest())){
 			
 			// ho cliccato sulla paginazione
@@ -126,7 +125,7 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 		//AZIONE AGGIORNA:
 		if(azione.equalsIgnoreCase("aggiorna")){
 			
-			boolean abilitato = isConsentita(CodiciOperazioni.OP_SPE_AGGCARTA) || isConsentita(CodiciOperazioni.OP_SPE_AGGCARTARAGIO);
+			boolean abilitato = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) || isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO);
 			if(!abilitato){
 				return false;
 			}
@@ -140,7 +139,7 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 		//AZIONE ANNULLA:
 		if(azione.equalsIgnoreCase("annulla")){
 			
-			boolean abilitato = (isConsentita(CodiciOperazioni.OP_SPE_AGGCARTA) || isConsentita(CodiciOperazioni.OP_SPE_AGGCARTARAGIO));
+			boolean abilitato = (isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) || isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO));
 			if(!abilitato){
 				return false;
 			}
@@ -153,7 +152,7 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 		//AZIONE REGOLARIZZA:
 		if(azione.equalsIgnoreCase("regolarizza")){
 			
-			boolean abilitato = isConsentita(CodiciOperazioni.OP_SPE_regCarta);
+			boolean abilitato = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_regCarta);
 			 if(!abilitato){
 					return false;
 			 }
@@ -166,7 +165,7 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 		//AZIONE COMPLETA:
 		if(azione.equalsIgnoreCase("completa")){
 			
-			 boolean abilitato = isConsentita(CodiciOperazioni.OP_SPE_AGGCARTA);
+			 boolean abilitato = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA);
 			 if(!abilitato){
 					return false;
 			 }
@@ -179,7 +178,7 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 		//AZIONE TRASMETTI:
 		if(azione.equalsIgnoreCase("trasmetti")){
 			
-			boolean abilitato = isConsentita(CodiciOperazioni.OP_SPE_AGGCARTARAGIO);
+			boolean abilitato = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO);
 			if(!abilitato){
 				return false;
 			}
@@ -192,7 +191,7 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 		//AZIONE RIPORTA A PROVVISORIO:
 		if(azione.equalsIgnoreCase("ripAProv")){
 			
-			boolean abilitato = isConsentita(CodiciOperazioni.OP_SPE_AGGCARTARAGIO);
+			boolean abilitato = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO);
 			if(!abilitato){
 				return false;
 			}
@@ -205,7 +204,7 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 		//AZIONE RIPORTA A COMPLETATO:
 		if(azione.equalsIgnoreCase("ripACompl")){
 			
-			boolean abilitato = isConsentita(CodiciOperazioni.OP_SPE_AGGCARTARAGIO);
+			boolean abilitato = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO);
 			if(!abilitato){
 				return false;
 			}
@@ -250,7 +249,7 @@ public class ElencoCartaAction extends ActionKeyRicercaCartaAction {
 							if(dsc!=null){
 								TipoDocumento tipoDoc = dsc.getTipoDocumento();
 								if(tipoDoc!=null){
-									if(tipoDoc.getCodice().equalsIgnoreCase(Constanti.D_DOC_TIPO_CARTA_CONTABILE_CODE)){
+									if(tipoDoc.getCodice().equalsIgnoreCase(CostantiFin.D_DOC_TIPO_CARTA_CONTABILE_CODE)){
 										
 										// in alcuni casi potrebbe arrivare dal servizio
 										// ricercaDettaglioQuotaSpesa lo stato = Null

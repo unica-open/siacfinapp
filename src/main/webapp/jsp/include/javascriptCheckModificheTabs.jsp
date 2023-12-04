@@ -7,7 +7,9 @@ SPDX-License-Identifier: EUPL-1.2
 
 <!-- Link utilizzati per la gestione controllo modifiche -->
 <a id="linkMsgDatipersi" href="#msgDatipersi" data-toggle="modal" style="display:none;"></a>
-<s:submit id="btnGestisciForward" method="gestisciForward" cssStyle="display:none;"/>
+<!-- task-131 <s:submit id="btnGestisciForward" method="gestisciForward" cssStyle="display:none;"/> -->
+<s:submit id="btnGestisciForward" action="%{#gestisciForwardAction}" cssStyle="display:none;"/>
+
 <s:hidden id="forward" name="forward"/>
 <s:hidden id="forceReload" name="forceReload"/>	
 <s:hidden id="ambito" name="ambito" />

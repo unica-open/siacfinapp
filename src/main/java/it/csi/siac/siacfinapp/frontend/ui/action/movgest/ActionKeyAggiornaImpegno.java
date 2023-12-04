@@ -4,6 +4,8 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
+
 /**
  * classe utilizzata per la definizione univoca del modello dati in sessione
  * ed anche per la renderizzazione automatica delle label a seconda
@@ -26,6 +28,24 @@ public class ActionKeyAggiornaImpegno extends WizardAggiornaSubMovGestAction {
 	
 	public boolean isAbilitatoAggiornamentoGenerico(){
 		return isAbilitatoAggiornaAnnullaImpegno(model.getImpegnoInAggiornamento());
+	}
+	
+	/**
+	 * SIAC-7976
+	 * A seguito della SIAC-7804 si slega il controllo sullo stato del movimento in caso
+	 * di movimento decentrato dal metodo generico isAbilitatoAggiornaAnnullaImpegno().
+	 * 
+	 * @return boolean
+	 */
+	@Override
+	public boolean mostraCompilazioneGuidataProvvedimento() {
+		// se decentrato dobbiamo assicurarci che sia un movimento in stato PROVVISORIO
+		return ("PROVVISORIO".equals(model.getImpegnoInAggiornamento().getDescrizioneStatoOperativoMovimentoGestioneSpesa()) 
+				&& isAbilitatoGestisciImpegnoDec()) 
+				// controllo per le modifiche di importo e soggetto 
+				|| (isAbilitatoGestisciImpegnoDec() && permettoCompilazioneProvvedimentoActionDEC())
+				// abilito in caso non sia un decentrato
+				|| !isAbilitatoGestisciImpegnoDec();
 	}
 	
 	/**
@@ -86,5 +106,11 @@ public class ActionKeyAggiornaImpegno extends WizardAggiornaSubMovGestAction {
 		model.getLabels().put(LABEL_OGGETTO_GENERICO_PADRE, "Impegno");
 		model.getLabels().put(LABEL_OGGETTO_GENERICO, "Subimpegno");
 		model.getLabels().put(LABEL_OGGETTO_GENERICO_VERBO, "subimpegnare");
+	}
+	
+	@Override
+	//SIAC-7667
+	protected boolean isPerimetroSanitarioCongruenteConGsa(CapitoloImpegnoModel capitolo) {
+		return capitolo.getCodicePerimetroSanitarioSpesa() != null && CODICE_PERIMETRO_SANITARIO_SPESA_GSA.equals(capitolo.getCodicePerimetroSanitarioSpesa());
 	}
 }

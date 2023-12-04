@@ -7,15 +7,15 @@ package it.csi.siac.siacfinapp.frontend.ui.action.ordinativo;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.GestoreTransazioneElementareModel;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
@@ -49,7 +49,7 @@ public class RicercaOrdinativoPagamentoAction extends ActionKeyRicercaOrdinativo
 	@BreadCrumb("%{model.titolo}")
 	public String execute() throws Exception {
 
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_RICMAN)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_RICMAN)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 		}
 
@@ -90,7 +90,7 @@ public class RicercaOrdinativoPagamentoAction extends ActionKeyRicercaOrdinativo
 		
 		List<Errore> listaErrori = checkParametri();
 
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_RICMAN)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_RICMAN)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			return INPUT;
 		}

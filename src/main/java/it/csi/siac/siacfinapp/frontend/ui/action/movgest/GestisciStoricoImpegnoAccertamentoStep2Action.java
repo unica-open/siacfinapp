@@ -7,8 +7,9 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
 import java.util.ArrayList;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -41,8 +42,8 @@ public class GestisciStoricoImpegnoAccertamentoStep2Action extends GenericFinAct
 	
 	private static final String RICARICA_PAGINA = "refreshStep2";
 	
-	@Autowired
-	private MovimentoGestioneService movimentoGestionService;
+	@Autowired @Qualifier("movimentoGestioneFinService")
+	private MovimentoGestioneService movimentoGestioneFinService;
 	
 	
 	/**
@@ -91,7 +92,7 @@ public class GestisciStoricoImpegnoAccertamentoStep2Action extends GenericFinAct
 		final String methodName = "caricaListaStoricoNelModel";
 		//dati per la paginazione dei risultati:
 		RicercaStoricoImpegnoAccertamento request = model.creaRequestRicercaStoricoImpegnoAccertamento(sessionHandler.getBilancio());
-		RicercaStoricoImpegnoAccertamentoResponse res = movimentoGestionService.ricercaStoricoImpegnoAccertamento(request);
+		RicercaStoricoImpegnoAccertamentoResponse res = movimentoGestioneFinService.ricercaStoricoImpegnoAccertamento(request);
 		if (res.hasErrori()) {
 			addErrori(methodName, res);
 			return;
@@ -112,10 +113,10 @@ public class GestisciStoricoImpegnoAccertamentoStep2Action extends GenericFinAct
 		if(model.getStoricoImpegnoAccertamentoInModifica() == null){
 			addActionError(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("storico").getTesto());
 		}
-		if(model.getStoricoImpegnoAccertamentoInModifica().getAccertamento() == null || model.getStoricoImpegnoAccertamentoInModifica().getAccertamento().getAnnoMovimento() == 0 || model.getStoricoImpegnoAccertamentoInModifica().getAccertamento().getNumero() == null ){
+		if(model.getStoricoImpegnoAccertamentoInModifica().getAccertamento() == null || model.getStoricoImpegnoAccertamentoInModifica().getAccertamento().getAnnoMovimento() == 0 || model.getStoricoImpegnoAccertamentoInModifica().getAccertamento().getNumeroBigDecimal() == null ){
 			addActionError(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("accertamento").getTesto());
 		}
-		if(model.getImpegno() == null || model.getImpegno().getAnnoMovimento() == 0 || model.getImpegno().getNumero() == null) {
+		if(model.getImpegno() == null || model.getImpegno().getAnnoMovimento() == 0 || model.getImpegno().getNumeroBigDecimal() == null) {
 			addActionError(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("impegno").getTesto());
 		}
 	}
@@ -128,7 +129,7 @@ public class GestisciStoricoImpegnoAccertamentoStep2Action extends GenericFinAct
 	public String inserisciStorico() {
 		
 		InserisceStoricoImpegnoAccertamento req = model.creaRequestInserisciStoricoImpegnoAccertamento(sessionHandler.getBilancio());
-		InserisceStoricoImpegnoAccertamentoResponse response = movimentoGestionService.inserisceStoricoImpegnoAccertamento(req);
+		InserisceStoricoImpegnoAccertamentoResponse response = movimentoGestioneFinService.inserisceStoricoImpegnoAccertamento(req);
 		if(response.hasErrori()){
 			addErrori(response);
 			return INPUT;
@@ -144,10 +145,10 @@ public class GestisciStoricoImpegnoAccertamentoStep2Action extends GenericFinAct
 		if(model.getStoricoImpegnoAccertamentoInModifica() == null || model.getStoricoImpegnoAccertamentoInModifica().getUid() == 0){
 			addActionError(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("storico").getTesto());
 		}
-		if(model.getStoricoImpegnoAccertamentoInModifica().getAccertamento() == null || model.getStoricoImpegnoAccertamentoInModifica().getAccertamento().getAnnoMovimento() == 0 || model.getStoricoImpegnoAccertamentoInModifica().getAccertamento().getNumero() == null ){
+		if(model.getStoricoImpegnoAccertamentoInModifica().getAccertamento() == null || model.getStoricoImpegnoAccertamentoInModifica().getAccertamento().getAnnoMovimento() == 0 || model.getStoricoImpegnoAccertamentoInModifica().getAccertamento().getNumeroBigDecimal() == null ){
 			addActionError(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("accertamento").getTesto());
 		}
-		if(model.getImpegno() == null || model.getImpegno().getAnnoMovimento() == 0 || model.getImpegno().getNumero() == null) {
+		if(model.getImpegno() == null || model.getImpegno().getAnnoMovimento() == 0 || model.getImpegno().getNumeroBigDecimal() == null) {
 			addActionError(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("impegno").getTesto());
 		}
 	}
@@ -160,7 +161,7 @@ public class GestisciStoricoImpegnoAccertamentoStep2Action extends GenericFinAct
 	public String aggiornaStorico() {
 		
 		AggiornaStoricoImpegnoAccertamento req = model.creaRequestAggiornaStoricoImpegnoAccertamento(sessionHandler.getBilancio());
-		AggiornaStoricoImpegnoAccertamentoResponse response = movimentoGestionService.aggiornaStoricoImpegnoAccertamento(req);
+		AggiornaStoricoImpegnoAccertamentoResponse response = movimentoGestioneFinService.aggiornaStoricoImpegnoAccertamento(req);
 		if(response.hasErrori()){
 			addErrori(response);
 			return INPUT;
@@ -187,7 +188,7 @@ public class GestisciStoricoImpegnoAccertamentoStep2Action extends GenericFinAct
 	 */
 	public String elimina() {
 		EliminaStoricoImpegnoAccertamento req = model.creaRequestEliminaStoricoImpegnoAccertamento(sessionHandler.getBilancio());
-		EliminaStoricoImpegnoAccertamentoResponse response = movimentoGestionService.eliminaStoricoImpegnoAccertamento(req);
+		EliminaStoricoImpegnoAccertamentoResponse response = movimentoGestioneFinService.eliminaStoricoImpegnoAccertamento(req);
 		if(response.hasErrori()){
 			addErrori(response);
 			return INPUT;

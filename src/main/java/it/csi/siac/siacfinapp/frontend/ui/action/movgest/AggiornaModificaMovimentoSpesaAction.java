@@ -17,12 +17,14 @@ import org.springframework.web.context.WebApplicationContext;
 import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siacbilser.model.Progetto;
 import it.csi.siac.siacbilser.model.TipoProgetto;
+import it.csi.siac.siaccorser.model.Bilancio;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegno;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegnoResponse;
 import it.csi.siac.siacfinser.model.SubImpegno;
@@ -50,13 +52,16 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 	private String importoNewFormatted;
 
 
-	//Valori di confronto
 	private String annoProvvedimento;
 	private Integer numeroProvvedimento;
 	private String idTipoProvvedimento;
 	private String descrizione;
 	private String motivo;
 	private String motivoOld;
+	
+	//SIAC-7349 CM 17/07/2020 Inizio gestione per la valorizzazione di DisponibilitaImpegnareComponente per la aggiorna modifiche di impegno
+	private BigDecimal maxImportoImpegnoCompApp;
+	//SIAC-7349 CM 17/07/2020 Fine
 	
 	@Override
 	public boolean abilitatoAzioneInserimentoProvvedimento() {
@@ -72,6 +77,8 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 		//setto il titolo:
 		super.model.setTitolo("Aggiorna Modifica Movimento Spesa");
 		caricaListaMotivi();
+		//SIAC-7838
+		caricaListaMotiviAgg();
 	}
 
 	@Override
@@ -122,7 +129,7 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 				for(ModificaMovimentoGestioneSpesa spesa :listaModificheImpegno){
 					if(movSpesaId == spesa.getUid()){
 						find = true;
-						spesa.setTipoMovimento(Constanti.MODIFICA_TIPO_IMP);
+						spesa.setTipoMovimento(CostantiFin.MODIFICA_TIPO_IMP);
 						model.getMovimentoSpesaModel().setModificaAggiornamento(spesa);
 						setDescrizione(spesa.getDescrizioneModificaMovimentoGestione());
 						if(spesa.getTipoModificaMovimentoGestione()!=null){
@@ -148,7 +155,7 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 							for(ModificaMovimentoGestioneSpesa spesa :listaModificheSubImpegno){
 									if(movSpesaId == spesa.getUid()){
 										find = true;
-										spesa.setTipoMovimento(Constanti.MODIFICA_TIPO_SIM);
+										spesa.setTipoMovimento(CostantiFin.MODIFICA_TIPO_SIM);
 										setDescrizione(spesa.getDescrizioneModificaMovimentoGestione());
 										model.getMovimentoSpesaModel().setModificaAggiornamento(spesa);
 										if(spesa.getTipoModificaMovimentoGestione()!=null){
@@ -192,20 +199,74 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 			model.getMovimentoSpesaModel().setDescrizioneOrigine(model.getMovimentoSpesaModel().getModificaAggiornamento().getDescrizioneModificaMovimentoGestione());
 		}
 		
-		
+		//SIAC-7349 CM 17/07/2020 Inizio CONTABILIA-268
+		initMaxImportoImpegnoCompApp();
+		//SIAC-7349 CM 17/07/2020 Fine CONTABILIA-268
+
 		return movSpesaId;
 	}
 
+	//SIAC-7349 CM 17/07/2020 Inizio CONTABILIA-268
+	public void initMaxImportoImpegnoCompApp() {
+		
+		if (model.getImpegnoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio()) {
+			//SIAC-7349
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		} else {
+			if (model.getStep1Model().getAnnoImpegno().intValue() == model.getImpegnoInAggiornamento()
+					.getCapitoloUscitaGestione().getAnnoCapitolo().intValue()) {
+				// anno corrente
+				//SIAC-7349 fare in modo di ottenere il valore degli importi capitolo della componente
+				maxImportoImpegnoCompApp = getDisponibilitaModifica(0);
+			} else {
+				model.setFlagSuperioreTreAnni(true);
+				return;
+			}
+		}
+		//SIAC-7349
+		if(maxImportoImpegnoCompApp == null){
+					//pongo a zero
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		}
+		//SIAC-7349 importo a zero il maxImportoImpegnoCompApp come fatto in precedenza, a determinate condizioni
+		if(maxImportoImpegnoCompApp.compareTo(new BigDecimal(0)) < 0){
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		}
+		// Setto il massimo e i minimo nelle variabili finali:		
+		//SIAC-7349
+		model.setMaxImportoImpComp(convertiBigDecimalToImporto(maxImportoImpegnoCompApp));		
+	}
+	//SIAC-7349 CM 17/07/2020 Fine CONTABILIA-268
 
 	public String salva(){
 		setMethodName("salva");
 
 		boolean changed = false;
 		boolean flagModificaDescrizione = false;
+		
+		//SIAC-7943
+		model.setErrori(new ArrayList<Errore>());
 
 		List<Errore> listaErrori = new ArrayList<Errore>();
 
+		//SIAC-8506
+		controllaLunghezzaMassimaDescrizioneMovimento(getDescrizione(), listaErrori);
 		
+		//SIAC-8781
+		// controllo immodificabilit. da ROR-REIMP e ROR-REANNO ad altro e viceversa
+		if(!getMotivo().equalsIgnoreCase(getMotivoOld()) &&
+				 ((getMotivo().equalsIgnoreCase("REIMP") || getMotivoOld().equalsIgnoreCase("REIMP")) ||
+				   (getMotivo().equalsIgnoreCase("REANNO") || getMotivoOld().equalsIgnoreCase("REANNO")))
+			) {
+			controllaImmodificabilitaTipoMotivoReimp(listaErrori);
+		}
+		//SIAC-8781
+		// se ROR-REIMP o ROR-REANNO non posso cambiare il flag reimputazione 
+		String reimputazione = model.getMovimentoSpesaModel().getReimputazione();
+		if ((getMotivo().equalsIgnoreCase("REIMP") || getMotivo().equalsIgnoreCase("REANNO")) && WebAppConstants.No.equals(reimputazione)) {		
+			controllaFlagReimp(listaErrori);
+		}
+			
 		//SIAC-6929
 		ProvvedimentoImpegnoModel pim = new ProvvedimentoImpegnoModel();
 		if(model.getStep1Model().getProvvedimento()!=null && model.getStep1Model().getProvvedimento().getUid()!=null){
@@ -216,6 +277,8 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 				return INPUT;
 			}
 		}
+		
+
 		
 		
 		String controlloProvv = provvedimentoConsentito();
@@ -231,6 +294,8 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 		
 		if(StringUtils.isEmpty(getMotivo())){
 			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Modifica motivo"));
+			//SIAC-7943
+			addErrori(listaErrori);
 			return INPUT;
 		}
 
@@ -251,7 +316,7 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 				changed=true;
 			}
 		}
-		// TODO da capire con elisa se va gestito diversamente oppure è un refuso (copiaincolla)
+		// TODO da capire con elisa se va gestito diversamente oppure . un refuso (copiaincolla)
 
 		
 		BigDecimal importoModifica=model.getMovimentoSpesaModel().getModificaAggiornamento().getImportoOld();
@@ -276,8 +341,6 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 		}
 		
 		
-		log.warn("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "controlli passati");
- 
 		if(		(model.getStep1Model().getProvvedimento().getAnnoProvvedimento() != null 
 					&& model.getStep1Model().getProvvedimento().getAnnoProvvedimento() != 0 
 					&& Integer.valueOf(getAnnoProvvedimento()).compareTo(model.getStep1Model().getProvvedimento().getAnnoProvvedimento())!=0) ||	
@@ -306,7 +369,7 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 			String tipoProvvedimentoSubimpegno="";
 			
 			for (SubImpegno subImpegnoCorrente : model.getListaSubimpegni()) {
-				if (subImpegnoCorrente.getNumero().intValue()==model.getMovimentoSpesaModel().getModificaAggiornamento().getNumeroSubImpegno().intValue()) {
+				if (subImpegnoCorrente.getNumeroBigDecimal().intValue()==model.getMovimentoSpesaModel().getModificaAggiornamento().getNumeroSubImpegno().intValue()) {
 					annoProvvedimentoSubimpegno=subImpegnoCorrente.getAttoAmministrativo().getAnno();
 					numeroProvvedimentoSubimpegno=subImpegnoCorrente.getAttoAmministrativo().getNumero();
 					tipoProvvedimentoSubimpegno=subImpegnoCorrente.getAttoAmministrativo().getTipoAtto().getCodice();
@@ -393,7 +456,7 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 				//tipo mod mov gest:
 				spesa.setTipoModificaMovimentoGestione(getMotivo());				
 				
-				if(spesa.getTipoMovimento().equalsIgnoreCase(Constanti.MODIFICA_TIPO_IMP)){
+				if(spesa.getTipoMovimento().equalsIgnoreCase(CostantiFin.MODIFICA_TIPO_IMP)){
 					List<ModificaMovimentoGestioneSpesa> listaImpegno = new ArrayList<ModificaMovimentoGestioneSpesa>();
 					if(model.getImpegnoInAggiornamento().getListaModificheMovimentoGestioneSpesa() != null && model.getImpegnoInAggiornamento().getListaModificheMovimentoGestioneSpesa().size() > 0){
 						for(ModificaMovimentoGestioneSpesa spesaIt : model.getImpegnoInAggiornamento().getListaModificheMovimentoGestioneSpesa()){
@@ -414,6 +477,11 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 					
 					AggiornaImpegno requestAggiorna = convertiModelPerChiamataServizioInserisciAggiornaModifiche(true);
 
+//					// SIAC-7349 GS 13/07/2020 INIZIO - Setto a true flag per bypassare i controlli di disponibilit. in caso di aggiornamento di una modifica di impegno 
+//					if (requestAggiorna != null)
+//						requestAggiorna.getImpegno().setAggiornaTabModificheImpegno(true); 
+//					// SIAC-7349 GS 13/07/2020 FINE
+					
 					if (requestAggiorna.getImpegno().getProgetto() != null) {
 						Progetto progetto = requestAggiorna.getImpegno().getProgetto();
 						
@@ -427,7 +495,7 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 
 					//SIAC-6990
 					//modifica di tipo IMPEGNO
-					AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna);
+					AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna);
 					model.setProseguiConWarning(false);
 					
 					if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
@@ -484,6 +552,11 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 					
 					AggiornaImpegno requestAggiorna = convertiModelPerChiamataServizioInserisciAggiornaModifiche(true);
 
+//					// SIAC-7349 GS 13/07/2020 INIZIO - Setto a true flag per bypassare i controlli di disponibilit. in caso di aggiornamento di una modifica di impegno 
+//					if (requestAggiorna != null)
+//						requestAggiorna.getImpegno().setAggiornaTabModificheImpegno(true); 
+//					// SIAC-7349 GS 13/07/2020 FINE
+					
 					if (requestAggiorna.getImpegno().getProgetto() != null) {
 						Progetto progetto = requestAggiorna.getImpegno().getProgetto();
 						
@@ -496,7 +569,7 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 					
 					//SIAC-6990
 					//modifica NON di tipo IMPEGNO
-					AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna);
+					AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna);
 					model.setProseguiConWarning(false);
 					
 					if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
@@ -654,5 +727,35 @@ public class AggiornaModificaMovimentoSpesaAction extends ActionKeyAggiornaImpeg
 		this.motivoOld = motivoOld;
 	}
 
+	//SIAC-7349 17/07/2020 CM Inizio CONTABILIA-268
+	public BigDecimal getMaxImportoImpegnoCompApp() {
+		return maxImportoImpegnoCompApp;
+	}
 
+	public void setMaxImportoImpegnoCompApp(BigDecimal maxImportoImpegnoCompApp) {
+		this.maxImportoImpegnoCompApp = maxImportoImpegnoCompApp;
+	}
+	//SIAC-7349 17/07/2020 CM Fine CONTABILIA-268
+
+	//SIAC-7349 17/07/2020 Inizio CM rielaborato dal metodo presente in AggiornaModificaMovimentoRorAction per CONTABILIA-268
+	//SIAC-7349 - SR90 - MR - 03/2020 - Metodo per ottenere la disponibilita della componente
+		private BigDecimal getDisponibilitaModifica(int i) {
+
+			if(model.getImportiComponentiCapitolo() == null || model.getImportiComponentiCapitolo().isEmpty()){
+				return BigDecimal.ZERO;	
+			}else{
+				if(i==0){				
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0().getImporto();					
+				}else{
+						return BigDecimal.ZERO;	
+					}				
+				}			
+			}			
+				return BigDecimal.ZERO;	
+		}
+		//SIAC-7349 - End
+		//SIAC-7349 17/07/2020 Fine CM CONTABILIA-268
 }

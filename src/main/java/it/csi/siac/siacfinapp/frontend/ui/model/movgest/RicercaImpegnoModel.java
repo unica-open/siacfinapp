@@ -58,7 +58,10 @@ public class RicercaImpegnoModel extends GenericFinModel {
 	
 	//per marcare competenza futuri
 	private boolean competenzaFuturi;
-
+	
+	//SIAC-6997
+	private boolean competenzaResiduiRor;
+	
 	//struttura selezionata su pagina
 	private String strutturaSelezionataSuPagina;
 	
@@ -245,4 +248,19 @@ public class RicercaImpegnoModel extends GenericFinModel {
 		this.hiddenPerEscludiAnnullati = hiddenPerEscludiAnnullati;
 	}
 
+	/**
+	 * @return the competenzaResiduiRor
+	 */
+	public boolean isCompetenzaResiduiRor() {
+		return competenzaResiduiRor;
+	}
+
+	/**
+	 * @param competenzaResiduiRor the competenzaResiduiRor to set
+	 */
+	public void setCompetenzaResiduiRor(boolean competenzaResiduiRor) {
+		this.competenzaResiduiRor = competenzaResiduiRor;
+	}
+
+	
 }

@@ -31,8 +31,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage"> 
-		
-			<s:form id="mainForm" method="post" action="gestRigheCarta.do">
+		    <%-- SIAC-7952 rimuovo .do dalla action --%>
+			<s:form id="mainForm" method="post" action="gestRigheCarta">
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 				<h3>Carta <s:property value="cartaContabileDaRicerca.numero"/> (stato <s:property value="cartaContabileDaRicerca.statoOperativoCartaContabile" /> dal <s:property value="%{cartaContabileDaRicerca.dataCreazione}" />)</h3>
 				
@@ -66,8 +66,8 @@ SPDX-License-Identifier: EUPL-1.2
                             </s:if>
                             
 							&nbsp;
-	                         <s:submit disabled="!presenzaRigheSelezionabili" name="completaRiga" value="completa riga" method="completaRiga" cssClass="btn btn-primary" />
-							
+	                        <!-- task-131 <s:submit disabled="!presenzaRigheSelezionabili" name="completaRiga" value="completa riga" method="completaRiga" cssClass="btn btn-primary" /> -->
+	                        <s:submit disabled="!presenzaRigheSelezionabili" name="completaRiga" value="completa riga" action="gestRigheCarta_completaRiga" cssClass="btn btn-primary" />
                       </span>
 
 					<h4><span class="num_result"><s:property value="NumeroRighe"/> </span> righe</h4>
@@ -144,7 +144,9 @@ SPDX-License-Identifier: EUPL-1.2
 					<div class="Border_line"></div>
 					<p>
 <%-- 						<s:include value="/jsp/include/indietro.jsp" /> --%>
-						<s:submit name="indietro" value="indietro" method="indietro" cssClass="btn" />
+						<!-- task-131 <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn" /> -->
+						<s:submit name="indietro" value="indietro" action="gestRigheCarta_indietro" cssClass="btn" />
+						
 						<span class="pull-right">
 	                         
 	                         <s:if test="presenzaRigheSelezionabili">
@@ -157,7 +159,8 @@ SPDX-License-Identifier: EUPL-1.2
                             </s:if>
 	                         
 	                         &nbsp;
-							<s:submit disabled="!presenzaRigheSelezionabili" name="completaRiga" value="completa riga" method="completaRiga" cssClass="btn btn-primary" />
+							<!-- task-131 <s:submit disabled="!presenzaRigheSelezionabili" name="completaRiga" value="completa riga" method="completaRiga" cssClass="btn btn-primary" /> -->
+							<s:submit disabled="!presenzaRigheSelezionabili" name="completaRiga" value="completa riga" action="gestRigheCarta_completaRiga" cssClass="btn btn-primary" />
 						</span>					
 					</p> 
 					
@@ -190,8 +193,9 @@ SPDX-License-Identifier: EUPL-1.2
 		              
 		              <div class="modal-footer regolarizzaOK">
 		                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-		                <s:submit id="submitBtn" name="btnRegolarizza" value="si, prosegui" cssClass="btn btn-primary" method="regolarizzaSelezionati"/>
-		              </div>
+		                 <!-- task-131 <s:submit id="submitBtn" name="btnRegolarizza" value="si, prosegui" cssClass="btn btn-primary" method="regolarizzaSelezionati"/> -->
+		                 <s:submit id="submitBtn" name="btnRegolarizza" value="si, prosegui" cssClass="btn btn-primary" action="gestRigheCarta_regolarizzaSelezionati"/>
+		             </div>
 		              
 		               <div class="modal-footer regolarizzaKO" style="display:none;">
 		                <button class="btn" data-dismiss="modal" aria-hidden="true">indietro</button>

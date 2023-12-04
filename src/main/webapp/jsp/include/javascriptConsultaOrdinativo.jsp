@@ -12,7 +12,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 	$("#linkTabQuote").click(function() {
 		$.ajax({
-			url: '<s:url method="cambiaTabFolder"/>',
+			//task-131 --> url: '<s:url method="cambiaTabFolder"/>',
+			url: '<s:url action="%{#cambiaTabFolderAction}"/>',
 			type: 'POST',
 			data: 'tabFolder=tabQuote',
 		    success: function(data)  {
@@ -22,7 +23,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	$("#linkTabOrdinativiCollegati").click(function() {
 		$.ajax({
-			url: '<s:url method="cambiaTabFolder"/>',
+			//task-131 --> url: '<s:url method="cambiaTabFolder"/>',
+			url: '<s:url action="%{#cambiaTabFolderAction}"/>',
 			type: 'POST',
 			data: 'tabFolder=tabOrdinativiCollegati',
 		    success: function(data)  {
@@ -32,7 +34,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	$("#linkTabOrdinativoIncasso").click(function() {
 		$.ajax({
-			url: '<s:url method="cambiaTabFolder"/>',
+			// task-131 --> url: '<s:url method="cambiaTabFolder"/>',
+			url: '<s:url action="%{#cambiaTabFolderAction}"/>',
 			type: 'POST',
 			data: 'tabFolder=tabOrdinativoIncasso',
 		    success: function(data)  {
@@ -42,7 +45,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	$("#linkTabOrdinativoPagamento").click(function() {
 		$.ajax({
-			url: '<s:url method="cambiaTabFolder"/>',
+			//task-131 --> url: '<s:url method="cambiaTabFolder"/>',
+			url: '<s:url action="%{#cambiaTabFolderAction}"/>',
 			type: 'POST',
 			data: 'tabFolder=tabOrdinativoPagamento',
 		    success: function(data)  {
@@ -52,7 +56,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	$("#linkTabProvvisori").click(function() {
 		$.ajax({
-			url: '<s:url method="cambiaTabFolder"/>',
+			//task-131 --> url: '<s:url method="cambiaTabFolder"/>',
+			url: '<s:url action="%{#cambiaTabFolderAction}"/>',
 			type: 'POST',
 			data: 'tabFolder=tabProvvisori',
 		    success: function(data)  {

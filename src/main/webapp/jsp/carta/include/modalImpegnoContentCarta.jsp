@@ -35,18 +35,17 @@ SPDX-License-Identifier: EUPL-1.2
 		<s:include value="/jsp/carta/include/risultatoRicercaImpegniCarta.jsp" />
 		
 		<div class="Border_line"></div>	
-		<s:if test="hasMutui">
-			<s:include value="/jsp/liquidazione/include/risultatoRicercaMutiPerImpegno.jsp" />	
-		</s:if>
 		
 </div>
 
 <div class="modal-footer">
 	<s:if test="hasImpegnoSelezionatoPopup">		
-		<s:submit name="conferma" value="conferma" method="confermaImpegnoCarta" data-dismiss="modal" cssClass="btn btn-primary" />
+		<!-- task-131 <s:submit name="conferma" value="conferma" method="confermaImpegnoCarta" cssClass="btn btn-primary" />-->
+		<s:submit name="conferma" value="conferma" action="%{#confermaImpegnoCartaAction}" cssClass="btn btn-primary" />
 	</s:if>
 	<s:else>
-		<s:submit name="conferma" value="conferma" method="confermaImpegnoCarta" data-dismiss="modal" disabled="true" cssClass="btn btn-primary" />
+		<!-- task-131 <s:submit name="conferma" value="conferma" method="confermaImpegnoCarta" disabled="true" cssClass="btn btn-primary" />-->
+		<s:submit name="conferma" value="conferma" action="%{#confermaImpegnoCartaAction}" disabled="true" cssClass="btn btn-primary" />
 	</s:else>
 </div>
 </div>
@@ -60,8 +59,9 @@ function initRicercaGuidataImpegno (anno, numero) {
 	// al caricamento sparisce il dettaglio jira-932
 	//$("#visDett").hide();
 	$.ajax({
-		url: '<s:url method="pulisciRicercaImpegno"/>',
-	    success: function(data)  {
+		//task-131 --> url: '<s:url method="pulisciRicercaImpegno"/>',
+		url: '<s:url action="%{#pulisciRicercaImpegnoAction}"/>',
+		success: function(data)  {
 		    $("#gestioneRisultatoRicercaImpegni").html(data);
 		}
 	});
@@ -81,7 +81,9 @@ function initRicercaGuidataImpegno (anno, numero) {
 		//if(annoimpegno && numeroimpegno){
 		if(true){
 			$.ajax({
-				url: '<s:url method="ricercaGuidataImpegno"/>',
+				
+				//task-131 --> url: '<s:url method="ricercaGuidataImpegno"/>',
+				url: '<s:url action="%{#ricercaGuidataImpegnoAction}"/>',				
 				type: 'GET',
 				data: { anno: annoimpegno, numero: numeroimpegno},
 			    success: function(data)  {
@@ -92,6 +94,5 @@ function initRicercaGuidataImpegno (anno, numero) {
 		$("#annoImpegno").val($("#annoimpegno").val());
 		$("#numeroImpegno").val($("#numeroimpegno").val());
 		$("#numeroSub").val(null);
-		$("#numeroMutuo").val(null);
 	});		
 </script>

@@ -50,7 +50,7 @@ public class SalvaSoggettoAction<M extends SoggettoModel> extends WizardScriviSo
 			log.debug(methodName, "OK INSERIMENTO");
 			// I dati sono stati salvati correttamente.
 			//E' stato inserito un soggetto "VALIDO
-			StringBuffer sb = new StringBuffer("I dati sono stati salvati correttamente. E&grave; stato inserito un soggetto ")
+			StringBuffer sb = new StringBuffer("I dati sono stati salvati correttamente. E' stato inserito un soggetto ")
 			.append(model.getStatoSoggetto())
 			.append(" con codice ").append(model.getCodiceSoggetto());
 			

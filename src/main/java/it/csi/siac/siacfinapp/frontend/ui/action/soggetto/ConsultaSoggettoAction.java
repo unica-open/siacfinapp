@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.ConsultaSoggettoModel;
-import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComuni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComuniResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaModalitaPagamentoPerChiave;
@@ -66,6 +66,12 @@ public class ConsultaSoggettoAction extends SoggettoAction<ConsultaSoggettoModel
 		setMethodName("prepare");
 		//invoco il prepare della super classe:
 		super.prepare();
+		//task-224
+		if(AzioneConsentitaEnum.OP_CEC_SOG_leggiSogg.getNomeAzione().equals(sessionHandler.getAzione().getNome())) {
+			this.model.setTitolo("Consulta Soggetto Cassa Economale");
+		}else {
+			this.model.setTitolo("Consulta Soggetto");	
+		}
 	}
 
 	@Override
@@ -82,12 +88,11 @@ public class ConsultaSoggettoAction extends SoggettoAction<ConsultaSoggettoModel
 		RicercaSoggettoPerChiaveResponse response = soggettoService.ricercaSoggettoPerChiave(ricercaSoggettoPerChiave);
 		// Salvo il dettaglio del soggetto selezionato e le relative sedi e
 		// modalita' di pagamento associate
-		boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(),ABILITAZIONE_GESTIONE_DECENTRATO);
+		boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 		
 		//analizzo la response in due modi diversi a seconda se sono decentrato o meno:
 		
 		if (gestSoggDec) {
-			
 			//gestione decentrata
 			
 			if (response.getSoggettoInModifica() != null) {
@@ -128,7 +133,8 @@ public class ConsultaSoggettoAction extends SoggettoAction<ConsultaSoggettoModel
 				}
 			}
 		}
-
+		
+		
 		//gestisce le province:
 		cercaProvinceIndirizziSoggetto();
 
@@ -141,30 +147,35 @@ public class ConsultaSoggettoAction extends SoggettoAction<ConsultaSoggettoModel
 				RicercaSedeSecondariaPerChiaveResponse resp2 = ricercaSedeSecondariaSoggetto(newSede, true);
 				//analizzo il dato ottenuto e setto i dati:
 				if (resp2.getSedeSecondariaSoggetto() != null){
-					newSede.setDescrizioneStatoOperativoSedeSecondaria(Constanti.STATO_IN_MODIFICA_no_underscore);
+					newSede.setDescrizioneStatoOperativoSedeSecondaria(CostantiFin.STATO_IN_MODIFICA_no_underscore);
 				}
 			}
 		}
 		
 		//ciclo le modalita di pagamento e carico i dati completi per ognuna di esse:
 		List<ModalitaPagamentoSoggetto> listaModPag = new ArrayList<ModalitaPagamentoSoggetto>();
-		if (response.getListaModalitaPagamentoSoggetto() != null && response.getListaModalitaPagamentoSoggetto().size() > 0){
+		/*if (response.getListaModalitaPagamentoSoggetto() != null && response.getListaModalitaPagamentoSoggetto().size() > 0){
 			for (ModalitaPagamentoSoggetto newModPag : response.getListaModalitaPagamentoSoggetto()){
 				//ricerco la modalita pagamento:
 				RicercaModalitaPagamentoPerChiaveResponse resp2 = ricercaModalitaPagamentoSoggetto(newModPag);
 				//analizzo il dato ottenuto e setto i dati:
 				if (resp2.getModalitaPagamentoSoggettoInModifica() != null){
-					resp2.getModalitaPagamentoSoggettoInModifica().setDescrizioneStatoModalitaPagamento(Constanti.STATO_IN_MODIFICA_no_underscore);
+					resp2.getModalitaPagamentoSoggettoInModifica().setDescrizioneStatoModalitaPagamento(CostantiFin.STATO_IN_MODIFICA_no_underscore);
 					resp2.getModalitaPagamentoSoggettoInModifica().setAssociatoA(newModPag.getAssociatoA());
 					listaModPag.add(resp2.getModalitaPagamentoSoggettoInModifica());
 				} else {
 					listaModPag.add(newModPag);
 				}
 			}
-		}
+		}*/
 
 		//setto la lista modalita pagamento nel model:
-		model.setModalitaPagamento(listaModPag);
+		if(response.getListaModalitaPagamentoSoggetto() != null && response.getListaModalitaPagamentoSoggetto().size() > 0) {
+			model.setModalitaPagamento(response.getListaModalitaPagamentoSoggetto());
+		}else {
+			model.setModalitaPagamento(listaModPag);
+		}
+		
 		
 		//setto la lista sedi secondarie nel model:
 		model.setSediSecondarie(response.getListaSecondariaSoggetto());
@@ -212,7 +223,7 @@ public class ConsultaSoggettoAction extends SoggettoAction<ConsultaSoggettoModel
 	protected String getCodificaAmbito() {
 		//ritorno la codifica dell'ambito
 		//in questo scenario e' fin
-		return Constanti.AMBITO_FIN;
+		return CostantiFin.AMBITO_FIN;
 	}
 
 	/**
@@ -343,7 +354,7 @@ public class ConsultaSoggettoAction extends SoggettoAction<ConsultaSoggettoModel
 
 	public String getContattoStr(String tipo) {
 		Contatto c = contattiMap.get(tipo);
-		return c.getDescrizione() + (Constanti.TRUE.equals(c.getAvviso()) ? " (recapito per avviso)" : "");
+		return c.getDescrizione() + (CostantiFin.TRUE.equals(c.getAvviso()) ? " (recapito per avviso)" : "");
 	}
 
 }

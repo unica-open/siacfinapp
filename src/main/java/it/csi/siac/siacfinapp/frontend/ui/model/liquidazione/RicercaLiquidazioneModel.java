@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.struts2.dispatcher.Parameter;
+
 import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
 import it.csi.siac.siacbilser.model.TipoFinanziamento;
@@ -67,8 +69,6 @@ public class RicercaLiquidazioneModel extends GenericPopupModel {
 	//atto amministrativo consulta
 	private AttoAmministrativo attoAmministrativoConsulta = new AttoAmministrativo();
 	
-	//numero mutuo consulta
-	private BigDecimal numeroMutuoConsulta;
 	//fine consulta
 	
 	//flag di selezione
@@ -91,12 +91,7 @@ public class RicercaLiquidazioneModel extends GenericPopupModel {
 	private StatoOperativoLiquidazione statoOperativoLiquidazione;
 	private Date dataCreazione,dataModifica,dataAnnullamento;
 	private String transazioneElementare;
-	
-	//mutuo
-	private BigDecimal numeroMutuo;
-	private String numeroMutuoString;
-	private String numeroMutuoImpegnoString;
-	
+		
 	//paginazione
 	private int resultSize;
 	private int numeroPaginaElenco;
@@ -170,12 +165,7 @@ public class RicercaLiquidazioneModel extends GenericPopupModel {
 	public void setNumeroLiquidazione(BigDecimal numeroLiquidazione) {
 		this.numeroLiquidazione = numeroLiquidazione;
 	}
-	public BigDecimal getNumeroMutuo() {
-		return numeroMutuo;
-	}
-	public void setNumeroMutuo(BigDecimal numeroMutuo) {
-		this.numeroMutuo = numeroMutuo;
-	}
+
 	public String getDescrizioneLiquidazione() {
 		return descrizioneLiquidazione;
 	}
@@ -321,24 +311,7 @@ public class RicercaLiquidazioneModel extends GenericPopupModel {
 	public void setNumeroLiquidazioneString(String numeroLiquidazioneString) {
 		this.numeroLiquidazioneString = numeroLiquidazioneString;
 	}
-	public String getNumeroMutuoString() {
-		return numeroMutuoString;
-	}
-	public void setNumeroMutuoString(String numeroMutuoString) {
-		this.numeroMutuoString = numeroMutuoString;
-	}
-	public String getNumeroMutuoImpegnoString() {
-		return numeroMutuoImpegnoString;
-	}
-	public void setNumeroMutuoImpegnoString(String numeroMutuoImpegnoString) {
-		this.numeroMutuoImpegnoString = numeroMutuoImpegnoString;
-	}
-	public BigDecimal getNumeroMutuoConsulta() {
-		return numeroMutuoConsulta;
-	}
-	public void setNumeroMutuoConsulta(BigDecimal numeroMutuoConsulta) {
-		this.numeroMutuoConsulta = numeroMutuoConsulta;
-	}
+
 	public int getNumeroPaginaElenco() {
 		return numeroPaginaElenco;
 	}

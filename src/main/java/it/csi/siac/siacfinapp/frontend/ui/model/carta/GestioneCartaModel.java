@@ -110,7 +110,7 @@ public class GestioneCartaModel  extends GenericPopupModel{
 	
 	//Variabili di appoggio per la gestione del soggetto da associare alla riga 
 	private ImpegnoLiquidazioneModel impegno;
-	private String numeroMutuoImpegnoString;	
+
 	//END variabili di appoggio impegno - riga
 	
 	//variabili dati riga
@@ -441,16 +441,6 @@ public class GestioneCartaModel  extends GenericPopupModel{
 
 	public void setImpegno(ImpegnoLiquidazioneModel impegno) {
 		this.impegno = impegno;
-	}
-
-
-	public String getNumeroMutuoImpegnoString() {
-		return numeroMutuoImpegnoString;
-	}
-
-
-	public void setNumeroMutuoImpegnoString(String numeroMutuoImpegnoString) {
-		this.numeroMutuoImpegnoString = numeroMutuoImpegnoString;
 	}
 
 

@@ -11,8 +11,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -47,8 +48,8 @@ public class GestisciStoricoImpegnoAccertamentoStep1Action extends GenericPopupA
 	private static final String PROSEGUI = "prosegui";
 	private static final String ANNULLA = "annulla";	
 	
-	@Autowired
-	private MovimentoGestioneService movimentoGestionService;
+	@Autowired @Qualifier("movimentoGestioneFinService")
+	private MovimentoGestioneService movimentoGestioneFinService;
 	
 	public GestisciStoricoImpegnoAccertamentoStep1Action() {
 	   	
@@ -233,7 +234,7 @@ public class GestisciStoricoImpegnoAccertamentoStep1Action extends GenericPopupA
 		if(model.getImpegno()!=null && this.model.getNumeroImpegno()!=null){
 			//impegno diverso da null e numero impegno diverso da null
 			BigDecimal numeroBD = new BigDecimal(this.model.getNumeroImpegno());
-			impegnoValorizzatoENumeroCambiato = !(numeroBD).equals(model.getImpegno().getNumero());
+			impegnoValorizzatoENumeroCambiato = !(numeroBD).equals(model.getImpegno().getNumeroBigDecimal());
 		}
 		return impegnoValorizzatoENumeroCambiato;
 	}
@@ -246,9 +247,7 @@ public class GestisciStoricoImpegnoAccertamentoStep1Action extends GenericPopupA
 		model.setAnnoImpegno(null);
 		model.setNumeroImpegno(null);
 		model.setNumeroSub(null);
-		model.setNumeroMutuoPopup(null);
 		model.setDescrizioneImpegnoPopup(null);
-		model.setDescrizioneMutuoPopup(null);
 		model.setImpegnoPopup(new Impegno());
 		model.setHasImpegnoSelezionatoPopup(false);
 		model.setDisponibilita(null);
@@ -266,7 +265,7 @@ public class GestisciStoricoImpegnoAccertamentoStep1Action extends GenericPopupA
  		rip.setEnte(sessionHandler.getEnte());
  		rip.setRichiedente(sessionHandler.getRichiedente());
  		RicercaImpegnoK k = new RicercaImpegnoK();
- 		k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+ 		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
  		k.setAnnoImpegno(this.model.getAnnoImpegno());
  		k.setNumeroImpegno(new BigDecimal(this.model.getNumeroImpegno()));
  		
@@ -289,7 +288,7 @@ public class GestisciStoricoImpegnoAccertamentoStep1Action extends GenericPopupA
  		
  		rip.setpRicercaImpegnoK(k);
  		
- 		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+ 		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
  		
  		return respRk;
  	}

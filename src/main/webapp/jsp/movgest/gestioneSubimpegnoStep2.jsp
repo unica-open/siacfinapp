@@ -16,11 +16,53 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="container-fluid-banner">
 		<a name="A-contenuti" title="A-contenuti"></a>
 	</div>
+	
+	<s:if test="oggettoDaPopolareSubimpegno()">
+		<s:set var="gestisciForwardAction" value="%{'gestioneSubimpegnoStep2_gestisciForward'}" />	                     					
+		<s:set var="selezionaProvvedimentoAction" value="%{'gestioneSubimpegnoStep2_selezionaProvvedimento'}" />       
+		<s:set var="clearRicercaProvvedimentoAction" value="%{'gestioneSubimpegnoStep2_clearRicercaProvvedimento'}" />	          
+	    <s:set var="ricercaProvvedimentoAction" value="%{'gestioneSubimpegnoStep2_ricercaProvvedimento'}" />	          
+	    <s:set var="eliminaAction" value="%{'gestioneSubimpegnoStep2_elimina'}" />	
+	    <s:set var="codiceSiopeChangedAction" value="%{'gestioneSubimpegnoStep2_codiceSiopeChanged'}" />
+		<s:set var="confermaPdcAction" value="%{'gestioneSubimpegnoStep2_confermaPdc'}" />	
+		
+		<s:set var="siSalvaAction" value="%{'gestioneSubimpegnoStep2_siSalva'}" />	 
+		<s:set var="siProseguiAction" value="%{'gestioneSubimpegnoStep2_siProsegui'}" />
+		<s:set var="annullaSubImpegnoAction" value="%{'gestioneSubimpegnoStep2_annullaSubImpegno'}" />	 
+		<s:set var="annullaSubAccertamentoAction" value="%{'gestioneSubimpegnoStep2_annullaSubAccertamento'}" />	 
+		<s:set var="annullaMovGestSpesaAction" value="%{'gestioneSubimpegnoStep2_annullaMovGestSpesa'}" />	
+		<s:set var="eliminaSubImpegnoAction" value="%{'gestioneSubimpegnoStep2_eliminaSubImpegno'}" />	 
+		<s:set var="eliminaSubAccertamentoAction" value="%{'gestioneSubimpegnoStep2_eliminaSubAccertamento'}" />
+		<s:set var="forzaProseguiAction" value="%{'gestioneSubimpegnoStep2_forzaProsegui'}" />	          
+		<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'gestioneSubimpegnoStep2_forzaSalvaPluriennaleAccertamento'}" />	          
+		<s:set var="salvaConByPassDodicesimiAction" value="%{'gestioneSubimpegnoStep2_salvaConByPassDodicesimi'}" />	          						          
+	</s:if>
+	<s:else>
+		<s:set var="gestisciForwardAction" value="%{'gestioneSubaccertamentoStep2_gestisciForward'}" />	                     						
+	    <s:set var="selezionaProvvedimentoAction" value="%{'gestioneSubaccertamentoStep2_selezionaProvvedimento'}" />       
+		<s:set var="clearRicercaProvvedimentoAction" value="%{'gestioneSubaccertamentoStep2_clearRicercaProvvedimento'}" />	          
+	    <s:set var="ricercaProvvedimentoAction" value="%{'gestioneSubaccertamentoStep2_ricercaProvvedimento'}" />	          
+	    <s:set var="eliminaAction" value="%{'gestioneSubaccertamentoStep2_elimina'}" />	
+	    <s:set var="codiceSiopeChangedAction" value="%{'gestioneSubaccertamentoStep2_codiceSiopeChanged'}" />
+		<s:set var="confermaPdcAction" value="%{'gestioneSubaccertamentoStep2_confermaPdc'}" />		  
+				
+		<s:set var="siSalvaAction" value="%{'gestioneSubaccertamentoStep2_siSalva'}" />	 
+		<s:set var="siProseguiAction" value="%{'gestioneSubaccertamentoStep2_siProsegui'}" />
+		<s:set var="annullaSubImpegnoAction" value="%{'gestioneSubaccertamentoStep2_annullaSubImpegno'}" />	 
+		<s:set var="annullaSubAccertamentoAction" value="%{'gestioneSubaccertamentoStep2_annullaSubAccertamento'}" />	 
+		<s:set var="annullaMovGestSpesaAction" value="%{'gestioneSubaccertamentoStep2_annullaMovGestSpesa'}" />	
+		<s:set var="eliminaSubImpegnoAction" value="%{'gestioneSubaccertamentoStep2_eliminaSubImpegno'}" />	 
+		<s:set var="eliminaSubAccertamentoAction" value="%{'gestioneSubaccertamentoStep2_eliminaSubAccertamento'}" />
+		<s:set var="forzaProseguiAction" value="%{'gestioneSubaccertamentoStep2_forzaProsegui'}" />	          
+		<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'gestioneSubaccertamentoStep2_forzaSalvaPluriennaleAccertamento'}" />	          
+		<s:set var="salvaConByPassDodicesimiAction" value="%{'gestioneSubaccertamentoStep2_salvaConByPassDodicesimi'}" />
+	</s:else>
+	            			
 
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12 contentPage">
-				<s:form id="%{labels.FORM}" action="%{labels.FORM}.do" method="post">
+				<s:form id="%{labels.FORM}" action="%{labels.FORM}" method="post">
 	<!-- 		<h3>
 					
 					<s:property value="%{labels.OGGETTO_GENERICO_PADRE}"/>
@@ -37,6 +79,7 @@ SPDX-License-Identifier: EUPL-1.2
 				
 					<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 					<s:include value="/jsp/movgest/include/tabsSubimpegno.jsp" />
+					
 					<s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
 					<h4><s:property value="%{labels.OGGETTO_GENERICO}"/> - Totale: <s:property value="getText('struts.money.format', {totaleSubImpegno})"/> - Disponibile a
 						<s:property value="%{labels.OGGETTO_GENERICO_VERBO}"/>: <s:property value="getText('struts.money.format', {disponibilitaSubImpegnare})"/></h4>
@@ -59,15 +102,30 @@ SPDX-License-Identifier: EUPL-1.2
 					<p class="margin-large">
 
 						<!-- Modal -->
+						
 						<s:include value="/jsp/movgest/include/modal.jsp" />
 
 						<s:include value="/jsp/include/indietro.jsp" />
 
-<!-- 						<a class="btn btn-secondary" href="">annulla</a>  -->
-						<s:submit name="annulla" value="annulla" method="annulla"	cssClass="btn btn-secondary" />
-						<span class="pull-right"> <!--         <a class="btn btn-primary" href="FIN-InsImpegnoStep3.shtml">conferma e prosegui</a> -->
-							<s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary freezePagina" />
-						</span>
+<!-- 					<a class="btn btn-secondary" href="">annulla</a>  -->
+						<s:if test="oggettoDaPopolareSubimpegno()">
+							<!-- task-131 <s:submit name="annulla" value="annulla" method="annulla"	cssClass="btn btn-secondary" /> -->
+							<s:submit name="annulla" value="annulla" action="gestioneSubimpegnoStep2_annulla"	cssClass="btn btn-secondary" /><!-- task-207 -->
+							
+							<span class="pull-right"> <!-- <a class="btn btn-primary" href="FIN-InsImpegnoStep3.shtml">conferma e prosegui</a> -->
+								<!-- task-131 <s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary freezePagina" /> -->
+								<s:submit name="salva" value="salva" action="gestioneSubimpegnoStep2_salva" id="salvaId" cssClass="btn btn-primary freezePagina" />
+							</span>
+						</s:if>		
+						<s:else>
+							<!-- task-131 <s:submit name="annulla" value="annulla" method="annulla"	cssClass="btn btn-secondary" /> -->
+							<s:submit name="annulla" value="annulla" action="gestioneSubaccertamentoStep2_annulla"	cssClass="btn btn-secondary" /> <!-- task-207 -->
+							
+							<span class="pull-right"> <!-- <a class="btn btn-primary" href="FIN-InsImpegnoStep3.shtml">conferma e prosegui</a> -->
+								<!-- task-131 <s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary freezePagina" /> -->
+								<s:submit name="salva" value="salva" action="gestioneSubaccertamentoStep2_salva" id="salvaId" cssClass="btn btn-primary freezePagina" />
+							</span>
+						</s:else>						
 					</p>
 					<a id="linkmsgPrimaNota" href="#msgPrimaNota" data-toggle="modal" style="display:none;"></a>
 					<s:if test="%{richiediConfermaRedirezioneContabilitaGenerale}">
@@ -76,7 +134,7 @@ SPDX-License-Identifier: EUPL-1.2
 			               <div class="alert alert-warning">
 			                 <button type="button" class="close" data-dismiss="alert">&times;</button>
 			                 <p>
-			                 	<s:property value="messaggioProsecuzioneSuContabilitaGenerale" escape="false"/>
+			                 	<s:property value="messaggioProsecuzioneSuContabilitaGenerale" escapeHtml="false"/>
 			                 </p>
 			               </div>
 			             </div>
@@ -100,22 +158,46 @@ SPDX-License-Identifier: EUPL-1.2
 		$(document).ready(function() {
 			
 			<s:if test="%{richiediConfermaRedirezioneContabilitaGenerale}">
-				$('#linkmsgPrimaNota').click();
-			 	$('#inserisciPrimaNotaProvvisoria').on('click', function(){
-					$('#HIDDEN_saltaInserimentoPrimaNota').val(false);
-					$('#HIDDEN_richiediConfermaUtente').val(true);
-					
-					$('form')
-					.append('<input type="hidden" name="method:salva" value="" class="btn" >')
-					.submit();
-				});
-			 	$('#validaPrimaNota').on('click', function(){
-					$('#HIDDEN_saltaInserimentoPrimaNota').val(true);
-					$('#HIDDEN_richiediConfermaUtente').val(true);
-					$('form')
-					.append('<input type="hidden" name="method:salva" value="" class="btn" >')
-					.submit(); 
+				<s:if test="oggettoDaPopolareSubimpegno()">
+					$('#linkmsgPrimaNota').click();
+				 	$('#inserisciPrimaNotaProvvisoria').on('click', function(){
+						$('#HIDDEN_saltaInserimentoPrimaNota').val(false);
+						$('#HIDDEN_richiediConfermaUtente').val(true);
+						
+						$('form')
+						//task-131 .append('<input type="hidden" name="method:salva" value="" class="btn" >')
+						.append('<input type="hidden" name="action:gestioneSubimpegnoStep2_salva" value="" class="btn" >')
+						.submit();
 					});
+				 	$('#validaPrimaNota').on('click', function(){
+						$('#HIDDEN_saltaInserimentoPrimaNota').val(true);
+						$('#HIDDEN_richiediConfermaUtente').val(true);
+						$('form')
+						//task-131 .append('<input type="hidden" name="method:salva" value="" class="btn" >')
+						.append('<input type="hidden" name="action:gestioneSubimpegnoStep2_salva" value="" class="btn" >')
+						.submit(); 
+						});
+				</s:if>
+				<s:else>
+					$('#linkmsgPrimaNota').click();
+				 	$('#inserisciPrimaNotaProvvisoria').on('click', function(){
+						$('#HIDDEN_saltaInserimentoPrimaNota').val(false);
+						$('#HIDDEN_richiediConfermaUtente').val(true);
+						
+						$('form')
+						//task-131 .append('<input type="hidden" name="method:salva" value="" class="btn" >')
+						.append('<input type="hidden" name="action:gestioneSubaccertamentoStep2_salva" value="" class="btn" >')
+						.submit();
+					});
+				 	$('#validaPrimaNota').on('click', function(){
+						$('#HIDDEN_saltaInserimentoPrimaNota').val(true);
+						$('#HIDDEN_richiediConfermaUtente').val(true);
+						$('form')
+						//task-131 .append('<input type="hidden" name="method:salva" value="" class="btn" >')
+						.append('<input type="hidden" name="action:gestioneSubaccertamentoStep2_salva" value="" class="btn" >')				
+						.submit(); 
+						});
+			</s:else>
 			</s:if>
 
 		 });  

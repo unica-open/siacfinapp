@@ -7,16 +7,17 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.MovimentoConsulta;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaAccertamento;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaAccertamentoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AnnullaMovimentoEntrata;
@@ -67,6 +68,10 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 		//valuto se ricaricare i contenuti:
 		if(ricaricaDopoInserimento || forceReload){
 			ricaricaSubAccertamenti(false);
+			//SIAC-8065 se trovo errori dal caricaDatiAccertamento torno indietro e li mostro
+			if(model.hasErrori()) {
+				return INPUT;
+			}
 		}
 		//caricamento delle label:
 		caricaLabelsAggiornaSub();
@@ -89,7 +94,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 		mc.setTipoMovimento(MovimentoConsulta.ACCERTAMENTO);
 		// movimento
 		mc.setAnno(String.valueOf(sub.getAnnoMovimento()));
-		mc.setNumero(String.valueOf(sub.getNumero()));
+		mc.setNumero(String.valueOf(sub.getNumeroBigDecimal()));
 //	    mc.setBloccoRagioneria( ((sub.getAttoAmministrativo().getBloccoRagioneria()==true ? "SI" : (sub.getBloccoRagioneria()==false) ? "NO" : "N/A")));
 	    
 	    
@@ -114,7 +119,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
         }
         
         //compongo la descrizione:
-		String descAccertamento = accertamento.getAnnoMovimento() + "/" + accertamento.getNumero() + 
+		String descAccertamento = accertamento.getAnnoMovimento() + "/" + accertamento.getNumeroBigDecimal() + 
 			" - " + accertamento.getDescrizione() +
 			" - " + convertiBigDecimalToImporto(accertamento.getImportoAttuale()) + 
 			" (" +  accertamento.getDescrizioneStatoOperativoMovimentoGestioneEntrata() + " dal " + convertDateToString(accertamento.getDataStatoOperativoMovimentoGestioneEntrata()) + ")";	
@@ -122,7 +127,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 
 	    // disponibilita
 	    mc.setDisponibilitaSub(sub.getDisponibilitaSubAccertare());
-	    mc.setTotaleSub(sub.getTotaleSubAccertamenti());
+	    mc.setTotaleSub(sub.getTotaleSubAccertamentiBigDecimal());
 	    
 	    // provvedimento
 	    if (sub.getAttoAmministrativo() != null) {
@@ -186,7 +191,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 		AnnullaMovimentoEntrata reqAnnulla = convertiModelPerChiamataServizioAnnulla(getUidSubDaAnnullare());
 		
 		//richiamo il servizio di annulla:
-		AnnullaMovimentoEntrataResponse response = movimentoGestionService.annullaMovimentoEntrata(reqAnnulla);
+		AnnullaMovimentoEntrataResponse response = movimentoGestioneFinService.annullaMovimentoEntrata(reqAnnulla);
 
 		//analizzo la risposta del servizio:
 		if(!response.isFallimento()){
@@ -197,6 +202,10 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 			
 			//richiamo il metodo di caricamento passandogli flagPostAggiorna a true:
 			ricaricaSubAccertamenti(true);
+			//SIAC-8065 se trovo errori dal caricaDatiAccertamento torno indietro e li mostro
+			if(model.hasErrori()) {
+				return INPUT;
+			}
 			
 			//setto il messaggio di esito positivo:
 			addActionMessage(ErroreFin.OPERAZIONE_EFFETTUATA_CORRETTAMENTE.getCodice() + " " + ErroreFin.OPERAZIONE_EFFETTUATA_CORRETTAMENTE.getErrore("").getDescrizione());
@@ -235,7 +244,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 		//SIAC-4949 IMPEGNI e ACCERTAMENTI Aggiornamento per decentrati CR 912
 		// quando l'utente ha il'azione DecentratoP deve essere disabilitata l'azione AGGIORNA e ANNULLA 
 		//dei subimpegni/subaccertamenti definitivi 
-		if(stato.equals("D") && isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamentoDecentratoP)){
+		if(stato.equals("D") && isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoDecentratoP)){
 			return false;
 		}
 		//
@@ -260,7 +269,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 		//SIAC-4949 IMPEGNI e ACCERTAMENTI Aggiornamento per decentrati CR 912
 		// quando l'utente ha il'azione DecentratoP deve essere disabilitata l'azione AGGIORNA e ANNULLA 
 		//dei subimpegni/subaccertamenti definitivi 
-		if(stato.equals("D") && isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamentoDecentratoP)){
+		if(stato.equals("D") && isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoDecentratoP)){
 			return false;
 		}
 		//
@@ -300,7 +309,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 			//travaso alcuni dati:
 			model.setListaSubaccertamenti(model.getAccertamentoRicaricatoDopoInsOAgg().getElencoSubAccertamenti());
 			model.setDisponibilitaSubImpegnare(model.getAccertamentoRicaricatoDopoInsOAgg().getDisponibilitaSubAccertare());
-			model.setTotaleSubImpegno(model.getAccertamentoRicaricatoDopoInsOAgg().getTotaleSubAccertamenti());
+			model.setTotaleSubImpegno(model.getAccertamentoRicaricatoDopoInsOAgg().getTotaleSubAccertamentiBigDecimal());
 			model.setAccertamentoInAggiornamento(model.getAccertamentoRicaricatoDopoInsOAgg());
 			setAccertamentoToUpdate(model.getAccertamentoRicaricatoDopoInsOAgg());
 			
@@ -342,7 +351,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 			//
 			
 			//chiamo il servizio di aggiorna che non avendo piu' quel sub in lista lo eliminera':
-			AggiornaAccertamentoResponse response =	movimentoGestionService.aggiornaAccertamento(requestAggiorna);
+			AggiornaAccertamentoResponse response =	movimentoGestioneFinService.aggiornaAccertamento(requestAggiorna);
 			
 			//analizzo l'esito del servizio:
 			if(!response.isFallimento() && response.getAccertamento()!= null ){
@@ -356,6 +365,11 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 		
 		//ricarico i dati:
 		ricaricaSubAccertamenti(true);
+		//SIAC-8065 se trovo errori dal caricaDatiAccertamento torno indietro e li mostro
+		if(model.hasErrori()) {
+			return INPUT;
+		}
+		
 		return SUCCESS;
 	}
 	
@@ -375,7 +389,7 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 		
 		Accertamento accertamento = new Accertamento();
 		accertamento.setAnnoMovimento(model.getAccertamentoInAggiornamento().getAnnoMovimento());
-		accertamento.setNumero(model.getAccertamentoInAggiornamento().getNumero());
+		accertamento.setNumeroBigDecimal(model.getAccertamentoInAggiornamento().getNumeroBigDecimal());
 		
 		SubAccertamento subAccertamentoIntero = FinUtility.getById(model.getAccertamentoInAggiornamento().getElencoSubAccertamenti(), Integer.valueOf(uid));
 		
@@ -385,6 +399,12 @@ public class AggiornaSubaccertamentoAction extends AggiornaSubGenericAction {
 		accertamento.setElencoSubAccertamenti(subAccertamentos);
 		request.setAccertamento(accertamento);
 		return request;
+	}
+	
+	@Override
+	//SIAC-7667
+	protected boolean isPerimetroSanitarioCongruenteConGsa(CapitoloImpegnoModel capitolo) {
+		return capitolo.getCodicePerimetroSanitarioEntrata() != null && CODICE_PERIMETRO_SANITARIO_ENTRATA_GSA.equals(capitolo.getCodicePerimetroSanitarioEntrata());
 	}
 
 }

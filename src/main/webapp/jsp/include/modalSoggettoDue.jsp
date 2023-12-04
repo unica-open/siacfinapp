@@ -75,8 +75,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	<div class="modal-footer">
 		<!-- <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button> -->
-		<s:submit cssClass="btn btn-primary" data-dismiss="modal"
-			aria-hidden="true" value="Conferma" method="selezionaSoggettoDue"></s:submit>
+		<!-- task-131 <s:submit cssClass="btn btn-primary" aria-hidden="true" value="Conferma" method="selezionaSoggettoDue"></s:submit> -->
+		<s:submit cssClass="btn btn-primary" aria-hidden="true" value="Conferma" action="%{#selezionaSoggettoDueAction}"></s:submit>
 
 	</div>
 </div>
@@ -92,7 +92,8 @@ SPDX-License-Identifier: EUPL-1.2
 		$("#pivaRicercaDue").val("");
 		$("#denominazioneDue").val("");
 		$.ajax({
-			url: '<s:url method="pulisciRicercaSoggetto"/>',
+			//task-131 url: '<s:url method="pulisciRicercaSoggetto"/>',
+			url: '<s:url action="%{#pulisciRicercaSoggettoAction}"/>',
 		    success: function(data)  {
 			    $("#gestioneRisultatoRicercaSoggettiDue").html(data);
 			}
@@ -102,8 +103,9 @@ SPDX-License-Identifier: EUPL-1.2
 	$(document).ready(function() {
 		$("#ricercaGuidataSoggettoDue").click(function() {
 			$.ajax({
-				url: '<s:url method="ricercaSoggettoDue"/>',
-				type: 'POST',
+				//task-131 url: '<s:url method="ricercaSoggettoDue"/>',
+				url: '<s:url action="%{#ricercaSoggettoDueAction}"/>',
+			    type: 'POST',
 				data: $(".parametroRicercaSoggettoDue").serialize(),
 			    success: function(data)  {
 				    $("#gestioneRisultatoRicercaSoggettiDue").html(data);

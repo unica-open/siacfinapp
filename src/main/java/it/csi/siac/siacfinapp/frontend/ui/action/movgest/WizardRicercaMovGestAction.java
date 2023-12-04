@@ -24,19 +24,27 @@ import it.csi.siac.siacbilser.model.CapitoloEntrataGestione;
 import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
 import it.csi.siac.siacbilser.model.ric.RicercaDettaglioCapitoloEGest;
 import it.csi.siac.siacbilser.model.ric.RicercaDettaglioCapitoloUGest;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.RicercaImpegnoModel;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamenti;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegniGlobal;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaAccertamentiSubAccertamenti;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaAccertamentiSubAccertamentiRORResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaAccertamentiSubAccertamentiResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaImpegniSubImpegni;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaImpegniSubimpegniRORResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaImpegniSubimpegniResponse;
 import it.csi.siac.siacfinser.model.Accertamento;
 import it.csi.siac.siacfinser.model.Impegno;
+import it.csi.siac.siacfinser.model.SubAccertamento;
+import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneEntrata;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesa;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaAccSubAcc;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaImpSub;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaImpegno;
@@ -108,11 +116,11 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		if(!StringUtils.isEmpty(model.getRicercaModel().getAnnoEsercizio())){
 			parametroRicercaImpegno.setAnnoEsercizio(Integer.valueOf(model.getRicercaModel().getAnnoEsercizio()));
 		}else{
-			parametroRicercaImpegno.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			parametroRicercaImpegno.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		}
 		
 		// anno bilancio e anno esercizio sono la stessa cosa
-		parametroRicercaImpegno.setAnnoBilancio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		parametroRicercaImpegno.setAnnoBilancio(sessionHandler.getAnnoBilancio());
 		
 		//numero impegno
 		if(!StringUtils.isEmpty(model.getRicercaModel().getNumeroImpegno())){
@@ -264,16 +272,16 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 
 	
 	// CR - 1907 converto per preparare la reqeust del servizio RicercaSinteticaImpegniSubimpegni
-	protected RicercaSinteticaImpegniSubImpegni convertiModelPerChiamataServizioRicercaImpegniSubImpegni() {
 		
 		RicercaSinteticaImpegniSubImpegni ricercaImpegniSubImpegni = new RicercaSinteticaImpegniSubImpegni();
+		protected RicercaSinteticaImpegniSubImpegni convertiModelPerChiamataServizioRicercaImpegniSubImpegni() {
 		ricercaImpegniSubImpegni.setRichiedente(sessionHandler.getRichiedente());
 		ricercaImpegniSubImpegni.setEnte(sessionHandler.getAccount().getEnte());
 		
 		ParametroRicercaImpSub paramRicercaImpSub = new ParametroRicercaImpSub();
 		
 		// Rm jira 2060: é fisso ed è l'anno di bilancio!
-		paramRicercaImpSub.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		paramRicercaImpSub.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		
 		// Rm jira 2060: l'anno movimento è inputato dall'utente:
 		// se non viene passato si considera la competenza, azzero l'anno per evitare il nullpointer
@@ -283,17 +291,20 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 			paramRicercaImpSub.setCompetenzaCompetenza(false);
 			paramRicercaImpSub.setCompetenzaCorrente(false);
 			paramRicercaImpSub.setCompetenzaFuturi(false);
+			paramRicercaImpSub.setCompetenzaResiduiRor(false);
 			
 		}else{
 			if(model.getRicercaModel().isCompetenzaTutti()||
 					model.getRicercaModel().isCompetenzaFuturi()||
 					model.getRicercaModel().isCompetenzaCompetenza()||
-					model.getRicercaModel().isCompetenzaCorrente()){
+					model.getRicercaModel().isCompetenzaCorrente() ||
+					model.getRicercaModel().isCompetenzaResiduiRor()){
 				paramRicercaImpSub.setAnnoImpegno(0);
 				
 				paramRicercaImpSub.setCompetenzaCompetenza(model.getRicercaModel().isCompetenzaCompetenza());
 				paramRicercaImpSub.setCompetenzaCorrente(model.getRicercaModel().isCompetenzaCorrente());
 				paramRicercaImpSub.setCompetenzaFuturi(model.getRicercaModel().isCompetenzaFuturi());
+				paramRicercaImpSub.setCompetenzaResiduiRor(model.getRicercaModel().isCompetenzaResiduiRor());
 			}
 		}
 		
@@ -346,6 +357,8 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		//CODICE PROGETTO:
 		if(StringUtils.isNotEmpty(model.getStep1Model().getProgetto())){
 			paramRicercaImpSub.setCodiceProgetto(model.getStep1Model().getProgetto());
+			//task-168
+			ricercaImpegniSubImpegni.setProgrammaCodeStrict(true);
 		}
 		
 		//SIAC-7042
@@ -386,7 +399,10 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 				if(model.getStep1Model().getCapitolo().getUeb() != null){
 					paramRicercaImpSub.setNumeroUEB(model.getStep1Model().getCapitolo().getUeb().intValue());
 				}
-				
+			}
+			//SIAC-7349
+			if(model.getStep1Model().getCapitolo().getComponenteBilancioUid()!= null){
+				paramRicercaImpSub.setComponenteBilancioUid(model.getStep1Model().getCapitolo().getComponenteBilancioUid().intValue());
 			}
 		}
 		
@@ -447,6 +463,24 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		//ricerca da impegno
 		paramRicercaImpSub.setIsRicercaDaImpegno(true);
 		
+		//SIAC-6997
+		if(model.getStep1Model().getReanno()!= null && "Si".equals(model.getStep1Model().getReanno())){
+			paramRicercaImpSub.setReanno(Boolean.TRUE);
+		}else{
+			paramRicercaImpSub.setReanno(Boolean.FALSE);
+		}
+		
+		//SIAC-6997
+		if(model.getRicercaModel().isCompetenzaResiduiRor()){
+			paramRicercaImpSub.setRicercaResiduiRorFlag(Boolean.TRUE);
+		}else{
+			paramRicercaImpSub.setRicercaResiduiRorFlag(Boolean.FALSE);
+		}
+		
+		
+		paramRicercaImpSub.setStrutturaSelezionataCompetente(model.getStep1Model().getStrutturaSelezionataCompetente());
+		
+		
 		//setto il parametro nella request:
 		ricercaImpegniSubImpegni.setParametroRicercaImpSub(paramRicercaImpSub);
 		
@@ -469,7 +503,7 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		ricercaAccertamenti.setRichiedente(sessionHandler.getRichiedente());
 		
 		//anno bilancio
-		parametro.setAnnoBilancio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		parametro.setAnnoBilancio(sessionHandler.getAnnoBilancio());
 		
 		//anno esercizio
 		if(!StringUtils.isEmpty(model.getRicercaModel().getAnnoEsercizio())){
@@ -636,7 +670,7 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		ParametroRicercaAccSubAcc parametro = new ParametroRicercaAccSubAcc();
 		
 		// anno esercizio = anno bilancio
-		parametro.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		parametro.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		// Rm jira 2060: l'anno movimento è inputato dall'utente:
 		// se non viene passato si considera la competenza, azzero l'anno per evitare il nullpointer
 		if(!StringUtils.isEmpty(model.getRicercaModel().getAnnoMovimento())){
@@ -645,16 +679,19 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 			parametro.setCompetenzaCompetenza(false);
 			parametro.setCompetenzaCorrente(false);
 			parametro.setCompetenzaFuturi(false);
+			parametro.setCompetenzaResiduiRor(false);
 		}else{
 			if(model.getRicercaModel().isCompetenzaTutti()||
 					model.getRicercaModel().isCompetenzaFuturi()||
 					model.getRicercaModel().isCompetenzaCompetenza()||
-					model.getRicercaModel().isCompetenzaCorrente()){
+					model.getRicercaModel().isCompetenzaCorrente() ||
+					model.getRicercaModel().isCompetenzaResiduiRor()){
 				parametro.setAnnoAccertamento(0);
 				
 				parametro.setCompetenzaCompetenza(model.getRicercaModel().isCompetenzaCompetenza());
 				parametro.setCompetenzaCorrente(model.getRicercaModel().isCompetenzaCorrente());
 				parametro.setCompetenzaFuturi(model.getRicercaModel().isCompetenzaFuturi());
+				parametro.setCompetenzaResiduiRor(model.getRicercaModel().isCompetenzaResiduiRor());
 				
 			}
 		}
@@ -689,6 +726,8 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		if(!StringUtils.isEmpty(model.getRicercaModel().getCup())){
 			parametro.setCup(model.getRicercaModel().getCup());
 		}
+		
+		
 		
 				
 		//Gestiscio Soggetto
@@ -774,6 +813,24 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		
 		parametro.setFlagDaRiaccertamento(model.getStep1Model().getRiaccertato());
 		
+		
+		//SIAC-6997
+		if(model.getStep1Model().getReanno()!= null && "Si".equals(model.getStep1Model().getReanno())){
+			parametro.setReanno(Boolean.TRUE);
+		}else{
+			parametro.setReanno(Boolean.FALSE);
+		}
+		//SIAC-6997
+		if(model.getRicercaModel().isCompetenzaResiduiRor()){
+			parametro.setRicercaResiduiRorFlag(Boolean.TRUE);
+		}else{
+			parametro.setRicercaResiduiRorFlag(Boolean.FALSE);
+		}
+		
+		
+		parametro.setStrutturaSelezionataCompetente(model.getStep1Model().getStrutturaSelezionataCompetente());
+		
+		
 		parametro.setIsRicercaDaAccertamento(true);
 		ricercaAccertamenti.setParametroRicercaAccSubAcc(parametro);
 		addNumAndPageSize(ricercaAccertamenti, "ricercaAccertamentoID");
@@ -784,11 +841,20 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 	protected void pulisciCampi(){
 		model.setRicercaModel(new RicercaImpegnoModel());
 		model.setStep1Model(new GestisciImpegnoStep1Model());
+		//SIAC-7349 FIX SU ANNULLA
+		model.getStep1Model().getCapitolo().setAnno(sessionHandler.getBilancio().getAnno());
 		
 		List<String> listaDaRiaccertamento = new ArrayList<String>();
 		listaDaRiaccertamento.add("Si");
 		listaDaRiaccertamento.add("No");
 		model.getStep1Model().setDaRiaccertamento(listaDaRiaccertamento);
+		
+		//SIAC-6997
+		List<String> listaDaReanno = new ArrayList<String>();
+		listaDaReanno.add("Si");
+		listaDaReanno.add("No");
+		model.getStep1Model().setDaReanno(listaDaReanno);
+		
 		model.getRicercaModel().setAnnoEsercizio(sessionHandler.getAnnoEsercizio());
 		model.getRicercaModel().setAnnoMovimento(sessionHandler.getAnnoEsercizio());
 		if(teSupport!=null){
@@ -814,11 +880,10 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		
 		// CR- 1908 RM Sostiuire la ricerca accertamenti 
 		//con la ricerca accertamentiSubAccertamenti,
-		// cosi come si e' x i mutui
-		RicercaSinteticaAccertamentiSubAccertamentiResponse response = movimentoGestionService.ricercaSinteticaAccertamentiSubAccertamenti(convertiModelPerChiamataServizioRicercaAccertamentiSub());
+		RicercaSinteticaAccertamentiSubAccertamentiResponse response = movimentoGestioneFinService.ricercaSinteticaAccertamentiSubAccertamenti(convertiModelPerChiamataServizioRicercaAccertamentiSub());
 
 		stopwatch.stop();
-		stopWatchLogger.info(this.getClass().getName(), methodName,  stopwatch.getTotalTimeMillis());
+		stopWatchLogger.info(methodName,  stopwatch.getTotalTimeMillis());
 		
 		/*
 		 *  FINE - STOPWATCH
@@ -839,6 +904,58 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 		    
 	}
 	
+	
+	
+	protected String executeRicercaAccertamentiROR() {
+		
+		//Viene pulita la sessione riguardo le modifiche da gestire nel cruscotto
+		List<ModificaMovimentoGestioneEntrata> modificheOld = sessionHandler
+				.getParametro(FinSessionParameter.LISTA_MODIFICHE_PRIMA_AGGIORNAMENTO);
+		if(modificheOld != null && !modificheOld.isEmpty()){
+			sessionHandler
+			.setParametro(FinSessionParameter.LISTA_MODIFICHE_PRIMA_AGGIORNAMENTO, null);
+		}
+
+		List<SubAccertamento> listaCompleta = new ArrayList<SubAccertamento>();
+	
+		/*
+		 *  INIZIO - STOPWATCH
+		 */
+		
+	    StopWatch stopwatch = new StopWatch("stopWatchCategory");
+		stopwatch.start();
+		
+		// CR- 1908 RM Sostiuire la ricerca accertamenti 
+		//con la ricerca accertamentiSubAccertamenti,
+		
+		
+		RicercaSinteticaAccertamentiSubAccertamentiRORResponse response = new RicercaSinteticaAccertamentiSubAccertamentiRORResponse();
+		
+		response = movimentoGestioneFinService.ricercaSinteticaAccertamentiSubAccertamentiROR(convertiModelPerChiamataServizioRicercaAccertamentiSub());
+
+		stopwatch.stop();
+		stopWatchLogger.info(methodName,  stopwatch.getTotalTimeMillis());
+		
+		/*
+		 *  FINE - STOPWATCH
+		 */
+		
+		if(response.isFallimento()){
+			addErrori(methodName, response);
+			return INPUT;
+		}
+		
+		
+		//Metto in sessione la lista ricevuta 
+		listaCompleta = (response.getListaSubAccertamenti()!=null? response.getListaSubAccertamenti() : new ArrayList<SubAccertamento>());
+		sessionHandler.setParametro(FinSessionParameter.RISULTATI_RICERCA_ACCERTAMENTI, listaCompleta);
+		model.setResultSize(response.getNumRisultati());
+		
+		return GOTO_ELENCO_ACCERTAMENTI;
+		    
+	}
+	
+	
 	/**
 	 * Si occupa di effettuare la ricerca degli impegni
 	 * @return
@@ -854,12 +971,11 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 	    StopWatch stopwatch = new StopWatch("stopWatchCategory");
 		stopwatch.start();
 		
-		// CR- 1907 Sostiuire la ricerca impegni con la ricerca impegni subimpegni, cosi come si fa x i mutui
-		RicercaSinteticaImpegniSubimpegniResponse response = movimentoGestionService.ricercaSinteticaImpegniSubimpegni(convertiModelPerChiamataServizioRicercaImpegniSubImpegni());
-		
+		RicercaSinteticaImpegniSubimpegniResponse response = new RicercaSinteticaImpegniSubimpegniResponse();
+		// CR- 1907 Sostiuire la ricerca impegni con la ricerca impegni subimpegni
+		response = movimentoGestioneFinService.ricercaSinteticaImpegniSubimpegni(convertiModelPerChiamataServizioRicercaImpegniSubImpegni());
 		stopwatch.stop();
-		stopWatchLogger.info(this.getClass().getName(), "executeRicercaImpegniSubImpegni",  stopwatch.getTotalTimeMillis());
-		
+		stopWatchLogger.info("executeRicercaImpegniSubImpegni",  stopwatch.getTotalTimeMillis());
 		/*
 		 *  FINE - STOPWATCH
 		 */
@@ -868,15 +984,103 @@ public class WizardRicercaMovGestAction extends WizardGenericMovGestAction {
 			addErrori(methodName, response);
 			return INPUT;
 		}
-		
 		listaCompleta = (response.getListaImpegni()!=null? response.getListaImpegni() : new ArrayList<Impegno>());
-		
 		//Metto in sessione la lista ricevuta
 		sessionHandler.setParametro(FinSessionParameter.RISULTATI_RICERCA_IMPEGNI, listaCompleta);
 		model.setResultSize(response.getNumRisultati());
 		
 		return GOTO_ELENCO_IMPEGNI;
-		    
+	}
+	
+	
+	
+	/**
+	 * SIAC-6992 RIcerca Impegni ROR
+	 * @return
+	 */
+	protected String executeRicercaImpegniROR() {
+		
+		//Viene pulita la sessione riguardo le modifiche da gestire nel cruscotto
+		List<ModificaMovimentoGestioneSpesa> modificheOld = sessionHandler
+				.getParametro(FinSessionParameter.LISTA_MODIFICHE_PRIMA_AGGIORNAMENTO);
+		if(modificheOld != null && !modificheOld.isEmpty()){
+			sessionHandler
+			.setParametro(FinSessionParameter.LISTA_MODIFICHE_PRIMA_AGGIORNAMENTO, null);
+		}
+
+		List<SubImpegno> listaCompletaROR = new ArrayList<SubImpegno>();
+	
+		/*
+		 *  INIZIO - STOPWATCH
+		 */
+		//
+	    StopWatch stopwatch = new StopWatch("stopWatchCategory");
+		stopwatch.start();
+		
+		//SIAC-6997 
+		RicercaSinteticaImpegniSubimpegniRORResponse responseROR = new RicercaSinteticaImpegniSubimpegniRORResponse();
+		
+		responseROR = movimentoGestioneFinService.ricercaSinteticaImpegniSubimpegniROR(convertiModelPerChiamataServizioRicercaImpegniSubImpegni());
+		
+		stopwatch.stop();
+		stopWatchLogger.info("executeRicercaImpegniSubImpegni",  stopwatch.getTotalTimeMillis());
+		/*
+		 *  FINE - STOPWATCH
+		 */
+		if(responseROR.isFallimento()){
+			addErrori(methodName, responseROR);
+			return INPUT;
+		}
+		listaCompletaROR = (responseROR.getListaSubImpegni()!=null? responseROR.getListaSubImpegni() : new ArrayList<SubImpegno>());
+		//Metto in sessione la lista ricevuta
+		sessionHandler.setParametro(FinSessionParameter.RISULTATI_RICERCA_IMPEGNI, listaCompletaROR);
+		model.setResultSize(responseROR.getNumRisultati());
+		return GOTO_ELENCO_IMPEGNI;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * Metodo che stabilisce se l utente deve fare una ricerca di 
+	 * tipo ROR oppure no
+	 * @return
+	 */
+	protected boolean isRicercaImpegniROR(){
+		boolean isROR = false;
+		
+		/*
+		 * FARE CHECK ANCHE SUL BILANCIO
+		 * SE IL BILANCIO E' NON IDONEO SI 
+		 * ESEGUE LA RICERCA NORMALE
+		 */
+		setAzioniDecToCheck(AzioneConsentitaEnum.OP_SPE_gestImprROR.getNomeAzione()+ ","+AzioneConsentitaEnum.OP_SPE_gestImpRORdecentrato.getNomeAzione()); //SOLO PER AZIONI ROR
+		if( checkAzioniDec() && "Residui ROR".equals(model.getRicercaModel().getCompetenze()) //   "Si".equals(model.getStep1Model().getReanno()
+				&& CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO.equals(sessionHandler.getFaseBilancio())	){ //SOLO PER PREDISPOSIZIONE CONSUNTIVO  
+			isROR = true;
+		}
+		return isROR;
+		
+		
+	}
+	
+	protected boolean isRicercaAccertamentiROR(){
+		boolean isROR = false;
+		
+		/*
+		 * FARE CHECK ANCHE SUL BILANCIO
+		 * SE IL BILANCIO E' NON IDONEO SI 
+		 * ESEGUE LA RICERCA NORMALE
+		 */
+		setAzioniDecToCheck(AzioneConsentitaEnum.OP_ENT_gestAccROR.getNomeAzione()+ ","+AzioneConsentitaEnum.OP_ENT_gestAccRORdecentrato.getNomeAzione()); //SOLO PER AZIONI ROR
+		if( checkAzioniDec() && "Residui ROR".equals(model.getRicercaModel().getCompetenze())  // "Si".equals(model.getStep1Model().getReanno())
+				&& CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO.equals(sessionHandler.getFaseBilancio())	){ //SOLO PER PREDISPOSIZIONE CONSUNTIVO  
+			isROR = true;
+		}
+		return isROR;
+		
+		
 	}
 	
 	

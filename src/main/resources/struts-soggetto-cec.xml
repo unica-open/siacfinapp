@@ -16,19 +16,70 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="input">/jsp/soggetto/cec/ricercaSoggettoCec.jsp</result>
 			<result name="gotoElencoSoggetti" type="redirectAction">elencoSoggettiCec</result>			
 		</action>
+		
+		<!--  task-131 -->
+		<action name="ricercaSoggettoCec_annulla" class="ricercaSoggettoCecAction" method="annulla">
+			<result name="success">/jsp/soggetto/cec/ricercaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/ricercaSoggettoCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">elencoSoggettiCec</result>			
+		</action>
+		<!--  task-131 -->
+		<action name="ricercaSoggettoCec_cerca" class="ricercaSoggettoCecAction" method="cerca">
+			<result name="success">/jsp/soggetto/cec/ricercaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/ricercaSoggettoCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">elencoSoggettiCec</result>			
+		</action>
  
  		<action name="elencoSoggettiCec" class="elencoSoggettiCecAction">
 			<result name="success">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
 			<result name="input">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
 			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
 		</action>
-  	 
+		
+  	 	<!-- task-131 -->
+  	 	<action name="elencoSoggettiCec_visualizzaDettaglio" class="elencoSoggettiCecAction" method="visualizzaDettaglio">
+			<result name="success">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
+			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
+		</action>
+  	 	<!-- task-131 -->
+  	 	<action name="elencoSoggettiCec_gestioneEliminaSoggetto" class="elencoSoggettiCecAction" method="gestioneEliminaSoggetto">
+			<result name="success">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
+			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
+		</action>
+		<!-- task-131 -->
+  	 	<action name="elencoSoggettiCec_gestisciAggiornamentoStato" class="elencoSoggettiCecAction" method="gestisciAggiornamentoStato">
+			<result name="success">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/elencoSoggettiCec.jsp</result>
+			<result name="risultatoDettaglioSoggetto">/jsp/soggetto/include/risultatoDettaglioSoggetto.jsp</result>
+		</action>
+		
  		<action name="inserisciSoggettoCec" class="inserisciSoggettoCecAction">
 			<result name="success">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
 			<result name="input">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
 			<result name="prosegui" type="redirectAction">inserisciContattiCec</result>
 		</action>
-  	 
+  	 	<!-- task-131 -->
+  	 	<action name="inserisciSoggettoCec_pulisci" class="inserisciSoggettoCecAction" method="pulisci">
+			<result name="success">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciContattiCec</result>
+		</action>
+		
+		<!-- task-155 -->
+  	 	<action name="inserisciSoggettoCec_prosegui" class="inserisciSoggettoCecAction" method="prosegui">
+			<result name="success">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciContattiCec</result>
+		</action>
+		
+		<!-- task-131 -->
+  	 	<action name="inserisciSoggettoCec_controllaDati" class="inserisciSoggettoCecAction" method="controllaDati">
+			<result name="success">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciSoggettoCec.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciContattiCec</result>
+		</action>
   		<action name="inserisciContattiCec" class="inserisciContattiCecAction">
 			<result name="success">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
 			<result name="input">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
@@ -37,15 +88,102 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
 			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
 		</action>
-  	 
+  	 	
+  	 	<!-- task-131 -->
+  	 	<action name="inserisciContattiCec_salvaRecapito" class="inserisciContattiCecAction" method="salvaRecapito">
+			<result name="success">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggettoCec</result>
+			<result name="salva" type="redirectAction">salvaSoggettoCec</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+  	 	<action name="inserisciContattiCec_annullaIndirizziERecapiti" class="inserisciContattiCecAction" method="annullaIndirizziERecapiti">
+			<result name="success">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggettoCec</result>
+			<result name="salva" type="redirectAction">salvaSoggettoCec</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+  	 	<action name="inserisciContattiCec_salva" class="inserisciContattiCecAction" method="salva">
+			<result name="success">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggettoCec</result>
+			<result name="salva" type="redirectAction">salvaSoggettoCec</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+  	 	<action name="inserisciContattiCec_pulisciContatto" class="inserisciContattiCecAction" method="pulisciContatto">
+			<result name="success">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggettoCec</result>
+			<result name="salva" type="redirectAction">salvaSoggettoCec</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+  	 	<action name="inserisciContattiCec_salvaIndirizzo" class="inserisciContattiCecAction" method="salvaIndirizzo">
+			<result name="success">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggettoCec</result>
+			<result name="salva" type="redirectAction">salvaSoggettoCec</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		<!-- task-131 -->
+  	 	<action name="inserisciContattiCec_pulisciIndirizzi" class="inserisciContattiCecAction" method="pulisciIndirizzi">
+			<result name="success">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/inserisciContattiCec.jsp</result>
+			<result name="indietroStep1" type="redirectAction">inserisciSoggettoCec</result>
+			<result name="salva" type="redirectAction">salvaSoggettoCec</result>	
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/insIndirizziContattiSnippet.jsp</result>
+			<result name="pulisciContatto">/jsp/soggetto/include/insContattiSnippet.jsp</result>  
+		</action>
+		
   		<action name="salvaSoggettoCec" class="salvaSoggettoAction">
 			<result name="success">/jsp/soggetto/cec/salvaSoggettoCec.jsp</result>
 			<result name="indietroStep2" type="redirectAction">inserisciContattiCec</result>					
 		</action>
   	 
-  	 
+  	 	<!-- task-131 -->
+  	 	<action name="salvaSoggettoCec_indietroStep2" class="salvaSoggettoAction" method="indietroStep2">
+			<result name="success">/jsp/soggetto/cec/salvaSoggettoCec.jsp</result>
+			<result name="indietroStep2" type="redirectAction">inserisciContattiCec</result>					
+		</action>	
   	 
   	 	<action name="aggiornaSoggettoCec" class="aggiornaSoggettoCecAction">
+			<result name="success">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapitiCec</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggettoCec</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaSoggettoCec_doExecute" class="aggiornaSoggettoCecAction" method="doExecute">
+			<result name="success">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapitiCec</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggettoCec</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaSoggettoCec_annullaAggiornaSoggetto" class="aggiornaSoggettoCecAction" method="annullaAggiornaSoggetto">
+			<result name="success">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapitiCec</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggettoCec</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaSoggettoCec_prosegui" class="aggiornaSoggettoCecAction" method="prosegui">
+			<result name="success">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
+			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapitiCec</result>
+			<result name="mdp" type="redirectAction">modalitaPagamentoSoggettoCec</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaSoggettoCec_redirectMdp" class="aggiornaSoggettoCecAction" method="redirectMdp">
 			<result name="success">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
 			<result name="input">/jsp/soggetto/cec/aggiornaSoggettoCec.jsp</result>
 			<result name="gotoAggiornaRecapiti" type="redirectAction">aggiornaRecapitiCec</result>
@@ -61,7 +199,168 @@ SPDX-License-Identifier: EUPL-1.2
 			</result>
 			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
 		</action>
-  	 
+		
+		<!-- task-131 -->
+		<action name="aggiornaRecapitiCec_pulisciContatto" class="aggiornaRecapitiCecAction" method="pulisciContatto">
+			<result name="success">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggettiCec</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="aggiornaRecapitiCec_salvaRecapito" class="aggiornaRecapitiCecAction" method="salvaRecapito">
+			<result name="success">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggettiCec</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="aggiornaRecapitiCec_annullaRecapito" class="aggiornaRecapitiCecAction" method="annullaRecapito">
+			<result name="success">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggettiCec</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="aggiornaRecapitiCec_salva" class="aggiornaRecapitiCecAction" method="salva">
+			<result name="success">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggettiCec</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		  	 	  	 
+		 <!-- task-131 -->
+		<action name="aggiornaRecapitiCec_pulisciIndirizzi" class="aggiornaRecapitiCecAction" method="pulisciIndirizzi">
+			<result name="success">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggettiCec</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="aggiornaRecapitiCec_salvaIndirizzo" class="aggiornaRecapitiCecAction" method="salvaIndirizzo">
+			<result name="success">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/aggiornaRecapitiCec.jsp</result>
+			<result name="gotoElencoSoggetti" type="redirectAction">
+				<param name="actionName">elencoSoggettiCec</param>
+				<param name="ricaricaPagina">true</param>
+			</result>
+			<result name="pulisciIndirizzo">/jsp/soggetto/include/aggIndirizziRecapitiSnippet.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_handleTypePayment" class="modalitaPagamentoSoggettoCecAction" method="handleTypePayment">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_inserisciModPagContoCorrente" class="modalitaPagamentoSoggettoCecAction" method="inserisciModPagContoCorrente">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_inserisciModPagGenerico" class="modalitaPagamentoSoggettoCecAction" method="inserisciModPagGenerico">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_inserisciModPagContanti" class="modalitaPagamentoSoggettoCecAction" method="inserisciModPagContanti">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_ricercaSoggettoModPag" class="modalitaPagamentoSoggettoCecAction" method="ricercaSoggettoModPag">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_ricercaSoggettoModPag_step2" class="modalitaPagamentoSoggettoCecAction" method="ricercaSoggettoModPag_step2">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_inserisciModPagCessione" class="modalitaPagamentoSoggettoCecAction" method="inserisciModPagCessione">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_aggiornaModPagContoCorrente" class="modalitaPagamentoSoggettoCecAction" method="aggiornaModPagContoCorrente">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_aggiornaGenerico" class="modalitaPagamentoSoggettoCecAction" method="aggiornaGenerico">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_aggiornaContante" class="modalitaPagamentoSoggettoCecAction" method="aggiornaContante">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_ricercaSoggettoModPagAggiorna" class="modalitaPagamentoSoggettoCecAction" method="ricercaSoggettoModPagAggiorna">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_ricercaSoggettoModPag_step2Aggiorna" class="modalitaPagamentoSoggettoCecAction" method="ricercaSoggettoModPag_step2Aggiorna">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="modalitaPagamentoSoggettoCec_aggiornaModPagCessione" class="modalitaPagamentoSoggettoCecAction" method="aggiornaModPagCessione">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-155 -->
+		<action name="modalitaPagamentoSoggettoCec_panelInsertPayment" class="modalitaPagamentoSoggettoCecAction" method="panelInsertPayment">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-155 -->
+		<action name="modalitaPagamentoSoggettoCec_annullaInserimento" class="modalitaPagamentoSoggettoCecAction" method="annullaInserimento">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		
+		<!-- task-155 -->
+		<action name="modalitaPagamentoSoggettoCec_aggiornaMDP" class="modalitaPagamentoSoggettoCecAction" method="aggiornaMDP">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-155 -->
+		<action name="modalitaPagamentoSoggettoCec_eliminaMdp" class="modalitaPagamentoSoggettoCecAction" method="eliminaMdp">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-155 -->
+		<action name="modalitaPagamentoSoggettoCec_annullaModalitaDiPagamento" class="modalitaPagamentoSoggettoCecAction" method="annullaModalitaDiPagamento">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+		<!-- task-155 -->
+		<action name="modalitaPagamentoSoggettoCec_bloccaModalitaDiPagamento" class="modalitaPagamentoSoggettoCecAction" method="bloccaModalitaDiPagamento">
+			<result name="success">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+			<result name="input">/jsp/soggetto/cec/modalitaPagamentoCec.jsp</result>
+		</action>
+	 
   		<action name="consultaSoggettoCec" class="consultaSoggettoCecAction">
 			<result name="success">/jsp/soggetto/cec/consultaSoggettoCec.jsp</result>
 			<result name="input">/jsp/soggetto/cec/consultaSoggettoCec.jsp</result>

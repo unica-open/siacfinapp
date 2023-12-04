@@ -709,7 +709,7 @@ public abstract class BaseInserisciAggiornaPrimaNotaIntegrataBaseModel<E extends
 		return new StringBuilder("Richiesta: ")
 			.append("<span>")
 			// Data della registrazione, nel formato DD/MM/YYYY
-			.append(DateConverter.formatDateAsString(getRegistrazioneMovFin().getDataRegistrazione()))
+			.append(DateConverter.convertToString(getRegistrazioneMovFin().getDataRegistrazione()))
 			.append("</span>")
 			.append(" - ")
 			.append("<span>")
@@ -772,7 +772,7 @@ public abstract class BaseInserisciAggiornaPrimaNotaIntegrataBaseModel<E extends
 			.append("Causale: ")
 			.append(causaleEP.getCodice())
 			.append(" - registrata il ")
-			.append(DateConverter.formatDateAsString(primaNota.getDataRegistrazione()))
+			.append(DateConverter.convertToString(primaNota.getDataRegistrazione()))
 			.toString();
 	}
 	

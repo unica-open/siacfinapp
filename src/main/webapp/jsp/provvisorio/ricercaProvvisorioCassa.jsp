@@ -30,25 +30,19 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage">
-		
-			<s:form method="post" action="ricercaProvvisorioCassa.do" id="ricercaProvvisorioCassa">
+			<%-- SIAC-7952 rimuovo .do dalla action --%>
+			<s:form method="post" action="ricercaProvvisorioCassa" id="ricercaProvvisorioCassa">
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 			
-			
 				<h3>Ricerca provvisori cassa</h3>
-        		<p>ˆ Inserire almeno un criterio di ricerca.</p>
+
         		<div class="step-content">
-		   
-          		<div class="step-pane active" id="step1">
-          			
-          			
+		   		<div class="step-pane active" id="step1">
           			<p class="margin-medium">
-          			
-					<s:submit name="cerca" value="cerca" method="ricercaProvvisorioCassa" cssClass="btn btn-primary pull-right" /> 
-					
+          			<!-- task-131 <s:submit name="cerca" value="cerca" method="ricercaProvvisorioCassa" cssClass="btn btn-primary pull-right" /> --> 
+					<s:submit name="cerca" value="cerca" action="ricercaProvvisorioCassa_ricercaProvvisorioCassa" cssClass="btn btn-primary pull-right" />
 					<br>
 					<br>
-					
 					<h4>Dati principali</h4>
          		  
 					<fieldset class="form-horizontal margin-large">
@@ -57,19 +51,17 @@ SPDX-License-Identifier: EUPL-1.2
 							<span class="control-label">Documento</span>
 							<div class="controls">														 
 							 	<div class="radio inline">
-                       				<s:radio id="documento" cssClass="flagDocumento" name="tipoDocumentoProv" list="tipoDocumentoProvList"/>
+                       				<s:radio id="documento" cssClass="flagDocumento" name="tipoDocumentoProv" list="#{ 'Entrata': 'Entrata', 'Spesa' : 'Spesa' }"/>
 								</div>		       								                     			
 							</div>
 						</div>
 						
-		      
 						<div class="control-group">
 							<label class="control-label" for="Nquiet">Numero</label>
 							<div class="controls">
 								<s:textfield id="numeroProvvisorio" onkeyup="return checkItNumbersOnly(event)" name="model.numeroProvvisorio" cssClass="lbTextSmall span2"/>
 							</div>
 						</div>												
-						
 						
 						<div class="control-group">
 							<label class="control-label" for="distinta">Conto evidenza</label>
@@ -175,7 +167,7 @@ SPDX-License-Identifier: EUPL-1.2
 							<div class="controls">
 								<div class="checkbox inline">
 									<%-- <s:checkboxlist id="annullatoProv" name="flagAnnullatoProv" list="flagAnnullatoProvList"/> --%>
-									<s:checkboxlist id="annullatoProv" name="flagAnnullatoProv" list="flagAnnullatoProvList" value="defaultValueAnnulla"/>									
+									<s:checkboxlist id="annullatoProv" name="flagAnnullatoProv" list="#{ 'si': 'Si', 'no' : 'No' }" value="defaultValueAnnulla"/>									
 								</div>								
 							</div>
 						</div>
@@ -185,7 +177,7 @@ SPDX-License-Identifier: EUPL-1.2
 							<div class="controls">	
 								<div class="radio inline">																					
 									<%-- <s:checkboxlist id="regolarizzatoProv" name="flagDaRegolarizzare" list="flagDaRegolarizzareList"/> --%>
-									<s:radio id="regolarizzatoProv" name="flagDaRegolarizzare" list="flagDaRegolarizzareList"/>
+									<s:radio id="regolarizzatoProv" name="flagDaRegolarizzare" list="#{ 'si': 'Si', 'no' : 'No' }"/>
 								</div>																																			
 							</div>					
 						</div>	
@@ -213,6 +205,29 @@ SPDX-License-Identifier: EUPL-1.2
 						
 
 
+						<div class="control-group">					
+							<label class="control-label" for="flag-accettato">Accettato</label>							
+							<div class="controls">	
+								<div class="radio inline">																					
+									<s:radio id="flag-accettato" name="flagAccettato" list="#{ 'si': 'Si', 'no' : 'No' }"/>
+								</div>																																			
+							</div>					
+						</div>	
+
+						<div class="control-group" id="presaInCaricoServizioCtrlGrp">
+							<label class="control-label" for="DescSogg">Data di accettazione</label>
+							<div class="controls">
+								<span class="al">
+										<label class="radio inline" for="dataInizioPresaInCaricoServizio">Inizio</label>
+								</span>								
+								<s:textfield id="dataInizioPresaInCaricoServizio" title="gg/mm/aaaa" name="model.dataInizioPresaInCaricoServizio" cssClass="lbTextSmall span2 datepicker"></s:textfield>
+								<span class="al">
+										<label class="radio inline" for="dataFinePresaInCaricoServizio">Fine</label>
+								</span>
+								<s:textfield id="dataFinePresaInCaricoServizio" title="gg/mm/aaaa" name="model.dataFinePresaInCaricoServizio" cssClass="lbTextSmall span2 datepicker"></s:textfield>
+							</div>
+						</div>
+						
 						<div class="control-group" id="rifiutoErrataAttribuzioneCtrlGrp">
 							<label class="control-label" for="DescSogg">Data di rifiuto per errata attribuzione</label>
 							<div class="controls">
@@ -237,8 +252,10 @@ SPDX-License-Identifier: EUPL-1.2
 				<br/> <br/> 
 				<p>           
 	            <s:include value="/jsp/include/indietro.jsp" /> 
-				<s:submit name="annulla" value="annulla" method="annullaRicercaProvvisori" cssClass="btn btn-secondary" />
-				<s:submit id="pulsanteCercaProvvisorio" name="cerca" value="cerca" method="ricercaProvvisorioCassa" cssClass="btn btn-primary pull-right" /> 
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaRicercaProvvisori" cssClass="btn btn-secondary" /> -->
+				<!-- task-131 <s:submit id="pulsanteCercaProvvisorio" name="cerca" value="cerca" method="ricercaProvvisorioCassa" cssClass="btn btn-primary pull-right" /> --> 
+				<s:submit name="annulla" value="annulla" action="ricercaProvvisorioCassa_annullaRicercaProvvisori" cssClass="btn btn-secondary" />
+				<s:submit id="pulsanteCercaProvvisorio" name="cerca" value="cerca" action="ricercaProvvisorioCassa_ricercaProvvisorioCassa" cssClass="btn btn-primary pull-right" /> 
 				</p>       				
   	    	</s:form>
     	</div>
@@ -247,7 +264,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
 <script type="text/javascript">
-var url_primaDiRicercaProvvisorioDiCassa = '<s:url method="primaDiRicercaProvvisorioDiCassa"/>';	
+// task-131 var url_primaDiRicercaProvvisorioDiCassa = '<s:url method="primaDiRicercaProvvisorioDiCassa"/>';	
+var url_primaDiRicercaProvvisorioDiCassa = '<s:url action="ricercaProvvisorioCassa_primaDiRicercaProvvisorioDiCassa"/>';
 </script>
 
 <script type="text/javascript" src="${jspath}provvisorio/ricercaProvvisorioCassa.js" charset="utf-8"></script>

@@ -19,8 +19,8 @@ SPDX-License-Identifier: EUPL-1.2
 		<fieldset class="form-horizontal" id="fieldsetModaleRicercaConto">
 			<div id="campiRicercaConto" class="accordion-body collapse in">
 			
-				<s:hidden id="HIDDEN_ambitoConto" data-maintain="" value="%{ambito}" name="ambito"/>
-				<s:hidden id="HIDDEN_ambitoContoFIN" data-maintain="" value="%{ambitoFIN}" name="ambitoFIN"/>
+				<s:hidden id="HIDDEN_ambitoConto" value="%{ambito}" name="ambito"/>
+				<s:hidden id="HIDDEN_ambitoContoFIN" value="%{ambitoFIN}" name="ambitoFIN"/>
 			
 				<div class="control-group">
 					<label class="control-label" for="classePianoDeiConti_modale">Classe *</label>
@@ -34,14 +34,14 @@ SPDX-License-Identifier: EUPL-1.2
 				<div class="control-group">
 					<label class="control-label"  for="codicePianoDeiContiRicerca_modale">Codice Conto</label>
 					<div class="controls">
-						<s:textfield id="codicePianoDeiContiRicerca_modale" name="conto.codice" cssClass="span6" data-noclassepdc=""/>
+						<s:textfield id="codicePianoDeiContiRicerca_modale" name="conto.codice" cssClass="span6"/>
 					</div>
 				</div>
 				
 				<div class="control-group">
 					<label class="control-label" for="livelloPianoDeiContiRicerca_modale">Livello</label>
 					<div class="controls">
-						<s:textfield id="livelloPianoDeiContiRicerca_modale" name="conto.livello" cssClass="span6 soloNumeri"  data-noclassepdc=""/>
+						<s:textfield id="livelloPianoDeiContiRicerca_modale" name="conto.livello" cssClass="span6 soloNumeri" />
 					</div>
 				</div>
 				
@@ -49,10 +49,10 @@ SPDX-License-Identifier: EUPL-1.2
 					<div class="control-group">
 						<div class="controls">
 							<label class="radio inline">
-								<input type="radio" name="optionConto" value="entrata" id="optionsRadios1" data-noclassepdc="" data-entrata=""> Entrata
+								<input type="radio" name="optionConto" value="entrata" id="optionsRadios1" > Entrata
 							</label>
 							<label class="radio inline">
-								<input type="radio" name="optionConto" value="spesa" id="optionsRadios2" data-noclassepdc="" data-spesa=""> Spesa
+								<input type="radio" name="optionConto" value="spesa" id="optionsRadios2" > Spesa
 							</label>
 						</div>
 					</div>
@@ -62,7 +62,7 @@ SPDX-License-Identifier: EUPL-1.2
 							<label class="control-label" for="titoloEntrata">Titolo</label>
 							<div class="controls">
 								<s:select list="listaTitoloEntrata" id="titoloEntrata" cssClass="span10"
-									name="titoloEntrata.uid" headerKey="" headerValue="" listKey="uid" listValue="%{codice + '-' + descrizione}" data-noclassepdc="" data-campoentrata="" />
+									name="titoloEntrata.uid" headerKey="" headerValue="" listKey="uid" listValue="%{codice + '-' + descrizione}" />
 							</div>
 						</div>
 	
@@ -87,7 +87,7 @@ SPDX-License-Identifier: EUPL-1.2
 							<label class="control-label" for="titoloSpesa">Titolo</label>
 							<div class="controls">
 								<s:select list="listaTitoloSpesa" id="titoloSpesa" cssClass="span10"
-										name="titoloSpesa.uid" headerKey="" headerValue="" listKey="uid" listValue="%{codice + '-' + descrizione}" data-noclassepdc="" data-campospesa="" />
+										name="titoloSpesa.uid" headerKey="" headerValue="" listKey="uid" listValue="%{codice + '-' + descrizione}" />
 							</div>
 						</div>
 						
@@ -129,7 +129,7 @@ SPDX-License-Identifier: EUPL-1.2
 					</div>
 				</div>	
 				
-				<s:hidden id="HIDDEN_Ammortamento" data-maintain="" name="conto.ammortamento" />
+				<s:hidden id="HIDDEN_Ammortamento" name="conto.ammortamento" />
 			</div>
 			<button type="button" class="btn btn-primary pull-right" id="bottoneCercaModaleRicercaPDC">
 				<i class="icon-search icon"></i>&nbsp;cerca&nbsp;<i class="icon-spin icon-refresh spinner" id="spinnerModaleRicercaPDC"></i>

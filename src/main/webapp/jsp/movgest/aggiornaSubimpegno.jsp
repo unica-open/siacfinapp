@@ -22,14 +22,47 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12 contentPage">
-				<s:form id="%{labels.FORM}" action="%{labels.FORM}.do" method="post">
-			<!-- 	<h3><s:property value="%{labels.OGGETTO_GENERICO_PADRE}"/> <s:property value="step1Model.annoImpegno"/>/<s:property value="step1Model.numeroImpegno"/> - <s:property value="step1Model.oggettoImpegno"/> -
-					<s:property value="step1Model.importoFormattato"/></h3>	-->
+				<s:form id="%{labels.FORM}" action="%{labels.FORM}" method="post">
+			<%-- 	<h3><s:property value="%{labels.OGGETTO_GENERICO_PADRE}"/> <s:property value="step1Model.annoImpegno"/>/<s:property value="step1Model.numeroImpegno"/> - <s:property value="step1Model.oggettoImpegno"/> -
+					<s:property value="step1Model.importoFormattato"/></h3>	--%>
+					
 					
 					<h3><s:include value="/jsp/movgest/include/titoloImpegno.jsp" /></h3>
 					
 					<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 					<s:include value="/jsp/movgest/include/tabsSubimpegno.jsp"/>
+					
+					<s:if test="oggettoDaPopolareSubimpegno()">
+						<s:set var="gestisciForwardAction" value="%{'aggiornaSubimpegno_gestisciForward'}" />
+						<s:set var="dettaglioSubPopUpAction" value="%{'aggiornaSubimpegno_dettaglioSubPopUp'}" />
+						
+						<s:set var="siSalvaAction" value="%{'aggiornaSubimpegno_siSalva'}" />	 
+						<s:set var="siProseguiAction" value="%{'aggiornaSubimpegno_siProsegui'}" />
+						<s:set var="annullaSubImpegnoAction" value="%{'aggiornaSubimpegno_annullaSubImpegno'}" />	 
+						<s:set var="annullaSubAccertamentoAction" value="%{'aggiornaSubimpegno_annullaSubAccertamento'}" />	 
+						<s:set var="annullaMovGestSpesaAction" value="%{'aggiornaSubimpegno_annullaMovGestSpesa'}" />	
+						<s:set var="eliminaSubImpegnoAction" value="%{'aggiornaSubimpegno_eliminaSubImpegno'}" />	 
+						<s:set var="eliminaSubAccertamentoAction" value="%{'aggiornaSubimpegno_eliminaSubAccertamento'}" />
+						<s:set var="forzaProseguiAction" value="%{'aggiornaSubimpegno_forzaProsegui'}" />	          
+						<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'aggiornaSubimpegno_forzaSalvaPluriennaleAccertamento'}" />	          
+						<s:set var="salvaConByPassDodicesimiAction" value="%{'aggiornaSubimpegno_salvaConByPassDodicesimi'}" />	          
+					</s:if>
+					<s:else>
+						<s:set var="gestisciForwardAction" value="%{'aggiornaSubaccertamento_gestisciForward'}" />
+						<s:set var="dettaglioSubPopUpAction" value="%{'aggiornaSubaccertamento_dettaglioSubPopUp'}" />	
+						
+						<s:set var="siSalvaAction" value="%{'aggiornaSubaccertamento_siSalva'}" />	 
+						<s:set var="siProseguiAction" value="%{'aggiornaSubaccertamento_siProsegui'}" />
+						<s:set var="annullaSubImpegnoAction" value="%{'aggiornaSubaccertamento_annullaSubImpegno'}" />	 
+						<s:set var="annullaSubAccertamentoAction" value="%{'aggiornaSubaccertamento_annullaSubAccertamento'}" />	 
+						<s:set var="annullaMovGestSpesaAction" value="%{'aggiornaSubaccertamento_annullaMovGestSpesa'}" />	
+						<s:set var="eliminaSubImpegnoAction" value="%{'aggiornaSubaccertamento_eliminaSubImpegno'}" />	 
+						<s:set var="eliminaSubAccertamentoAction" value="%{'aggiornaSubaccertamento_eliminaSubAccertamento'}" />
+						<s:set var="forzaProseguiAction" value="%{'aggiornaSubaccertamento_forzaProsegui'}" />	          
+						<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'aggiornaSubaccertamento_forzaSalvaPluriennaleAccertamento'}" />	          
+						<s:set var="salvaConByPassDodicesimiAction" value="%{'aggiornaSubaccertamento_salvaConByPassDodicesimi'}" />				
+					</s:else>
+						                     		 
 					<s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
 					<h4><s:property value="%{labels.OGGETTO_GENERICO}"/> - Totale: <s:property value="getText('struts.money.format', {totaleSubImpegno})"/> - Disponibile a
 						<s:property value="%{labels.OGGETTO_GENERICO_VERBO}"/>: <s:property value="getText('struts.money.format', {disponibilitaSubImpegnare})"/>
@@ -39,7 +72,7 @@ SPDX-License-Identifier: EUPL-1.2
 					                class="table table-hover tab_centered" 
 					                summary="riepilogo subimpegni"
 					                pagesize="10" 
-					                
+					               
 					                partialList="true"
 					                size="resultSize"
 					                keepStatus="${status}" clearStatus="${status}"
@@ -99,7 +132,7 @@ SPDX-License-Identifier: EUPL-1.2
 					
 				 	<display:column title="CUP" property="cup"/>
 					 <display:column title="Provvedimento">
-					 <!-- attr.ricercaSubImpegniID.attoAmministrativo.oggetto -->
+					 <%-- attr.ricercaSubImpegniID.attoAmministrativo.oggetto --%>
 					 	 <a href="#" data-trigger="hover" rel="popover" title="OGGETTO" 
 					 	    
 					 	    data-content="<s:property value="%{#attr.ricercaSubImpegniID.attoAmministrativo.oggetto}"/>">
@@ -111,7 +144,7 @@ SPDX-License-Identifier: EUPL-1.2
 					 	 </a>
 					 </display:column>
 					 
-					 <!-- SIAC-6929 -->
+					 <%-- SIAC-6929 --%>
 					 <display:column title="Blocco Rag.">
 					   <s:if test="%{#attr.ricercaSubImpegniID.attoAmministrativo.bloccoRagioneria == null }">
 			              	N/A
@@ -127,7 +160,9 @@ SPDX-License-Identifier: EUPL-1.2
 					 <display:column title="Importo" property="importoAttuale" decorator="it.csi.siac.siacfinapp.frontend.ui.util.displaytag.ConverterEuro"/>
 					 <display:column>
 				       <div class="btn-group">
-				       		<s:url id="aggiornaSubimpegnoUrl" action="gestioneSubimpegno.do" escapeAmp="false">
+				       		<%-- SIAC-7952 rimuovo .do dalla action --%>
+				       		<%-- task-131 <s:url id="aggiornaSubimpegnoUrl" action="gestioneSubimpegno" escapeAmp="false"> --%>
+					        <s:url var="aggiornaSubimpegnoUrl" action="gestioneSubimpegno" escapeAmp="false">
 					        	<s:param name="idSubImpegno" value="%{#attr.ricercaSubImpegniID.uid}" />
 					        	<s:param name="inserimentoSubimpegno" value="false" />
 			                </s:url>
@@ -136,37 +171,49 @@ SPDX-License-Identifier: EUPL-1.2
 							</button>
 							<ul class="dropdown-menu pull-right">
 								<li><a id="linkConsulta_<s:property value="%{#attr.ricercaSubImpegniID_rowNum-1}"/>" href="#consultazioneSub" class="consultaSubPopUp"  data-toggle="modal">consulta</a></li>
-								<s:if test="isAggiornaAbilitatoImpegno(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa)">
-									
-									<!-- SIAC-6929 -->
-			                        <s:if test="%{(#attr.ricercaSubImpegniID.attoAmministrativo == null || #attr.ricercaSubImpegniID.attoAmministrativo.bloccoRagioneria != true) && !isAbilitatoGestisciImpegnoDecentratoP()}">
+
+								<%-- SIAC-6929 --%>
+								<%-- SIAC-7800 soluzione workaround - non riesco a reperire indicazioni del controllo per la SIAC-6929 - ripropongo il controllo degli accertamenti --%>
+								<s:if test="isAggiornaAbilitatoImpegno(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa) && ((#attr.ricercaSubImpegniID.attoAmministrativo == null || #attr.ricercaSubImpegniID.attoAmministrativo.bloccoRagioneria != true))">
+			                         <%-- 
+			                        && !isAbilitatoGestisciImpegnoDecentratoP())
+			                        || isAggiornaAbilitatoImpegno(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa)
+			                         --%>
 										<li><a href="<s:property value="aggiornaSubimpegnoUrl"/>">aggiorna</a></li>
-									</s:if>
+								<%-- </s:if> --%>
 									
 								</s:if>		
-								<s:if test="isAnnullaAbilitatoImpegno(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa,#attr.ricercaSubImpegniID.disponibilitaImpegnoModifica,#attr.ricercaSubImpegniID.importoAttuale)">		
-
-									<!-- SIAC-6929 -->
-		                           <s:if test="%{(#attr.ricercaSubImpegniID.attoAmministrativo == null ||  #attr.ricercaSubImpegniID.attoAmministrativo.bloccoRagioneria != true) && !isAbilitatoGestisciImpegnoDecentratoP()}">
+								
+								<%-- SIAC-6929 --%>
+								<%-- SIAC-7800 soluzione workaround - non riesco a reperire indicazioni del controllo per la SIAC-6929 - ripropongo il controllo degli accertamenti --%>
+								<s:if test="isAnnullaAbilitatoImpegno(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa,#attr.ricercaSubImpegniID.disponibilitaImpegnoModifica,#attr.ricercaSubImpegniID.importoAttuale) && ((#attr.ricercaSubImpegniID.attoAmministrativo == null || #attr.ricercaSubImpegniID.attoAmministrativo.bloccoRagioneria != true))">
+			                        <%-- 
+		                           && !isAbilitatoGestisciImpegnoDecentratoP())
+			                        || isAnnullaAbilitatoImpegno(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa)
+			                        --%>
 			                           <li>
 			                         	  <a id="linkAnnulla_<s:property value="%{#attr.ricercaSubImpegniID.uid}"/>_<s:property value="%{#attr.ricercaSubImpegniID.numero.intValue()}"/>_<s:property value="%{#attr.ricercaSubImpegniID.annoMovimento}"/>" href="#msgAnnullaSubImp" data-toggle="modal" class="linkAnnullaSub"> 
 			                               annulla
 			                              </a>
 			                           </li>
-		                           </s:if>
+	                           <%-- </s:if> --%>
 
 								</s:if>	
-								<s:if test="isEliminaAbilitato(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa)">	
-								
-								   <!-- SIAC-6929 -->
-		                           <s:if test="%{(#attr.ricercaImpegnoID.attoAmministrativo == null ||  #attr.ricercaImpegnoID.attoAmministrativo.bloccoRagioneria != true) && !isAbilitatoGestisciImpegnoDecentratoP()}">
+
+								<%-- SIAC-6929 --%>
+								<%-- SIAC-7800 soluzione workaround - non riesco a reperire indicazioni del controllo per la SIAC-6929 - ripropongo il controllo degli accertamenti --%>
+								<s:if test="isEliminaAbilitato(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa) && ((#attr.ricercaSubImpegniID.attoAmministrativo == null || #attr.ricercaSubImpegniID.attoAmministrativo.bloccoRagioneria != true))">
+			                         <%-- 
+		                           && !isAbilitatoGestisciImpegnoDecentratoP())
+			                        || isEliminaAbilitato(#attr.ricercaSubImpegniID.statoOperativoMovimentoGestioneSpesa)
+			                         --%>
 			                           <li>
 <%-- 			                           	<a id="linkElimina_<s:property value="%{#attr.ricercaSubImpegniID.uid}"/>_<s:property value="%{#attr.ricercaSubImpegniID.numero.intValue()}"/>_<s:property value="%{#attr.ricercaSubImpegniID.numero.intValue()}"/>_<s:property value="%{#attr.ricercaSubImpegniID.annoMovimento}"/>_<s:property value="%{#attr.ricercaSubImpegniID.annoMovimento}"/>" href="#msgEliminaSubImp" data-toggle="modal" class="linkEliminaSub">  --%>
-<!-- 			                               elimina -->
-<!-- 			                            </a> -->
-			                            <a id="linkElimina_<s:property value="%{#attr.ricercaSubImpegniID.uid}"/>_<s:property value="%{#attr.ricercaSubImpegniID.numero.intValue()}"/>_<s:property value="%{#attr.ricercaSubImpegniID.annoMovimento}"/>" href="#msgEliminaSubImp" data-toggle="modal" class="linkEliminaSub">elimina</a>
+<%-- 			                               elimina --%>
+<%-- 			                            </a> --%>
+			                            	<a id="linkElimina_<s:property value="%{#attr.ricercaSubImpegniID.uid}"/>_<s:property value="%{#attr.ricercaSubImpegniID.numero.intValue()}"/>_<s:property value="%{#attr.ricercaSubImpegniID.annoMovimento}"/>" href="#msgEliminaSubImp" data-toggle="modal" class="linkEliminaSub">elimina</a>
 			                           </li>
-		                           </s:if>
+	                           <%-- </s:if> --%>
 
 								</s:if>					
 							</ul>
@@ -196,7 +243,7 @@ SPDX-License-Identifier: EUPL-1.2
 					 	 </a>
 					 </display:column>
 					 <display:column title="Importo" property="importoAttuale" decorator="it.csi.siac.siacfinapp.frontend.ui.util.displaytag.ConverterEuro"/>
-					 <!-- SIAC-6929 -->
+					 <%-- SIAC-6929 --%>
 					 <display:column title="Blocco Rag.">
 					   <s:if test="%{#attr.ricercaSubAccertamentiID.attoAmministrativo.bloccoRagioneria == null }">
 			              	N/A
@@ -211,7 +258,7 @@ SPDX-License-Identifier: EUPL-1.2
 				
 					 <display:column>					 
 				       <div class="btn-group">
-				       		<s:url id="aggiornaSubAccUrl" action="gestioneSubaccertamento.do" escapeAmp="false">
+				       		<s:url var="aggiornaSubAccUrl" action="gestioneSubaccertamento.do" escapeAmp="false">
 					        	<s:param name="idSubImpegno" value="%{#attr.ricercaSubAccertamentiID.uid}" />
 					        	<s:param name="inserimentoSubimpegno" value="false" />
 			                </s:url>
@@ -221,19 +268,19 @@ SPDX-License-Identifier: EUPL-1.2
 							<ul class="dropdown-menu pull-right">
 								<li><a id="linkConsulta_<s:property value="%{#attr.ricercaSubAccertamentiID_rowNum-1}"/>" href="#consultazioneSub" class="consultaSubPopUp"  data-toggle="modal">consulta</a></li>
 								<s:if test="isAggiornaAbilitatoAccertamento(#attr.ricercaSubAccertamentiID.statoOperativoMovimentoGestioneEntrata) && ((#attr.ricercaSubAccertamentiID.attoAmministrativo.bloccoRagioneria != true) || (#attr.ricercaSubAccertamentiID.attoAmministrativo == null))">
-									<li>
-										<a href="<s:property value="aggiornaSubAccUrl"/>">aggiorna</a>
-									</li>
+										<li>
+											<a href="<s:property value="aggiornaSubAccUrl"/>">aggiorna</a>
+										</li>
 								</s:if>		
 								<s:if test="isAnnullaAbilitatoAccertamento(#attr.ricercaSubAccertamentiID.statoOperativoMovimentoGestioneEntrata) && ((#attr.ricercaSubAccertamentiID.attoAmministrativo.bloccoRagioneria != true) || (#attr.ricercaSubAccertamentiID.attoAmministrativo == null))">		
-									<li>		
-									   <a id="linkAnnulla_<s:property value="%{#attr.ricercaSubAccertamentiID.uid}"/>_<s:property value="%{#attr.ricercaSubAccertamentiID.numero.intValue()}"/>" href="#msgAnnullaSubAcc" data-toggle="modal" class="linkAnnullaSub">annulla</a>
-									</li>
+										<li>		
+										   <a id="linkAnnulla_<s:property value="%{#attr.ricercaSubAccertamentiID.uid}"/>_<s:property value="%{#attr.ricercaSubAccertamentiID.numero.intValue()}"/>" href="#msgAnnullaSubAcc" data-toggle="modal" class="linkAnnullaSub">annulla</a>
+										</li>
 								</s:if>	
 								<s:if test="isEliminaAbilitatoAccertamento(#attr.ricercaSubAccertamentiID.statoOperativoMovimentoGestioneEntrata)  &&  ((#attr.ricercaSubAccertamentiID.attoAmministrativo.bloccoRagioneria != true) || (#attr.ricercaSubAccertamentiID.attoAmministrativo == null))">											
-									<li>							
-										<a id="linkElimina_<s:property value="%{#attr.ricercaSubAccertamentiID.uid}"/>_<s:property value="%{#attr.ricercaSubAccertamentiID.numero.intValue()}"/>" href="#msgEliminaSubAcc" data-toggle="modal" class="linkEliminaSub">elimina</a>
-									</li>	
+										<li>							
+											<a id="linkElimina_<s:property value="%{#attr.ricercaSubAccertamentiID.uid}"/>_<s:property value="%{#attr.ricercaSubAccertamentiID.numero.intValue()}"/>" href="#msgEliminaSubAcc" data-toggle="modal" class="linkEliminaSub">elimina</a>
+										</li>	
 								</s:if>					
 							</ul>
 						</div>
@@ -244,25 +291,60 @@ SPDX-License-Identifier: EUPL-1.2
 					<s:hidden id="uidSubDaEliminare" name="uidSubDaEliminare"/>
 					<s:hidden id="uidSubDaAnnullare" name="uidSubDaAnnullare"/>
 					<s:hidden id="uidSubDaAggiornare" name="uidSubDaAggiornare"/>
+					
+					
+				    <s:if test="oggettoDaPopolareSubimpegno()">					        
+						<s:set var="selezionaProvvedimentoAction" value="%{'aggiornaSubimpegno_selezionaProvvedimento'}" />
+						<s:set var="clearRicercaProvvedimentoAction" value="%{'aggiornaSubimpegno_clearRicercaProvvedimento'}" />	          
+	            	  	<s:set var="ricercaProvvedimentoAction" value="%{'aggiornaSubimpegno_ricercaProvvedimento'}" />	          
+	            	  	<s:set var="eliminaAction" value="%{'aggiornaSubimpegno_elimina'}" />	  
+	            		<s:set var="selezionaProvvedimentoInseritoAction" value="%{'aggiornaSubimpegno_selezionaProvvedimentoInserito'}" />	
+						<s:set var="inserisciProvvedimentoAction" value="%{'aggiornaSubimpegno_inserisciProvvedimento'}" />		
+						<s:set var="clearInserimentoProvvedimentoAction" value="%{'aggiornaSubimpegno_clearInserimentoProvvedimento'}" />	            
+					</s:if>
+					<s:else>
+						<s:set var="selezionaProvvedimentoAction" value="%{'aggiornaSubaccertamento_selezionaProvvedimento'}" />
+					    <s:set var="clearRicercaProvvedimentoAction" value="%{'aggiornaSubaccertamento_clearRicercaProvvedimento'}" />	          
+	        			<s:set var="ricercaProvvedimentoAction" value="%{'aggiornaSubaccertamento_ricercaProvvedimento'}" />	          
+	         			<s:set var="eliminaAction" value="%{'aggiornaSubaccertamento_elimina'}" />	  
+	            		<s:set var="selezionaProvvedimentoInseritoAction" value="%{'aggiornaSubaccertamento_selezionaProvvedimentoInserito'}" />	
+						<s:set var="inserisciProvvedimentoAction" value="%{'aggiornaSubaccertamento_inserisciProvvedimento'}" />
+						<s:set var="clearInserimentoProvvedimentoAction" value="%{'aggiornaSubaccertamento_clearInserimentoProvvedimento'}" />	
+					</s:else>
+								
 					<s:include value="/jsp/movgest/include/modal.jsp" /> 
 					
-					<!-- ACCERTAMENTO IN STATO D NON DEVE VISUALIZZARE IL BTN -->
+					<%-- ACCERTAMENTO IN STATO D NON DEVE VISUALIZZARE IL BTN --%>
 					<s:if test="statoSubDefinitivo()">
 					  		
 					</s:if> 
 					<s:else>
 						<%-- <s:if test="!isAbilitatoGestisciImpegnoDecentratoP()" > --%>
-					   		<p>
-								<s:submit name="idInserisciSubimpegno" value="%{labels.INSERISCI}" method="inserisciSubimpegno" cssClass="btn" />	
-							</p>
+						<s:if test="oggettoDaPopolareSubimpegno()">
+							<s:if test="!isAbilitatoImpegnoRORdecentratoEFaseBilancioPredisposizioneConsuntivo()">
+						   		<p>
+									<!-- task-131 <s:submit name="idInserisciSubimpegno" value="%{labels.INSERISCI}" method="inserisciSubimpegno" cssClass="btn" /> -->
+									<s:submit name="idInserisciSubimpegno" value="%{labels.INSERISCI}" action="aggiornaSubimpegno_inserisciSubimpegno" cssClass="btn" />
+										
+								</p>
+							</s:if>
+						</s:if>
+						<s:else>
+							<s:if test="!isAbilitatoAccertamentoRORdecentratoEFaseBilancioPredisposizioneConsuntivo()">
+						   		<p>
+									<!-- task-131 <s:submit name="idInserisciSubimpegno" value="%{labels.INSERISCI}" method="inserisciSubimpegno" cssClass="btn" /> -->
+									<s:submit name="idInserisciSubimpegno" value="%{labels.INSERISCI}" action="aggiornaSubaccertamento_inserisciSubimpegno" cssClass="btn" />	
+								</p>
+							</s:if>
+						</s:else>
 					    <%-- </s:if>   --%>
 					</s:else>
 					
 					
-					<!-- Jira-1584 levare il tasto indietro -->
-<!-- 					<p class="margin-large"> -->
+					<%-- Jira-1584 levare il tasto indietro --%>
+<%-- 					<p class="margin-large"> --%>
 <%-- 						<s:include value="/jsp/include/indietro.jsp" />  --%>
-<!-- 					</p> -->
+<%-- 					</p> --%>
 				</s:form>
 			</div>
 		</div>
@@ -272,7 +354,8 @@ SPDX-License-Identifier: EUPL-1.2
 		$(".consultaSubPopUp").click(function() {
 			var supportId = $(this).attr("id").split("_");
 			$.ajax({
-				url: '<s:url method="dettaglioSubPopUp"/>',
+				// task-131 url: '<s:url method="dettaglioSubPopUp"/>',
+				url: '<s:url action="%{#dettaglioSubPopUpAction}"/>',
 				type: 'POST',
 				data: 'uidPerDettaglioSub=' + supportId[1],
 			    success: function(data)  {

@@ -38,10 +38,12 @@ SPDX-License-Identifier: EUPL-1.2
 </div>
 <div class="modal-footer">
 	<s:if test="hasImpegnoSelezionatoPopup">		
-		<s:submit name="conferma" value="conferma" method="confermaCompGuidataImpegno" data-dismiss="modal" cssClass="btn btn-primary" />
+		<!-- task-131 <s:submit name="conferma" value="conferma" method="confermaCompGuidataImpegno" cssClass="btn btn-primary" /> -->
+		<s:submit name="conferma" value="conferma" action="reintroitoOrdinativoPagamentoStep2_confermaCompGuidataImpegno" cssClass="btn btn-primary" />
 	</s:if>
 	<s:else>
-		<s:submit name="conferma" value="conferma" method="confermaCompGuidataImpegno" data-dismiss="modal" disabled="true" cssClass="btn btn-primary" />
+		<!-- task-131 <s:submit name="conferma" value="conferma" method="confermaCompGuidataImpegno" disabled="true" cssClass="btn btn-primary" /> -->
+		<s:submit name="conferma" value="conferma" action="reintroitoOrdinativoPagamentoStep2_confermaCompGuidataImpegno" disabled="true" cssClass="btn btn-primary" />
 	</s:else>
 </div>
 
@@ -58,8 +60,8 @@ SPDX-License-Identifier: EUPL-1.2
 		//if(annoimpegno && numeroimpegno){
 		if(true){
 			$.ajax({
-				//url: '<s:url method="ricercaGuidataImpegno"/>',
-				url: '<s:url method="ricercaImpegnoCompilazioneGuidata"/>',
+				//task-131 url: '<s:url method="ricercaImpegnoCompilazioneGuidata"/>',
+				url: '<s:url action="reintroitoOrdinativoPagamentoStep2_ricercaImpegnoCompilazioneGuidata"/>',
 				type: 'GET',
 				data: { anno: annoimpegno, numero: numeroimpegno},
 			    success: function(data)  {

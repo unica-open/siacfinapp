@@ -9,7 +9,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
+
+import org.apache.struts2.dispatcher.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,13 +19,14 @@ import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.Normalizzatore;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.RecapitoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggetto;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggettoProvvisorio;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggettoResponse;
@@ -110,10 +113,11 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 		debug(methodName, " ciclo la lista errori ");
 		
 		if(!ciclaListaErrori(listaErrori, "Comune", ErroreCore.DATO_OBBLIGATORIO_OMESSO)){
-			String[] idComune = (String[])getRequest().get("nuovaSedeSecondaria.indirizzoSoggettoPrincipale.idComune");
-			
-			if (idComune == null || 
-					"".equalsIgnoreCase(idComune[0])) {
+			//task-131
+			//String[] codiceIstatComune = (String[])getRequest().get("nuovaSedeSecondaria.indirizzoSoggettoPrincipale.codiceIstatComune");
+			Parameter codiceIstatComune = getRequest().get("nuovaSedeSecondaria.indirizzoSoggettoPrincipale.codiceIstatComune");
+			//if (codiceIstatComune == null || "".equalsIgnoreCase(codiceIstatComune[0])) {			
+			if (codiceIstatComune == null || "".equalsIgnoreCase(codiceIstatComune.getValue())) {
 				ListaComunePerNome comunePerNome = new ListaComunePerNome();
 				comunePerNome.setCodiceNazione(model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().getCodiceNazione());
 				comunePerNome.setNomeComune(model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().getComune());
@@ -121,22 +125,22 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 				comunePerNome.setRicercaPuntuale(true);
 				ListaComunePerNomeResponse response = genericService.findComunePerNome(comunePerNome);
 				if (response != null && response.getListaComuni() != null && response.getListaComuni().size() > 0 && response.getListaComuni().get(0).getCodice() != null) {
-					model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setIdComune(response.getListaComuni().get(0).getCodice());
+					model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setCodiceIstatComune(response.getListaComuni().get(0).getCodice());
 				} else {
-					model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setIdComune("");
+					model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setCodiceIstatComune("");
 				}
 			}
 		    // se gia' non e' stato segnalato prima come errore il comune allora vado a verificare
 			// che l'utente abbia usato l'autocomplete
 			if(null!=model.getNuovaSedeSecondaria() && model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale() != null && 
-				FinStringUtils.isEmpty(model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().getIdComune())){
+				FinStringUtils.isEmpty(model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().getCodiceIstatComune())){
 				debug(methodName, "verifico la nazione ");
 				if(WebAppConstants.CODICE_ITALIA.equals(model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().getCodiceNazione())){
 					ListaComunePerNomeResponse comunePerNomeResponse = controlloPuntualeComune(model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().getComune(), model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().getCodiceNazione());
 					if (comunePerNomeResponse == null || comunePerNomeResponse.isFallimento() || comunePerNomeResponse.getListaComuni() == null || comunePerNomeResponse.getListaComuni().size() == 0 || comunePerNomeResponse.getListaComuni().get(0).getId() == null) {
 						listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Comune"));
 					} else {
-						model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setIdComune(comunePerNomeResponse.getListaComuni().get(0).getCodice());
+						model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setCodiceIstatComune(comunePerNomeResponse.getListaComuni().get(0).getCodice());
 						model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setComune(comunePerNomeResponse.getListaComuni().get(0).getDescrizione());
 					}
 					
@@ -221,8 +225,8 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 			
 			// setto il sesso 
 			if(response.getSoggetto().getSesso().equals(Sesso.MASCHIO))
-				 response.getSoggetto().setSessoStringa(Constanti.MASCHIO.toLowerCase());
-			else response.getSoggetto().setSessoStringa(Constanti.FEMMINA.toLowerCase());
+				 response.getSoggetto().setSessoStringa(CostantiFin.MASCHIO.toLowerCase());
+			else response.getSoggetto().setSessoStringa(CostantiFin.FEMMINA.toLowerCase());
 			
 			// setto soggetto generale
 			model.setDettaglioSoggetto(response.getSoggetto());
@@ -238,7 +242,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 		 if(model.getListaSecondariaSoggetto()!= null && model.getListaSecondariaSoggetto().size()>0){
 			   for(SedeSecondariaSoggetto sede: model.getListaSecondariaSoggetto()){
 				    if(sede!=null && StatoOperativoAnagrafica.IN_MODIFICA.name().equalsIgnoreCase(sede.getDescrizioneStatoOperativoSedeSecondaria())){
-				    	sede.setDescrizioneStatoOperativoSedeSecondaria(Constanti.STATO_IN_MODIFICA_no_underscore);
+				    	sede.setDescrizioneStatoOperativoSedeSecondaria(CostantiFin.STATO_IN_MODIFICA_no_underscore);
 				    }
 			   }
 		 }
@@ -258,7 +262,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -268,7 +272,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 		
 		//a seconda se siamo decentrati o meno richiamiamo il servizio
 		//opportuno di aggiornamento del soggetto:
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 			//AGGIORNAMENTO PROVVISIORIO
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(convertiModelPerChiamataServizioAggiornaSoggetto(model.getDettaglioSoggetto(),true));
 			response = soggettoService.aggiornaSoggettoProvvisorio(asp);
@@ -329,26 +333,29 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 				RicercaSedeSecondariaPerChiaveResponse resp = soggettoService.ricercaSedeSecondariaPerChiave(request);
 				selectedSedeMod = resp.getSedeSecondariaSoggetto();
 
-				if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO) && 
+				if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite()) && 
 						isUtenteLoggato(selectedSedeMod.getUtenteCreazione()) ) {
 					//SONO DECENTRATO E SONO IL "MODIFICANTE" 
 					// Jira - 947
 					selectedSede.setUtenteModifica(utModDecentrato);
 					selectedSede.setDataModifica(dataModDecentrato);
 					selectedSede.setDenominazione(selectedSedeMod.getDenominazione());
+					// SIAC-7568
+					selectedSede.setCodDestinatario(selectedSedeMod.getCodDestinatario());
+
 					selectedSede.setIndirizzoSoggettoPrincipale(selectedSedeMod.getIndirizzoSoggettoPrincipale());
 					selectedSede.setContatti(selectedSedeMod.getContatti());
-					selectedSede.setDescrizioneStatoOperativoSedeSecondaria(Constanti.STATO_VALIDO);
+					selectedSede.setDescrizioneStatoOperativoSedeSecondaria(CostantiFin.STATO_VALIDO);
 					//ANCHE SE IL DEC STA GUARDANDO LA SUA PROPOSTA IN MODIFICA, LA DATA E L'UTENTE DEVONO ESSERE SEMPRE QUELLI ORIGINALI DELLA T_SOGGETTO
 					selectedSede.setDataCreazione(data);
 					selectedSede.setUtenteCreazione(selectedSede.getUtenteCreazione());
-				}else if (!FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)){
+				}else if (!AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())){
 					//SONO "CENTRATO" (cioe' l'admin) e vedo IN_MODIFICA
-					selectedSede.setDescrizioneStatoOperativoSedeSecondaria(Constanti.STATO_VALIDO);
-				} else if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO) && 
+					selectedSede.setDescrizioneStatoOperativoSedeSecondaria(CostantiFin.STATO_VALIDO);
+				} else if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite()) && 
 						!isUtenteLoggato(selectedSedeMod.getUtenteCreazione()) ){
 					//SONO DECENTRATO E NON SONO IL "MODIFICANTE" (vedo valido, cioe' non noto la modifica in corso da parte di un altro)
-					selectedSede.setDescrizioneStatoOperativoSedeSecondaria(Constanti.STATO_VALIDO);
+					selectedSede.setDescrizioneStatoOperativoSedeSecondaria(CostantiFin.STATO_VALIDO);
 				}
 				
 			}else{
@@ -375,7 +382,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 			selectedSede = model.getListaSecondariaSoggetto().get(idSedeSecondaria - 1);
 			
 			if(selectedSede!=null && selectedSede.getIndirizzoSoggettoPrincipale()!=null){
-				if(selectedSede.getIndirizzoSoggettoPrincipale().getAvviso().equals(Constanti.TRUE)){
+				if(selectedSede.getIndirizzoSoggettoPrincipale().getAvviso().equals(CostantiFin.TRUE)){
 					selectedSede.getIndirizzoSoggettoPrincipale().setCheckAvviso(true);
 				}else{
 					selectedSede.getIndirizzoSoggettoPrincipale().setCheckAvviso(false);
@@ -392,12 +399,12 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 			Contatto c = getContatto("email");
 			if (c != null) {
 				model.getRecapitoSS().setEmail(c.getDescrizione());
-				model.getRecapitoSS().setCheckAvvisoEmail(c.getAvviso() != null && (Constanti.TRUE.equals(c.getAvviso()) || "true".equals(c.getAvviso())) ? "true" : null);
+				model.getRecapitoSS().setCheckAvvisoEmail(c.getAvviso() != null && (CostantiFin.TRUE.equals(c.getAvviso()) || "true".equals(c.getAvviso())) ? "true" : null);
 			}
 			c = getContatto("PEC");
 			if (c != null) {
 				model.getRecapitoSS().setPec(c.getDescrizione());
-				model.getRecapitoSS().setCheckAvvisoPec(c.getAvviso() != null && (Constanti.TRUE.equals(c.getAvviso()) || "true".equals(c.getAvviso())) ? "true" : null);
+				model.getRecapitoSS().setCheckAvvisoPec(c.getAvviso() != null && (CostantiFin.TRUE.equals(c.getAvviso()) || "true".equals(c.getAvviso())) ? "true" : null);
 			}
 		}
 		return "modifica";
@@ -531,10 +538,10 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 		// se deseleziono tutti i valori setto cmq a null
 		// cosi verra' tenuto nel model il valore vuoto
 		model.getNuovaSedeSecondaria().setContatti(contatti);
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 			 // utente decentrato
 			model.getNuovaSedeSecondaria().setStatoOperativoSedeSecondaria(StatoOperativoSedeSecondaria.IN_MODIFICA);
-			model.getNuovaSedeSecondaria().setDescrizioneStatoOperativoSedeSecondaria(Constanti.STATO_IN_MODIFICA_no_underscore);
+			model.getNuovaSedeSecondaria().setDescrizioneStatoOperativoSedeSecondaria(CostantiFin.STATO_IN_MODIFICA_no_underscore);
 			if(sedeFinded==null){
 				//SE NON HA UN ID FISICO SUL DB VUOL DIRE CHE E' STATO APPENA INSERITO DURANTE LA SESSIONE IN CORSO 
 				//E PUO' SOLO ESSERE PROVVISORIO
@@ -553,7 +560,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 			model.getNuovaSedeSecondaria().setDescrizioneStatoOperativoSedeSecondaria(StatoOperativoSedeSecondaria.VALIDO.name());
 		}
 		
-		model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setPrincipale(Constanti.TRUE);
+		model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().setPrincipale(CostantiFin.TRUE);
 		
 		// setto il check avviso in avviso
 		if(model.getNuovaSedeSecondaria().getIndirizzoSoggettoPrincipale().isCheckAvviso()){
@@ -564,7 +571,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 		
 		if (idSedeSecondaria == null){
 			model.getListaSecondariaSoggetto().add(model.getNuovaSedeSecondaria());
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 				 // utente decentrato
 				model.getNuovaSedeSecondaria().setStatoOperativoSedeSecondaria(StatoOperativoSedeSecondaria.PROVVISORIO);
 				model.getNuovaSedeSecondaria().setDescrizioneStatoOperativoSedeSecondaria(StatoOperativoSedeSecondaria.PROVVISORIO.name());
@@ -589,7 +596,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 			
 			//a seconda se siamo decentrati o meno richiamiamo il servizio
 			//opportuno di aggiornamento del soggetto:
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 				//AGGIORNAMENTO PROVVISIORIO
 				response = soggettoService.aggiornaSoggettoProvvisorio(new AggiornaSoggettoProvvisorio(convertiModelPerChiamataServizioAggiornaSoggetto(model.getDettaglioSoggetto(),true)));
 			}else{
@@ -656,7 +663,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 			
 			//a seconda se siamo decentrati o meno richiamiamo il servizio
 			//opportuno di aggiornamento del soggetto:
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 				//AGGIORNAMENTO PROVVISIORIO
 				AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 				response = soggettoService.aggiornaSoggettoProvvisorio(asp);
@@ -741,7 +748,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 			//a seconda se siamo decentrati o meno richiamiamo il servizio
 			//opportuno di aggiornamento del soggetto:
 			AggiornaSoggettoResponse response = null;			
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 				//AGGIORNAMENTO PROVVISIORIO
 				AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(convertiModelPerChiamataServizioAggiornaSoggetto(model.getDettaglioSoggetto(),true));
 				response = soggettoService.aggiornaSoggettoProvvisorio(asp);
@@ -805,8 +812,8 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 	 */
 	public boolean isAbilitato(Integer decodificaOperazione, String codiceStato, String utenteUltimaModifica, String utenteUltimaModificaMod) {
 		boolean abilitato = false;
-		boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-		boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+		boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+		boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 		String supportStato = (codiceStato != null && stack(codiceStato) != null) ? stack(codiceStato).toString() : null;
 		String supportUtenteUltimaModifica = (utenteUltimaModifica != null && stack(utenteUltimaModifica) != null) ? stack(utenteUltimaModifica).toString() : null;
 		boolean checkUltimoUtenteModifica = decentratoSuPropriaOccorrenza(supportUtenteUltimaModifica);
@@ -842,10 +849,11 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 					abilitato = gestSoggDec && checkUltimoUtenteModifica;
 				}
 				break;
+			//SIAC-8799
 			case VALIDA:
 				//CASO VALIDA
 				if (CodiciStatoSoggetto.PROVVISORIO.toString().equalsIgnoreCase(supportStato) || CodiciStatoSoggetto.IN_MODIFICA.toString().equalsIgnoreCase(supportStato)) {
-					abilitato = gestSogg;
+					abilitato = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_validaSogg , sessionHandler.getAzioniConsentite());
 				}
 				break;
 			default:
@@ -879,7 +887,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 	
 	public String getContattoStr(String tipo) {
 		Contatto c = getContatto(tipo);
-		return c.getDescrizione() + (Constanti.TRUE.equals(c.getAvviso()) ? " (recapito per avviso)" : "");
+		return c.getDescrizione() + (CostantiFin.TRUE.equals(c.getAvviso()) ? " (recapito per avviso)" : "");
 	}
 	
 	protected Contatto getContatto(String tipo, boolean isMod) {
@@ -898,7 +906,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 		Contatto c = getContatto(tipo, isMod);
 		if (c != null) {
 			String dettaglioContatto = c.getDescrizione();
-			if (c.getAvviso() != null && c.getAvviso().equals(Constanti.TRUE)){
+			if (c.getAvviso() != null && c.getAvviso().equals(CostantiFin.TRUE)){
 				dettaglioContatto += " (recapito per avviso)";
 			}
 			return dettaglioContatto;
@@ -907,7 +915,7 @@ public class AggiornaSediSecondarieAction extends AggiornaSoggettoGenericAction 
 	}
 	
 	public boolean checkSedeInModifica(){
-		if(selectedSede.getStatoOperativoSedeSecondaria().toString().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA)){
+		if(selectedSede.getStatoOperativoSedeSecondaria().toString().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA)){
 			return true;
 		}else{
 			return false;

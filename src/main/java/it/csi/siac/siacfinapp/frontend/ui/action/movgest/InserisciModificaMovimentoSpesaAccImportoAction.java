@@ -7,8 +7,10 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.context.annotation.Scope;
@@ -21,16 +23,22 @@ import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ImpegniPluriennaliModel;
+import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaAccertamento;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaAccertamentoResponse;
+import it.csi.siac.siacfinser.frontend.webservice.msg.ConsultaVincoliAccertamento;
+import it.csi.siac.siacfinser.frontend.webservice.msg.ConsultaVincoliAccertamentoResponse;
 import it.csi.siac.siacfinser.model.Accertamento;
+import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubAccertamento;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneEntrata;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesaCollegata;
+import it.csi.siac.siacfinser.model.movgest.VincoloAccertamento;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
-public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAggiornaAccertamento{
+public class InserisciModificaMovimentoSpesaAccImportoAction extends BaseRorEntrata {
 	
 	private static final long serialVersionUID = -1894703170048881209L;
 
@@ -85,8 +93,13 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 	public void prepare() throws Exception {
 		setMethodName("prepare");
 		
+		
 		//Reimputazione:
 		inizializzaReimputazioneInInserimentoNelModel();
+		//SIAC-6997
+		inizializzaElaboraRorReannoInInserimentoNelModel();
+		
+		 
 		
 		//invoco il prepare della super classe:
 		super.prepare();
@@ -112,9 +125,9 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			//ciclo sui sub:
 			for(SubAccertamento sub : model.getListaSubaccertamenti()){
 				if(sub.getStatoOperativoMovimentoGestioneEntrata().equalsIgnoreCase("D")){
-					if(sub.getNumero() != null){
+					if(sub.getNumeroBigDecimal() != null){
 						//aggiungo il sub alla lista
-						numeroSubImpegnoList.add(String.valueOf(sub.getNumero()));
+						numeroSubImpegnoList.add(String.valueOf(sub.getNumeroBigDecimal()));
 					}	
 				}
 				
@@ -143,6 +156,16 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			disponibilitaUtilizzare = model.getAccertamentoInAggiornamento().getDisponibilitaUtilizzare();
 		}
 		
+		//SIAC-7349 Inizio  SR180 FL 08/04/2020
+	 	setListaModificheSpeseCollegata(
+	 			//SIAC-8041 filtro la lista modifiche per le reimputazioni
+	 			initListaModificheSpesaCollegataSoloReimp(
+	 					model.getAccertamentoInAggiornamento()
+	 						.getListaModificheMovimentoGestioneSpesaCollegata()
+	 			)
+	 	);
+		//SIAC-7349 Fine SR180 FL 08/04/2020
+		
 		if(!model.getAccertamentoInAggiornamento().getStatoOperativoMovimentoGestioneEntrata().equalsIgnoreCase("D")){
 			// non e' definitivo
 			BigDecimal minTemp = model.getAccertamentoInAggiornamento().getDisponibilitaSubAccertare().min(disponibilitaUtilizzare);
@@ -161,7 +184,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 		
 		minImportoImpegnoApp = convertiImportoToBigDecimal(minImpApp);
 		
-		if(model.getAccertamentoInAggiornamento().getAnnoMovimento() < Integer.valueOf(sessionHandler.getAnnoEsercizio())){
+		if(model.getAccertamentoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
 			//mi riconduco a questa casistica in modo da non avere un massimo:
 			model.setFlagSuperioreTreAnni(true);
 			//
@@ -257,6 +280,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 		}
 		
 		model.getStep1Model().setSaltaControlloLegamiStoricizzati(false);
+		model.setProseguiConWarningModificaPositivaAccertamento(false);
 		
 		return SUCCESS;
 	}
@@ -281,12 +305,12 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 				model.setSubImpegnoSelectedMod(true);
 				
 				for(SubAccertamento sub : model.getListaSubaccertamenti()){
-					if(String.valueOf(sub.getNumero()).equals(getSubSelected())){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equals(getSubSelected())){
 						
 						setImportoAttualeSubImpegno(convertiBigDecimalToImporto(sub.getImportoAttuale()));
-						setNumeroSubImpegno(String.valueOf(sub.getNumero()));
+						setNumeroSubImpegno(String.valueOf(sub.getNumeroBigDecimal()));
 						model.setImportoAttualeSubImpegnoMod(convertiBigDecimalToImporto(sub.getImportoAttuale()));
-						model.setNumeroSubImpegnoMod(String.valueOf(sub.getNumero()));
+						model.setNumeroSubImpegnoMod(String.valueOf(sub.getNumeroBigDecimal()));
 						
 						//BigDecimal importoAttualeSubImpegno = sub.getImportoAttuale()
 
@@ -305,7 +329,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 						
 
 					
-						if(sub.getAnnoMovimento() < Integer.valueOf(sessionHandler.getAnnoEsercizio())){
+						if(sub.getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
 							maxImportoSubApp = new BigDecimal(0);
 						} else if(sub.isFlagDaRiaccertamento()){
 							maxImportoSubApp = new BigDecimal(0);
@@ -392,13 +416,40 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 	public String salva(){
 		setMethodName("salva");
 		
+		//eliminazione degli errori precedenti se risalvo
+		model.setErrori(new ArrayList<Errore>());
+		
 		List<Errore> listaErrori = new ArrayList<Errore>();
 		
 		List<Errore> listaWarning = new ArrayList<Errore>();
 		
-		boolean erroreProvvedimento = false;
+		boolean erroreProvvedimento = false;	
+		//SIAC-7349 Inizio SR180 CM 08/04/2020 aggiunto controllo su importo collegamento
+		boolean erroreListaCollegata = false;
+		//SIAC-7349 Fine SR180 CM 08/04/2020 aggiunto controllo su importo collegamento
+		
+		//SIAC-8506
+		controllaLunghezzaMassimaDescrizioneMovimento(getDescrizione(), listaErrori);
 		
 		String tipoMotivo = getIdTipoMotivo();
+		//SIAC-8818				
+		// se ROR-REIMP o ROR-REANNO non posso mettere flag reimputazione = No 
+		// se flag reimp a si non posso mettere tipi diversi da REIMP o REANNO 
+		// se flag reimp a si o ROR-REIMP - ROR-REANNO l'importo deve essere minore di 0 (controllo gia presente)
+		String reimputazione = model.getMovimentoSpesaModel().getReimputazione();
+		if (tipoMotivo.equalsIgnoreCase("REIMP") || tipoMotivo.equalsIgnoreCase("REANNO")) {
+				if(WebAppConstants.No.equals(reimputazione)) {		
+					controllaFlagReimp(listaErrori);
+				}
+		} 
+		
+		if (WebAppConstants.Si.equals(reimputazione)) {
+			if (!tipoMotivo.equalsIgnoreCase("REIMP") && !tipoMotivo.equalsIgnoreCase("REANNO")) {
+				controllaIncompatibilitaFlagReimpMotivo(listaErrori);
+			}
+		}
+		
+		
 		//Motivo
 		if(StringUtils.isEmpty(getIdTipoMotivo())){
 			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Modifica motivo"));
@@ -408,7 +459,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 		}
 		
 		//Controllo dei campi
-		if(tipoImpegno.equalsIgnoreCase("Accertamento")){
+		if(tipoImpegno.equalsIgnoreCase("Accertamento")){		
 			
 			//controlli su reimputazione:
 			listaErrori = controlliReimputazioneInInserimentoEMotivoRIAC(listaErrori, tipoImpegno, abbina, importoImpegnoModImp,tipoMotivo);
@@ -416,7 +467,6 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			checkProvvedimento(listaErrori);
 			
 			listaErrori = controlloGestisciAccertamentoDecentratoPerModifica(listaErrori);
-			
 			
 			//SIAC-
 			//Importo Obbligatorio
@@ -431,39 +481,83 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 				model.getStep1Model().setSaltaControlloLegamiStoricizzati(false);
 				
 				List<ModificaMovimentoGestioneEntrata> modificheList = model.getAccertamentoInAggiornamento().getListaModificheMovimentoGestioneEntrata();
+				//inizio SIAC-7349
+				
+				
+				
+				//List<ModificaMovimentoGestioneSpesaCollegata> modificheCollegateList = model.getMovimentoSpesaModel().getListaModificheSpeseCollegata();
+				//fine SIAC-7349
 				
 				if(modificheList == null){
 					modificheList = new ArrayList<ModificaMovimentoGestioneEntrata>();
 				}
 				
-				ModificaMovimentoGestioneEntrata spesa = new ModificaMovimentoGestioneEntrata();
+				ModificaMovimentoGestioneEntrata modificaEntrataInInserimento = new ModificaMovimentoGestioneEntrata();
 				
 				BigDecimal importoDiInput = convertiImportoToBigDecimal(importoImpegnoModImp);
 				BigDecimal importoAttuale = model.getAccertamentoInAggiornamento().getImportoAttuale();
 				
 				BigDecimal importoCambiato = importoAttuale.add(importoDiInput);
 
-				spesa.setUid(0); //Lo setto a zero cosi da riconoscere che e nuovo
-				spesa.setImportoOld(convertiImportoToBigDecimal(importoImpegnoModImp));
-				spesa.setImportoNew(importoCambiato);
+				modificaEntrataInInserimento.setUid(0); //Lo setto a zero cosi da riconoscere che e nuovo
+				modificaEntrataInInserimento.setImportoOld(convertiImportoToBigDecimal(importoImpegnoModImp));
+				modificaEntrataInInserimento.setImportoNew(importoCambiato);
 				model.getMovimentoSpesaModel().getAccertamento().setImportoAttuale(importoCambiato);
 				
 				model.getStep1Model().setImportoFormattato(convertiBigDecimalToImporto(importoCambiato));
 				model.getStep1Model().setImportoImpegno(importoCambiato);
 				
 				//DATI DEL PROVVEDIMENTO DELLA MODIFICA:
-				spesa = settaDatiProvvDalModel(spesa, model.getStep1Model().getProvvedimento());
+				modificaEntrataInInserimento = settaDatiProvvDalModel(modificaEntrataInInserimento, model.getStep1Model().getProvvedimento());
 				
-				spesa.setTipoModificaMovimentoGestione(getIdTipoMotivo());
+				modificaEntrataInInserimento.setTipoModificaMovimentoGestione(getIdTipoMotivo());
 				if(getDescrizione()!=null){
-					spesa.setDescrizione(getDescrizione().toUpperCase());
+					modificaEntrataInInserimento.setDescrizione(getDescrizione().toUpperCase());
 				}
-				spesa.setTipoMovimento("ACC");
+				modificaEntrataInInserimento.setTipoMovimento("ACC");
 				
-				settaDatiReimputazioneDalModel(spesa);
+				settaDatiReimputazioneDalModel(modificaEntrataInInserimento);
+				
+				//SIAC-7349 CONTABILIA-257 CM 30/06/2020 inizio
+				controlloImportoLimiteInferiore(modificaEntrataInInserimento, listaErrori, listaWarning);
+				
+				if(!listaErrori.isEmpty()){
+					addErrori(listaErrori);
+					return INPUT;
+				}
+				//SIAC-7349 CONTABILIA-257 CM 30/06/2020 fine
+				
+				//SIAC-7349 Inizio SR180 CM 08/04/2020 aggiunto controllo su importo collegamento
+				if (CollectionUtils.isNotEmpty(getListaModificheSpeseCollegata())) {
+
+					erroreListaCollegata = checkListaCollegataImpegni( modificaEntrataInInserimento,listaErrori);
+					if(!listaErrori.isEmpty() || erroreListaCollegata){
+						//presenza errori
+						addErrori(listaErrori);
+						return INPUT;
+					}
+					//CALCOLO DEL RESIDUO
+					for (ModificaMovimentoGestioneSpesaCollegata modificheSpeseCollegata : getListaModificheSpeseCollegata()) {
+						if (modificaEntrataInInserimento.getTipoModificaMovimentoGestione().equals(modificheSpeseCollegata.getModificaMovimentoGestioneSpesa().getTipoModificaMovimentoGestione())
+								&& modificaEntrataInInserimento.getAnnoReimputazione() != null && modificaEntrataInInserimento.getAnnoReimputazione().equals(modificheSpeseCollegata.getModificaMovimentoGestioneSpesa().getAnnoReimputazione())
+								) {
+									BigDecimal residuoNew = modificheSpeseCollegata.getImportoResiduoCollegare().subtract(modificheSpeseCollegata.getImportoCollegamento());
+									modificheSpeseCollegata.setImportoResiduoCollegare(residuoNew);
+						}
+					}
+					modificaEntrataInInserimento.setListaModificheMovimentoGestioneSpesaCollegata(getListaModificheSpeseCollegata());
+				}
+				//SIAC-7349 Fine SR180 CM 08/04/2020 
 				
 				//Inserisco nell impegno che andra nel servizio aggiorna impegno
-				modificheList.add(spesa);
+				for (Iterator<ModificaMovimentoGestioneEntrata> iterator = modificheList.iterator(); iterator.hasNext();) {
+					ModificaMovimentoGestioneEntrata mm = iterator.next();
+					if(mm.getUid() == 0) {
+						iterator.remove();
+					}
+					
+				}
+				modificheList.add(modificaEntrataInInserimento);
 				model.getAccertamentoInAggiornamento().setListaModificheMovimentoGestioneEntrata(modificheList);
 				
 				//Mi salvo il capitolo
@@ -484,7 +578,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 				AggiornaAccertamento requestAggiorna = convertiModelPerChiamataServiziInserisciAggiornaModifiche(true);
 				
 				//invoco il servizio:
-				AggiornaAccertamentoResponse response = movimentoGestionService.aggiornaAccertamento(requestAggiorna);
+				AggiornaAccertamentoResponse response = movimentoGestioneFinService.aggiornaAccertamento(requestAggiorna);
 				
 				//setto prosegui con warning a false:
 				model.setProseguiConWarning(false);
@@ -546,8 +640,8 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 				return INPUT;
 			}
 	
-			
-		}  else if(tipoImpegno.equals("SubAccertamento") && abbina == null ){
+			//SIAC-8279 controllo campo blank
+		}  else if(tipoImpegno.equals("SubAccertamento") && StringUtils.isBlank(abbina)){
 			
 			//controllo selezione subImpegno
 			if(getSubSelected()==null || StringUtils.isEmpty(getSubSelected())){
@@ -579,7 +673,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 				List<ModificaMovimentoGestioneEntrata> modificheList = new ArrayList<ModificaMovimentoGestioneEntrata>();
 				
 				for(SubAccertamento sub : model.getListaSubaccertamenti()){
-					if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 						modificheList = sub.getListaModificheMovimentoGestioneEntrata();
 					}
 				}
@@ -614,7 +708,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 				
 				List<SubAccertamento> nuovaSubImpegnoList = new ArrayList<SubAccertamento>();
 				for(SubAccertamento sub : model.getListaSubaccertamenti()){
-					if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 						sub.setListaModificheMovimentoGestioneEntrata(modificheList);
 						sub.setImportoAttuale(importoCambiatoSub);
 					}
@@ -642,7 +736,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 				AggiornaAccertamento requestAggiorna = convertiModelPerChiamataServiziInserisciAggiornaModifiche(true);
 				
 				//invoco il servizio:
-				AggiornaAccertamentoResponse response = movimentoGestionService.aggiornaAccertamento(requestAggiorna);
+				AggiornaAccertamentoResponse response = movimentoGestioneFinService.aggiornaAccertamento(requestAggiorna);
 				
 				//setto prosegui con warning a false:
 				model.setProseguiConWarning(false);
@@ -778,7 +872,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			List<ModificaMovimentoGestioneEntrata> modificheSubList = new ArrayList<ModificaMovimentoGestioneEntrata>();
 			
 			for(SubAccertamento sub : model.getListaSubaccertamenti()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					modificheSubList = sub.getListaModificheMovimentoGestioneEntrata();
 				}
 			}
@@ -808,13 +902,16 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			}
 			spesaSub.setTipoMovimento("SAC");
 			
+			//SIAC-8051
+			settaDatiReimputazioneDalModel(spesaSub);
+			
 			
 			//Inserisco nell impegno che andra nel servizio aggiorna impegno
 			modificheSubList.add(spesaSub);
 			
 			List<SubAccertamento> nuovaSubImpegnoList = new ArrayList<SubAccertamento>();
 			for(SubAccertamento sub : model.getListaSubaccertamenti()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					sub.setListaModificheMovimentoGestioneEntrata(modificheSubList);
 					sub.setImportoAttuale(importoCambiatoSub);
 					
@@ -842,7 +939,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			AggiornaAccertamento requestAggiorna = convertiModelPerChiamataServiziInserisciAggiornaModifiche(true);
 			
 			//invoco il servizio:
-			AggiornaAccertamentoResponse response = movimentoGestionService.aggiornaAccertamento(requestAggiorna );
+			AggiornaAccertamentoResponse response = movimentoGestioneFinService.aggiornaAccertamento(requestAggiorna );
 			
 			//setto prosegui con warning a false:
 			model.setProseguiConWarning(false);
@@ -902,6 +999,244 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 		return GOTO_ELENCO_MODIFICHE;
 	}
 
+	//SIAC-7349 Inizio SR180 CM 08/04/2020 aggiunto controllo su importo collegamento
+	
+
+	protected boolean checkListaCollegataImpegni(ModificaMovimentoGestioneEntrata spesa, List<Errore> listaErrori) {
+			
+		if(spesa.isReimputazione() &&  model.getMovimentoSpesaModel().getAnnoReimputazione() != null 
+				&& model.getMovimentoSpesaModel().getAnnoReimputazione() > 0){
+			//SIAC-8140 si usa 
+			List<ModificaMovimentoGestioneSpesaCollegata> listaModificheReimputazione = getListaModificheSpeseCollegata();
+			
+			if(CollectionUtils.isNotEmpty(listaModificheReimputazione)){
+				//inizializziamo a 0 la variabile che dovra' contenere la somma degli importi collegabili inseriti e totali della tabella
+				
+				BigDecimal sommaImportiCollegabiliPrioritariePerAnnoSelezionato = new BigDecimal(0);
+				BigDecimal sommaImportiCollegabiliPrioritarieMaxCollegabilePerAnnoSelezionato = new BigDecimal(0);
+				
+				BigDecimal sommaImportiMaxCollegabilePerAnnoSelezionato = new BigDecimal(0);
+				BigDecimal sommaImportoCollegamentoPerAnnoSelezionato = new BigDecimal(0);
+				
+				
+				BigDecimal sommaImportoCollegamentoPerAnnoNONPrioritaireSelezionato = new BigDecimal(0);
+				
+				
+				int countNumeroPrioritariePerAnnoSelezionato=0;
+				int countNumeroPrioritarieAll=0;
+				
+				int numeroReimputazionePerAnnoSelezionato=0;
+				
+				int numeroReimputazionePerALLAnnualita=0;
+				int numeroReimputazionePerDiffAnnualita=0;
+			 
+				
+				int countErrorCollegabile=0;
+				int countErrorDifferimneto=0;
+				
+				
+				
+				BigDecimal sommaImportiMaxCollegabilePerAnniNonSelezionato = new BigDecimal(0);
+				BigDecimal sommaImportoCollegamentoPerAnniNonSelezionato = new BigDecimal(0);
+				
+				//CONTABILIA-260 - Bug fix per test 20.17 e 20.30 - SIAC-7349 Inizio CM 08/07/2020
+				boolean isImportoCollegamentoNegativo = false;
+				//CONTABILIA-260 - Bug fix per test 20.17 e 20.30 - SIAC-7349 Fine CM 08/07/2020
+				
+				//Primo controllo: L'importo inserito nel campo aperto "Importo Collegato" sia minore dell'importo "Massimo Collegabile"
+				for(int i=0; i<listaModificheReimputazione.size(); i++) {
+					
+					BigDecimal importoMaxCollegabile = listaModificheReimputazione.get(i).getImportoMaxCollegabile();
+					
+					//CONTABILIA-260 - Bug fix per test 20.17 e 20.30 - SIAC-7349 Inizio CM 08/07/2020
+					if(listaModificheReimputazione.get(i).getImportoCollegamento().compareTo(BigDecimal.ZERO) < 0) {
+						isImportoCollegamentoNegativo = true;
+					}
+					//CONTABILIA-260 - Bug fix per test 20.17 e 20.30 - SIAC-7349 Fine CM 08/07/2020
+					
+					if (spesa.getTipoModificaMovimentoGestione().equals(listaModificheReimputazione.get(i).getModificaMovimentoGestioneSpesa().getTipoModificaMovimentoGestione())
+							&& listaModificheReimputazione.get(i).getImportoMaxCollegabile().compareTo(BigDecimal.ZERO) > 0
+							) {
+					
+						if (!spesa.getAnnoReimputazione().equals(listaModificheReimputazione.get(i).getModificaMovimentoGestioneSpesa().getAnnoReimputazione())){
+							numeroReimputazionePerDiffAnnualita++;
+						}
+						
+						numeroReimputazionePerALLAnnualita++;
+						
+						if(!spesa.getAnnoReimputazione().equals(listaModificheReimputazione.get(i).getModificaMovimentoGestioneSpesa().getAnnoReimputazione())) {	
+							sommaImportoCollegamentoPerAnniNonSelezionato = sommaImportoCollegamentoPerAnniNonSelezionato.add(listaModificheReimputazione.get(i).getImportoCollegamento());
+							sommaImportiMaxCollegabilePerAnniNonSelezionato = sommaImportiMaxCollegabilePerAnniNonSelezionato.add(importoMaxCollegabile);
+						}
+						
+						if (listaModificheReimputazione.get(i).isVincoloEsplicito()   ) {
+							countNumeroPrioritarieAll++;	
+						}
+					
+						if(spesa.getAnnoReimputazione().equals(listaModificheReimputazione.get(i).getModificaMovimentoGestioneSpesa().getAnnoReimputazione())) {		
+							
+							if(listaModificheReimputazione.get(i).getImportoCollegamento().compareTo(listaModificheReimputazione.get(i).getImportoMaxCollegabile()) > 0 ) {
+							   	countErrorCollegabile++;
+							}
+							if(listaModificheReimputazione.get(i).getImportoCollegamento().compareTo(spesa.getImportoOld().abs()) > 0 ) {
+								countErrorDifferimneto++;
+							}
+							
+							numeroReimputazionePerAnnoSelezionato++;
+							sommaImportiMaxCollegabilePerAnnoSelezionato =sommaImportiMaxCollegabilePerAnnoSelezionato.add(listaModificheReimputazione.get(i).getImportoMaxCollegabile());
+							sommaImportoCollegamentoPerAnnoSelezionato =sommaImportoCollegamentoPerAnnoSelezionato.add(listaModificheReimputazione.get(i).getImportoCollegamento());
+							
+							if (listaModificheReimputazione.get(i).isVincoloEsplicito()) {
+								countNumeroPrioritariePerAnnoSelezionato++;
+								sommaImportiCollegabiliPrioritariePerAnnoSelezionato = sommaImportiCollegabiliPrioritariePerAnnoSelezionato.add(listaModificheReimputazione.get(i).getImportoCollegamento());
+								sommaImportiCollegabiliPrioritarieMaxCollegabilePerAnnoSelezionato = sommaImportiCollegabiliPrioritarieMaxCollegabilePerAnnoSelezionato.add(listaModificheReimputazione.get(i).getImportoMaxCollegabile());
+							}
+							
+						} 
+					} 
+					
+					
+					if (!spesa.getTipoModificaMovimentoGestione().equals(listaModificheReimputazione.get(i).getModificaMovimentoGestioneSpesa().getTipoModificaMovimentoGestione())
+							|| !spesa.getAnnoReimputazione().equals(listaModificheReimputazione.get(i).getModificaMovimentoGestioneSpesa().getAnnoReimputazione())
+							) {
+					
+							listaModificheReimputazione.get(i).setImportoCollegamento(BigDecimal.ZERO);
+					}
+					
+					
+				}
+				
+				if(numeroReimputazionePerALLAnnualita == numeroReimputazionePerDiffAnnualita	
+						&& sommaImportiMaxCollegabilePerAnniNonSelezionato.subtract(sommaImportoCollegamentoPerAnniNonSelezionato).compareTo(BigDecimal.ZERO)	 !=0	
+						) {
+					listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("Si sta tentando di differire una quota di accertamento che non fornisce copertura ad alcuna reimputazione di spesa: Esaurire prima tutte le righe di differimento di spesa"));
+				}else {
+				
+					sommaImportoCollegamentoPerAnnoNONPrioritaireSelezionato = sommaImportoCollegamentoPerAnnoSelezionato.subtract(sommaImportiCollegabiliPrioritariePerAnnoSelezionato);
+					
+					//controllo di esaurimento importo differimento spalmati anche su tutti gli anni 07/05/2020
+					if ((spesa.getImportoOld().abs().compareTo(sommaImportiMaxCollegabilePerAnnoSelezionato) > 0
+							&& spesa.getImportoOld().abs().compareTo(sommaImportoCollegamentoPerAnnoSelezionato)>0
+							//&& numeroReimputazionePerALLAnnualita > numeroReimputazionePerAnnoSelezionato 
+							&& sommaImportiMaxCollegabilePerAnniNonSelezionato.subtract(sommaImportoCollegamentoPerAnniNonSelezionato).compareTo(BigDecimal.ZERO)	 !=0 ) 
+						|| (spesa.getImportoOld().abs().compareTo(sommaImportiMaxCollegabilePerAnnoSelezionato)>=0 
+							&& sommaImportoCollegamentoPerAnnoSelezionato.compareTo(sommaImportiMaxCollegabilePerAnnoSelezionato)<0)) {
+						
+						listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("Si sta tentando di differire una quota di accertamento che non fornisce copertura ad alcuna reimputazione di spesa."));
+					}
+					
+					
+					//CM 01/07/2020 - commentato perch. unito al controllo sopra per non far duplicare il messaggio di errore a seguito delle correzioni ai messaggi di errore date da Pietro Gambino
+//					if (spesa.getImportoOld().abs().compareTo(sommaImportiMaxCollegabilePerAnnoSelezionato)>=0 && 
+//							sommaImportoCollegamentoPerAnnoSelezionato.compareTo(sommaImportiMaxCollegabilePerAnnoSelezionato)<0 ) {
+//						listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("Impossibile procedere: Si sta tentando di differire una quota di accertamento che non fornisce copertura ad alcuna reimputazione di spesa."));
+//					}
+					
+					//CONTABILIA-260 - Bug fix per test 20.17 e 20.30 - SIAC-7349 Inizio CM 08/07/2020
+					if(isImportoCollegamentoNegativo) {
+					   	listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("'Importo collegamento' deve essere positivo"));
+					}
+					//CONTABILIA-260 - Bug fix per test 20.17 e 20.30 - SIAC-7349 Fine CM 08/07/2020
+					
+					if(countErrorCollegabile >0) {
+					   	listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("'Importo collegamento' deve essere minore o uguale dell'importo 'Importo max. collegabile' per l'anno "+ spesa.getAnnoReimputazione()));
+					}
+					
+					if(countErrorDifferimneto > 0 && numeroReimputazionePerAnnoSelezionato == 1) {
+						listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("La somma dei collegamenti impostati supera l'importo della modifica di entrata per l'anno "+ spesa.getAnnoReimputazione()));
+					}
+						
+					if ((sommaImportoCollegamentoPerAnnoSelezionato.compareTo(BigDecimal.ZERO) == 0 && sommaImportiMaxCollegabilePerAnniNonSelezionato.subtract(sommaImportoCollegamentoPerAnniNonSelezionato).compareTo(BigDecimal.ZERO)	 !=0)
+							|| (sommaImportoCollegamentoPerAnnoSelezionato.compareTo(BigDecimal.ZERO) == 0 && spesa.getImportoOld().abs().compareTo(BigDecimal.ZERO)!=0 && sommaImportiMaxCollegabilePerAnnoSelezionato.compareTo(BigDecimal.ZERO)!=0 )
+							) {
+						
+						listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("Si sta tentando di differire una quota di accertamento senza fornire copertura ad alcuna reimputazione di spesa: Valorizzare 'Importo collegamento' per un anno di Reimputazioni di Spesa "));
+					}
+					
+					if ( sommaImportoCollegamentoPerAnnoSelezionato.compareTo(spesa.getImportoOld().abs()) > 0) {
+						if (numeroReimputazionePerAnnoSelezionato > 1 )
+							listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("La somma dei collegamenti impostati supera l'importo della modifica di entrata per l'anno " + spesa.getAnnoReimputazione()));
+					}
+	
+					//Controllo sulle righe prioritarie
+					int countmsgErrorPri=0;
+					int countmsgErrorNonPri=0;
+					int countmsgErrorNumeroPrioritarieAll=0;
+					int countmsgErrorPrioritariePerAnnoSelezionato=0;
+					for(int z=0; z<listaModificheReimputazione.size(); z++) {
+						
+						if (spesa.getTipoModificaMovimentoGestione().equals(listaModificheReimputazione.get(z).getModificaMovimentoGestioneSpesa().getTipoModificaMovimentoGestione())
+								&& listaModificheReimputazione.get(z).getImportoMaxCollegabile().compareTo(BigDecimal.ZERO) > 0
+								) {
+
+						
+								if (listaModificheReimputazione.get(z).getImportoCollegamento() != null && listaModificheReimputazione.get(z).getImportoCollegamento().compareTo(BigDecimal.ZERO) > 0  
+										&& spesa.getTipoModificaMovimentoGestione().equals(listaModificheReimputazione.get(z).getModificaMovimentoGestioneSpesa().getTipoModificaMovimentoGestione())
+										){
+									//tratto righe non vincolate
+									if ( !listaModificheReimputazione.get(z).isVincoloEsplicito()   ) {
+										if ( countNumeroPrioritarieAll ==0 ) {
+											if( spesa.getImportoOld().abs().compareTo(sommaImportiMaxCollegabilePerAnnoSelezionato) <= 0 &&
+													spesa.getImportoOld().abs().compareTo(sommaImportoCollegamentoPerAnnoSelezionato) >0 ) {
+											
+											countmsgErrorNonPri++;
+											}
+										}
+										
+										if ( countNumeroPrioritarieAll > 0 ) {
+											if( spesa.getImportoOld().abs().compareTo(sommaImportiCollegabiliPrioritarieMaxCollegabilePerAnnoSelezionato) <= 0 &&
+												spesa.getImportoOld().abs().compareTo(sommaImportiCollegabiliPrioritariePerAnnoSelezionato) >0 ) {
+											countmsgErrorPri++;
+											}
+											countmsgErrorNumeroPrioritarieAll++;
+										}
+									}
+									
+									//tratto righe prioritarie
+									if ( listaModificheReimputazione.get(z).isVincoloEsplicito() && countNumeroPrioritarieAll >1  && spesa.getTipoModificaMovimentoGestione().equals(listaModificheReimputazione.get(z).getModificaMovimentoGestioneSpesa().getTipoModificaMovimentoGestione())) {
+										if (   countNumeroPrioritariePerAnnoSelezionato < numeroReimputazionePerAnnoSelezionato && 
+												sommaImportoCollegamentoPerAnnoNONPrioritaireSelezionato.compareTo(BigDecimal.ZERO) != 0  ) {
+											countmsgErrorPrioritariePerAnnoSelezionato++;
+										}
+										if ( countNumeroPrioritariePerAnnoSelezionato == numeroReimputazionePerAnnoSelezionato) {
+											if( spesa.getImportoOld().abs().compareTo(sommaImportiCollegabiliPrioritarieMaxCollegabilePerAnnoSelezionato) <= 0 &&
+													spesa.getImportoOld().abs().compareTo(sommaImportiCollegabiliPrioritariePerAnnoSelezionato) >0 ) {
+												countmsgErrorPri++;
+											}
+										}
+									}
+								}
+							}
+						}
+						//Messsaggi in presenza di righe prioritarie
+						if (countmsgErrorNumeroPrioritarieAll > 0 ||  countmsgErrorPrioritariePerAnnoSelezionato >0){
+							if(sommaImportiCollegabiliPrioritariePerAnnoSelezionato.compareTo(sommaImportiCollegabiliPrioritarieMaxCollegabilePerAnnoSelezionato) != 0) {
+								if (countNumeroPrioritarieAll==1  || countNumeroPrioritariePerAnnoSelezionato==1){
+									 listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("E' stato valorizzato l'importo collegamento di una modifica di impegno non esplicitamente in vincolo senza prima fornire coperture alle modifiche di impegno in vincolo esplicito con il corrente accertamento. Esaurire prima l'importo massimo collegabile della riga 'prioritaria' (Evidenziata)"));
+								}else {
+									listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("E' stato valorizzato l'importo collegamento di una modifica di impegno non esplicitamente in vincolo senza prima fornire coperture alle modifiche di impegno in vincolo esplicito con il corrente accertamento. Esaurire prima l'importo massimo collegabile delle righe 'prioritarie' (Evidenziate)"));	
+								}
+							}
+						}
+						if(countmsgErrorPri>0) {
+							listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("E' necessario esaurire l'importo Massimo Collegabile di tutte le righe 'prioritarie' (Evidenziate)"));
+						}
+						if(countmsgErrorNonPri>0) {
+							listaErrori.add(ErroreCore.IMPORTI_DA_VALORIZZARE.getErrore("E' necessario esaurire l'importo Massimo Collegabile di tutte le righe"));
+						}
+					
+					//fine controlli	
+				}
+			}
+		}
+		if (listaErrori != null && ! listaErrori.isEmpty()) {
+			return true;
+		}else {
+			return false;	
+		}
+	}
+		//SIAC-7349 Fine SR180 CM 08/04/2020 
+
 	/**
 	 * @param listaErrori
 	 */
@@ -924,7 +1259,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 		BigDecimal importoAttualeSub = new BigDecimal(0);
 
 		for(SubAccertamento sub : model.getListaSubaccertamenti()){
-			if(getSubSelected().equals(String.valueOf(sub.getNumero()))){
+			if(getSubSelected().equals(String.valueOf(sub.getNumeroBigDecimal()))){
 				importoAttualeSub = sub.getImportoAttuale();
 				setImportoAttualeSubImpegno(convertiBigDecimalToImporto(importoAttualeSub));
 				model.setImportoAttualeSubImpegnoMod(convertiBigDecimalToImporto(importoAttualeSub));
@@ -1011,18 +1346,18 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 					
 		for(SubAccertamento sub : model.getListaSubaccertamenti()){
 		
-			if(getSubSelected().equals(String.valueOf(sub.getNumero()))){
+			if(getSubSelected().equals(String.valueOf(sub.getNumeroBigDecimal()))){
 				setImportoAttualeSubImpegno(convertiBigDecimalToImporto(sub.getImportoAttuale()));
-				setNumeroSubImpegno(String.valueOf(sub.getNumero()));
+				setNumeroSubImpegno(String.valueOf(sub.getNumeroBigDecimal()));
 				model.setImportoAttualeSubImpegnoMod(convertiBigDecimalToImporto(sub.getImportoAttuale()));
-				model.setNumeroSubImpegnoMod(String.valueOf(sub.getNumero()));
+				model.setNumeroSubImpegnoMod(String.valueOf(sub.getNumeroBigDecimal()));
 				
 				setUidSubSelected(sub.getUid());
 				
 				BigDecimal importoAttualeSubImpegno = sub.getImportoAttuale();
 				minImportoSubApp = new BigDecimal(0).subtract(importoAttualeSubImpegno);
 			
-				if(sub.getAnnoMovimento() < Integer.valueOf(sessionHandler.getAnnoEsercizio())){
+				if(sub.getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
 					maxImportoSubApp = sub.getImportoAttuale().subtract(importoAttualeSubImpegno);
 				} else if(sub.isFlagDaRiaccertamento()){
 					maxImportoSubApp = sub.getImportoAttuale().subtract(importoAttualeSubImpegno);
@@ -1117,9 +1452,10 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 		}
 		
 		BigDecimal importoDiInput = convertiImportoToBigDecimal(importoImpegnoModImp);
+
 		boolean isRORDaMantenere = CODICE_MOTIVO_ROR_MANTENERE.equals(StringUtils.defaultIfBlank(getIdTipoMotivo(), ""));
 		
-		boolean importoMinoreDelMinimoAmmissibile = importoDiInput.compareTo(minImportoImpegnoApp)<0;
+//		boolean importoMinoreDelMinimoAmmissibile = importoDiInput.compareTo(minImportoImpegnoApp)<0;
 		boolean importoZero = importoDiInput.compareTo(BigDecimal.ZERO)==0;
 		
 		if(isRORDaMantenere && !importoZero){
@@ -1127,24 +1463,36 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
 		}
 
-		if(!isRORDaMantenere && (importoMinoreDelMinimoAmmissibile|| importoZero)){
-			listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("minimo"));
-			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
-		}
+		//SIAC-7349 CONTABILIA-257 01/07/2020 CM commentata e aggiunta nel metodo controlloImportoLimiteInferiore per bug fix
+//		if(!isRORDaMantenere && (importoMinoreDelMinimoAmmissibile|| importoZero)){
+//				listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("minimo"));
+//				model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+//		}
 		
 		//SIAC-6586
-		
 
 		//Jira SIAC-3438
-		if(!model.isFlagSuperioreTreAnni() && importoDiInput.compareTo(maxImportoImpegnoApp) >0 && !model.isProseguiConWarningModificaPositivaAccertamento()){ 
-			Errore erroreMax = ErroreFin.RANGE_NON_VALIDO.getErrore("massimo");
-			listaWarning.add(erroreMax);
-			
-			addPersistentActionWarning(erroreMax.getCodice() + " - " + "Superamento importo massimo consentito");
-			
-			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
-			model.setProseguiConWarningModificaPositivaAccertamento(true);
-					
+//		if(!model.isFlagSuperioreTreAnni() && importoDiInput.compareTo(maxImportoImpegnoApp) >0 && !model.isProseguiConWarningModificaPositivaAccertamento()){ 
+//			Errore erroreMax = ErroreFin.RANGE_NON_VALIDO.getErrore("massimo");
+//			listaWarning.add(erroreMax);
+//			
+//			addPersistentActionWarning(erroreMax.getCodice() + " - " + "Superamento importo massimo consentito");
+//			
+//			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+//			model.setProseguiConWarningModificaPositivaAccertamento(true);
+//					
+//		}
+		//SIAC-8553
+		//controlliImportoModifica(importoDiInput, listaWarning);
+		//issue-11: su accertamento residuo non deve controllare il tetto massimo
+		boolean residuo = model.getAccertamentoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio();
+		//issue-12: non dare il warning se il capitolo ha disponibilità negativa e importo in input (la modifica che sto inserendo) è negativa
+		boolean	disponibCapitoloNegativa = model.getAccertamentoInAggiornamento().getAnnoMovimento() == sessionHandler.getAnnoBilancio() &&
+										   model.getAccertamentoInAggiornamento().getCapitoloEntrataGestione().getImportiCapitolo().getDisponibilitaAccertareAnno1().signum() == -1 && 
+										   importoDiInput.signum() == -1?true:false;
+				
+		if (!residuo && !disponibCapitoloNegativa) {	
+			controlliImportoModifica(importoDiInput, listaWarning);
 		}
 		
 		//Controllo modifiche solo negative per RIU e RIAC
@@ -1163,8 +1511,133 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
 			model.getStep1Model().setSaltaControlloLegamiStoricizzati(true);
 		}
+		
+		
 	}
+	
+	//SIAC-8553
+	private void controlliImportoModifica(BigDecimal importoDiInput, List<Errore> listaWarning) {
+		
+		boolean throwWarning = controlloImportoModificaSuMassimoConsentito(importoDiInput, listaWarning);
 
+		throwWarning = controlloImportoModificaSuDisponibiltaAccertareCapitolo(importoDiInput, listaWarning) || throwWarning;
+		
+		
+		if(throwWarning) {
+			// devo mostrare il warning
+			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+			model.setProseguiConWarningModificaPositivaAccertamento(true);
+		}
+	}
+	
+	private boolean controlloImportoModificaSuMassimoConsentito(BigDecimal importoDiInput, List<Errore> listaWarning) {
+		//Jira SIAC-3438
+		if(!model.isFlagSuperioreTreAnni() && importoDiInput.compareTo(maxImportoImpegnoApp) > 0 && !model.isProseguiConWarningModificaPositivaAccertamento()){ 
+			Errore erroreMax = new Errore(ErroreFin.RANGE_NON_VALIDO.getCodice(), "Superamento importo massimo consentito");
+			listaWarning.add(erroreMax);
+			addPersistentActionWarningFin(erroreMax);
+			return true;
+		}
+		return false;
+	}
+	
+	//SIAC-7349 CONTABILIA-257 01/07/2020 CM implementato per bug fix limite inferiore di importo modifica - INIZIO
+	private void controlloImportoLimiteInferiore(ModificaMovimentoGestioneEntrata spesa, List<Errore> listaErrori, List<Errore> listaWarning) {
+
+		BigDecimal importoDiInput = convertiImportoToBigDecimal(importoImpegnoModImp);
+		boolean isRORDaMantenere = CODICE_MOTIVO_ROR_MANTENERE.equals(StringUtils.defaultIfBlank(getIdTipoMotivo(), ""));
+		
+		boolean importoMinoreDelMinimoAmmissibile = importoDiInput.compareTo(minImportoImpegnoApp)<0;
+		boolean importoZero = importoDiInput.compareTo(BigDecimal.ZERO)==0;
+
+		if(!isRORDaMantenere && (importoMinoreDelMinimoAmmissibile || importoZero) && verificaLimiteInferiore(spesa, listaErrori)){
+			listaErrori.add(ErroreFin.RANGE_NON_VALIDO.getErrore("minimo"));
+			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
+		}
+	}
+	
+	private boolean verificaLimiteInferiore(ModificaMovimentoGestioneEntrata spesa, List<Errore> listaErrori) {
+		final String methodName="verificaLimiteInferiore";
+		BigDecimal valoreModifica = spesa.getImportoOld();
+		Boolean isSpesaReimputazione = WebAppConstants.Si.equals(model.getMovimentoSpesaModel().getReimputazione()) ? true : false;
+		List<ModificaMovimentoGestioneSpesaCollegata> listaSpeseCollegate = new ArrayList<ModificaMovimentoGestioneSpesaCollegata>();
+		boolean esitoVerifica = false;
+		BigDecimal sommatoriaVincoliPerImpegno = BigDecimal.ZERO;
+		BigDecimal nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno = BigDecimal.ZERO;
+//		BigDecimal dispUtilizzabileIniziale = BigDecimal.ZERO;
+		
+			if (valoreModifica.compareTo(BigDecimal.ZERO) < 0) {
+				// eseguo il controllo sul disp a incassare solo se ricevo una modifica negativa:
+				BigDecimal dispUtilizzabileAccOld = model.getAccertamentoInAggiornamento().getImportoUtilizzabile();
+				
+				BigDecimal importoUtilizzabileNew = dispUtilizzabileAccOld.subtract(valoreModifica);
+				
+				ConsultaVincoliAccertamento reqConsVincoli = new ConsultaVincoliAccertamento();
+				reqConsVincoli.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
+				reqConsVincoli.setAnnoMovimento(Integer.valueOf(model.getAccertamentoInAggiornamento().getAnnoMovimento()));
+				reqConsVincoli.setEnte(sessionHandler.getEnte());
+				reqConsVincoli.setRichiedente(sessionHandler.getRichiedente());
+				reqConsVincoli.setNumeroMovimento(model.getAccertamentoInAggiornamento().getNumeroBigDecimal());
+				ConsultaVincoliAccertamentoResponse respVincoli = movimentoGestioneFinService.consultaVincoliAccertamento(reqConsVincoli);
+				
+				List<VincoloAccertamento> vincoli = respVincoli.getVincoli();
+	
+				if (vincoli != null && vincoli.size() > 0) {
+	
+					if(isSpesaReimputazione != null && isSpesaReimputazione.equals(true)){
+						listaSpeseCollegate = getListaModificheSpeseCollegata();				
+					}
+					StringBuilder logString = new StringBuilder();
+					log.info(methodName, "importo utilizzabile old: [" + dispUtilizzabileAccOld + "] - valore modifica [" + valoreModifica + "] = importoUtilizzabileNew [" + importoUtilizzabileNew + "]");
+					for (VincoloAccertamento it : vincoli) {		
+						if(it.getImpegno() != null) {
+							sommatoriaVincoliPerImpegno = calcolaSommatoriaImportiCollegamentoPerImpegno(it.getImpegno(), listaSpeseCollegate);	
+							
+							nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno = it.getImporto().add(sommatoriaVincoliPerImpegno);
+							//dispUtilizzabileIniziale = nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno.subtract(dispUtilizzabileAccOld);
+							boolean importoUtilizzabileNewMaggioreDiNuovaDispAdUtilizzare =  importoUtilizzabileNew.compareTo(nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno) < 0;
+							boolean sommatoriaVincoliPerImpegnoMaggioreDiZero = sommatoriaVincoliPerImpegno.compareTo(BigDecimal.ZERO) > 0;
+							logString.append(" SommatoriaImportiCollegamentoPerImpegno [ ").append(sommatoriaVincoliPerImpegno).append(" ] >0?  ").append((sommatoriaVincoliPerImpegno.compareTo(BigDecimal.ZERO) > 0)
+									).append("] = importoVincolo [").append(it.getImporto()).append("]").append(" sommatoriaImportiCollegamentoPerImpegno [ ").append(sommatoriaVincoliPerImpegno).append(" ]  = "
+											).append(". nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno[ ").append(nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno).append( " ] ."
+													).append("importoUtilizzabileNew [").append(importoUtilizzabileNew).append("] < nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno[ ").append(nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno).append( " ]? "
+													).append(importoUtilizzabileNewMaggioreDiNuovaDispAdUtilizzare).append(". La sommatoria dei vincoli per impeno e' maggiore di zero? ").append(sommatoriaVincoliPerImpegnoMaggioreDiZero);
+							
+							log.info(methodName, logString);
+							if ((sommatoriaVincoliPerImpegno.compareTo(BigDecimal.ZERO) > 0)  && (importoUtilizzabileNew.compareTo(nuovaDisponibilitaUtilizzabilePerVincoloPerImpegno) < 0)) {
+//							if (dispUtilizzabileIniziale.compareTo(BigDecimal.ZERO) < 0) {
+								esitoVerifica = true;
+								log.info(methodName, "Controllo FE non superato");
+							}
+						}
+					}
+				}
+			}
+		return esitoVerifica;
+	}
+	
+	
+	private BigDecimal calcolaSommatoriaImportiCollegamentoPerImpegno(Impegno i, List<ModificaMovimentoGestioneSpesaCollegata> listaSpeseCollegate) {
+		
+		BigDecimal sommatoria = BigDecimal.ZERO;
+		
+		if(listaSpeseCollegate != null && !listaSpeseCollegate.isEmpty()){
+			for(ModificaMovimentoGestioneSpesaCollegata mmge : listaSpeseCollegate){
+				if(mmge.isVincoloEsplicito() 
+					&& mmge.getModificaMovimentoGestioneSpesa() != null 
+					&& mmge.getModificaMovimentoGestioneSpesa().getImpegno()!= null 
+					&& !mmge.getModificaMovimentoGestioneSpesa().isElaboraRorReanno() 
+					&& i.getUid() == mmge.getModificaMovimentoGestioneSpesa().getImpegno().getUid() ){
+					
+						sommatoria = sommatoria.add(mmge.getImportoCollegamento());											
+				}
+			}
+		}	
+		return sommatoria;
+	}
+	
+	//SIAC-7349 CONTABILIA-257 01/07/2020 CM implementato per bug fix limite inferiore di importo modifica - FINE
+	
 	/**
 	 * @param listaErrori
 	 */
@@ -1330,7 +1803,7 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 			return INPUT;
 		}
 	}
-
+	
 	/**
 	 * @param listaErrori
 	 * @return
@@ -1631,7 +2104,6 @@ public class InserisciModificaMovimentoSpesaAccImportoAction extends ActionKeyAg
 	public void setUidSubSelected(Integer uidSubSelected) {
 		this.uidSubSelected = uidSubSelected;
 	}
-
 
 	
 }

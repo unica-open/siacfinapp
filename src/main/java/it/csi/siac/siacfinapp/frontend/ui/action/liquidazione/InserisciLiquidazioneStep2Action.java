@@ -12,13 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siacbilser.model.SiopeSpesa;
+import it.csi.siac.siaccommon.util.collections.CollectionUtil;
+import it.csi.siac.siaccommon.util.collections.Filter;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.Esito;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
@@ -26,12 +29,15 @@ import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
+import it.csi.siac.siacfinser.frontend.webservice.OilService;
+import it.csi.siac.siacfinser.frontend.webservice.msg.AccreditoTipoOilIsPagoPA;
+import it.csi.siac.siacfinser.frontend.webservice.msg.AccreditoTipoOilIsPagoPAResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceLiquidazione;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceLiquidazioneResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSoggettoPerChiaveResponse;
-import it.csi.siac.siacfinser.model.ContoTesoreria;
+import it.csi.siac.siacfin2ser.model.ContoTesoreria;
 import it.csi.siac.siacfinser.model.Distinta;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubImpegno;
@@ -61,6 +67,9 @@ public class InserisciLiquidazioneStep2Action extends WizardInserisciLiquidazion
 	private static final String TRX = "trx";
 	private static final String SALVA = "salva";
 	private static final String PROCEED = "proceed";
+	//SIAC-8853
+	@Autowired 
+	private transient OilService oilService;
 	
 	
 	public boolean isAbilitatoAggiornamentoCampiSiopePlus(){
@@ -163,9 +172,6 @@ public class InserisciLiquidazioneStep2Action extends WizardInserisciLiquidazion
 				model.setImpegno(ricaricatoImp);
 			}
 			
-			//settiamo eventuali mutui:
-			settaVociMutuoNelModel();
-			
 			//imposta disp liquidare:
 			impostaDisponibilitaLiquidare();
 			
@@ -235,14 +241,14 @@ public class InserisciLiquidazioneStep2Action extends WizardInserisciLiquidazion
 		
 		//SIAC-7159
 		//si invalida la Modalita Pagamento PagoPA
-		if(mps!=null && mps.getCodiceModalitaPagamento()!=null && "APA".equals(mps.getModalitaAccreditoSoggetto().getCodice())){
-//		if(mps!=null && mps.getModalitaAccreditoSoggetto()!=null && mps.getModalitaAccreditoSoggetto().getCodice()!=null && "APA".equals(mps.getModalitaAccreditoSoggetto().getCodice())){
+		//SIAC-8853
+		if(mps!=null && mps.getCodiceModalitaPagamento()!=null && checkModalitaPagamentoIsPagoPA(mps.getUid())){
 			listaErrori.add(it.csi.siac.siacfin2ser.model.errore.ErroreFin.MOD_PAGO_PA_NON_AMMESSA.getErrore(""));
 		}
 		
 		//CONTROLLIAMO CHE IL TIPO DI ACCREDITO DELLA MOD PAG SIA ACCETTABILE:
 		
-		if(mps!=null && mps.getModalitaAccreditoSoggetto()!=null && mps.getModalitaAccreditoSoggetto().getCodice()!=null && mps.getModalitaAccreditoSoggetto().getCodice().equals(Constanti.D_ACCREDITO_TIPO_CODE_Cessione_del_credito)){
+		if(mps!=null && mps.getModalitaAccreditoSoggetto()!=null && mps.getModalitaAccreditoSoggetto().getCodice()!=null && mps.getModalitaAccreditoSoggetto().getCodice().equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Cessione_del_credito)){
 			if(mps.getTipoAccredito().equals(TipoAccredito.CSC)){
 				listaErrori.add(ErroreFin.MOD_PAGAMENTO_STATO_CESSIONE.getErrore(""));
 			}else{
@@ -348,11 +354,11 @@ public class InserisciLiquidazioneStep2Action extends WizardInserisciLiquidazion
 		SubImpegno subImpegno = null;
 		
 		if(model.getImpegnoPerServizio()!=null && model.getImpegno()!=null){
-			BigDecimal codImpegnoModel = model.getImpegno().getNumero();
+			BigDecimal codImpegnoModel = model.getImpegno().getNumeroBigDecimal();
 			
 			if(model.getImpegno() instanceof SubImpegno)	{
 				for(int i = 0; i<impegno.getElencoSubImpegni().size();i++){
-					if(impegno.getElencoSubImpegni().get(i).getNumero().intValue()==codImpegnoModel.intValue()){
+					if(impegno.getElencoSubImpegni().get(i).getNumeroBigDecimal().intValue()==codImpegnoModel.intValue()){
 						subImpegno =impegno.getElencoSubImpegni().get(i);
 						break;
 					}
@@ -366,10 +372,6 @@ public class InserisciLiquidazioneStep2Action extends WizardInserisciLiquidazion
 			}
 			
 		}
-		
-		// jira 2031, non funziona il salva della voce di mutuo, nel ser ho verificato che non arriva la selezione
-		// e che si prende sempre la prima voce della lista
-		liquidazione.setNumeroMutuo(model.getNumeroMutuoPopup());
 		
 		liquidazione.setImpegno(impegno);
 		liquidazione.setSubImpegno(subImpegno);
@@ -397,7 +399,7 @@ public class InserisciLiquidazioneStep2Action extends WizardInserisciLiquidazion
 		liquidazione.setLiqManuale(model.getTipoConvalida());
 		// Jira 1976, in fase di inserimento di liquidazione da ordinativo si deve settare non il liqManuale ma il
 		// liqAutomatica a S
-		liquidazione.setLiqAutomatica(Constanti.LIQUIDAZIONE_LIQ_AUTOMATICA_NO);
+		liquidazione.setLiqAutomatica(CostantiFin.LIQUIDAZIONE_LIQ_AUTOMATICA_NO);
 		
 		liquidazione.setCodMissione(teSupport.getMissioneSelezionata());
 		liquidazione.setCodProgramma(teSupport.getProgrammaSelezionato());
@@ -433,6 +435,31 @@ public class InserisciLiquidazioneStep2Action extends WizardInserisciLiquidazion
 		return chiamaSalvaORichiediConferma();
 		
 	}	
+	
+	//SIAC-8853
+	private boolean checkModalitaPagamentoIsPagoPA(int uidModPag) {
+
+		ModalitaPagamentoSoggetto modalitaPagamentoSoggetto = 
+			CollectionUtil.findFirst(model.getListaModalitaPagamentoSoggetto(), new Filter<ModalitaPagamentoSoggetto>() {
+				@Override
+				public boolean isAcceptable(ModalitaPagamentoSoggetto source) {
+					return source.getUid() == uidModPag;
+				}
+			});
+		
+		//task-34
+		if(modalitaPagamentoSoggetto == null) {
+			return false;
+		}
+		
+		AccreditoTipoOilIsPagoPA req = model.creaRequestAccreditoTipoOilIsPagoPA();
+		logServiceRequest(req);
+		req.setCodiceAccreditoTipo(modalitaPagamentoSoggetto.getModalitaAccreditoSoggetto().getCodice());
+		AccreditoTipoOilIsPagoPAResponse res = oilService.accreditoTipoOilIsPagoPA(req);
+		logServiceResponse(res);
+
+		return res.isAccreditoTipoOilIsPagoPA();
+	}
 
 	//JIRA-SIAC-6688
 	private boolean checkImpegnoConImportoVincolato(Impegno impegno) {		
@@ -458,7 +485,10 @@ public class InserisciLiquidazioneStep2Action extends WizardInserisciLiquidazion
 					 ris = false;
 					 return ris;
 				 }
-			 }
+			 }else{//task-147
+             	 ris = false;
+             	 return ris;
+             }
 		 }
 		return ris; 
 	}

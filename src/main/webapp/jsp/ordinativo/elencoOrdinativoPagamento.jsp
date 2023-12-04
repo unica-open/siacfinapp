@@ -35,7 +35,8 @@ SPDX-License-Identifier: EUPL-1.2
 			<div class="contentPage"> 
 			
 			<!--  -->
-				<s:form id="mainForm" method="post" action="elencoOrdinativoPagamento.do">  
+				<%-- SIAC-7952 rimuovo .do dalla action --%>
+				<s:form id="mainForm" method="post" action="elencoOrdinativoPagamento">  
 
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 				<h3>Elenco ordinativi pagamento</h3>		
@@ -109,14 +110,16 @@ SPDX-License-Identifier: EUPL-1.2
 		    	<div class="btn-group">
 		    		<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
 		    		<ul class="dropdown-menu pull-right">
-                  	 	<s:url id="consultaUrl" action="consultaOrdinativoPagamento.do" escapeAmp="false">
+                  	 	<%-- task-131<s:url id="consultaUrl" action="consultaOrdinativoPagamento.do" escapeAmp="false"> --%>
+                  	 	<s:url var="consultaUrl" action="consultaOrdinativoPagamento.do" escapeAmp="false">
 			        		<s:param name="anno" value="%{#attr.ricercaOrdinativoPagamentoID.anno}" />
 			        		<s:param name="numero" value="%{#attr.ricercaOrdinativoPagamentoID.numero}" />			        				        	
 	                    </s:url>
 	                    
-		    			<s:url id="aggiornaUrl" action="gestioneOrdinativoPagamentoStep1.do" escapeAmp="false">
+		    			<s:url var="aggiornaUrl" action="gestioneOrdinativoPagamentoStep1.do" escapeAmp="false">
 			        		<s:param name="annoOrdinativo" value="%{#attr.ricercaOrdinativoPagamentoID.anno}" />
 			        		<s:param name="numeroOrdinativo" value="%{#attr.ricercaOrdinativoPagamentoID.numero}" />
+			        		<s:param name="forceReloadAgiornamentoOrdinativo" value="true" />
 	                    </s:url>
 		                    
 						<s:if test="isAbilitatoAggiorna(#attr.ricercaOrdinativoPagamentoID.codStatoOperativoOrdinativo)">
@@ -130,7 +133,7 @@ SPDX-License-Identifier: EUPL-1.2
 						</s:if>
 
 						<s:if test="#attr.ricercaOrdinativoPagamentoID.canAllegareReversali">
-	                  	 	<s:url id="collegaReversaliUrl" action="ricercaOrdinativoIncasso.do" escapeAmp="false">
+	                  	 	<s:url var="collegaReversaliUrl" action="ricercaOrdinativoIncasso.do" escapeAmp="false">
 				        		<s:param name="uidOrdCollegaReversali" value="%{#attr.ricercaOrdinativoPagamentoID.uid}" />
 		                    </s:url>
 						

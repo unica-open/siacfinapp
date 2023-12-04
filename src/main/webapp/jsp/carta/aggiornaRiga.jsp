@@ -28,8 +28,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage">    
-		  
-		<s:form id="aggiornaRigaDaMovimento" action="aggiornaRigaDaMovimento.do" method="post">  
+		<%-- SIAC-7952 rimuovo .do dalla action --%>  
+		<s:form id="aggiornaRigaDaMovimento" action="aggiornaRigaDaMovimento" method="post">  
 			<!--#include virtual="include/alertErrorSuccess.html" -->
 			<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 			<!--<h3>Carta 2014/23568 - riga n. 9999</h3> -->
@@ -114,6 +114,10 @@ SPDX-License-Identifier: EUPL-1.2
 							</div>
 						</div>
 						
+						<s:set var="resedeAction" value="%{'aggiornaRigaDaMovimento_resede'}" />	          
+						<s:set var="caricaTitoloModPagAction" value="%{'aggiornaRigaDaMovimento_caricaTitoloModPag'}" />	          
+						<s:set var="remodpagamentoAction" value="%{'aggiornaRigaDaMovimento_remodpagamento'}" />	          
+						
 						<div class="accordion" id="soggetto2">
 							<div class="accordion-group">
 							  <div class="accordion-heading">    
@@ -150,6 +154,9 @@ SPDX-License-Identifier: EUPL-1.2
 							</div>
 						</div>
 						
+						<s:set var="confermaImpegnoCartaAction" value="%{'aggiornaRigaDaMovimento_confermaImpegnoCarta'}" />			
+            			<s:set var="pulisciRicercaImpegnoAction" value="%{'aggiornaRigaDaMovimento_pulisciRicercaImpegno'}" />	          
+            			<s:set var="ricercaGuidataImpegnoAction" value="%{'aggiornaRigaDaMovimento_ricercaGuidataImpegno'}" />	          
 						<s:include value="/jsp/carta/include/modalImpegnoCarta.jsp" />
 						
 						<div class="accordion" id="accordionRigaCC">
@@ -179,17 +186,24 @@ SPDX-License-Identifier: EUPL-1.2
 				</div>
 			</div>
 			  
-			<!--#include virtual="include/modal.html" --> 
-			<s:include value="/jsp/carta/include/modalRicercaDocumentoCarta.jsp" />
+		   <!--#include virtual="include/modal.html" -->
+		   <s:set var="confermaCompGuidataDocumentoAction" value="%{'aggiornaRigaDaMovimento_confermaCompGuidataDocumento'}" />			            			 
+		   <s:set var="pulisciRicercaDocumentoAction" value="%{'aggiornaRigaDaMovimento_pulisciRicercaDocumento'}" />	          
+           <s:set var="ricercaGuidataDocumentoAction" value="%{'aggiornaRigaDaMovimento_ricercaGuidataDocumento'}" />	          
+           <s:include value="/jsp/carta/include/modalRicercaDocumentoCarta.jsp" />
 			
 			<p class="margin-medium">
 				<!-- <a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> -->
-				<s:submit name="indietro" value="indietro" method="indietroRiga" cssClass="btn btn-secondary" />
+				<!-- task-131 <s:submit name="indietro" value="indietro" method="indietroRiga" cssClass="btn btn-secondary" /> -->
+				<s:submit name="indietro" value="indietro" action="aggiornaRigaDaMovimento_indietroRiga" cssClass="btn btn-secondary" />
 				<!-- <a class="btn btn-secondary" href="#">annulla</a> --> 
-				<s:submit name="annulla" value="annulla" method="annullaAggiornaRiga" cssClass="btn btn-secondary" />
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaAggiornaRiga" cssClass="btn btn-secondary" />-->
+				<s:submit name="annulla" value="annulla" action="aggiornaRigaDaMovimento_annullaAggiornaRiga" cssClass="btn btn-secondary" />
+				
 				<span class="pull-right">
 					<!-- <a class="btn btn-primary" href="FIN-insCartaContabileStep2.shtml">aggiorna riga</a> -->
-					<s:submit cssClass="btn btn-primary pull-right" method="aggiornaRiga" value="aggiorna riga" name="aggiornaRiga" />
+					<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" method="aggiornaRiga" value="aggiorna riga" name="aggiornaRiga" /> -->
+					<s:submit cssClass="btn btn-primary pull-right" action="aggiornaRigaDaMovimento_aggiornaRiga" value="aggiorna riga" name="aggiornaRiga" />
 				</span>
 			</p>       
 			  
@@ -229,7 +243,8 @@ SPDX-License-Identifier: EUPL-1.2
 			var cod = $("#codCreditore").val();
 			//Carico i dati in tabella "Modalita' di pagamento"		
 			$.ajax({
-				url: '<s:url method="modpagamento"></s:url>',
+				//task-131 url: '<s:url method="modpagamento"></s:url>',
+				url: '<s:url action="aggiornaRigaDaMovimento_modpagamento"></s:url>',
 				type: "GET",
 				data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 			    success: function(data)  {
@@ -237,7 +252,8 @@ SPDX-License-Identifier: EUPL-1.2
 			    	// $("#openSediSEC").click(); 
 			    	 //Carico i dati in tabella "Sedi secondarie"
 					$.ajax({
-						url: '<s:url method="sedisecondarie"></s:url>',
+						//task-131 url: '<s:url method="sedisecondarie"></s:url>',
+						url: '<s:url action="aggiornaRigaDaMovimento_sedisecondarie"></s:url>',
 						type: "GET",
 						data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 					    success: function(data)  {
@@ -245,7 +261,8 @@ SPDX-License-Identifier: EUPL-1.2
 					    	
 					    	
 					    	$.ajax({
-								url: '<s:url method="aggiornaAvviso"></s:url>',
+					    		//task-131 url: '<s:url method="aggiornaAvviso"></s:url>',
+					    		 url: '<s:url action="aggiornaRigaDaMovimento_aggiornaAvviso"></s:url>',
 								type: "GET",
 							    success: function(data)  {
 							    	$("#aggiornaAvviso").html(data);

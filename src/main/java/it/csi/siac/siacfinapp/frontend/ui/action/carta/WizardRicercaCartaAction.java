@@ -6,7 +6,6 @@ package it.csi.siac.siacfinapp.frontend.ui.action.carta;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import it.csi.siac.siacfinser.frontend.webservice.CartaContabileService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaCartaContabile;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaCartaContabileResponse;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaCartaContabile;
 
 public class WizardRicercaCartaAction extends GenericPopupAction<RicercaCartaModel>{
@@ -73,19 +71,8 @@ public class WizardRicercaCartaAction extends GenericPopupAction<RicercaCartaMod
 			model.setNumeroImpegno(model.getnImpegno());
 			model.setAnnoImpegno(model.getnAnno());
 			model.setNumeroSub(model.getnSubImpegno());
-			model.setNumeroMutuoPopup(null);
 			model.setnAnno(null);
 			model.setnImpegno(null);
-			int voceMutuoScelta = model.getRadioVoceMutuoSelezionata();
-			List<VoceMutuo> listaVocMutuo = model.getListaVociMutuo();		
-			if(listaVocMutuo!=null && listaVocMutuo.size()>0){
-				for(int j=0; j<listaVocMutuo.size();j++){
-					if(listaVocMutuo.get(j).getUid()==voceMutuoScelta){
-						model.setNumeroMutuoPopup(Integer.valueOf(listaVocMutuo.get(j).getNumeroMutuo()));
-						model.setDisponibilita(listaVocMutuo.get(j).getImportoDisponibileLiquidareVoceMutuo());
-					}
-				}
-			}
 		}
 		// cosi' tiene la tendina aperta
 		model.setToggleImputazioneContabiliAperto(true);
@@ -107,7 +94,7 @@ public class WizardRicercaCartaAction extends GenericPopupAction<RicercaCartaMod
 	    ParametroRicercaCartaContabile prk = new ParametroRicercaCartaContabile();
 	    prk.setRichiedente(sessionHandler.getRichiedente());
 	    // anno esercizio
-	    prk.setAnnoEsercizio(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+	    prk.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 	    // numero DA
 	    if(StringUtils.isNotEmpty(model.getNumeroCartaDa())){
 	    	prk.setNumeroCartaContabileDa(Integer.parseInt(model.getNumeroCartaDa()));
@@ -248,7 +235,7 @@ public class WizardRicercaCartaAction extends GenericPopupAction<RicercaCartaMod
 			// costruisco l'oggetto per la ricerca
 			ParametroRicercaCartaContabile prcc =  (ParametroRicercaCartaContabile)sessionHandler.getParametro(FinSessionParameter.PAR_RICERCA_CARTA);
 			prcc.setRichiedente(sessionHandler.getRichiedente());
-			prcc.setAnnoEsercizio(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+			prcc.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			ricercaCartaContabile.setParametroRicercaCartaContabile(prcc);
 			ricercaCartaContabile.setEnte(sessionHandler.getEnte());
 			ricercaCartaContabile.setRichiedente(sessionHandler.getRichiedente());
@@ -291,8 +278,6 @@ public class WizardRicercaCartaAction extends GenericPopupAction<RicercaCartaMod
 	    }else{
 		  
 		  
-		   //  numeratore per la paginazione
-		   addNumAndPageSize(ricercaCartaContabile, "ricercaMutuiID");
 	    }
 		return SUCCESS;
 	}

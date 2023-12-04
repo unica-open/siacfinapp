@@ -123,7 +123,7 @@ public class GestisciStoricoImpegnoAccertamentoModel extends GenericPopupModel {
 	public RicercaStoricoImpegnoAccertamento creaRequestRicercaStoricoImpegnoAccertamento(Bilancio bilancio) {
 		RicercaStoricoImpegnoAccertamento req = creaRequest(RicercaStoricoImpegnoAccertamento.class);
 		req.setEnte(getEnte());
-		boolean subValorizzato = getSubImpegno() != null && getSubImpegno().getNumero() != null && BigDecimal.ZERO.compareTo(getSubImpegno().getNumero())<0;  
+		boolean subValorizzato = getSubImpegno() != null && getSubImpegno().getNumeroBigDecimal() != null && BigDecimal.ZERO.compareTo(getSubImpegno().getNumeroBigDecimal())<0;  
 		ParametroRicercaStoricoImpegnoAccertamento parametroRicercaStoricoImpegnoAccertamento = new ParametroRicercaStoricoImpegnoAccertamento();
 		
 		StoricoImpegnoAccertamento st = new StoricoImpegnoAccertamento();
@@ -149,14 +149,14 @@ public class GestisciStoricoImpegnoAccertamentoModel extends GenericPopupModel {
 		
 		//il subacc e' facoltativo
 		SubAccertamento subAccertamento = req.getStoricoImpegnoAccertamento().getSubAccertamento();
-		if(subAccertamento != null && (subAccertamento.getNumero() == null || BigDecimal.ZERO.compareTo(subAccertamento.getNumero()) > 0)) {
+		if(subAccertamento != null && (subAccertamento.getNumeroBigDecimal() == null || BigDecimal.ZERO.compareTo(subAccertamento.getNumeroBigDecimal()) > 0)) {
 			req.getStoricoImpegnoAccertamento().setSubAccertamento(null);
 		}
 		
 		req.getStoricoImpegnoAccertamento().setImpegno(getImpegno());
 		req.setEnte(getEnte());
 		req.setBilancio(bilancio);
-		req.getStoricoImpegnoAccertamento().setSubImpegno(getSubImpegno() != null && getSubImpegno().getNumero() != null && BigDecimal.ZERO.compareTo(getSubImpegno().getNumero())<0?
+		req.getStoricoImpegnoAccertamento().setSubImpegno(getSubImpegno() != null && getSubImpegno().getNumeroBigDecimal() != null && BigDecimal.ZERO.compareTo(getSubImpegno().getNumeroBigDecimal())<0?
 				getSubImpegno() : null);
 		return req;
 	}
@@ -173,7 +173,7 @@ public class GestisciStoricoImpegnoAccertamentoModel extends GenericPopupModel {
 		
 		//il subacc e' facoltativo
 		SubAccertamento subAccertamento = req.getStoricoImpegnoAccertamento().getSubAccertamento();
-		if(subAccertamento != null && subAccertamento.getNumero() != null && BigDecimal.ZERO.compareTo(subAccertamento.getNumero()) >0) {
+		if(subAccertamento != null && subAccertamento.getNumeroBigDecimal() != null && BigDecimal.ZERO.compareTo(subAccertamento.getNumeroBigDecimal()) >0) {
 			req.getStoricoImpegnoAccertamento().setSubAccertamento(null);
 		}
 		

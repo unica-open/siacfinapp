@@ -7,4 +7,6 @@ SPDX-License-Identifier: EUPL-1.2
 <%-- Inclusione dell'HEAD --%>
 <r:include url="/ris/servizi/siac/include/head.html" resourceProvider="rp"/>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath() %>/css/jquery-ui-1.8.16.custom.css"/>
+<link rel="stylesheet" type="text/css" href="<%= request.getContextPath()  %>/css/jquery.bs.overlay.css" />
+<%-- SIAC-7349 --%>
 <link rel="stylesheet" type="text/css" href="<%= request.getContextPath()  %>/css/styleCustom.css" />

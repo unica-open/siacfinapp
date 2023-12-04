@@ -16,14 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
-import it.csi.siac.siacfinser.CodiciOperazioni;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
@@ -33,10 +33,7 @@ import it.csi.siac.siacfinser.model.errore.ErroreFin;
 public class RicercaProvvisorioCassaAction extends WizardRicercaProvvisorioAction {
 
 	private static final long serialVersionUID = 1L;
-	
-	private static final String SI = "si";
-	private static final String NO = "no";
-	
+		
 	@Override
 	public void prepare() throws Exception {
 		//invoco il prepare della super classe:
@@ -57,7 +54,7 @@ public class RicercaProvvisorioCassaAction extends WizardRicercaProvvisorioActio
 	@BreadCrumb("%{model.titolo}")
 	public String execute() throws Exception {
 
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_LEGGIPROVVCASSA)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_LEGGIPROVVCASSA)){
 			//errore per utenza non abilitata
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 		}
@@ -71,21 +68,7 @@ public class RicercaProvvisorioCassaAction extends WizardRicercaProvvisorioActio
 	   		//setto l'anno provvisorio uguale all'anno di esercizio come default
 			model.setAnnoProvvisorio(new Integer(sessionHandler.getAnnoEsercizio()));
 		}
-	   	
-	   	//set radio tipo
-	   	model.getTipoDocumentoProvList().add("Entrata");
-	   	model.getTipoDocumentoProvList().add("Spesa");
-	   	model.setTipoDocumentoProv("Entrata");
-	   	
-	   	//set checkBox annullato
-	   	model.getFlagAnnullatoProvList().add(SI);
-	   	model.getFlagAnnullatoProvList().add(NO);
-	   	
-	   	//set checkBox Regolarizzato	   	
-	   	model.getFlagDaRegolarizzareList().add(SI);
-	   	model.getFlagDaRegolarizzareList().add(NO);
-	   	model.setFlagDaRegolarizzare(null);
-	   	
+	   		   	
 	   	return SUCCESS;
 	}
 	
@@ -100,7 +83,7 @@ public class RicercaProvvisorioCassaAction extends WizardRicercaProvvisorioActio
 		
 		boolean noInputData = true;
 
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_LEGGIPROVVCASSA)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_LEGGIPROVVCASSA)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			return INPUT;
 		}
@@ -182,6 +165,13 @@ public class RicercaProvvisorioCassaAction extends WizardRicercaProvvisorioActio
 			noInputData=false;
 		}
 		
+		if(StringUtils.isNotEmpty(model.getDataInizioPresaInCaricoServizio())){
+			noInputData=false;
+		}
+		if(StringUtils.isNotEmpty(model.getDataFinePresaInCaricoServizio())){
+			noInputData=false;
+		}
+		
 		if(StringUtils.isNotEmpty(model.getDataInizioRifiutoErrataAttribuzione())){
 			noInputData=false;
 		}
@@ -208,14 +198,14 @@ public class RicercaProvvisorioCassaAction extends WizardRicercaProvvisorioActio
 		//Condizioni ricerca - Da-A importo
 		if (model.getImportoDa()!=null && model.getImportoA()!=null) {
 			if (model.getImportoDa().compareTo(model.getImportoA())==1) {
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Importo Da/Importo A","(Importo Da deve essere minore di Importo A)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Importo Da/Importo A","(Importo Da deve essere minore di Importo A)"));
 			}
 		}
 
 		//Condizioni ricerca - Da-A numOrd
 		if (model.getNumeroProvvisorioDa()!=null && model.getNumeroProvvisorioA()!=null) {
 			if (model.getNumeroProvvisorioDa().compareTo(model.getNumeroProvvisorioA())==1) {
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Numero Provvisorio Da/Numero Provvisorio A","(Numero Provvisorio Da deve essere minore di Numero Provvisorio A)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Numero Provvisorio Da/Numero Provvisorio A","(Numero Provvisorio Da deve essere minore di Numero Provvisorio A)"));
 			}
 		}
 		
@@ -248,7 +238,7 @@ public class RicercaProvvisorioCassaAction extends WizardRicercaProvvisorioActio
 		if (noInputData) {
 			listaErrori.add(ErroreCore.NESSUN_CRITERIO_RICERCA.getErrore(""));
 		}
-	
+
 		//VALIDO
 		if(listaErrori.isEmpty()){			
 
@@ -294,11 +284,11 @@ public class RicercaProvvisorioCassaAction extends WizardRicercaProvvisorioActio
 		}
 
 		if (parsedTimeDa==null && parsedTimeA!=null) {
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore(String.format("Data %s", tipo), "(non e' possibile inserire Data fine senza Data inizio)"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore(String.format("Data %s", tipo), "(non e' possibile inserire Data fine senza Data inizio)"));
 		}
 
 		if (parsedTimeDa!=null && parsedTimeA!=null && parsedTimeDa.after(parsedTimeA)) {
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore(String.format("Data %s", tipo), "(Data inizio deve essere minore di Data fine)"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore(String.format("Data %s", tipo), "(Data inizio deve essere minore di Data fine)"));
 		}			
 	}
 	

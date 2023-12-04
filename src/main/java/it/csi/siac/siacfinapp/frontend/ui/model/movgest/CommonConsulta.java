@@ -52,10 +52,18 @@ public class CommonConsulta implements Serializable{
 	//reimputazione:
 	private Integer	annoReimputazione;
 	private String	reimputazione;
-	
+	private String reanno;
 	
 	//Inner classes:
 	
+	public String getReanno() {
+		return reanno;
+	}
+
+	public void setReanno(String reanno) {
+		this.reanno = reanno;
+	}
+
 	//INNER CLASS ImportoCapitolo
 	public class ImportoCapitolo implements Serializable{
 		
@@ -392,4 +400,20 @@ public class CommonConsulta implements Serializable{
 		this.reimputazione = reimputazione;
 	}
 
+	// WORKAORUND PER PESSIMA GESTIONE E MODELLAZIONE
+	public String getCodiceTipoMovimento() {
+		String codiceTipoMovimento = null;
+		switch (getTipoMovimento()) {
+			case IMPEGNO:
+				codiceTipoMovimento = "I";
+				break;
+			case ACCERTAMENTO:
+				codiceTipoMovimento = "A";
+				break;
+			default:
+				break;
+		}
+		return codiceTipoMovimento;
+	}
+	
 }

@@ -55,7 +55,7 @@ public class WizardInserisciProvvisorioAction extends AbstractGestioneProvvisior
 		inserisciProvvisorio.setBilancio(sessionHandler.getBilancio());
 		
 		//Anno Esercizio/Bilancio
-		provvisorioDaInserire.setAnno(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		provvisorioDaInserire.setAnno(sessionHandler.getAnnoBilancio());
 		
 		//Provvisorio di cassa			
 		if(model.getNumeroProvvisorio() != null){

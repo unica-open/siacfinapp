@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -21,7 +21,7 @@ import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RegolarizzaCartaContabile;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RegolarizzaCartaContabileResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzato;
@@ -30,7 +30,6 @@ import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
 import it.csi.siac.siacfinser.model.carta.PreDocumentoCarta;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 
 
 @Component
@@ -97,11 +96,11 @@ public class RegolazioneCartaAction extends WizardRegolarizzaCartaAction {
 	    	
 	    	// devo disabilitare e proteggere i campi della collega impegni
 	    	model.setAnnoImpegno(model.getDettaglioRiga().getImpegno().getAnnoMovimento());
-	    	model.setNumeroImpegno(model.getDettaglioRiga().getImpegno().getNumero().intValue());
+	    	model.setNumeroImpegno(model.getDettaglioRiga().getImpegno().getNumeroBigDecimal().intValue());
 	    	
 	    	//in caso di sub setto il suo numero nel model:
-	    	if(model.getDettaglioRiga().getSubImpegno()!=null && model.getDettaglioRiga().getSubImpegno().getNumero()!=null){
-	    		model.setNumeroSub(model.getDettaglioRiga().getSubImpegno().getNumero().intValue());
+	    	if(model.getDettaglioRiga().getSubImpegno()!=null && model.getDettaglioRiga().getSubImpegno().getNumeroBigDecimal()!=null){
+	    		model.setNumeroSub(model.getDettaglioRiga().getSubImpegno().getNumeroBigDecimal().intValue());
 	    	}
 	    	
 	    	//imposto i flag di appoggio:
@@ -203,19 +202,8 @@ public class RegolazioneCartaAction extends WizardRegolarizzaCartaAction {
 			model.setNumeroImpegno(model.getnImpegno());
 			model.setAnnoImpegno(model.getnAnno());
 			model.setNumeroSub(model.getnSubImpegno());
-			model.setNumeroMutuoPopup(null);
 			model.setnAnno(null);
 			model.setnImpegno(null);
-			int voceMutuoScelta = model.getRadioVoceMutuoSelezionata();
-			List<VoceMutuo> listaVocMutuo = model.getListaVociMutuo();		
-			if(listaVocMutuo!=null && listaVocMutuo.size()>0){
-				for(int j=0; j<listaVocMutuo.size();j++){
-					if(listaVocMutuo.get(j).getUid()==voceMutuoScelta){
-						model.setNumeroMutuoPopup(Integer.valueOf(listaVocMutuo.get(j).getNumeroMutuo()));
-						model.setDisponibilita(listaVocMutuo.get(j).getImportoDisponibileLiquidareVoceMutuo());
-					}
-				}
-			}
 		}
 		model.setToggleCollegaImpegnoAperto(true);
 
@@ -284,7 +272,7 @@ public class RegolazioneCartaAction extends WizardRegolarizzaCartaAction {
 		
 		req.setCaricaSub(false);
 		
-		RicercaImpegnoPerChiaveOttimizzatoResponse response = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(req);
+		RicercaImpegnoPerChiaveOttimizzatoResponse response = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(req);
 		
 		if(response.isFallimento()){
 			addErrori(response.getErrori());
@@ -299,11 +287,11 @@ public class RegolazioneCartaAction extends WizardRegolarizzaCartaAction {
 			addErrore(ErroreFin.MOV_NON_ESISTENTE.getErrore("Impegno"));
 			model.setToggleCollegaImpegnoAperto(true);
 			return INPUT;
-		}else if(response.getImpegno().getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_ANNULLATO)){
+		}else if(response.getImpegno().getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_ANNULLATO)){
 			addErrore(ErroreFin.MOV_ANNULLATO.getErrore("Impegno"));
 			model.setToggleCollegaImpegnoAperto(true);
 			return INPUT;
-		}else if(response.getImpegno().getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_PROVVISORIO)){
+		}else if(response.getImpegno().getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_PROVVISORIO)){
 			addErrore(ErroreFin.MOV_PROVVISORIO.getErrore("Impegno"));
 			model.setToggleCollegaImpegnoAperto(true);
 			return INPUT;
@@ -313,7 +301,7 @@ public class RegolazioneCartaAction extends WizardRegolarizzaCartaAction {
 		
 		
 		//SE L'impegno e' in stato DEFINITIVO
-		if(response.getImpegno().getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_DEFINITIVO)){
+		if(response.getImpegno().getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_DEFINITIVO)){
 			if(model.getNumeroSub()== null || FinStringUtils.isEmpty(model.getNumeroSub().toString())){
 				
 				//Se esiste il codice Soggetto
@@ -363,7 +351,7 @@ public class RegolazioneCartaAction extends WizardRegolarizzaCartaAction {
 					boolean esisteSubImpegno = false;
 					for(SubImpegno sub : response.getElencoSubImpegniTuttiConSoloGliIds()){
 						//Se esiste il subImpegno
-						if(sub.getNumero().compareTo(BigDecimal.valueOf(model.getNumeroSub()))==0){
+						if(sub.getNumeroBigDecimal().compareTo(BigDecimal.valueOf(model.getNumeroSub()))==0){
 							// devo controllare il soggetto
 							if(sub.getSoggetto()== null || !sub.getSoggetto().getCodiceSoggetto().equals(model.getDettaglioRiga().getSoggetto().getCodiceSoggetto())){
 								addErrore(ErroreFin.IMPEGNO_NON_COMPATIBILE.getErrore(""));

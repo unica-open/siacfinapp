@@ -7,13 +7,14 @@ package it.csi.siac.siacfinapp.frontend.ui.action.soggetto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggetto;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggettoProvvisorio;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggettoResponse;
@@ -127,15 +128,15 @@ public class ValidaModalitaPagamentoAction extends AggiornaSoggettoGenericAction
 				modalitaPagamentoSoggettoOut = mdpDef;
 			}
 			
-			if(modalitaPagamentoSoggettoOut.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA_no_underscore)){
+			if(modalitaPagamentoSoggettoOut.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA_no_underscore)){
 				
-				modalitaPagamentoValidate.setDescrizioneStatoModalitaPagamento(Constanti.STATO_VALIDO);
+				modalitaPagamentoValidate.setDescrizioneStatoModalitaPagamento(CostantiFin.STATO_VALIDO);
 				modalitaPagamentoValidate.setAssociatoA(modalitaPagamentoSoggettoOut.getAssociatoA());
 				modalitaPagamentoValidate.setModalitaAccreditoSoggetto(modalitaPagamentoSoggettoOut.getModalitaAccreditoSoggetto());
 				
 				modalitaPagamentoValidate.setTipoAccredito(modalitaPagamentoSoggettoOut.getTipoAccredito());
 				modalitaPagamentoValidate.setUid(modalitaPagamentoSoggettoOut.getUid());
-				TipoAccredito tipoAccredito = Constanti.codeToTipoAccredito(modalitaPagamentoSoggettoOut.getModalitaAccreditoSoggetto().getCodice());
+				TipoAccredito tipoAccredito = CostantiFin.codeToTipoAccredito(modalitaPagamentoSoggettoOut.getModalitaAccreditoSoggetto().getCodice());
 				modalitaPagamentoValidate.setTipoAccredito(tipoAccredito);
 				
 				modListDef.add(modalitaPagamentoValidate);
@@ -147,8 +148,8 @@ public class ValidaModalitaPagamentoAction extends AggiornaSoggettoGenericAction
 				soggettoService.annullaModalitaPagamentoInModifica(ampim);
 				
 			} else if (modalitaPagamentoSoggettoOut.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("provvisorio") || modalitaPagamentoSoggettoOut.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("bloccato")){
-				modalitaPagamentoSoggettoOut.setDescrizioneStatoModalitaPagamento(Constanti.STATO_VALIDO);
-				TipoAccredito tipoAccredito = Constanti.codeToTipoAccredito(modalitaPagamentoSoggettoOut.getModalitaAccreditoSoggetto().getCodice());
+				modalitaPagamentoSoggettoOut.setDescrizioneStatoModalitaPagamento(CostantiFin.STATO_VALIDO);
+				TipoAccredito tipoAccredito = CostantiFin.codeToTipoAccredito(modalitaPagamentoSoggettoOut.getModalitaAccreditoSoggetto().getCodice());
 				modalitaPagamentoSoggettoOut.setTipoAccredito(tipoAccredito);
 				modListDef.add(modalitaPagamentoSoggettoOut);
 					
@@ -162,7 +163,7 @@ public class ValidaModalitaPagamentoAction extends AggiornaSoggettoGenericAction
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -170,7 +171,7 @@ public class ValidaModalitaPagamentoAction extends AggiornaSoggettoGenericAction
 		}
 		AggiornaSoggettoResponse responseSoggetto = null;
 		
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 		
 			//istanzio la request per il servizio aggiornaSoggettoProvvisorio:
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(convertiModelPerChiamataServizioAggiornaSoggetto(model.getDettaglioSoggetto(),false));
@@ -256,7 +257,7 @@ public class ValidaModalitaPagamentoAction extends AggiornaSoggettoGenericAction
 			
 			model.getDettaglioSoggetto().setModalitaPagamentoList(modListDef);
 			
-		} else if(modalitaPagamentoSoggettoOut.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA_no_underscore)){
+		} else if(modalitaPagamentoSoggettoOut.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA_no_underscore)){
 			List<ModalitaPagamentoSoggetto> modListApp = model.getDettaglioSoggetto().getModalitaPagamentoList();
 			List<ModalitaPagamentoSoggetto> modListDef = new ArrayList<ModalitaPagamentoSoggetto>();
 			modListDef.addAll(model.getDettaglioSoggetto().getModalitaPagamentoList());
@@ -295,7 +296,7 @@ public class ValidaModalitaPagamentoAction extends AggiornaSoggettoGenericAction
 			model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 			model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 			if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-				if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+				if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 					model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 				} else {
 					model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -303,7 +304,7 @@ public class ValidaModalitaPagamentoAction extends AggiornaSoggettoGenericAction
 			}
 			AggiornaSoggettoResponse responseSoggetto = null;
 			
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 			
 				//istanzio la request per il servizio aggiornaSoggettoProvvisorio:
 				AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(convertiModelPerChiamataServizioAggiornaSoggetto(model.getDettaglioSoggetto(),false));

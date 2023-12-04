@@ -37,7 +37,13 @@ SPDX-License-Identifier: EUPL-1.2
 			</div>
 	        <div class="step-content">	
 	          <div class="step-pane active" id="step1"> 
-				<s:include value="/jsp/liquidazione/include/impegno.jsp" />				
+				<s:include value="/jsp/liquidazione/include/impegno.jsp" />		
+				
+				<s:set var="confermaCompGuidataAction" value="%{'inserisciLiquidazioneStep1_confermaCompGuidata'}" />
+				<s:set var="ricercaGuidataImpegnoAction" value="%{'inserisciLiquidazioneStep1_ricercaGuidataImpegno'}" />
+				<s:set var="ricercaImpegnoCompilazioneGuidataAction" value="%{'inserisciLiquidazioneStep1_ricercaGuidataImpegno'}" />	          
+				<s:set var="selezionaImpegnoCompilazioneGuidataAction" value="%{'inserisciLiquidazioneStep1_confermaCompGuidata'}" />	          
+			
 				<s:include value="/jsp/liquidazione/include/modalImpegno.jsp" />      
 	          </div>
 	        </div>          
@@ -45,8 +51,10 @@ SPDX-License-Identifier: EUPL-1.2
 	         
 	        <p>
 				<s:include value="/jsp/include/indietro.jsp" /> 
-		        <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary"/>
-				<s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary pull-right" /> 
+		        <!-- task-131 <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary"/> -->
+		        <s:submit name="annulla" value="annulla" action="inserisciLiquidazioneStep1_annulla" cssClass="btn btn-secondary"/>
+		        <!-- task-131 <s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary pull-right" /> -->
+		        <s:submit name="prosegui" value="prosegui" action="inserisciLiquidazioneStep1_prosegui" cssClass="btn btn-primary pull-right" /> 
 			</p>   
 			        
 	      </s:form>

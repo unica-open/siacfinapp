@@ -35,7 +35,8 @@ SPDX-License-Identifier: EUPL-1.2
 	<h3>Ricerca Soggetto</h3>
 	<p>&Egrave; necessario inserire almeno un criterio di ricerca.</p>
 	<div class="step-content">
-	<s:form id="ricercaSoggetto" action="ricercaSoggetto.do" method="post" focusElement="cerca" >
+	<%-- SIAC-7952 rimuovo .do dalla action --%>
+	<s:form id="ricercaSoggetto" action="ricercaSoggetto" method="post" focusElement="cerca" >
 		<p></p>
 		<%-- Messaggio di ERROR --%>
 		<s:if test="hasActionErrors()">
@@ -122,8 +123,10 @@ SPDX-License-Identifier: EUPL-1.2
 		   
 		   <s:a cssClass="btn btn-secondary" href="${redirect.cruscotto}">indietro</s:a>
 		  
-		   <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-link" />  
-		   <s:submit name="cerca" id="cerca" value="cerca" method="cerca" cssClass="btn btn-primary pull-right" />  
+		   <!-- task-131 <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-link" /> -->  
+		   <!-- task-131 <s:submit name="cerca" id="cerca" value="cerca" method="cerca" cssClass="btn btn-primary pull-right" /> -->  
+		   <s:submit name="annulla" value="annulla" action="ricercaSoggetto_annulla" cssClass="btn btn-link" />  
+		   <s:submit name="cerca" id="cerca" value="cerca" action="ricercaSoggetto_cerca" cssClass="btn btn-primary pull-right" />  
 		   
 		</p><p></p>
 	

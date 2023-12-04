@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -23,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siaccorser.model.paginazione.ParametriPaginazione;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfin2ser.frontend.webservice.DocumentoSpesaService;
 import it.csi.siac.siacfin2ser.frontend.webservice.msg.RicercaDettaglioDocumentoSpesa;
 import it.csi.siac.siacfin2ser.frontend.webservice.msg.RicercaDettaglioDocumentoSpesaResponse;
@@ -32,8 +33,7 @@ import it.csi.siac.siacfin2ser.model.SubdocumentoSpesa;
 import it.csi.siac.siacfin2ser.model.TipoDocumento;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaDocumentiCarta;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaDocumentiCartaResponse;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
@@ -145,7 +145,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 			//PROVVISIORIO
 			if (model.getStatoOperativoCarta()!=null && 
 					model.getStatoOperativoCarta().equalsIgnoreCase(CartaContabile.StatoOperativoCartaContabile.PROVVISORIO.toString())) {
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA) && !isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) && !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			}
@@ -153,7 +153,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 			//COMPLETATO
 			if (model.getStatoOperativoCarta()!=null && 
 					model.getStatoOperativoCarta().equalsIgnoreCase(CartaContabile.StatoOperativoCartaContabile.COMPLETATO.toString())) {
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			}
@@ -181,7 +181,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//PROVVISORIO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA) && !isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) && !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 				
@@ -193,7 +193,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//COMPLETATO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 
@@ -205,7 +205,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//TRASMESSO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_regCarta)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_regCarta)) {
 					disabled=true;
 				}
 				
@@ -228,7 +228,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//PROVVISORIO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA) && !isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) && !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
@@ -236,7 +236,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//COMPLETATO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
@@ -244,7 +244,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//TRASMESSO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_regCarta)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_regCarta)) {
 					disabled=true;
 				} else if (model.getListaSubDocumentoSpesa()!=null && model.getListaSubDocumentoSpesa().size()>0){
 					
@@ -252,7 +252,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 						if(subDoc.getUid()==docId){
 							
 							if(subDoc.getDocumento()!=null && subDoc.getDocumento().getTipoDocumento()!=null && subDoc.getDocumento().getTipoDocumento().getCodice()!=null && 
-									!subDoc.getDocumento().getTipoDocumento().getCodice().equalsIgnoreCase(Constanti.D_DOC_TIPO_CARTA_CONTABILE_CODE)){
+									!subDoc.getDocumento().getTipoDocumento().getCodice().equalsIgnoreCase(CostantiFin.D_DOC_TIPO_CARTA_CONTABILE_CODE)){
 								disabled=true;
 							}							
 						}
@@ -275,7 +275,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//PROVVISORIO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA) && !isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) && !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
@@ -283,7 +283,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//COMPLETATO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
@@ -291,7 +291,7 @@ public class AggiornaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction 
 				
 				//TRASMESSO
 				
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_regCarta)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_regCarta)) {
 					disabled=true;
 				}
 			}

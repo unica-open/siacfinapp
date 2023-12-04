@@ -59,10 +59,6 @@ public class RicercaOrdinativoModel extends GenericPopupModel {
 	private Integer numeroAccertamento;
 	private Integer numeroSubAccertamento;
 
-	// mutuo
-	private BigInteger numeroMutuo;
-	private String numeroMutuoString;
-
 	// liste codifiche
 	private List<CodificaFin> listaDistinta = new ArrayList<CodificaFin>();
 	private List<CodificaFin> listaContoTesoriere = new ArrayList<CodificaFin>();
@@ -274,14 +270,6 @@ public class RicercaOrdinativoModel extends GenericPopupModel {
 		this.numeroLiquidazione = numeroLiquidazione;
 	}
 
-	public BigInteger getNumeroMutuo() {
-		return numeroMutuo;
-	}
-
-	public void setNumeroMutuo(BigInteger numeroMutuo) {
-		this.numeroMutuo = numeroMutuo;
-	}
-
 	public List<TipoFinanziamento> getListaTipoFinanziamento() {
 		return listaTipoFinanziamento;
 	}
@@ -304,14 +292,6 @@ public class RicercaOrdinativoModel extends GenericPopupModel {
 
 	public void setNumeroLiquidazioneString(String numeroLiquidazioneString) {
 		this.numeroLiquidazioneString = numeroLiquidazioneString;
-	}
-
-	public String getNumeroMutuoString() {
-		return numeroMutuoString;
-	}
-
-	public void setNumeroMutuoString(String numeroMutuoString) {
-		this.numeroMutuoString = numeroMutuoString;
 	}
 
 	public BigInteger getNumeroOrdinativoPagamento() {

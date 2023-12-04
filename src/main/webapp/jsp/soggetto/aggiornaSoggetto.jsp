@@ -42,8 +42,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-     <s:form id="aggiornaSoggetto" action="aggiornaSoggetto.do" method="post">
+     <%-- SIAC-7952 rimuovo .do dalla action --%>
+     <s:form id="aggiornaSoggetto" action="aggiornaSoggetto" method="post">
      
      <s:hidden name="soggetto" />
      
@@ -84,9 +84,10 @@ SPDX-License-Identifier: EUPL-1.2
              <p>
               <s:include value="/jsp/include/indietro.jsp" />
            
-                 <s:submit name="annulla" id="annulla" value="annulla" method="annullaAggiornaSoggetto" cssClass="btn" />
-                 <s:submit name="prosegui" id="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary pull-right" />
-                  
+                 <!-- task-131 <s:submit name="annulla" id="annulla" value="annulla" method="annullaAggiornaSoggetto" cssClass="btn" /> -->
+                 <!-- task-131 <s:submit name="prosegui" id="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary pull-right" /> -->
+                 <s:submit name="annulla" id="annulla" value="annulla" action="aggiornaSoggetto_annullaAggiornaSoggetto" cssClass="btn" />
+                 <s:submit name="prosegui" id="prosegui" value="prosegui" action="aggiornaSoggetto_prosegui" cssClass="btn btn-primary pull-right" />                  
               </p>
              </div>
 				</div>
@@ -120,15 +121,14 @@ var elencoStruttureAmministrativoContabiliJson =
 	$(document).ready(function() {
 
 		$("#vaiAggiornaSediSecondarie").click(function() {
-// 			alert("ciao");
-			
-			$("#aggiornaSoggetto").attr('action','<s:url method="redirectSedi"/>').submit();
+			// task-131 $("#aggiornaSoggetto").attr('action','<s:url method="redirectSedi"/>').submit();
+			$("#aggiornaSoggetto").attr('action','<s:url action="aggiornaSoggetto_redirectSedi"/>').submit();
 		});
 		
 		$("#vaiModPagam").click(function() {
-// 			alert("ciao");
 			
-			$("#aggiornaSoggetto").attr('action','<s:url method="redirectMdp"/>').submit();
+			// task-131 $("#aggiornaSoggetto").attr('action','<s:url method="redirectMdp"/>').submit();
+			$("#aggiornaSoggetto").attr('action','<s:url action="aggiornaSoggetto_redirectMdp"/>').submit();
 		});
 		
 		

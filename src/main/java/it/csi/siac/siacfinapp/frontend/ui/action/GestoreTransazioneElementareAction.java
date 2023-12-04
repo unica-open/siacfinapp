@@ -33,12 +33,12 @@ import it.csi.siac.siacbilser.model.TransazioneUnioneEuropeaSpesa;
 import it.csi.siac.siaccorser.model.ClassificatoreGenerico;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.GestoreTransazioneElementareModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.liquidazione.InserisciLiquidazioneModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiClassificatoriGenericiByTipoMovimentoGest;
 import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiClassificatoriGenericiByTipoMovimentoGestResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiClassificatoriGenericiByTipoOrdinativoGest;
@@ -115,7 +115,7 @@ public abstract class GestoreTransazioneElementareAction<M extends GestoreTransa
      public boolean abilitatoGestioneTE(){
     	 // da inserire nella lista delle azioni altrimenti non verra'
     	 // visualizzata mai il blocco della transazione
-    	 if(FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), CodiciOperazioni.OP_COM_gestisciCFG)){
+    	 if(AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_COM_gestisciCFG, sessionHandler.getAzioniConsentite())){
     		 return true; 
     	 }
     	 return false;
@@ -370,7 +370,7 @@ public abstract class GestoreTransazioneElementareAction<M extends GestoreTransa
 	protected boolean caricaListeFin(String tipoMovimento) {
 		//istanzio la request per il servizio:
 		LeggiClassificatoriGenericiByTipoMovimentoGest ll = new LeggiClassificatoriGenericiByTipoMovimentoGest();
-		ll.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		ll.setAnno(sessionHandler.getAnnoBilancio());
 		ll.setCodiceTipoMovimentoGestione(tipoMovimento);
 		ll.setDataOra(new Date());
 		ll.setIdEnteProprietario(sessionHandler.getEnte().getUid());
@@ -453,7 +453,7 @@ public abstract class GestoreTransazioneElementareAction<M extends GestoreTransa
 	protected boolean caricaListeFinOrdinativo(String tipoOrdinativo) {
 		//istanzio la request per il servizio:
 		LeggiClassificatoriGenericiByTipoOrdinativoGest ll = new LeggiClassificatoriGenericiByTipoOrdinativoGest();
-		ll.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		ll.setAnno(sessionHandler.getAnnoBilancio());
 		ll.setCodiceTipoOrdinativoGestione(tipoOrdinativo);
 		ll.setDataOra(new Date());
 		ll.setIdEnteProprietario(sessionHandler.getEnte().getUid());
@@ -550,7 +550,7 @@ public abstract class GestoreTransazioneElementareAction<M extends GestoreTransa
 		request.setRichiedente(sessionHandler.getRichiedente());
 		request.setEnte(sessionHandler.getEnte());
 		request.setIdClassif(idProgramma);
-		request.setAnno(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		request.setAnno(sessionHandler.getAnnoBilancio());
 		//invoco il servizio:
 		LeggiClassificatoriByRelazioneResponse response = classificatoreBilService.leggiClassificatoriByRelazione(request);
 		List<ClassificazioneCofog> listaCofog = response.getClassificatoriClassificazioneCofog();

@@ -6,7 +6,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action.saldo;
 
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -43,7 +43,7 @@ public class BaseRicercaContoCorrenteAction<BRCCM extends BaseRicercaContoCorren
 	@BreadCrumb("%{model.titolo}")
 	public String execute() throws Exception {
 		//leggo l'anno di esercizio dalla sessione:
-		int annoEsercizio = Integer.parseInt(sessionHandler.getAnnoEsercizio());
+		int annoEsercizio = sessionHandler.getAnnoBilancio();
 
 		//setto l'anno nel model:
 		model.initElencoAnniBilancio(annoEsercizio);

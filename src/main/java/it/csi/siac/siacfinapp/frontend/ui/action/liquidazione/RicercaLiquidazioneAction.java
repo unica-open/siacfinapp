@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -113,24 +113,7 @@ public class RicercaLiquidazioneAction extends WizardRicercaLiquidazioneAction {
 			model.setNumeroLiquidazione(null);
 		}
 		
-		//Numero Mutuo
-		if (!StringUtils.isEmpty(model.getNumeroMutuoString()) && !("0".equalsIgnoreCase(model.getNumeroMutuoString()))) {
-			try {
-				model.setNumeroMutuo(convertiImportoToBigDecimal(model.getNumeroMutuoString()));
-			} catch (Exception e) {
-				//formato non valido per il numero mutuo indicato
-				listaErrori.add(ErroreCore.FORMATO_NON_VALIDO.getErrore("Numero Mutuo "));
-			}
-		}else if (!StringUtils.isEmpty(model.getNumeroMutuoImpegnoString()) && !("0".equalsIgnoreCase(model.getNumeroMutuoImpegnoString()))) {
-			try {
-				model.setNumeroMutuo(convertiImportoToBigDecimal(model.getNumeroMutuoImpegnoString()));
-			} catch (Exception e) {
-				//formato non valido per il numero mutuo indicato
-				listaErrori.add(ErroreCore.FORMATO_NON_VALIDO.getErrore("Numero Mutuo "));
-			}
-		}else {
-			model.setNumeroMutuo(null);
-		}
+
 		
 		if(model.getNumeroLiquidazione()!=null && model.getAnnoLiquidazione()==null){
 			//se indico un numero liquidazione, l'anno diventa obbligatorio

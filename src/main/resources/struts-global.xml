@@ -130,17 +130,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<param name="method">execute</param>
 			</result>
 
-			<result name="OP-MUT-gestisciMutuo" type="redirectAction">
-				<param name="actionName">gestioneMutuo</param>
-				<param name="namespace">/</param>
-				<param name="method">execute</param>
-			</result>
-			<result name="OP-MUT-leggiMutuo" type="redirectAction">
-				<param name="actionName">ricercaMutuo</param>
-				<param name="namespace">/</param>
-				<param name="method">execute</param>
-			</result>
-			
+
 			<result name="OP-SPE-gestisciImpegnoDecentrato"	type="redirectAction">
 				<param name="actionName">inserisceImpegno</param>
 				<param name="namespace">/</param>
@@ -244,8 +234,28 @@ SPDX-License-Identifier: EUPL-1.2
 				<param name="method">execute</param>
 			</result>
 
-			
-			
+			<!-- SIAC 6997 -->
+			<result name="OP-SPE-gestImpRORdecentrato" type="redirectAction">
+				<param name="actionName">ricercaImpegno</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			<result name="OP-SPE-gestImprROR" type="redirectAction">
+				<param name="actionName">ricercaImpegno</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			<!-- SIAC 6997 -->
+			<result name="OP-ENT-gestAccRORdecentrato" type="redirectAction">
+				<param name="actionName">ricercaAccertamento</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+			<result name="OP-ENT-gestAccROR" type="redirectAction">
+				<param name="actionName">ricercaAccertamento</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
 			
 			
 		</action>

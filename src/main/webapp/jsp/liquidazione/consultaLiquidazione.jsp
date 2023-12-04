@@ -32,7 +32,9 @@ SPDX-License-Identifier: EUPL-1.2
 		<div class="span12 ">
 
 			<div class="contentPage">  
-					<s:form id="mainForm" method="post" action="consultaLiquidazione.do">
+			
+					<%-- SIAC-7952 rimuovo .do dalla action --%>
+					<s:form id="mainForm" method="post" action="consultaLiquidazione">
 						<h3>Consultazione liquidazione ${model.liquidazioneConsulta.annoLiquidazione}/${model.liquidazioneConsulta.numeroLiquidazione} <s:if test="%{model.liquidazioneConsulta.descrizioneLiquidazione!=''}">- Descrizione ${model.liquidazioneConsulta.descrizioneLiquidazione}</s:if></h3>
 								
 						<s:include value="/jsp/include/actionMessagesErrors.jsp" />
@@ -197,10 +199,6 @@ SPDX-License-Identifier: EUPL-1.2
 										<dl>${model.impegnoConsulta.descrizione}</dl>
 									</li>
 									
-									<li>
-										<dfn>Mutuo</dfn> 
-										<dl>${model.numeroMutuoConsulta}</dl>
-									</li>
 								</ul>	
 								
 							</div>				

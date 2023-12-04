@@ -4,6 +4,84 @@ SIAC FIN app
 
 Funzionalità rilasciate
 --------------------------+
+build 27/02/202ì1 versione 4.28.0
+ SIAC-7838
+ SIAC-7985
+
+build 27/09/2020 versione 4.27.0
+ SIAC-7667
+ SIAC-7704
+ SIAC-7734
+ SIAC-7726
+
+build 17/08/2020 versione 4.26.0
+
+ SIAC-7551
+ SIAC-7559
+ SIAC-7689
+ SIAC-7710
+
+build 17/07/2020 versione 4.25.0
+ SIAC-7651
+ SIAC-7653
+ SIAC-7698
+
+build 30/06/2020 versione 4.24.0
+ SIAC-7688
+
+build 30/06/2020 versione 4.23.0
+ SIAC-7470
+ SIAC-7631
+
+build 30/05/2020 versione 4.22.0
+ SIAC-7516
+ SIAC-7606
+ SIAC-7630
+
+build 30/04/2020 versione 4.21.0
+ SIAC-7609
+
+build 18/03/2020 versione 4.20.0
+ SIAC-7469
+ SIAC-7476
+ SIAC-7477
+ SIAC-7481
+ SIAC-7482
+ SIAC-7496
+ SIAC-7499
+ SIAC-7500
+ SIAC-7501
+ SIAC-7502
+ SIAC-7503
+ SIAC-7504
+
+build 28/02/2020 versione 4.19.0
+ SIAC-6997
+ SIAC-7362
+ SIAC-7395
+ SIAC-7389 
+ SIAC-7393 
+ SIAC-7395 
+ SIAC-7399 
+ SIAC-7400 
+ SIAC-7411 
+ SIAC-7429
+
+build 28/01/2020 versione 4.18.0
+ SIAC-7184
+ SIAC-7252
+ SIAC-7300
+ SIAC-7308
+ SIAC-7321
+ SIAC-7325
+ SIAC-7360
+
+build 18/12/2019 versione 4.17.0
+ SIAC-6990
+
+build 06/11/2019 versione 4.16.1
+ SIAC-6929
+ 
 build 27/11/2019 versione 4.16.0
  SIAC-6879
  SIAC-7093

@@ -7,6 +7,13 @@ SPDX-License-Identifier: EUPL-1.2
 <%@taglib prefix="s" uri="/struts-tags" %>
 
 
+<s:if test="oggettoDaPopolarePagamento()">
+	<s:set var="aggiornaCoperturaAction" value="%{'gestioneOrdinativoPagamentoStep3_aggiornaCopertura'}" />	   		           								
+</s:if>
+<s:else>
+	<s:set var="aggiornaCoperturaAction" value="%{'gestioneOrdinativoIncassoStep3_aggiornaCopertura'}" />	   		           								
+</s:else>
+
 <!-- Modal aggProvvisorioCassa-->
 <!-- <div id="aggProvvisorioCassa" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="aggProvvisorioCassaLabel" aria-hidden="true"> -->
 	<div class="modal-header">
@@ -80,7 +87,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 	<div class="modal-footer">
 <!-- 		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button> -->
-		<s:submit id="submitBtnAggCopertura" name="btnAggCopertura" value="conferma" cssClass="btn btn-primary" method="aggiornaCopertura"/>
+		<!-- task-131 <s:submit id="submitBtnAggCopertura" name="btnAggCopertura" value="conferma" cssClass="btn btn-primary" method="aggiornaCopertura"/> -->
+		<s:submit id="submitBtnAggCopertura" name="btnAggCopertura" value="conferma" cssClass="btn btn-primary" action="%{#aggiornaCoperturaAction}"/>
 	</div>
 <!-- </div>  -->
 <!-- /Modal --->

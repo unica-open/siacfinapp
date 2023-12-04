@@ -17,7 +17,7 @@ SPDX-License-Identifier: EUPL-1.2
 		
 			<!-- Interceptor di log prima e a termine dell'invocazione -->
 			<interceptor name="logInterceptor" 
-				class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+				class="it.csi.siac.siaccommonapp.interceptor.LogInterceptor" />
 
 			<!--  Interceptor per la gestione degli errori di conversione 
 			<interceptor name="siacConversionErrorInterceptor" 
@@ -25,11 +25,18 @@ SPDX-License-Identifier: EUPL-1.2
 			-->	
 			
 			<!-- Interceptor per la gestione dei breadcrumb --> 
+			<!-- task-131 -->
+			<!-- 
 			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
   				<param name="defaultRewindMode">AUTO</param>
   				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
 			</interceptor>
-
+			-->
+			 <interceptor name="breadCrumbs" class="xyz.timedrain.arianna.plugin.BreadCrumbInterceptor">
+				<param name="defaultRewindMode">AUTO</param>
+				<param name="defaultComparator">xyz.timedrain.arianna.plugin.NameComparator</param>
+			</interceptor>
+			
 			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
 			<interceptor name="redirectMessage" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.RedirectMessageInterceptor" />
 							
@@ -40,6 +47,8 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="servletConfig"/>
 				<interceptor-ref name="i18n"/>
 	            <interceptor-ref name="actionData"/>
+					<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
 				<interceptor-ref name="prepare"/>
 	            <interceptor-ref name="redirectMessage"/>
 				<interceptor-ref name="chain"/>
@@ -69,8 +78,6 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="breadCrumbs"/>
 				
 				
-				<!-- Interceptor di log -->
-				<interceptor-ref name="logInterceptor" />
 				
 			</interceptor-stack>
 		</interceptors>
@@ -113,6 +120,14 @@ SPDX-License-Identifier: EUPL-1.2
 				</param>
 			</result>
 		</action>
+		<!-- SIAC-7477 -->
+		<action name="strutturaAmministrativeCompetenteAjax" class="ajaxAction" method="getStrutturaAmministrativaCompetente">
+			<result type="json">
+				<param name="includeProperties">
+					listaStrutturaAmministrativeCompetente.*
+				</param>
+			</result>
+		</action>
 		<action name="contoEconomicoAjax" class="ajaxAction" method="getContoEconomico">
 			<result type="json">
 				<param name="includeProperties">
@@ -124,6 +139,30 @@ SPDX-License-Identifier: EUPL-1.2
 			<result type="json">
 				<param name="includeProperties">
 					listaSiopeSpesa.*
+				</param>
+			</result>
+		</action>
+		<!-- SIAC-7349 -->
+		 <action name="getComponentiBilancioCapitoloAjax" class="ajaxAction" method="getComponentiBilancioCapitolo">
+			<result type="json">
+				<param name="includeProperties">
+					listaComponentiBilancio.*,
+					listaComponentiBilancioCompleta.*
+				</param>
+			</result>
+		</action>
+		<action name="getComponentiBilancioDaCapitoloAjax" class="ajaxAction" method="getComponentiBilancioDaCapitolo">
+			<result type="json">
+				<param name="includeProperties">
+					listaComponentiBilancio.*,
+					uidCapitolo
+				</param>
+			</result>
+		</action>
+		<action name="getComponentiBilancioTotaliAjax" class="ajaxAction" method="getComponentiBilancioTotali">
+			<result type="json">
+				<param name="includeProperties">
+					listaComponentiBilancio.*
 				</param>
 			</result>
 		</action>

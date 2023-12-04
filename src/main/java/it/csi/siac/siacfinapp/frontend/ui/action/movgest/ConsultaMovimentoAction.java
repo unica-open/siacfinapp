@@ -9,33 +9,47 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import it.csi.siac.siacbilser.frontend.webservice.MovimentoGestioneService;
+import it.csi.siac.siacbilser.frontend.webservice.msg.movimentogestione.RicercaDettaglioAccertamento;
+import it.csi.siac.siacbilser.frontend.webservice.msg.movimentogestione.RicercaDettaglioAccertamentoResponse;
+import it.csi.siac.siacbilser.frontend.webservice.msg.movimentogestione.RicercaDettaglioImpegno;
+import it.csi.siac.siacbilser.frontend.webservice.msg.movimentogestione.RicercaDettaglioImpegnoResponse;
 import it.csi.siac.siacbilser.model.CapitoloEntrataGestione;
 import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
 import it.csi.siac.siacbilser.model.ImportiCapitoloEG;
 import it.csi.siac.siacbilser.model.ImportiCapitoloUG;
+import it.csi.siac.siacbilser.model.movimentogestione.MutuoAssociatoMovimentoGestione;
+import it.csi.siac.siaccommon.util.CoreUtil;
+import it.csi.siac.siaccommon.util.collections.CollectionUtil;
 import it.csi.siac.siaccorser.model.ClassificatoreGenerico;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
+import it.csi.siac.siacfinapp.frontend.ui.exception.ImportoDeltaException;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.ConsultaMovimentiModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CommonConsulta.Soggetto;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ImportiCapitoloModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ModificaConsulta;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.MovimentoConsulta;
-import it.csi.siac.siacfinapp.frontend.ui.model.movgest.MutuoConsulta;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
-import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
+import it.csi.siac.siacfinapp.frontend.ui.util.ComparaVincoli;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ConsultaDettaglioAccertamento;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ConsultaDettaglioAccertamentoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ConsultaDettaglioImpegno;
@@ -45,29 +59,41 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.ConsultaVincoliAccertament
 import it.csi.siac.siacfinser.frontend.webservice.msg.DatiOpzionaliElencoSubTuttiConSoloGliIds;
 import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiStoricoAggiornamentoProvvedimentoMovimentoGestione;
 import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiStoricoAggiornamentoProvvedimentoMovimentoGestioneResponse;
+import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiStoricoAggiornamentoStrutturaCompetenteMovimentoGestione;
+import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiStoricoAggiornamentoStrutturaCompetenteMovimentoGestioneResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamentoPerChiaveOttimizzato;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamentoPerChiaveOttimizzatoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzato;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaModulareModificaMovimentoSpesaCollegata;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaModulareModificaMovimentoSpesaCollegataResponse;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaModulareVincoliAccertamento;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaModulareVincoliAccertamentoResponse;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaModulareVincoliImpegno;
+import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSinteticaModulareVincoliImpegnoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaStoricoImpegnoAccertamento;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaStoricoImpegnoAccertamentoResponse;
 import it.csi.siac.siacfinser.model.Accertamento;
-import it.csi.siac.siacfinser.model.AccertamentoDettaglioImporti;
 import it.csi.siac.siacfinser.model.AttoAmministrativoStoricizzato;
+import it.csi.siac.siacfinser.model.ClasseSoggetto;
+import it.csi.siac.siacfinser.model.DettaglioImportiAccertamento;
+import it.csi.siac.siacfinser.model.DettaglioImportiImpegno;
 import it.csi.siac.siacfinser.model.Impegno;
-import it.csi.siac.siacfinser.model.ImpegnoDettaglioImporti;
 import it.csi.siac.siacfinser.model.MovimentoGestione;
 import it.csi.siac.siacfinser.model.StoricoImpegnoAccertamento;
+import it.csi.siac.siacfinser.model.StrutturaAmmContabileFlatStoricizzato;
 import it.csi.siac.siacfinser.model.SubAccertamento;
 import it.csi.siac.siacfinser.model.SubImpegno;
+import it.csi.siac.siacfinser.model.errore.ErroreFin;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestione.StatoOperativoModificaMovimentoGestione;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneEntrata;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesa;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesaCollegata;
 import it.csi.siac.siacfinser.model.movgest.VincoloAccertamento;
 import it.csi.siac.siacfinser.model.movgest.VincoloImpegno;
-import it.csi.siac.siacfinser.model.mutuo.Mutuo;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.RicercaAccertamentoK;
 import it.csi.siac.siacfinser.model.ric.RicercaImpegnoK;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -92,6 +118,16 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	protected static final String BLOCCO_RAGIONERIA_NO = "NO";
 	protected static final String BLOCCO_RAGIONERIA_NA = "N/A";
 	
+	//task-93
+	@Autowired @Qualifier("movimentoGestioneBilService")
+	protected MovimentoGestioneService movimentoGestioneBilService;
+	
+	private static final Comparator<MutuoAssociatoMovimentoGestione> MutuoAssociatoMovimentoGestioneNumeroMutuoComparator = new Comparator<MutuoAssociatoMovimentoGestione>() {
+		@Override
+		public int compare(MutuoAssociatoMovimentoGestione arg0, MutuoAssociatoMovimentoGestione arg1) {
+			return arg0.getMutuo().getNumero().compareTo(arg1.getMutuo().getNumero());
+		}};	
+	
 	public boolean isImpegnoSdf(){
 		if (tipo.equals("I")) {
 			//ha senso solo per impegno
@@ -99,7 +135,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		}
 		return false;
 	}
-	
+
 	@Override
 	public String getActionKey() {
 		return "consultaImpegno";
@@ -116,7 +152,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		//setto il titolo:
 		this.model.setTitolo("Consulta movimento");
 	}	
-	
+
 	@Override
 	@BreadCrumb("%{model.titolo}")
 	public String execute() throws Exception {
@@ -185,20 +221,40 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 			
 			oggettoDaPopolare= OggettoDaPopolareEnum.IMPEGNO;
 			loadResponse(response, response.getCapitoloUscitaGestione());
+			//task-93 qui metto il metodo per ricavare la lista degli impegni che sono collegati al mutuo
+			loadResponseMutuiImpegno(response);
 			
 			model.getLabels().put(LABEL_OGGETTO_GENERICO_PADRE, "Impegno");
 			model.getLabels().put(LABEL_OGGETTO_GENERICO_PADRE_LOWER_CASE, "impegno");
 			
 			//MARZO 2017 CR 396:
 			ConsultaDettaglioImpegno reqConsDettaglio = new ConsultaDettaglioImpegno();
-			reqConsDettaglio.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			reqConsDettaglio.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			reqConsDettaglio.setAnnoMovimento(Integer.valueOf(anno));
 			reqConsDettaglio.setEnte(sessionHandler.getEnte());
 			reqConsDettaglio.setRichiedente(sessionHandler.getRichiedente());
 			reqConsDettaglio.setNumeroMovimento(new BigDecimal(numero));
-			ConsultaDettaglioImpegnoResponse respCons = movimentoGestionService.consultaDettaglioImpegno(reqConsDettaglio);
-			ImpegnoDettaglioImporti dettaglioImporti = respCons.getImpegnoDettaglioImporti();
+			ConsultaDettaglioImpegnoResponse respCons = movimentoGestioneFinService.consultaDettaglioImpegno(reqConsDettaglio);
+			//inizio SIAC-6997
+			DettaglioImportiImpegno dettaglioImporti = respCons.getImpegnoDettaglioImporti();
+			
+			if(dettaglioImporti.getStrutturaCompetente()==null) {
+				model.getMovimento().setStrutturaCompetente("");
+			}else {
+				model.getMovimento().setStrutturaCompetente(dettaglioImporti.getStrutturaCompetente().getCodice() + " - " + dettaglioImporti.getStrutturaCompetente().getDescrizione());
+			}
+			
+//			dettaglioImporti.getStrutturaCompetente().equals(null) ? model.getMovimento().setStrutturaCompetente("") : model.getMovimento().setStrutturaCompetente(dettaglioImporti.getStrutturaCompetente().getCodice() + " - " + dettaglioImporti.getStrutturaCompetente().getDescrizione());
+			
+			//model.getMovimento().setStrutturaCompetente(dettaglioImporti.getStrutturaCompetente().getCodice() + " - " + dettaglioImporti.getStrutturaCompetente().getDescrizione());
+			//fine SIAC-6997
 			model.setDettaglioImporti(dettaglioImporti);
+			model.setImpegnoConsulta(response.getImpegno());
+			
+			//task-250
+			model.getMovimento().setSoggetto(impostaSoggetto(model.getImpegnoConsulta().getSoggetto(),model.getImpegnoConsulta().getClasseSoggetto()));
+			
+			
 		}
 		else if (tipo.equals("A")) {
 			RicercaAccertamentoPerChiaveOttimizzatoResponse response = getAccertamento();
@@ -208,6 +264,8 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 			}	
 			oggettoDaPopolare= OggettoDaPopolareEnum.ACCERTAMENTO;
 			loadResponse(response.getAccertamento(), response.getCapitoloEntrataGestione());
+			//task-93 qui metto il metodo per ricavare la lista degli accertamenti che sono collegati al mutuo
+			loadResponseMutuiAccertamento(response.getAccertamento());
 			
 			model.getLabels().put(LABEL_OGGETTO_GENERICO_PADRE, "Accertamento");
 			model.getLabels().put(LABEL_OGGETTO_GENERICO_PADRE_LOWER_CASE, "accertamento");
@@ -236,34 +294,105 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 			
 			//APRILE 2017 CR 627:
 			ConsultaDettaglioAccertamento reqConsDettaglio = new ConsultaDettaglioAccertamento();
-			reqConsDettaglio.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			reqConsDettaglio.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			reqConsDettaglio.setAnnoMovimento(Integer.valueOf(anno));
 			reqConsDettaglio.setEnte(sessionHandler.getEnte());
 			reqConsDettaglio.setRichiedente(sessionHandler.getRichiedente());
 			reqConsDettaglio.setNumeroMovimento(new BigDecimal(numero));
-			ConsultaDettaglioAccertamentoResponse respCons = movimentoGestionService.consultaDettaglioAccertamento(reqConsDettaglio);
-			AccertamentoDettaglioImporti dettaglioImporti = respCons.getAcertamentoDettaglioImporti();
+			ConsultaDettaglioAccertamentoResponse respCons = movimentoGestioneFinService.consultaDettaglioAccertamento(reqConsDettaglio);
+			//inizio SIAC-6997
+			DettaglioImportiAccertamento dettaglioImporti = respCons.getAcertamentoDettaglioImporti();
+//			model.getMovimento().setStrutturaCompetente(dettaglioImporti.getStrutturaCompetente().getCodice() + " - " + dettaglioImporti.getStrutturaCompetente().getDescrizione());
+			
+			if(dettaglioImporti.getStrutturaCompetente()==null) {
+				model.getMovimento().setStrutturaCompetente("");
+			}else {
+				model.getMovimento().setStrutturaCompetente(dettaglioImporti.getStrutturaCompetente().getCodice() + " - " + dettaglioImporti.getStrutturaCompetente().getDescrizione());			}
+			
 			model.setDettaglioImportiAcc(dettaglioImporti);
+			model.setAccertamentoConsulta(response.getAccertamento());
+
+			//task-250
+			model.getMovimento().setSoggetto(impostaSoggetto(model.getAccertamentoConsulta().getSoggetto(), model.getAccertamentoConsulta().getClasseSoggetto()));
+			
+			
 			
 			//SETTEMBRE 2017 CR 946 - Consultazione Accertamenti - vincoli
 			ConsultaVincoliAccertamento reqConsVincoli = new ConsultaVincoliAccertamento();
-			reqConsVincoli.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			reqConsVincoli.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			reqConsVincoli.setAnnoMovimento(Integer.valueOf(anno));
 			reqConsVincoli.setEnte(sessionHandler.getEnte());
 			reqConsVincoli.setRichiedente(sessionHandler.getRichiedente());
 			reqConsVincoli.setNumeroMovimento(new BigDecimal(numero));
-			ConsultaVincoliAccertamentoResponse respVincoli = movimentoGestionService.consultaVincoliAccertamento(reqConsVincoli);
+			ConsultaVincoliAccertamentoResponse respVincoli = movimentoGestioneFinService.consultaVincoliAccertamento(reqConsVincoli);
 			
 			List<VincoloAccertamento> vincoli = respVincoli.getVincoli();
-			loadVincoli(response.getAccertamento(), vincoli);
+			loadVincoli(response.getAccertamento(), vincoli);		
 			
 		}
 		
 		//ordinamento
 		Collections.sort(model.getListaModifiche(), new NumComparator());
-
+		
 		return SUCCESS;
 	}
+	
+	//task-250
+	private Soggetto impostaSoggetto(it.csi.siac.siacfinser.model.soggetto.Soggetto soggetto, it.csi.siac.siacfinser.model.codifiche.ClasseSoggetto classe) {
+		Soggetto s = model.getMovimento().getSoggetto();
+		s.setCodice(soggetto.getCodice());
+		s.setCodiceFiscale(soggetto.getCodiceFiscale());
+		s.setDenominazione(soggetto.getDenominazione());
+		s.setPartitaIva(soggetto.getPartitaIva());
+		if(classe != null) {
+			s.setClasseSoggettoCodice(classe.getCodice());
+			s.setClasseSoggettoDescrizione(classe.getDescrizione());
+		}else {
+			s.setClasseSoggettoCodice(null);
+			s.setClasseSoggettoDescrizione(null);
+		}
+		return s;
+	}
+	
+	// inizio SIAC-6997
+	public String consultaModificheStrutturaCompetente() throws Exception{
+		//info per debug:
+		setMethodName("consultaModificheStrutturaCompetente");
+		
+		//leggo i dati necessari:
+		if (tipo.equals("I")) {
+			Impegno impegno = model.getImpegnoConsulta();
+			leggiStoricoStrutturaCompetenteByMovimento(impegno);
+		}else {
+			Accertamento accertamento = model.getAccertamentoConsulta();
+			leggiStoricoStrutturaCompetenteByMovimento(accertamento);
+		}
+		
+		return "consultaModificheStrutturaCompetente";
+	}
+	
+	/**
+	 * richiama il servizio di lettura dello storico delle modifche della Struttura Competente
+	 * @param movimento
+	 */
+	public void leggiStoricoStrutturaCompetenteByMovimento(MovimentoGestione movimento) {
+		LeggiStoricoAggiornamentoStrutturaCompetenteMovimentoGestione req = new LeggiStoricoAggiornamentoStrutturaCompetenteMovimentoGestione();
+		req.setRichiedente(sessionHandler.getRichiedente());
+		req.setMovimento(movimento);
+		
+		LeggiStoricoAggiornamentoStrutturaCompetenteMovimentoGestioneResponse res = movimentoGestioneFinService.leggiStoricoAggiornamentoStrutturaCompetenteMovimentoGestione(req);
+		
+		if(res!=null && !res.isFallimento()){
+			
+			if(res.getStoricoStrutturaCompetente()!=null && !res.getStoricoStrutturaCompetente().isEmpty()){
+				model.setListaModificheStruttureCompetenti(res.getStoricoStrutturaCompetente());
+			}else{
+				model.setListaModificheStruttureCompetenti(new ArrayList<StrutturaAmmContabileFlatStoricizzato>());
+			}
+		}
+	}
+	
+	// fine SIAC-6997
 	
 	/**
 	 * Load legame movimento storicizzato.
@@ -277,15 +406,15 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		if (tipo.equals("I")) {
 			imp = new Impegno();
 			imp.setAnnoMovimento(Integer.valueOf(model.getMovimento().getAnno()));
-			imp.setNumero(new BigDecimal(model.getMovimento().getNumero()));
+			imp.setNumeroBigDecimal(new BigDecimal(model.getMovimento().getNumero()));
 		}
 		if(tipo.equals("A")) {
 			acc = new Accertamento();
 			acc.setAnnoMovimento(Integer.valueOf(model.getMovimento().getAnno()));
-			acc.setNumero(new BigDecimal(model.getMovimento().getNumero()));
+			acc.setNumeroBigDecimal(new BigDecimal(model.getMovimento().getNumero()));
 		}
 		RicercaStoricoImpegnoAccertamento req = model.creaRequestRicercaStoricoImpegnoAccertamento(sessionHandler.getBilancio(), imp, acc);
-		RicercaStoricoImpegnoAccertamentoResponse res = movimentoGestionService.ricercaStoricoImpegnoAccertamento(req);
+		RicercaStoricoImpegnoAccertamentoResponse res = movimentoGestioneFinService.ricercaStoricoImpegnoAccertamento(req);
 		if(res.hasErrori()) {
 			addErrori(res);
 			return "errori";
@@ -299,7 +428,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	
 	public boolean statoImpegnoDefinitivo(){
 		boolean statoDef = false;
-		if(model.getMovimento()!=null && model.getMovimento().getStatoOperativo().equalsIgnoreCase(Constanti.STATO_DEFINITIVO)){
+		if(model.getMovimento()!=null && model.getMovimento().getStatoOperativo().equalsIgnoreCase(CostantiFin.STATO_DEFINITIVO)){
 			statoDef = true;
 		}
 		return statoDef;
@@ -321,13 +450,13 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		if(model.getMovimento().getTipoMovimento() == MovimentoConsulta.IMPEGNO){
 			
 			ConsultaDettaglioImpegno reqCons = new ConsultaDettaglioImpegno();
-			reqCons.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			reqCons.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			reqCons.setAnnoMovimento(Integer.valueOf(model.getMovimento().getAnno()));
 			reqCons.setEnte(sessionHandler.getEnte());
 			reqCons.setNumeroMovimento(new BigDecimal(model.getMovimento().getNumero()));
 			reqCons.setNumeroSub(new BigDecimal(numeroSub));
 			reqCons.setRichiedente(sessionHandler.getRichiedente());
-			ConsultaDettaglioImpegnoResponse resp = movimentoGestionService.consultaDettaglioImpegno(reqCons);
+			ConsultaDettaglioImpegnoResponse resp = movimentoGestioneFinService.consultaDettaglioImpegno(reqCons);
 			
 			if(resp!=null){
 				model.setDettaglioImportiSubSelezionato(resp.getImpegnoDettaglioImporti());
@@ -336,13 +465,13 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		} else {
 			
 			ConsultaDettaglioAccertamento reqCons = new ConsultaDettaglioAccertamento();
-			reqCons.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			reqCons.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			reqCons.setAnnoMovimento(Integer.valueOf(model.getMovimento().getAnno()));
 			reqCons.setEnte(sessionHandler.getEnte());
 			reqCons.setNumeroMovimento(new BigDecimal(model.getMovimento().getNumero()));
 			reqCons.setNumeroSub(new BigDecimal(numeroSub));
 			reqCons.setRichiedente(sessionHandler.getRichiedente());
-			ConsultaDettaglioAccertamentoResponse resp = movimentoGestionService.consultaDettaglioAccertamento(reqCons);
+			ConsultaDettaglioAccertamentoResponse resp = movimentoGestioneFinService.consultaDettaglioAccertamento(reqCons);
 			
 			if(resp!=null){
 				model.setDettaglioImportiSubAccSelezionato(resp.getAcertamentoDettaglioImporti());
@@ -362,7 +491,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	public String dettaglioModPopup() {
 		setMethodName("dettaglioModPopup");
 		debug(methodName, "UID mod: "+getUidPerDettaglioMod());
-
+		
 		model.setModificaDettaglio(model.getListaModifiche().get(Integer.valueOf(getUidPerDettaglioMod()) - 1));
 		
 		return "dettaglioModPopup";
@@ -381,7 +510,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		RicercaImpegnoK k = new RicercaImpegnoK();
 			k.setAnnoImpegno(Integer.valueOf(anno));
 			k.setNumeroImpegno(new BigDecimal(numero));
-			k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		request.setpRicercaImpegnoK(k);
 		request.setEnte(sessionHandler.getEnte());
 		request.setRichiedente(sessionHandler.getRichiedente());
@@ -390,8 +519,6 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		request.setCaricaSub(false);
 		DatiOpzionaliElencoSubTuttiConSoloGliIds datiOpzionaliElencoSubTuttiConSoloGliIds = new DatiOpzionaliElencoSubTuttiConSoloGliIds();
 		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaElencoModificheMovGest(true);
-		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaMutui(true);
-		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaVociMutuo(true);
 		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaCig(true);
 		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaCup(true);
 		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaDisponibileLiquidareEDisponibilitaInModifica(true);
@@ -400,7 +527,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		request.setDatiOpzionaliElencoSubTuttiConSoloGliIds(datiOpzionaliElencoSubTuttiConSoloGliIds );
 		//
 		
-		RicercaImpegnoPerChiaveOttimizzatoResponse response =  movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(request);
+		RicercaImpegnoPerChiaveOttimizzatoResponse response =  movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(request);
 		
 		if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)) {
 			debug(methodName, "Errore nella risposta del servizio");
@@ -423,7 +550,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		//
 		mc.setIdMovimento(impegno.getUid());
 		mc.setAnno(String.valueOf(impegno.getAnnoMovimento()));
-		mc.setNumero(String.valueOf(impegno.getNumero()));
+		mc.setNumero(String.valueOf(impegno.getNumeroBigDecimal()));
 		mc.setDescrizione(impegno.getDescrizione());
 	    mc.setImporto(impegno.getImportoAttuale());
 	    mc.setImportoIniziale(impegno.getImportoIniziale());
@@ -449,6 +576,9 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
         	mc.setAnnoScritturaEconomicoPatrimoniale(impegno.getAnnoScritturaEconomicoPatrimoniale().toString());
         }
         
+        //SIAC-7349
+        if(impegno.getComponenteBilancioImpegno() != null)
+        	mc.setDescrizioneComponente(impegno.getComponenteBilancioImpegno().getDescrizioneTipoComponente());
         
         //SIAC-6929
         if(!ObjectUtils.equals(impegno.getAttoAmministrativo(), null) 
@@ -481,16 +611,17 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 //        		impegno.getCodPdc(),
 //        		impegno.getCodCofog(),
 //        		impegno.getCodSiope()));
-        mc.setCodificaTransazioneElementare(componiTransazioneElementare(impegno));
+        //SIAC-8840
+        mc.setCodificaTransazioneElementare(componiTransazioneElementareImpegno(impegno,capitolo));
         
 	    // disponibilita
 	    mc.setDisponibilitaSub(impegno.getDisponibilitaSubimpegnare());
-	    mc.setTotaleSub(impegno.getTotaleSubImpegni());
+	    mc.setTotaleSub(impegno.getTotaleSubImpegniBigDecimal());
 	    mc.setDisponibilitaLiquidare(impegno.getDisponibilitaLiquidare());
 	    
 	    // 	SIAC-5558 il servizio e' corretto che possa darmi un valaore diverso da zero per 
 	    //  definitivi non liquidabili, ma sulla maschera di consulta lo setto a zero:
-	    if(Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equals(impegno.getStatoOperativoMovimentoGestioneSpesa())){
+	    if(CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equals(impegno.getStatoOperativoMovimentoGestioneSpesa())){
 	    	 mc.setDisponibilitaPagare(new BigDecimal(0.0));
 	    } else {
 	    	 mc.setDisponibilitaPagare(impegno.getDisponibilitaPagare());
@@ -552,13 +683,22 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
     	} else {
     		mc.setFrazionabileString(WebAppConstants.NON_FRAZIONABILE);
     	}
-	    
+    	
         // riaccertamento
         if (impegno.isFlagDaRiaccertamento()){ 
         	mc.setDaRiaccertamento(WebAppConstants.MSG_SI + " " + impegno.getAnnoRiaccertato() + " / " + impegno.getNumeroRiaccertato());
         }else{
         	mc.setDaRiaccertamento(WebAppConstants.MSG_NO);
         }	
+        
+        // inizio SIAC-6997
+        if (impegno.isFlagDaReanno()){ 
+        	mc.setDaReanno(WebAppConstants.MSG_SI + " " + impegno.getAnnoRiaccertato() + " / " + impegno.getNumeroRiaccertato());
+        }else{
+        	mc.setDaReanno(WebAppConstants.MSG_NO);
+        }
+        
+        // fine SIAC-6997
                 
         if (impegno.isFlagSoggettoDurc()){ 
         	mc.setSoggettoDurc(WebAppConstants.MSG_SI);
@@ -662,44 +802,167 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		mc.setMotivazioneDisponibilitaSubImpegnare(impegno.getMotivazioneDisponibilitaSubImpegnare());
 		mc.setMotivazioneDisponibilitaImpegnoModifica(impegno.getMotivazioneDisponibilitaImpegnoModifica());
 		mc.setMotivazioneDisponibilitaVincolare(impegno.getMotivazioneDisponibilitaVincolare());
+		
+		//SIAC-6865
+		if(StringUtils.isNotEmpty(impegno.getAnnoPrenotazioneOrigine())) {
+			mc.setAggiudicazioneDaPrenotazione(true);
+			mc.setImpegnoPrenotazioneOrigine(impegno.getImpegnoPrenotazioneOrigine());
+			mc.setProvvedimentoAggiudicazione(impegno.getAttoAmministrativoAggiudicazione());
+		}
         
         return mc;
-	}
-
+	}  
+	
 	/**
-	 * Nella consultazione degli impegni definire meglio le informazioni della transazione elementare dividendola su due righe e aggiungendo le lable come nell'esempio:
-	 * <pre>Transazione Elementare missione 14 programma 1401 Cofog 04,4
-                                   P.d.C. finanziario U.2.04.23.01.001 YYYY</pre>
+	 * Nella consultazione degli impegni definire meglio le informazioni della transazione elementare dividendola 
+	 * su cinque righe e aggiungendo le label come nell'esempio per la spesa:
+	 * <pre>
+	 * 		Transazione Elementare Missione: 14 Programma: 1401 Cofog: 04,4
+	 * 							   P.d.C. finanziario: U.2.04.23.01.001 Siope: YYYY
+	 * 							   Capitoli perimetro sanitario: 2 Ricorrente: 3
+	 * 							   Codifica transazione europea: 1 Cup: A00TLOU2JKJHKUH
+	 * 							   Programma pol. reg. unitaria: 4
+	 * </pre>
+	 * o su tre righe per l'entrata aggiungendo le label come nell'esempio:
+	 * <pre>
+	 * 		Transazione Elementare P.d.C. finanziario: E.3.03.02.01.001 Siope: YYYY
+	 * 							   Capitoli perimetro sanitario: 1 Ricorrente: 2
+	 * 							   Codifica transazione europea: 1 
+	 * </pre>
 	 * @param impegno l'impegno
 	 * @return la transazione
 	 */
-	private String componiTransazioneElementare(Impegno impegno) {
+    //SIAC-8629 Generics e perimetro sanitario
+	private <MOV extends MovimentoGestione> String componiTransazioneElementare(MOV movimento) {
 		List<String> lines = new ArrayList<String>();
-		// Prima riga: missione, programma, cofog
 		List<String> firstLine = new ArrayList<String>();
-		if(StringUtils.isNotBlank(impegno.getCodMissione())) {
-			firstLine.add("<strong>Missione:</strong> " + impegno.getCodMissione());
+		// Prima riga: missione, programma, cofog
+		if(StringUtils.isNotBlank(movimento.getCodMissione())) {
+			firstLine.add("<strong>Missione:</strong> " + movimento.getCodMissione());
 		}
-		if(StringUtils.isNotBlank(impegno.getCodProgramma())) {
-			firstLine.add("<strong>Programma:</strong> " + impegno.getCodProgramma());
+		if(StringUtils.isNotBlank(movimento.getCodProgramma())) {
+			firstLine.add("<strong>Programma:</strong> " + movimento.getCodProgramma());
 		}
-		if(StringUtils.isNotBlank(impegno.getCodCofog())) {
-			firstLine.add("<strong>Cofog:</strong> " + impegno.getCodCofog());
+		if(StringUtils.isNotBlank(movimento.getCodCofog())) {
+			firstLine.add("<strong>Cofog:</strong> " + movimento.getCodCofog());
 		}
-		lines.add(StringUtils.join(firstLine, ' '));
+		aggiungiRigaTransazioneElemenatale(lines, firstLine);
 		
 		// Seconda riga: pdc, siope
 		List<String> secondLine = new ArrayList<String>();
-		if(StringUtils.isNotBlank(impegno.getCodPdc())) {
-			secondLine.add("<strong>P.d.C. finanziario:</strong> " + impegno.getCodPdc());
+		if(StringUtils.isNotBlank(movimento.getCodPdc())) {
+			secondLine.add("<strong>P.d.C. finanziario:</strong> " + movimento.getCodPdc());
 		}
-		if(StringUtils.isNotBlank(impegno.getCodSiope())) {
-			secondLine.add("<strong>Siope:</strong> " + impegno.getCodSiope());
+		if(StringUtils.isNotBlank(movimento.getCodSiope())) {
+			secondLine.add("<strong>Siope:</strong> " + movimento.getCodSiope());
 		}
-		lines.add(StringUtils.join(secondLine, ' '));
+		aggiungiRigaTransazioneElemenatale(lines, secondLine);
+
+		// Terza riga: perimetro sanitario, ricorrente
+		List<String> thirdLine = new ArrayList<String>();
+		if(StringUtils.isNotBlank(movimento.getCodCapitoloSanitarioSpesa())) {
+			thirdLine.add("<strong>Capitoli perimetro sanitario:</strong> " + movimento.getCodCapitoloSanitarioSpesa());
+		}
+		if(StringUtils.isNotBlank(movimento.getCodRicorrenteSpesa())) {
+			thirdLine.add("<strong>Ricorrente:</strong> " + movimento.getCodRicorrenteSpesa());
+		}
+		aggiungiRigaTransazioneElemenatale(lines, thirdLine);
+
+		// Quarta riga: transazione europea, cup
+		List<String> fourthLine = new ArrayList<String>();
+		if(StringUtils.isNotBlank(movimento.getCodTransazioneEuropeaSpesa())) {
+			fourthLine.add("<strong>Codifica transazione europea:</strong> " + movimento.getCodTransazioneEuropeaSpesa());
+		}
+		if(StringUtils.isNotBlank(movimento.getCup())) {
+			fourthLine.add("<strong>Cup:</strong> " + movimento.getCup());
+		}
+		aggiungiRigaTransazioneElemenatale(lines, fourthLine);
+
+		// Quinta riga: programma politica regionale
+		List<String> fifthLine = new ArrayList<String>();
+		if(StringUtils.isNotBlank(movimento.getCodPrgPolReg())) {
+			fifthLine.add("<strong>Programma pol. reg. unitaria:</strong> " + movimento.getCodPrgPolReg());
+		}
+		aggiungiRigaTransazioneElemenatale(lines, fifthLine);
 		
 		return StringUtils.join(lines, "<br/>");
 	} 
+	//SIAC-8840
+	private <MOV extends MovimentoGestione> String componiTransazioneElementareImpegno(MOV movimento, CapitoloUscitaGestione capitolo) {
+		List<String> lines = new ArrayList<String>();
+		List<String> firstLine = new ArrayList<String>();
+		// Prima riga: missione, programma, cofog
+		if(capitolo!=null) {
+			if(StringUtils.isNotBlank(movimento.getCodMissione())) {
+				firstLine.add("<strong>Missione:</strong> " + capitolo.getMissione().getCodice());
+			}
+			if(StringUtils.isNotBlank(movimento.getCodProgramma())) {
+				firstLine.add("<strong>Programma:</strong> " + capitolo.getProgramma().getCodice());
+			}
+			if(StringUtils.isNotBlank(movimento.getCodCofog())) {
+				//SIAC-8875
+				firstLine.add("<strong>Cofog:</strong> " + movimento.getCodCofog());
+			}
+		}else {
+			//SIAC-8858
+			if(StringUtils.isNotBlank(movimento.getCodMissione())) {
+				firstLine.add("<strong>Missione:</strong> " + movimento.getCodMissione());
+			}
+			if(StringUtils.isNotBlank(movimento.getCodProgramma())) {
+				firstLine.add("<strong>Programma:</strong> " + movimento.getCodProgramma());
+			}
+			if(StringUtils.isNotBlank(movimento.getCodCofog())) {
+				firstLine.add("<strong>Cofog:</strong> " + movimento.getCodCofog());
+			}
+		}
+		aggiungiRigaTransazioneElemenatale(lines, firstLine);
+		
+		// Seconda riga: pdc, siope
+		List<String> secondLine = new ArrayList<String>();
+		if(StringUtils.isNotBlank(movimento.getCodPdc())) {
+			secondLine.add("<strong>P.d.C. finanziario:</strong> " + movimento.getCodPdc());
+		}
+		if(StringUtils.isNotBlank(movimento.getCodSiope())) {
+			secondLine.add("<strong>Siope:</strong> " + movimento.getCodSiope());
+		}
+		aggiungiRigaTransazioneElemenatale(lines, secondLine);
+
+		// Terza riga: perimetro sanitario, ricorrente
+		List<String> thirdLine = new ArrayList<String>();
+		if(StringUtils.isNotBlank(movimento.getCodCapitoloSanitarioSpesa())) {
+			thirdLine.add("<strong>Capitoli perimetro sanitario:</strong> " + movimento.getCodCapitoloSanitarioSpesa());
+		}
+		if(StringUtils.isNotBlank(movimento.getCodRicorrenteSpesa())) {
+			thirdLine.add("<strong>Ricorrente:</strong> " + movimento.getCodRicorrenteSpesa());
+		}
+		aggiungiRigaTransazioneElemenatale(lines, thirdLine);
+
+		// Quarta riga: transazione europea, cup
+		List<String> fourthLine = new ArrayList<String>();
+		if(StringUtils.isNotBlank(movimento.getCodTransazioneEuropeaSpesa())) {
+			fourthLine.add("<strong>Codifica transazione europea:</strong> " + movimento.getCodTransazioneEuropeaSpesa());
+		}
+		if(StringUtils.isNotBlank(movimento.getCup())) {
+			fourthLine.add("<strong>Cup:</strong> " + movimento.getCup());
+		}
+		aggiungiRigaTransazioneElemenatale(lines, fourthLine);
+
+		// Quinta riga: programma politica regionale
+		List<String> fifthLine = new ArrayList<String>();
+		if(StringUtils.isNotBlank(movimento.getCodPrgPolReg())) {
+			fifthLine.add("<strong>Programma pol. reg. unitaria:</strong> " + movimento.getCodPrgPolReg());
+		}
+		aggiungiRigaTransazioneElemenatale(lines, fifthLine);
+		
+		return StringUtils.join(lines, "<br/>");
+	} 
+	
+	//SIAC-8629
+	private void aggiungiRigaTransazioneElemenatale(List<String> lines, List<String> linesToAdd) {
+		if(CollectionUtils.isNotEmpty(linesToAdd)) {
+			lines.add(StringUtils.join(linesToAdd, ' '));
+		}
+	}
 	
 	/**
 	 * Carica in un oggetto ModificaConsulta i dati della modifica movimento di spesa
@@ -713,13 +976,16 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		mc.setNumero(String.valueOf(modifica.getNumeroModificaMovimentoGestione()));
 		mc.setDescrizione(modifica.getDescrizioneModificaMovimentoGestione());
 	    mc.setImporto(modifica.getImportoOld());
+	    //SIAC-8834
+	    mc.setImpegnoAssociato(modifica.getImpegno());
 	    mc.setMotivo(modifica.getTipoMovimentoDesc());
 	    mc.setUtenteCreazione(modifica.getUtenteCreazione());
 	    mc.setUtenteModifica(modifica.getUtenteModifica());
 	    mc.setDataInserimento(modifica.getDataEmissione());
 	    mc.setDataModifica(modifica.getDataModifica());
 	    mc.setStatoOperativo(modifica.getStatoOperativoModificaMovimentoGestione().name());
-	    mc.setDataStatoOperativo(modifica.getDataModificaMovimentoGestione());
+	    //SIAC-8183
+	    mc.setDataStatoOperativo(modifica.getDataFromStatoOperativo());
 	    
 	    //Reimputazione:
 	    mc = settaDatiReimputazioneInModificaConsulta(modifica, mc);
@@ -772,7 +1038,12 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	    } else if (modifica.getClasseSoggettoNewMovimentoGestione() != null && modifica.getClasseSoggettoNewMovimentoGestione().getUid() != 0) {
 	    	mc.getSoggettoAttuale().setClasseSoggettoCodice(modifica.getClasseSoggettoNewMovimentoGestione().getCodice());
 	    	mc.getSoggettoAttuale().setClasseSoggettoDescrizione(modifica.getClasseSoggettoNewMovimentoGestione().getDescrizione());
-	    }	    
+	    }	   
+	    
+	    //SIAC-7349 Inizio  SR180 CM 22/04/2020 Aggiunto per visualizzazione lista modifiche movimenti di spesa in consulta impegno
+	    mc.setListaModificheMovimentoGestioneSpesaCollegata(modifica.getListaModificheMovimentoGestioneSpesaCollegata());
+	    //SIAC-7349 Fine  SR180 CM 22/04/2020
+	    
 	    return mc;
 	}
 
@@ -795,16 +1066,68 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		
 		loadResponseSubimp(descImpegno,response);
 		loadResponseModimp(descImpegno,response);
-		loadMutui(descImpegno, response);
+
 		loadVincoli(impegno, descImpegno);
+		//SIAC-8650
+		loadVincoliOriginari(impegno);
 	}
 	
+	//task-93
+	private void loadResponseMutuiImpegno(RicercaImpegnoPerChiaveOttimizzatoResponse response){
+		
+		Impegno impegno = response.getImpegno();
+		RicercaDettaglioImpegno request = model.creaRequestRicercaDettaglioImpegnoMutuo();
+		request.setImpegno(impegno);
+		
+		//la res di ricercaDettaglioImpegno è valorizzata corretta
+		RicercaDettaglioImpegnoResponse res = movimentoGestioneBilService.ricercaDettaglioImpegno(request);
+		//la res non ha gli impegni che res ha valorizzato nel service
+		
+		if(!res.hasErrori() && res.getImpegno() != null) {
+			model.setElencoMutuiAssociati(CollectionUtil.getSortedList(res.getImpegno().getElencoMutuiAssociati(), MutuoAssociatoMovimentoGestioneNumeroMutuoComparator));
+		}
+	}
+	
+	
+	//SIAC-8650
+	private void loadVincoliOriginari(Impegno impegno) {
+		RicercaSinteticaModulareVincoliImpegno req = model
+				.creaRequestRicercaSinteticaModulareVincoliOriginariImpegno(sessionHandler.getAnnoBilancio());
+		
+		RicercaSinteticaModulareVincoliImpegnoResponse res = 
+				movimentoGestioneFinService.ricercaSinteticaModulareVincoliImpegno(req);
+		
+		if(res.hasErrori()) {
+			model.addErrori(res.getErrori());
+			return;
+		}
+		
+		model.setListaVincoliImpegnoOriginari(res.getVincoliImpegno());
+		model.setPrimoImpCatena(res.getImpegno());
+	}
+
+	//SIAC-8650
+	private void loadVincoliOriginari(Accertamento accertamento) {
+		RicercaSinteticaModulareVincoliAccertamento req = model
+				.creaRequestRicercaSinteticaModulareVincoliOriginariAccertamento(sessionHandler.getAnnoBilancio());
+		
+		RicercaSinteticaModulareVincoliAccertamentoResponse res = 
+				movimentoGestioneFinService.ricercaSinteticaModulareVincoliAccertamento(req);
+		
+		if(res.hasErrori()) {
+			model.addErrori(res.getErrori());
+			return;
+		}
+		
+		model.setListaVincoliAccertamentoOriginari(res.getVincoliAccertamento());
+		model.setPrimoAccCatena(res.getAccertamento());
+	}
 	
 	/**
 	 * Carica nel model una lista di subimpegni
 	 * @param subResponse
 	 */
-	private void loadResponseSubimp (String descImpegno,RicercaImpegnoPerChiaveOttimizzatoResponse response) {
+	private void loadResponseSubimp(String descImpegno,RicercaImpegnoPerChiaveOttimizzatoResponse response) {
 		ArrayList<MovimentoConsulta> subImp = new ArrayList<MovimentoConsulta>();
 		
 		List<SubImpegno> elencoSub = response.getElencoSubImpegniTuttiConSoloGliIds();
@@ -841,7 +1164,6 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		if (impegno.getListaModificheMovimentoGestioneSpesa() != null) {
 			for (ModificaMovimentoGestioneSpesa modif : impegno.getListaModificheMovimentoGestioneSpesa()) {
 				ModificaConsulta mc = new ModificaConsulta();
-				
 				modList.add(mapModifica(mc, modif));
 				mc.setDescMain(descImpegno);
 			}
@@ -850,38 +1172,97 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		if (elencoSubImpegni != null) {
 			for (SubImpegno subimp : elencoSubImpegni) {
 				if (subimp.getListaModificheMovimentoGestioneSpesa() != null) {
-					String descSub = subimp.getNumero() + " (" +  subimp.getStatoOperativoMovimentoGestioneSpesa() + " dal " + convertDateToString(subimp.getDataStatoOperativoMovimentoGestioneSpesa()) + ")";	
+					String descSub = subimp.getNumeroBigDecimal() + " (" +  subimp.getStatoOperativoMovimentoGestioneSpesa() + " dal " + convertDateToString(subimp.getDataStatoOperativoMovimentoGestioneSpesa()) + ")";	
 					for (ModificaMovimentoGestioneSpesa modif : subimp.getListaModificheMovimentoGestioneSpesa()) {
 						ModificaConsulta mc = new ModificaConsulta();
 						modList.add(mapModifica(mc, modif));
 						mc.setDescMain(descImpegno);
-				    	mc.setNumSub(String.valueOf(subimp.getNumero()));
+				    	mc.setNumSub(String.valueOf(subimp.getNumeroBigDecimal()));
 				    	mc.setDescSub(descSub);
 						
 					}
 				}
 			}
 		}
-
-		
-		
-		
-		
 		model.setListaModifiche(modList);
 	}
 	
+	//SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM: mostrare il residuo delle modifiche di un accertamento che rimane da collegare/
+	private BigDecimal calcolaDiCuiPending(Impegno impegno) throws ImportoDeltaException{
+		BigDecimal vincoliDiCuiPending = BigDecimal.ZERO;
+		BigDecimal totPrimoValore = BigDecimal.ZERO;
+		BigDecimal totSecondoValore = BigDecimal.ZERO;
+		if(impegno.getListaModificheMovimentoGestioneSpesa() != null && !impegno.getListaModificheMovimentoGestioneSpesa().isEmpty()){
+			for(int j =  0; j < impegno.getListaModificheMovimentoGestioneSpesa().size(); j++){
+				if(!impegno.getListaModificheMovimentoGestioneSpesa().get(j).isElaboraRorReanno() &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).isReimputazione() && 
+					!(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getStatoOperativoModificaMovimentoGestione().name().equals(StatoOperativoModificaMovimentoGestione.ANNULLATO.name())) &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld() != null &&
+					impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().compareTo(BigDecimal.ZERO) < 0){
+					//PRENDO SEMPRE IL VALORE DELLA MODIFICA COME PRIMO STEP
+					totPrimoValore = totPrimoValore.add(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().abs());
+					BigDecimal importoDeltaVincolo = impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoDeltaVincolo();
+					if(importoDeltaVincolo != null && importoDeltaVincolo.compareTo(BigDecimal.ZERO) > 0){
+						if(importoDeltaVincolo.compareTo(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getImportoOld().abs()) > 0){
+							throw new ImportoDeltaException("Errore nel calcolo di importo delta vincoli");
+						}else
+							totPrimoValore = totPrimoValore.subtract(importoDeltaVincolo);
+					}
+					if(impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata() != null &&
+						!impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata().isEmpty()){
+						for(int k =  0; k < impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata().size(); k++){
+							totSecondoValore = totSecondoValore.add(
+								impegno.getListaModificheMovimentoGestioneSpesa().get(j).getListaModificheMovimentoGestioneSpesaCollegata().get(k).getImportoCollegamento()
+							);
+						}
+					}
+					//QUESTO E' IL VALORE DA RIPARTIRE SUI VINCOLI DI TIPO ACCERTAMENTO CHE NON HANNO MODIFICHE GIA' COLLEGATE
+					vincoliDiCuiPending = totPrimoValore.subtract(totSecondoValore);				}
+			}
+		}
+		return vincoliDiCuiPending;
+	}
+	//END SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM
+		
 	private void loadVincoli(Impegno impegno, String descImpegno){
-		
+		//SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM: mostrare il residuo delle modifiche di un accertamento che rimane da collegare
+		BigDecimal vincoliDiCuiPending = BigDecimal.ZERO;
+		try{
+			vincoliDiCuiPending = calcolaDiCuiPending(impegno);
+		}catch(ImportoDeltaException e){
+			addErrore(ErroreFin.IMPORTO_DELTA_VINCOLI.getErrore(""));
+		}
+		//END SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM
+	
 		List<VincoloImpegno> vincoliList = new ArrayList<VincoloImpegno>();
-		
 		if(impegno.getVincoliImpegno()!=null && !impegno.getVincoliImpegno().isEmpty()){
-		
+			Collections.sort(impegno.getVincoliImpegno(), Collections.reverseOrder(new ComparaVincoli()));
 			for (VincoloImpegno vincoloImpegno : impegno.getVincoliImpegno()) {
+		
+				//SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM: se il vincolo è legato ad un accertamento verifico se questo ha delle modifiche già collegate e quindi lo scarto
+				//se invece non ha modifiche collegate allora devo calcorare il residuo "diCuiPending" fino ad esaurimento
+				if(vincoloImpegno.getAccertamento() != null && 
+					(vincoloImpegno.getAccertamento().getListaModificheMovimentoGestioneSpesaCollegata() == null || 
+					(vincoloImpegno.getAccertamento().getListaModificheMovimentoGestioneSpesaCollegata() != null && 
+					vincoloImpegno.getAccertamento().getListaModificheMovimentoGestioneSpesaCollegata().isEmpty()))){
+					if(vincoliDiCuiPending.compareTo(BigDecimal.ZERO) > 0){
+						int comparing = vincoliDiCuiPending.compareTo(vincoloImpegno.getImporto()); 
+						if(comparing >= 0){
+							//diCUiPending > importoVincolo
+							vincoliDiCuiPending = vincoliDiCuiPending.subtract(vincoloImpegno.getImporto());
+							vincoloImpegno.setDiCuiPending(vincoloImpegno.getImporto());
+						}else if (comparing < 0){
+							//diCUiPending < importoVincolo
+							vincoloImpegno.setDiCuiPending(vincoliDiCuiPending);
+							vincoliDiCuiPending = BigDecimal.ZERO;
+						}
+					}
+				}
+				//END SIAC-7349 - CONTABILIA-234 - 01/07/2020 - GM
 				
 				vincoliList.add(vincoloImpegno);
 			}
 		}
-		
 		model.setListaVincoliImpegno(vincoliList);
 	}
 	
@@ -934,82 +1315,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		}
 		return totVincoli;
 	}
-	
-	/**
-	 * carica i mutui associati
-	 * @param impegno
-	 * @param descImpegno
-	 */
-	private void loadMutui(String descImpegno,RicercaImpegnoPerChiaveOttimizzatoResponse response){
-		
-		Impegno impegno = response.getImpegno();
-		
-		List<SubImpegno> elencoSubImpegni = response.getElencoSubImpegniTuttiConSoloGliIds();
-		
-		List<MutuoConsulta> mutuoList = new ArrayList<MutuoConsulta>();
-		
-		// JIRA 1887
-		// nella jsp vanno visualizzate le occorrenze di voci di mutuo, ora visualizza il mutuo
-		// e sempre la prima voce di mutuo
-		if(impegno.getElencoMutui()!=null && !impegno.getElencoMutui().isEmpty()){
-			List<Mutuo> elencoMutui = impegno.getElencoMutui();
-			mapMutuo(mutuoList, elencoMutui, impegno.getNumero(), Boolean.TRUE);
-			
-		}else if (elencoSubImpegni!=null &&
-				elencoSubImpegni.size() > 0){
-				
-				for (SubImpegno subImpegno : elencoSubImpegni) {
-										
-					if(subImpegno.getElencoMutui()!=null && subImpegno.getElencoMutui().size()>0){
-						List<Mutuo> elencoMutui = subImpegno.getElencoMutui();
-						mapMutuo(mutuoList, elencoMutui, subImpegno.getNumero(), Boolean.FALSE);
-					}
-					
-				}
-		}
-	
-		model.setListaMutui(mutuoList);
-	}
 
-
-	private void mapMutuo(List<MutuoConsulta> mutuoList, List<Mutuo> elencoMutui, BigDecimal numeroMovimentoGestione, boolean isImpegno) {
-		for (Mutuo mutuo : elencoMutui) {
-			
-			MutuoConsulta mc = new MutuoConsulta();
-			
-			mc.setCodiceMutuo(mutuo.getCodiceMutuo());
-			mc.setDescrizioneMutuo(mutuo.getDescrizioneMutuo());
-			mc.setDescrizioneTipoMutuo(mutuo.getDescrizioneTipoMutuo());
-			mc.setDataInizioMutuo(mutuo.getDataInizioMutuo());
-			mc.setIstitutoMutuante(mutuo.getSoggettoMutuo().getCodiceSoggetto()+ " - " +mutuo.getSoggettoMutuo().getDenominazione());
-			mc.setImportoAttualeMutuo(mutuo.getImportoAttualeMutuo());
-			
-			for (VoceMutuo voceMutuo : mutuo.getListaVociMutuo()) {
-				
-				BigDecimal numeroMovGest = BigDecimal.ZERO;
-				if(!isImpegno){
-					numeroMovGest = ((SubImpegno)voceMutuo.getImpegno().getElencoSubImpegni().get(0)).getNumero();
-				}else{
-					numeroMovGest = voceMutuo.getImpegno().getNumero();
-				}
-				
-				if(numeroMovimentoGestione.equals(numeroMovGest)){
-					if(!isImpegno)
-						mc.setNumeroMovimentoGestione(String.valueOf(numeroMovimentoGestione));
-					else
-						mc.setNumeroMovimentoGestione(String.valueOf(0));
-					
-					mc.setImportoAttualeVoceMutuo(voceMutuo.getImportoAttualeVoceMutuo());
-					break;
-				}
-					
-			}
-			
-			mutuoList.add(mc);
-			
-		}
-	}
-	
 
 
 	
@@ -1026,12 +1332,14 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		RicercaAccertamentoK k = new RicercaAccertamentoK();
 			k.setAnnoAccertamento(Integer.valueOf(anno));
 			k.setNumeroAccertamento(new BigDecimal(numero));
-			k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		request.setpRicercaAccertamentoK(k);
 		request.setEnte(sessionHandler.getEnte());
+		//SIAC-8467
+		request.setCaricalistaModificheCollegate(false);
 		request.setRichiedente(sessionHandler.getRichiedente());
 		
-		RicercaAccertamentoPerChiaveOttimizzatoResponse response =  movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(request);
+		RicercaAccertamentoPerChiaveOttimizzatoResponse response =  movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(request);
 		
 		if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)) {
 			debug(methodName, "Errore nella risposta del servizio");
@@ -1053,7 +1361,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		// movimento
 		mc.setIdMovimento(accertamento.getUid());
 		mc.setAnno(String.valueOf(accertamento.getAnnoMovimento()));
-		mc.setNumero(String.valueOf(accertamento.getNumero()));
+		mc.setNumero(String.valueOf(accertamento.getNumeroBigDecimal()));
 		mc.setDescrizione(accertamento.getDescrizione());
 	    mc.setImporto(accertamento.getImportoAttuale());
 	    mc.setImportoIniziale(accertamento.getImportoIniziale());
@@ -1103,8 +1411,9 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
             	mc.setBloccoRagioneria(ConsultaMovimentoAction.BLOCCO_RAGIONERIA_NA);
         }
         
+        //SIAC-8629
         //TRANSAZIONE ELEMENTARE:
-        mc.setCodificaTransazioneElementare(FinStringUtils.smartConcatMult(" - ", accertamento.getCodPdc(),accertamento.getCodSiope()));
+        mc.setCodificaTransazioneElementare(componiTransazioneElementare(accertamento));
         
         
         // parere finanziario
@@ -1114,13 +1423,14 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
         
         mc.setParereFinanziarioDataModifica(accertamento.getParereFinanziarioDataModifica());
         mc.setParereFinanziarioLoginOperazione(accertamento.getParereFinanziarioLoginOperazione());
+        //SIAC-8178
+	    mc.setCodiceVerbale(StringUtils.defaultString(accertamento.getCodiceVerbale()));
         
 	    // disponibilita
 	    mc.setDisponibilitaSub(accertamento.getDisponibilitaSubAccertare());
 	    mc.setDisponibilitaIncassare(accertamento.getDisponibilitaIncassare());
-	    mc.setTotaleSub(accertamento.getTotaleSubAccertamenti());
+	    mc.setTotaleSub(accertamento.getTotaleSubAccertamentiBigDecimal());
 	    mc.setDisponibilitaUtilizzare(accertamento.getDisponibilitaUtilizzare());
-	    
 	    
 	    // provvedimento
 	    if (accertamento.getAttoAmministrativo() != null) {
@@ -1166,6 +1476,15 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
         }else{
         	mc.setDaRiaccertamento(WebAppConstants.MSG_NO);
         }	
+        
+        // inizio SIAC-6997
+        if (accertamento.isFlagDaReanno()){ 
+        	mc.setDaReanno(WebAppConstants.MSG_SI + " " + accertamento.getAnnoRiaccertato() + " / " + accertamento.getNumeroRiaccertato());
+        }else{
+        	mc.setDaReanno(WebAppConstants.MSG_NO);
+        }
+        
+        // fine SIAC-6997
         
         mc.setFlagFattura(booleanToWebAppSINO(accertamento.isFlagFattura()));
         mc.setFlagCorrispettivo(booleanToWebAppSINO(accertamento.isFlagCorrispettivo()));
@@ -1267,7 +1586,8 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	    mc.setDataInserimento(modifica.getDataEmissione());
 	    mc.setDataModifica(modifica.getDataModifica());
 	    mc.setStatoOperativo(modifica.getStatoOperativoModificaMovimentoGestione().name());
-	    mc.setDataStatoOperativo(modifica.getDataModificaMovimentoGestione());
+	    //SIAC-8183
+	    mc.setDataStatoOperativo(modifica.getDataFromStatoOperativo());
 	    
 	    //Reimputazione:
 	    mc = settaDatiReimputazioneInModificaConsulta(modifica, mc);
@@ -1306,6 +1626,10 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	    	mc.getSoggettoAttuale().setClasseSoggettoDescrizione(modifica.getClasseSoggettoNewMovimentoGestione().getDescrizione());
 	    }	  
 	    
+	    //SIAC-7349 Inizio  SR180 CM 22/04/2020 Aggiunto per visualizzazione lista modifiche movimenti di spesa in consulta accertamento
+	    mc.setListaModificheMovimentoGestioneSpesaCollegata(model.getMapModificheSpesaCollegate().get(modifica.getIdModificaMovimentoGestione()));
+	    //SIAC-7349 Fine  SR180 CM 22/04/2020
+	    
 	    return mc;
 	}
 
@@ -1323,8 +1647,24 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 				" - " + convertiBigDecimalToImporto(model.getMovimento().getImporto()) + 
 				" (" +  model.getMovimento().getStatoOperativo() + " dal " + convertDateToString(model.getMovimento().getDataStatoOperativo()) + ")";	
 		
+		initMapListaModificheMovimentoGestioneCollegate(accertamento);
 		loadResponseSubacc(accertamento, descAccertamento);
 		loadResponseModacc(accertamento, descAccertamento);
+		//SIAC-8650
+		loadVincoliOriginari(accertamento);
+	}
+	
+	//task-93
+	private void loadResponseMutuiAccertamento(Accertamento accertamento){
+				
+		RicercaDettaglioAccertamento request = model.creaRequestRicercaDettaglioAccertamentoMutuo();
+		request.setAccertamento(accertamento);
+		
+		RicercaDettaglioAccertamentoResponse res = movimentoGestioneBilService.ricercaDettaglioAccertamento(request);
+		
+		if(!res.hasErrori() && res.getAccertamento()!=null) {
+			model.setElencoMutuiAssociati(CollectionUtil.getSortedList(res.getAccertamento().getElencoMutuiAssociati(), MutuoAssociatoMovimentoGestioneNumeroMutuoComparator));
+		}
 	}
 	
 	/**
@@ -1358,6 +1698,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	 */
 	private void loadResponseModacc (Accertamento accertamento, String descImpegno) {
 		ArrayList<ModificaConsulta> modList = new ArrayList<ModificaConsulta>();
+		
 		if (accertamento.getListaModificheMovimentoGestioneEntrata() != null) {
 			for (ModificaMovimentoGestioneEntrata modif : accertamento.getListaModificheMovimentoGestioneEntrata()) {
 				ModificaConsulta mc = new ModificaConsulta(); 
@@ -1378,12 +1719,12 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		if (accertamento.getElencoSubAccertamenti() != null) {
 			for (SubAccertamento subacc : accertamento.getElencoSubAccertamenti()) {
 				if (subacc.getListaModificheMovimentoGestioneEntrata() != null) {
-					String descSub = subacc.getNumero() + " (" +  subacc.getStatoOperativoMovimentoGestioneEntrata() + " dal " + convertDateToString(subacc.getDataStatoOperativoMovimentoGestioneEntrata()) + ")";	
+					String descSub = subacc.getNumeroBigDecimal() + " (" +  subacc.getStatoOperativoMovimentoGestioneEntrata() + " dal " + convertDateToString(subacc.getDataStatoOperativoMovimentoGestioneEntrata()) + ")";	
 					for (ModificaMovimentoGestioneEntrata modif : subacc.getListaModificheMovimentoGestioneEntrata()) {
 						ModificaConsulta mc = new ModificaConsulta();
 						modList.add(mapModifica(mc, modif));
 						mc.setDescMain(descImpegno);
-				    	mc.setNumSub(String.valueOf(subacc.getNumero()));
+				    	mc.setNumSub(String.valueOf(subacc.getNumeroBigDecimal()));
 				    	mc.setDescSub(descSub);
 					}
 				}
@@ -1544,7 +1885,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	public String consultaModificheProvvedimento() throws Exception{
 		setMethodName("consultaModificheProvvedimento");
 		
-		impostaMovimentoGestione(tipo.equals("I") ? new Impegno(): new Accertamento(), model.getMovimento().getIdMovimento(), Constanti.MOVGEST_TS_TIPO_TESTATA);
+		impostaMovimentoGestione(tipo.equals("I") ? new Impegno(): new Accertamento(), model.getMovimento().getIdMovimento(), CostantiFin.MOVGEST_TS_TIPO_TESTATA);
 		
 		return "consultaModificheProvvedimento";
 	}
@@ -1553,7 +1894,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 	public String consultaModificheProvvedimentoSub() throws Exception{
 		setMethodName("consultaModificheProvvedimentoSub");
 		
-		impostaMovimentoGestione(tipo.equals("I") ? new SubImpegno(): new SubAccertamento(), Integer.parseInt(getUidSubMovimento()), Constanti.MOVGEST_TS_TIPO_SUBIMPEGNO);
+		impostaMovimentoGestione(tipo.equals("I") ? new SubImpegno(): new SubAccertamento(), Integer.parseInt(getUidSubMovimento()), CostantiFin.MOVGEST_TS_TIPO_SUBIMPEGNO);
 		
 		return "consultaModificheProvvedimento";
 	}
@@ -1578,7 +1919,7 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		req.setRichiedente(sessionHandler.getRichiedente());
 		req.setMovimento(movimento);
 		
-		LeggiStoricoAggiornamentoProvvedimentoMovimentoGestioneResponse res = movimentoGestionService.leggiStoricoAggiornamentoProvvedimentoMovimentoGestione(req);
+		LeggiStoricoAggiornamentoProvvedimentoMovimentoGestioneResponse res = movimentoGestioneFinService.leggiStoricoAggiornamentoProvvedimentoMovimentoGestione(req);
 		
 		if(res!=null && !res.isFallimento()){
 			
@@ -1617,4 +1958,32 @@ public class ConsultaMovimentoAction extends MovGestAction<ConsultaMovimentiMode
 		//Auto-generated method stub
 	}
 	
+	private void initMapListaModificheMovimentoGestioneCollegate(Accertamento movimentoGestione){
+		Map<Integer, List<ModificaMovimentoGestioneSpesaCollegata>> map = new HashMap<Integer, List<ModificaMovimentoGestioneSpesaCollegata>>();
+		RicercaModulareModificaMovimentoSpesaCollegata req = new RicercaModulareModificaMovimentoSpesaCollegata();
+		req.setRichiedente(model.getRichiedente());
+		req.setAnnoBilancio(model.getnAnno());
+		req.setDataOra(new Date());
+		req.setAccertamento(movimentoGestione);
+		
+		RicercaModulareModificaMovimentoSpesaCollegataResponse response = movimentoGestioneFinService.ricercaModulareModificaMovimentoSpesaCollegata(req);
+	
+		if(response != null && (response.isFallimento() || response.hasErrori())){
+			addErrori(response.getErrori());
+			return;
+		}
+		
+		if(response != null) {
+			for (ModificaMovimentoGestioneSpesaCollegata modifica : CoreUtil.checkList(response.getListaModificheMovimentoGestioneSpesaCollegata())) {
+				if(!map.containsKey(modifica.getModificaMovimentoGestioneEntrata().getIdModificaMovimentoGestione())) {
+					map.put(modifica.getModificaMovimentoGestioneEntrata().getIdModificaMovimentoGestione(), new ArrayList<ModificaMovimentoGestioneSpesaCollegata>());
+				}
+				map.get(modifica.getModificaMovimentoGestioneEntrata().getIdModificaMovimentoGestione()).add(modifica);
+			}
+			
+			model.setMapModificheSpesaCollegate(map);
+		}
+	}
+
+
 }

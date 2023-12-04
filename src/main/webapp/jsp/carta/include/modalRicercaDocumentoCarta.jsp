@@ -21,7 +21,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 	
 	<div class="modal-footer">
-			<s:submit id="confermaCompGuidataSubDoc" name="conferma" value="conferma" method="confermaCompGuidataDocumento" data-dismiss="modal" disabled="true" cssClass="btn btn-primary" />
+			<!-- task-131 <s:submit id="confermaCompGuidataSubDoc" name="conferma" value="conferma" method="confermaCompGuidataDocumento" disabled="true" cssClass="btn btn-primary" /> -->
+			<s:submit id="confermaCompGuidataSubDoc" name="conferma" value="conferma" action="%{#confermaCompGuidataDocumentoAction}" disabled="true" cssClass="btn btn-primary" />
 	</div>
 </div>
 <!--/modale -->

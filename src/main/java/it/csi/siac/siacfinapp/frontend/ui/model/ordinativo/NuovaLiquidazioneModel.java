@@ -19,9 +19,6 @@ public class NuovaLiquidazioneModel extends GenericFinModel{
 	//num sub
 	private String numeroSub;
 	
-	//numero mutuo
-	private String numeroMutuoPopupString;
-	
 	//anno imp
 	private String annoImpegno;
 	
@@ -63,12 +60,7 @@ public class NuovaLiquidazioneModel extends GenericFinModel{
 	public void setNumeroSub(String numeroSub) {
 		this.numeroSub = numeroSub;
 	}
-	public String getNumeroMutuoPopupString() {
-		return numeroMutuoPopupString;
-	}
-	public void setNumeroMutuoPopupString(String numeroMutuoPopupString) {
-		this.numeroMutuoPopupString = numeroMutuoPopupString;
-	}
+
 	public String getAnnoImpegno() {
 		return annoImpegno;
 	}

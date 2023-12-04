@@ -4,6 +4,7 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaAccertamentoResponse;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubAccertamento;
@@ -50,6 +51,26 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 	
 	//Parametri SubImpegno
 	private String numeroSubImpegno;
+	
+	
+	//SIAC-7738 Inizio  FL 25/08/2020 riporto modifiche relative alla 7349
+	private String minImp;
+	private String maxImp;
+	private String minSub;
+	private String maxSub;
+	private String minAnche;
+	private String maxAnche;
+
+	//IMPORTI CALCOLATI
+	private String minImportoCalcolato;
+	private String maxImportoCalcolato;
+	private String minImportoSubCalcolato;
+	private String maxImportoSubCalcolato;
+	private BigDecimal minImportoImpegnoApp;
+	private BigDecimal maxImportoImpegnoApp;
+	private BigDecimal minImportoSubApp;
+	private BigDecimal maxImportoSubApp;
+	//SIAC-7738 Fine  FL 25/08/2020 riporto modifiche relative alla 7349
 	
 	//SOGGETTI
 	private String idSub;							
@@ -101,8 +122,8 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 			//solo quelli con stato DEFINTIVO:
 			for(SubAccertamento sub : model.getListaSubaccertamenti()){
 				if(sub.getStatoOperativoMovimentoGestioneEntrata().equals("D")){
-					if(sub.getNumero() != null){
-						numeroSubImpegnoList.add(String.valueOf(sub.getNumero()));
+					if(sub.getNumeroBigDecimal() != null){
+						numeroSubImpegnoList.add(String.valueOf(sub.getNumeroBigDecimal()));
 					}		
 				}
 			}
@@ -150,6 +171,85 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 		
 		//tipo movimento impegno a false, in quanto accertamento:
 		tipoMovimentoImpegno = false;
+		
+		//SIAC-7738 Inizio  FL 25/08/2020 riporto modifiche relative alla 7349
+
+		//Calcolo importi
+		String minImpApp ="";
+		
+		BigDecimal disponibilitaUtilizzare = BigDecimal.ZERO;
+		if(model.getAccertamentoInAggiornamento().getDisponibilitaUtilizzare()!=null){
+			disponibilitaUtilizzare = model.getAccertamentoInAggiornamento().getDisponibilitaUtilizzare();
+		}
+		
+		
+		
+		if(!model.getAccertamentoInAggiornamento().getStatoOperativoMovimentoGestioneEntrata().equalsIgnoreCase("D")){
+			// non e' definitivo
+			BigDecimal minTemp = model.getAccertamentoInAggiornamento().getDisponibilitaSubAccertare().min(disponibilitaUtilizzare);
+			minImpApp = convertiBigDecimalToImporto(minTemp);
+		} else {
+			//e' definitivo
+			BigDecimal minTemp = model.getAccertamentoInAggiornamento().getDisponibilitaIncassare().min(disponibilitaUtilizzare);
+			minImpApp = convertiBigDecimalToImporto(minTemp);
+		}
+		
+		if(!minImpApp.contains("-")){
+			minImpApp = "-" + minImpApp;
+		}
+		
+		log.debug("",minImpApp);//
+		
+		minImportoImpegnoApp = convertiImportoToBigDecimal(minImpApp);
+		
+		if(model.getAccertamentoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
+			//mi riconduco a questa casistica in modo da non avere un massimo:
+			model.setFlagSuperioreTreAnni(true);
+			//
+		} else if(model.getAccertamentoInAggiornamento().isFlagDaRiaccertamento()){
+			maxImportoImpegnoApp = new BigDecimal(0);
+		} else {
+			//SIAC-580
+			
+			if(model.getAccertamentoInAggiornamento().getAnnoMovimento() == model.getAccertamentoInAggiornamento().getCapitoloEntrataGestione().getAnnoCapitolo().intValue()){
+				// anno corrente
+				maxImportoImpegnoApp = model.getAccertamentoInAggiornamento().getCapitoloEntrataGestione().getImportiCapitoloEG().getDisponibilitaAccertareAnno1();
+				
+			}else if(model.getAccertamentoInAggiornamento().getAnnoMovimento() == (model.getAccertamentoInAggiornamento().getCapitoloEntrataGestione().getAnnoCapitolo().intValue()+1 )){
+//				anno  +1
+				maxImportoImpegnoApp = model.getAccertamentoInAggiornamento().getCapitoloEntrataGestione().getImportiCapitoloEG().getDisponibilitaAccertareAnno2();
+			}else if(model.getAccertamentoInAggiornamento().getAnnoMovimento() == (model.getAccertamentoInAggiornamento().getCapitoloEntrataGestione().getAnnoCapitolo().intValue()+2 )){
+//				anno +2
+				maxImportoImpegnoApp = model.getAccertamentoInAggiornamento().getCapitoloEntrataGestione().getImportiCapitoloEG().getDisponibilitaAccertareAnno3();
+			}else{
+				//  da GESTIRE NELLA PAGINA
+				model.setFlagSuperioreTreAnni(true);
+			}
+		}
+		
+		if(minImportoImpegnoApp == null){
+			//pongo a zero
+			minImportoImpegnoApp = new BigDecimal(0);
+		}
+		
+		if(maxImportoImpegnoApp == null){
+			maxImportoImpegnoApp = new BigDecimal(0);
+		}else if(maxImportoImpegnoApp.compareTo(BigDecimal.ZERO)<0){
+				maxImportoImpegnoApp = new BigDecimal(0);
+		}
+		
+		//Setto il massimo e i minimo nelle variabili finali:
+		setMaxImp(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+		setMinImp(convertiBigDecimalToImporto(minImportoImpegnoApp));
+		model.setMaxImpMod(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+		model.setMinImpMod(convertiBigDecimalToImporto(minImportoImpegnoApp));
+		
+		setMinImportoCalcolato(convertiBigDecimalToImporto(minImportoImpegnoApp));
+		setMaxImportoCalcolato(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+		model.setMinImportoCalcolatoMod(convertiBigDecimalToImporto(minImportoImpegnoApp));
+		model.setMaxImportoCalcolatoMod(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+		
+		//SIAC-7738 Fine  FL 25/08/2020 riporto modifiche relative alla 7349
 	}
 	
 	/**
@@ -196,11 +296,11 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 				
 				//itero tra i sub cercando quello selezionato:
 				for(SubAccertamento sub : model.getListaSubaccertamenti()){
-					if(String.valueOf(sub.getNumero()).equals(getSubSelected())){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equals(getSubSelected())){
 						//trovato
 						
 						//Setto i dati del sug trovato:
-						setNumeroSubImpegno(String.valueOf(sub.getNumero()));
+						setNumeroSubImpegno(String.valueOf(sub.getNumeroBigDecimal()));
 						
 						if(sub.getSoggetto()!=null){
 							setSoggettoSubEffettivo(sub.getSoggetto());
@@ -241,6 +341,9 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 		//istanzio la lista di eventuali errori:
 		List<Errore> listaErrori = new ArrayList<Errore>();
 		boolean erroreProvvedimento = false;
+		
+		//SIAC-8506
+		controllaLunghezzaMassimaDescrizioneMovimento(getDescrizione(), listaErrori);
 		
 		if(StringUtils.isEmpty(tipoImpegno)){
 			
@@ -303,7 +406,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 				for(SubAccertamento subAccertamento : listaSubAccertamenti){
 					String stato = subAccertamento.getStatoOperativoMovimentoGestioneEntrata();
 					if(stato.equalsIgnoreCase("D")){
-						listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("entita: subaccertamento " + subAccertamento.getNumero(), "DEFINITIVO"));
+						listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("entita: subaccertamento " + subAccertamento.getNumeroBigDecimal(), "DEFINITIVO"));
 					}
 				}
 			}
@@ -417,7 +520,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 				
 				modEntrata.setTipoModificaMovimentoGestione(getIdTipoMotivo());
 				modEntrata.setDescrizione(getDescrizione());
-				modEntrata.setTipoMovimento(Constanti.MODIFICA_TIPO_ACC);
+				modEntrata.setTipoMovimento(CostantiFin.MODIFICA_TIPO_ACC);
 				
 				//soggetto:
 				if(soggettoNew!=null){
@@ -438,7 +541,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 				popolaStrutturaTransazioneElementareAcc();
 				
 				//richiamo il servizio di aggiornamento:
-				AggiornaAccertamentoResponse response = movimentoGestionService.aggiornaAccertamento(convertiModelPerChiamataServiziInserisciAggiornaModifiche(true));
+				AggiornaAccertamentoResponse response = movimentoGestioneFinService.aggiornaAccertamento(convertiModelPerChiamataServiziInserisciAggiornaModifiche(true));
 				model.setProseguiConWarning(false);
 				
 				//analizzo la risposta del servizio:
@@ -565,7 +668,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 			
 			//controllo esistenza soggetto associato a subaccertamento
 			for(SubAccertamento sub : model.getListaSubaccertamenti()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					if(sub.getSoggetto().getCodiceSoggetto()==null||sub.getClasseSoggetto()!=null){
 						listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Soggetto per il sub accertamento non presente"));
 					}					
@@ -591,7 +694,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 				List<ModificaMovimentoGestioneEntrata> modificheList = new ArrayList<ModificaMovimentoGestioneEntrata>();
 					
 				for(SubAccertamento sub : model.getListaSubaccertamenti()){
-					if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 						modificheList = sub.getListaModificheMovimentoGestioneEntrata();
 					}
 				}				
@@ -604,7 +707,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 												
 				//Soggetto OLD
 				for(SubAccertamento sub : model.getListaSubaccertamenti()){
-					if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 						modEntrata.setSoggettoOldMovimentoGestione(sub.getSoggetto());
 					}
 				}		
@@ -637,7 +740,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 				
 				modEntrata.setTipoModificaMovimentoGestione(getIdTipoMotivo());
 				modEntrata.setDescrizione(getDescrizione());
-				modEntrata.setTipoMovimento(Constanti.MODIFICA_TIPO_SAC);
+				modEntrata.setTipoMovimento(CostantiFin.MODIFICA_TIPO_SAC);
 				
 				
 				//Inserisco nell accertamento che andra nel servizio aggiorna accertmento
@@ -645,7 +748,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 				
 				List<SubAccertamento> nuovaSubAccertamentoList = new ArrayList<SubAccertamento>();
 				for(SubAccertamento sub : model.getListaSubaccertamenti()){
-					if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 						sub.setListaModificheMovimentoGestioneEntrata(modificheList);
 					}
 					nuovaSubAccertamentoList.add(sub);
@@ -680,7 +783,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 				popolaStrutturaTransazioneElementareAcc();
 		
 				//richiamo il servizio di aggiornamento:
-				AggiornaAccertamentoResponse response = movimentoGestionService.aggiornaAccertamento(convertiModelPerChiamataServiziInserisciAggiornaModifiche(true));
+				AggiornaAccertamentoResponse response = movimentoGestioneFinService.aggiornaAccertamento(convertiModelPerChiamataServiziInserisciAggiornaModifiche(true));
 				model.setProseguiConWarning(false);
 				
 				if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
@@ -763,7 +866,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 			for(SubAccertamento subAccertamento : listaSubAccertamenti){
 				if(subAccertamento.getSoggetto()!=null){
 					String stato = subAccertamento.getStato().name();
-					if(stato.equalsIgnoreCase(Constanti.STATO_VALIDO) && model.getSoggettoSubAttuale().getCodiceSoggetto().equalsIgnoreCase(subAccertamento.getSoggetto().getCodiceSoggetto())){
+					if(stato.equalsIgnoreCase(CostantiFin.STATO_VALIDO) && model.getSoggettoSubAttuale().getCodiceSoggetto().equalsIgnoreCase(subAccertamento.getSoggetto().getCodiceSoggetto())){
 						errorWarning = ErroreFin.DATO_SOGGETTO_PRESENTE.getErrore("Creditore ", subAccertamento.getSoggetto().getCodiceSoggetto() + " " + subAccertamento.getSoggetto().getDenominazione());
 					}
 				}
@@ -814,7 +917,7 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 					//soggetto trovato
 					
 					//controllo sullo stato:
-					if(s.getStatoOperativo() != null && (!s.getStatoOperativo().name().equalsIgnoreCase(Constanti.STATO_VALIDO)) && (!s.getStatoOperativo().name().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA))){
+					if(s.getStatoOperativo() != null && (!s.getStatoOperativo().name().equalsIgnoreCase(CostantiFin.STATO_VALIDO)) && (!s.getStatoOperativo().name().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA))){
 						//stato non compatibile
 						listaErrori.add(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("entita: soggetto " + s.getCodiceSoggetto(), s.getStatoOperativo().name()));
 						addErrori(listaErrori);
@@ -1084,5 +1187,235 @@ public class InserisciModificaMovimentoSpesaAccSoggettoAction extends ActionKeyA
 	public void setAperturaIniziale(String aperturaIniziale) {
 		this.aperturaIniziale = aperturaIniziale;
 	}
+	//SIAC-7738 Inizio  FL 25/08/2020 riporto modifiche relative alla 7349
+
+	/**
+	 * @return the minImp
+	 */
+	public String getMinImp()
+	{
+		return minImp;
+	}
+
+	/**
+	 * @param minImp the minImp to set
+	 */
+	public void setMinImp(String minImp)
+	{
+		this.minImp = minImp;
+	}
+
+	/**
+	 * @return the maxImp
+	 */
+	public String getMaxImp()
+	{
+		return maxImp;
+	}
+
+	/**
+	 * @param maxImp the maxImp to set
+	 */
+	public void setMaxImp(String maxImp)
+	{
+		this.maxImp = maxImp;
+	}
+
+	/**
+	 * @return the minSub
+	 */
+	public String getMinSub()
+	{
+		return minSub;
+	}
+
+	/**
+	 * @param minSub the minSub to set
+	 */
+	public void setMinSub(String minSub)
+	{
+		this.minSub = minSub;
+	}
+
+	/**
+	 * @return the maxSub
+	 */
+	public String getMaxSub()
+	{
+		return maxSub;
+	}
+
+	/**
+	 * @param maxSub the maxSub to set
+	 */
+	public void setMaxSub(String maxSub)
+	{
+		this.maxSub = maxSub;
+	}
+
+	/**
+	 * @return the minAnche
+	 */
+	public String getMinAnche()
+	{
+		return minAnche;
+	}
+
+	/**
+	 * @param minAnche the minAnche to set
+	 */
+	public void setMinAnche(String minAnche)
+	{
+		this.minAnche = minAnche;
+	}
+
+	/**
+	 * @return the maxAnche
+	 */
+	public String getMaxAnche()
+	{
+		return maxAnche;
+	}
+
+	/**
+	 * @param maxAnche the maxAnche to set
+	 */
+	public void setMaxAnche(String maxAnche)
+	{
+		this.maxAnche = maxAnche;
+	}
+
+	/**
+	 * @return the minImportoCalcolato
+	 */
+	public String getMinImportoCalcolato()
+	{
+		return minImportoCalcolato;
+	}
+
+	/**
+	 * @param minImportoCalcolato the minImportoCalcolato to set
+	 */
+	public void setMinImportoCalcolato(String minImportoCalcolato)
+	{
+		this.minImportoCalcolato = minImportoCalcolato;
+	}
+
+	/**
+	 * @return the maxImportoCalcolato
+	 */
+	public String getMaxImportoCalcolato()
+	{
+		return maxImportoCalcolato;
+	}
+
+	/**
+	 * @param maxImportoCalcolato the maxImportoCalcolato to set
+	 */
+	public void setMaxImportoCalcolato(String maxImportoCalcolato)
+	{
+		this.maxImportoCalcolato = maxImportoCalcolato;
+	}
+
+	/**
+	 * @return the minImportoSubCalcolato
+	 */
+	public String getMinImportoSubCalcolato()
+	{
+		return minImportoSubCalcolato;
+	}
+
+	/**
+	 * @param minImportoSubCalcolato the minImportoSubCalcolato to set
+	 */
+	public void setMinImportoSubCalcolato(String minImportoSubCalcolato)
+	{
+		this.minImportoSubCalcolato = minImportoSubCalcolato;
+	}
+
+	/**
+	 * @return the maxImportoSubCalcolato
+	 */
+	public String getMaxImportoSubCalcolato()
+	{
+		return maxImportoSubCalcolato;
+	}
+
+	/**
+	 * @param maxImportoSubCalcolato the maxImportoSubCalcolato to set
+	 */
+	public void setMaxImportoSubCalcolato(String maxImportoSubCalcolato)
+	{
+		this.maxImportoSubCalcolato = maxImportoSubCalcolato;
+	}
+
+	/**
+	 * @return the minImportoImpegnoApp
+	 */
+	public BigDecimal getMinImportoImpegnoApp()
+	{
+		return minImportoImpegnoApp;
+	}
+
+	/**
+	 * @param minImportoImpegnoApp the minImportoImpegnoApp to set
+	 */
+	public void setMinImportoImpegnoApp(BigDecimal minImportoImpegnoApp)
+	{
+		this.minImportoImpegnoApp = minImportoImpegnoApp;
+	}
+
+	/**
+	 * @return the maxImportoImpegnoApp
+	 */
+	public BigDecimal getMaxImportoImpegnoApp()
+	{
+		return maxImportoImpegnoApp;
+	}
+
+	/**
+	 * @param maxImportoImpegnoApp the maxImportoImpegnoApp to set
+	 */
+	public void setMaxImportoImpegnoApp(BigDecimal maxImportoImpegnoApp)
+	{
+		this.maxImportoImpegnoApp = maxImportoImpegnoApp;
+	}
+
+	/**
+	 * @return the minImportoSubApp
+	 */
+	public BigDecimal getMinImportoSubApp()
+	{
+		return minImportoSubApp;
+	}
+
+	/**
+	 * @param minImportoSubApp the minImportoSubApp to set
+	 */
+	public void setMinImportoSubApp(BigDecimal minImportoSubApp)
+	{
+		this.minImportoSubApp = minImportoSubApp;
+	}
+
+	/**
+	 * @return the maxImportoSubApp
+	 */
+	public BigDecimal getMaxImportoSubApp()
+	{
+		return maxImportoSubApp;
+	}
+
+	/**
+	 * @param maxImportoSubApp the maxImportoSubApp to set
+	 */
+	public void setMaxImportoSubApp(BigDecimal maxImportoSubApp)
+	{
+		this.maxImportoSubApp = maxImportoSubApp;
+	}
+	
+	
+	
+	
+	//SIAC-7738 Fine  FL 25/08/2020 riporto modifiche relative alla 7349
 
 }

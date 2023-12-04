@@ -34,8 +34,38 @@ SPDX-License-Identifier: EUPL-1.2
   <div class="row-fluid">
     <div class="span12 contentPage">    
     
-     <s:form id="%{labels.FORM}" action="%{labels.FORM}.do" method="post">
-		
+     <s:form id="%{labels.FORM}" action="%{labels.FORM}" method="post">
+     	
+  		<s:if test="oggettoDaPopolarePagamento()">
+  			<s:set var="dettaglioConsultaQuotaAction" value="%{'gestioneOrdinativoPagamentoStep2_dettaglioConsultaQuota'}" />
+		    <s:set var="dettaglioAggiornaQuotaAction" value="%{'gestioneOrdinativoPagamentoStep2_dettaglioAggiornaQuota'}" />
+		    <s:set var="annullaInserimentoQuotaAction" value="%{'gestioneOrdinativoPagamentoStep2_annullaInserimentoQuota'}" />	   		           
+			<!-- per contenitoreOrdPag.jsp -->
+			<s:set var="inserisciQuotaAction" value="%{'gestioneOrdinativoPagamentoStep2_inserisciQuota'}" />	 
+			<s:set var="ricaricaTEByIdLiquidazioneAction" value="%{'gestioneOrdinativoPagamentoStep2_ricaricaTEByIdLiquidazione'}" />	 
+			
+			<!-- per modalOrdinativo.jsp -->
+			<s:set var="eliminaQuotaOrdinativoAction" value="%{'gestioneOrdinativoPagamentoStep2_eliminaQuotaOrdinativo'}" />
+			<s:set var="eliminaProvvisorioAction" value="%{'gestioneOrdinativoPagamentoStep2_eliminaProvvisorio'}" />
+			<s:set var="forzaInserisciQuotaAccertamentoAction" value="%{'gestioneOrdinativoPagamentoStep2_forzaInserisciQuotaAccertamento'}" />
+			<s:set var="forzaAggiornaQuotaAccertamentoAction" value="%{'gestioneOrdinativoPagamentoStep2_forzaAggiornaQuotaAccertamento'}" />				  		           
+		</s:if>
+  		<s:else>
+  			<s:set var="dettaglioConsultaQuotaAction" value="%{'gestioneOrdinativoIncassoStep2_dettaglioConsultaQuota'}" />
+		    <s:set var="dettaglioAggiornaQuotaAction" value="%{'gestioneOrdinativoIncassoStep2_dettaglioAggiornaQuota'}" />
+		    <s:set var="annullaInserimentoQuotaAction" value="%{'gestioneOrdinativoIncassoStep2_annullaInserimentoQuota'}" />	   		           		
+  			<!-- per contenitoreOrdInc.jsp -->
+  			<s:set var="inserisciQuotaAction" value="%{'gestioneOrdinativoIncassoStep2_inserisciQuota'}" />
+  			<s:set var="ricaricaTEByIdAccertamentoAction" value="%{'gestioneOrdinativoIncassoStep2_ricaricaTEByIdAccertamento'}" />	 
+			
+  			<!-- per modalOrdinativo.jsp -->
+			<s:set var="eliminaQuotaOrdinativoAction" value="%{'gestioneOrdinativoIncassoStep2_eliminaQuotaOrdinativo'}" />
+			<s:set var="eliminaProvvisorioAction" value="%{'gestioneOrdinativoIncassoStep2_eliminaProvvisorio'}" />
+			<s:set var="forzaInserisciQuotaAccertamentoAction" value="%{'gestioneOrdinativoIncassoStep2_forzaInserisciQuotaAccertamento'}" />
+			<s:set var="forzaAggiornaQuotaAccertamentoAction" value="%{'gestioneOrdinativoIncassoStep2_forzaAggiornaQuotaAccertamento'}" />
+				
+  		</s:else> 
+  		
 		<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 		<s:if test="(sonoInAggiornamento() || sonoInAggiornamentoIncasso())"><h3>Ordinativo <s:property value="gestioneOrdinativoStep1Model.ordinativo.numero"/>  del <s:property value="%{gestioneOrdinativoStep1Model.ordinativo.dataEmissione}"/> -  Stato <s:property value="gestioneOrdinativoStep1Model.ordinativo.statoOperativoOrdinativo"/> dal <s:property value="%{gestioneOrdinativoStep1Model.ordinativo.dataInizioValidita}"/> </h3></s:if>
 		<s:else><h3>Inserimento quote ordinativo</h3></s:else>
@@ -59,7 +89,7 @@ SPDX-License-Identifier: EUPL-1.2
 
 		<s:if test="oggettoDaPopolarePagamento()"> 
    			 <!--  ORDINATIVO PAGAMENTO -->
-
+			
 			<display:table name="gestioneOrdinativoStep2Model.listaSubOrdinativiPagamenti"  requestURI="gestioneOrdinativoPagamentoStep2.do"
 		               pagesize="10" class="table table-hover tab_left"  summary="riepilogo indirizzo" uid="subOrdinativiPagId" >
 					<display:column title="Quota" property="numero" />		
@@ -98,9 +128,7 @@ SPDX-License-Identifier: EUPL-1.2
 				          </s:elseif>
 				      </a>    
 					</display:column>
-					
-					<display:column title="Mutuo" property="liquidazione.numeroMutuo" />
-					
+										
 					<display:column class="pagination-right" title="Importo quota" property="importoAttuale" decorator="it.csi.siac.siacfinapp.frontend.ui.util.displaytag.ConverterEuro" />
 					
 					
@@ -233,33 +261,39 @@ SPDX-License-Identifier: EUPL-1.2
 				<s:if test="oggettoDaPopolarePagamento()">				
 					
 					<s:if test="attivaPulsanteSalva()">
-						<s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" method="salva" value="salva" name="salva" />	
+						<!-- task-131 <s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" method="salva" value="salva" name="salva" /> -->
+						<s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" action="gestioneOrdinativoPagamentoStep2_salva" value="salva" name="salva" />	
 					</s:if> 
-					<s:else>
-						
+					<s:else>						
 						<s:if test="presenzaQuote()">
 		                    <!--  attivo btn solo se sono presenti delle quote -->			
-							<s:submit id="proseguiStep" cssClass="btn btn-primary pull-right" method="proseguiStep" value="prosegui" name="prosegui" />	
+							<!-- task-131 <s:submit id="proseguiStep" cssClass="btn btn-primary pull-right" method="proseguiStep" value="prosegui" name="prosegui" /> -->
+							<s:submit id="proseguiStep" cssClass="btn btn-primary pull-right" action="gestioneOrdinativoPagamentoStep2_proseguiStep" value="prosegui" name="prosegui" />					
 					   	</s:if>					   						   	
 						<s:if test="sonoInAggiornamento()">
-						  	<s:submit id="aggiornaOrdinativo" cssClass="btn btn-primary pull-right" method="aggiornaOrdinativo" value="salva" name="salva" />
+						  	<!-- task-131 <s:submit id="aggiornaOrdinativo" cssClass="btn btn-primary pull-right" method="aggiornaOrdinativo" value="salva" name="salva" /> -->
+						  	<s:submit id="aggiornaOrdinativo" cssClass="btn btn-primary pull-right" action="gestioneOrdinativoPagamentoStep2_aggiornaOrdinativo" value="salva" name="salva" />		
 						</s:if>
 					</s:else>
 				</s:if>	
 				<s:else>
 					<s:if test="attivaPulsanteProsegui()">
-						<s:submit id="proseguiBtn" cssClass="btn btn-primary pull-right" method="prosegui" value="prosegui" name="prosegui" />	
+						<!-- task-131 <s:submit id="proseguiBtn" cssClass="btn btn-primary pull-right" method="prosegui" value="prosegui" name="prosegui" /> -->
+						<s:submit id="proseguiBtn" cssClass="btn btn-primary pull-right" action="gestioneOrdinativoIncassoStep2_prosegui" value="prosegui" name="prosegui" />	
 					</s:if>
 					<s:else>
 						<s:if test="controlloQuote()">
-							<s:submit id="proseguiBtn" cssClass="btn btn-primary pull-right" method="prosegui" value="prosegui" name="prosegui" />	
+							<!-- task-131 <s:submit id="proseguiBtn" cssClass="btn btn-primary pull-right" method="prosegui" value="prosegui" name="prosegui" /> -->
+							<s:submit id="proseguiBtn" cssClass="btn btn-primary pull-right" action="gestioneOrdinativoIncassoStep2_prosegui" value="prosegui" name="prosegui" />	
 						</s:if>
 						
 						<s:if test="sonoInAggiornamentoIncasso()">
-							<s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" method="aggiornaOrdinativoIncasso" value="salva" name="salva" />
+							<!-- task-131 <s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" method="aggiornaOrdinativoIncasso" value="salva" name="salva" /> -->
+							<s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" action="gestioneOrdinativoIncassoStep2_aggiornaOrdinativoIncasso" value="salva" name="salva" />
 						</s:if>
 						<s:else>
-							<s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" method="salva" value="salva" name="salva" />
+							<!-- task-131 <s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" method="salva" value="salva" name="salva" /> -->
+							<s:submit id="saveBtn" cssClass="btn btn-primary freezePagina pull-right" action="gestioneOrdinativoIncassoStep2_salva" value="salva" name="salva" />
 						</s:else>	
 					</s:else>
 				</s:else>	
@@ -294,8 +328,9 @@ $(document).ready(function() {
 	$(".linkConsultaQuota").click(function() {
 		var supportId = $(this).attr("id").split("_");
 		$.ajax({
-			url: '<s:url method="dettaglioConsultaQuota"/>',
-			type: 'POST',
+			//task-131 url: '<s:url method="dettaglioConsultaQuota"/>',
+			url: '<s:url action="%{#dettaglioConsultaQuotaAction}"/>',
+		    type: 'POST',
 			data: 'numeroPerDettaglio=' + supportId[1],
 		    success: function(data)  {
 			    $("#divDettaglioConsultaQuotaOrdinativo").html(data);
@@ -306,8 +341,9 @@ $(document).ready(function() {
 	$(".linkAggiornaQuota").click(function() {
 		var supportId = $(this).attr("id").split("_");
 		$.ajax({
-			url: '<s:url method="dettaglioAggiornaQuota"/>',
-			type: 'POST',
+			//task-131 url: '<s:url method="dettaglioAggiornaQuota"/>',
+			url: '<s:url action="%{#dettaglioAggiornaQuotaAction}"/>',
+		    type: 'POST',
 			data: 'numeroPerDettaglio=' + supportId[1],
 		    success: function(data)  {
 			    $("#divDettaglioAggiornaQuotaOrdinativo").html(data);
@@ -359,7 +395,8 @@ $(document).ready(function() {
 	   	 
 	   
        $.ajax({
-			url: '<s:url method="annullaInserimentoQuota"></s:url>',
+			//task-131 url: '<s:url method="annullaInserimentoQuota"></s:url>',
+			url: '<s:url action="%{#annullaInserimentoQuotaAction}"/>',  
 			type: "POST",
 			data: $("#gestioneOrdinativoIncassoStep2").serialize(), 
 		    success: function(data)  {

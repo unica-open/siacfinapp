@@ -46,7 +46,7 @@ public class InserisciSoggettoModel extends SoggettoModel {
 
 	// Comune
 	private String comune;
-	private String idComune;
+	private String codiceIstatComune;
 
 	// altri campi:
 	private String note;
@@ -80,6 +80,9 @@ public class InserisciSoggettoModel extends SoggettoModel {
 
 	// fallimnento
 	private boolean fallimento;
+	
+	//task-6
+	private boolean flagIstitutoDiCredito;
 
 	// indirizzo
 	private IndirizzoModel indirizzo;
@@ -271,12 +274,12 @@ public class InserisciSoggettoModel extends SoggettoModel {
 		this.radioSesso = radioSesso;
 	}
 
-	public String getIdComune() {
-		return idComune;
+	public String getCodiceIstatComune() {
+		return codiceIstatComune;
 	}
 
-	public void setIdComune(String idComune) {
-		this.idComune = idComune;
+	public void setCodiceIstatComune(String codiceIstatComune) {
+		this.codiceIstatComune = codiceIstatComune;
 	}
 
 	public String[] getIdClasseSoggetto() {
@@ -446,4 +449,12 @@ public class InserisciSoggettoModel extends SoggettoModel {
 		this.emailPec = emailPec;
 	}
 
+	//task-6
+	public boolean isFlagIstitutoDiCredito() {
+		return flagIstitutoDiCredito;
+	}
+
+	public void setFlagIstitutoDiCredito(boolean flagIstitutoDiCredito) {
+		this.flagIstitutoDiCredito = flagIstitutoDiCredito;
+	}
 }

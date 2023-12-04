@@ -84,10 +84,10 @@ SPDX-License-Identifier: EUPL-1.2
 								&nbsp;&nbsp;&nbsp; 
 								<!-- liquidazione  -->							
 								<s:if test="teSupport.oggettoAbilitaTE.equals('LIQUIDAZIONE') || teSupport.oggettoAbilitaTE.equals('ORDINATIVO_PAGAMENTO') || teSupport.oggettoAbilitaTE.equals('ORDINATIVO_INCASSO')">
-									<!-- non si deve vedere il btn -->
+									<%-- non si deve vedere il btn --%>
 								</s:if>	
 								<s:elseif test="teSupport.oggettoAbilitaTE.equals('IMPEGNO') || teSupport.oggettoAbilitaTE.equals('ACCERTAMENTO')">
-									  <!-- SIAC-5288 POTREI ESSERE IN AGGIORNA IMPEGNO O ACCERTAMENTO POTENDO MODIFICARE SOLO GSA: -->
+									  <%-- SIAC-5288 POTREI ESSERE IN AGGIORNA IMPEGNO O ACCERTAMENTO POTENDO MODIFICARE SOLO GSA: --%>
 									  <s:if test="isAbilitatoAggiornamentoGenerico()">
 									  		 <a  href="#myModal" role="button"
 											class="btn btn-primary" data-toggle="modal">seleziona il
@@ -101,7 +101,6 @@ SPDX-License-Identifier: EUPL-1.2
 								</s:else>
 								<div id="myModal" class="modal hide fade" tabindex="-1"
 									role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-									
 									
 										<div class="modal-header">
 											<button type="button" class="close" data-dismiss="modal" 
@@ -123,9 +122,9 @@ SPDX-License-Identifier: EUPL-1.2
 									</div>
 									
 									<div class="modal-footer">
-										<s:submit value="conferma" name="conferma"
-											method="confermaPdc" cssClass="btn btn-primary"
-											data-dismiss="modal" aria-hidden="true"></s:submit>
+										<!--task-131 <s:submit value="conferma" name="conferma" method="confermaPdc" cssClass="btn btn-primary" aria-hidden="true"></s:submit>-->
+										<!-- task-159 -->
+										<s:submit value="conferma" name="conferma" action="%{#confermaPdcAction}" cssClass="btn btn-primary" aria-hidden="true"></s:submit>
 									</div>
 								</div>
 							</div>
@@ -317,7 +316,7 @@ SPDX-License-Identifier: EUPL-1.2
 									</div>
 								</div>
 							</div>
-						</div>-->
+						</div> -->
 						
 						
 						
@@ -338,7 +337,7 @@ SPDX-License-Identifier: EUPL-1.2
 						    	 </div>
 						</s:if>
 						<s:elseif test="teSupport.oggettoAbilitaTE.equals('IMPEGNO') || teSupport.oggettoAbilitaTE.equals('ACCERTAMENTO')">
-								<!-- SIAC-5288  IMPEGNO E ACCERTAMENTO disabled dipende da isAbilitatoAggiornamentoGenerico-->
+							<%-- SIAC-5288  IMPEGNO E ACCERTAMENTO disabled dipende da isAbilitatoAggiornamentoGenerico--%>
 								<div class="control-group" >
 								      <label class="control-label" for="siopenew">SIOPE *</label>
 								      
@@ -442,6 +441,7 @@ SPDX-License-Identifier: EUPL-1.2
 								<div class="control-group">
 									<label for="ASL" class="control-label">Capitoli perimetro
 										sanitario</label>
+										<s:if test="ObbligatorioPerimetroSanitario()">*</s:if>
 									<div class="controls">
 										<s:select list="teSupport.listaPerimetroSanitarioSpesa"
 											id="listaPerimetroSanitarioSpesa" disabled="true"
@@ -459,6 +459,7 @@ SPDX-License-Identifier: EUPL-1.2
 								  	<div class="control-group">
 											<label for="ASL" class="control-label">Capitoli perimetro
 												sanitario</label>
+												<s:if test="obbligatorioPerimetroSanitario">*</s:if>
 											<div class="controls">
 												<s:select list="teSupport.listaPerimetroSanitarioSpesa"
 													id="listaPerimetroSanitarioSpesa" 
@@ -754,7 +755,8 @@ $("#siopenew").change(function(){
 	var cod = $("#siopenew").val();
 	//Carico i dati in tabella "Modalita' di pagamento"		
 	$.ajax({
-		url: '<s:url method="codiceSiopeChanged"></s:url>',
+		//task-131 url: '<s:url method="codiceSiopeChanged"></s:url>',
+		url: '<s:url action="%{#codiceSiopeChangedAction}"></s:url>',
 		type: "GET",
 		data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 	    success: function(data)  {

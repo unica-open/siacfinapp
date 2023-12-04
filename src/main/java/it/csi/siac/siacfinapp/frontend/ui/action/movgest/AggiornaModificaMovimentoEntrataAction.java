@@ -20,7 +20,8 @@ import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaAccertamentoResponse;
 import it.csi.siac.siacfinser.model.SubAccertamento;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
@@ -107,7 +108,7 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 					if(movSpesaId == spesa.getUid()){
 						//trovata
 						find = true;
-						spesa.setTipoMovimento(Constanti.MODIFICA_TIPO_ACC);
+						spesa.setTipoMovimento(CostantiFin.MODIFICA_TIPO_ACC);
 						setDescrizione(spesa.getDescrizioneModificaMovimentoGestione());
 						model.getMovimentoSpesaModel().setModificaAggiornamentoAcc(spesa);
 						if(spesa.getTipoModificaMovimentoGestione()!=null){
@@ -138,7 +139,7 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 								if(movSpesaId == spesa.getUid()){
 									//trovata
 									find = true;
-									spesa.setTipoMovimento(Constanti.MODIFICA_TIPO_SAC);
+									spesa.setTipoMovimento(CostantiFin.MODIFICA_TIPO_SAC);
 									setDescrizione(spesa.getDescrizioneModificaMovimentoGestione());
 									model.getMovimentoSpesaModel().setModificaAggiornamentoAcc(spesa);
 									if(spesa.getTipoModificaMovimentoGestione()!=null){
@@ -211,7 +212,30 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 		boolean flagModificaDescrizione = false;
 
 		List<Errore> listaErrori = new ArrayList<Errore>();
+		
+		//SIAC-8506
+		controllaLunghezzaMassimaDescrizioneMovimento(getDescrizione(), listaErrori);
 
+		//SIAC-8818
+		// controllo immodificabilit da ROR-REIMP e ROR-REANNO ad altro e viceversa
+		/* se il tipo diverso dal tipo vecchio &&
+		   (se il tipo vecchio reimp o reanno oppure  il tipo nuovo reimp o reanno)
+		*/
+		if(!getMotivo().equalsIgnoreCase(getMotivoOld()) &&
+				( (getMotivoOld().equalsIgnoreCase("REIMP") || getMotivoOld().equalsIgnoreCase("REANNO")) ||
+				  (getMotivo().equalsIgnoreCase("REIMP") || getMotivo().equalsIgnoreCase("REANNO"))
+				) ) 
+		{
+			controllaImmodificabilitaTipoMotivoReimp(listaErrori);
+		}
+		
+		//SIAC-8818
+		// se ROR-REIMP o ROR-REANNO non posso cambiare il flag reimputazione 
+		String reimputazione = model.getMovimentoSpesaModel().getReimputazione();
+		if ((getMotivo().equalsIgnoreCase("REIMP") || getMotivo().equalsIgnoreCase("REANNO")) && WebAppConstants.No.equals(reimputazione)) {		
+			controllaFlagReimp(listaErrori);
+		}
+				
 		//controllo descrizione non vuota
 		//controllo descizione nuove diversa dalla vecchia
 		if(!FinStringUtils.sonoUgualiTrimmed(model.getMovimentoSpesaModel().getDescrizioneOrigine(), getDescrizione())){
@@ -317,7 +341,7 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 			String tipoProvvedimentoSubaccertamento="";
 			
 			for (SubAccertamento subAccertamentoCorrente : model.getAccertamentoInAggiornamento().getElencoSubAccertamenti()) {
-				if (subAccertamentoCorrente.getNumero().intValue()==model.getMovimentoSpesaModel().getModificaAggiornamentoAcc().getNumeroSubAccertamento().intValue()) {
+				if (subAccertamentoCorrente.getNumeroBigDecimal().intValue()==model.getMovimentoSpesaModel().getModificaAggiornamentoAcc().getNumeroSubAccertamento().intValue()) {
 					annoProvvedimentoSubaccertamento=subAccertamentoCorrente.getAttoAmministrativo().getAnno();
 					numeroProvvedimentoSubaccertamento=subAccertamentoCorrente.getAttoAmministrativo().getNumero();
 					tipoProvvedimentoSubaccertamento=subAccertamentoCorrente.getAttoAmministrativo().getTipoAtto().getCodice();
@@ -373,8 +397,8 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 				
 				if(!soggettoDecentrato){
 					if(!model.isProseguiConWarning()){
-						addPersistentActionWarning(ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore("il provvedimento deve essere diverso da quello dell'acceratmento").getCodice()+" - "+
-							ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore("il provvedimento deve essere diverso da quello dell'acceratmento").getDescrizione());
+						addPersistentActionWarning(ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore("il provvedimento deve essere diverso da quello dell'accertamento").getCodice()+" - "+
+							ErroreCore.INCONGRUENZA_NEI_PARAMETRI.getErrore("il provvedimento deve essere diverso da quello dell'accertamento").getDescrizione());
 						model.setProseguiConWarning(true);
 						
 						erroreProvvedimento = true;
@@ -429,7 +453,7 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 				spesa.setTipoModificaMovimentoGestione(getMotivo());
 				
 				
-				if(spesa.getTipoMovimento().equalsIgnoreCase(Constanti.MODIFICA_TIPO_ACC)){
+				if(spesa.getTipoMovimento().equalsIgnoreCase(CostantiFin.MODIFICA_TIPO_ACC)){
 					List<ModificaMovimentoGestioneEntrata> listaAccertamento = new ArrayList<ModificaMovimentoGestioneEntrata>();
 					if(model.getAccertamentoInAggiornamento().getListaModificheMovimentoGestioneEntrata() != null && model.getAccertamentoInAggiornamento().getListaModificheMovimentoGestioneEntrata().size() > 0){
 						for(ModificaMovimentoGestioneEntrata spesaIt : model.getAccertamentoInAggiornamento().getListaModificheMovimentoGestioneEntrata()){
@@ -447,7 +471,7 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 					//Non veniva popolto il componente con i dati della trans. elemen.
 					popolaStrutturaTransazioneElementareAcc();
 					
-					AggiornaAccertamentoResponse response = movimentoGestionService.aggiornaAccertamento(convertiModelPerChiamataServiziInserisciAggiornaModifiche(true));
+					AggiornaAccertamentoResponse response = movimentoGestioneFinService.aggiornaAccertamento(convertiModelPerChiamataServiziInserisciAggiornaModifiche(true));
 					model.setProseguiConWarning(false);
 					
 					if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
@@ -519,7 +543,7 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 					popolaStrutturaTransazioneElementareAcc();
 					
 					//Richiamo il servizio:
-					AggiornaAccertamentoResponse response = movimentoGestionService.aggiornaAccertamento(convertiModelPerChiamataServiziInserisciAggiornaModifiche(true));
+					AggiornaAccertamentoResponse response = movimentoGestioneFinService.aggiornaAccertamento(convertiModelPerChiamataServiziInserisciAggiornaModifiche(true));
 					model.setProseguiConWarning(false);
 					
 					if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
@@ -701,4 +725,3 @@ public class AggiornaModificaMovimentoEntrataAction  extends ActionKeyAggiornaAc
 	}
 
 }
-

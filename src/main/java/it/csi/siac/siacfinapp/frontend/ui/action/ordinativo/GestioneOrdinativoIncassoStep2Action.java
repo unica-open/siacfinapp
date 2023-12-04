@@ -10,16 +10,16 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamentiSubAccertamenti;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamentiSubAccertamentiResponse;
 import it.csi.siac.siacfinser.model.Accertamento;
@@ -183,7 +183,7 @@ public class GestioneOrdinativoIncassoStep2Action extends ActionKeyGestioneOrdin
     	}
     	
     	//rimando al metodo della super classe:
-    	String ritorno = super.inserisciQuotaAccertamento();
+    	String ritorno = super.inserisciQuotaAccertamento(Integer.valueOf(1));
     	
     	// aggiorno la sommatoria delle quote
     	sommatoriaQuoteSubOrdIncasso();
@@ -269,7 +269,7 @@ public class GestioneOrdinativoIncassoStep2Action extends ActionKeyGestioneOrdin
 			return INPUT;
 		}
 	
-		//Constanti.ORDINATIVO_TIPO_PAGAMENTO
+		//CostantiFin.ORDINATIVO_TIPO_PAGAMENTO
 		// Jira - 1357 in caso di errore di caricamento dei dati
 		// dei classificatori non viene segnalato alcun errore
 		// ma carica la pagina, al massimo non verranno visualizzate le combo relative
@@ -309,8 +309,8 @@ public class GestioneOrdinativoIncassoStep2Action extends ActionKeyGestioneOrdin
 
 
     			ParametroRicercaAccSubAcc param= new ParametroRicercaAccSubAcc();
-    			param.setAnnoEsercizio(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
-    			param.setAnnoAccertamento(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+    			param.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
+    			param.setAnnoAccertamento(sessionHandler.getAnnoBilancio());
     			param.setDisponibilitaAdIncassare(true);
 
     			// Capitolo
@@ -330,7 +330,7 @@ public class GestioneOrdinativoIncassoStep2Action extends ActionKeyGestioneOrdin
 
     			addNumAndPageSize(request, "listaAccertamentoOrdinativoId");
 
-    			RicercaAccertamentiSubAccertamentiResponse response= movimentoGestionService.ricercaAccertamentiSubAccertamentiPerOrdinativoIncasso(request);
+    			RicercaAccertamentiSubAccertamentiResponse response= movimentoGestioneFinService.ricercaAccertamentiSubAccertamentiPerOrdinativoIncasso(request);
 
     			if(response.isFallimento() || !response.getErrori().isEmpty()){
 
@@ -399,7 +399,7 @@ public class GestioneOrdinativoIncassoStep2Action extends ActionKeyGestioneOrdin
 	 */
 	public boolean abilitaNuovoAccertamento(){
 		
-		if(isAzioneAbilitata(CodiciOperazioni.OP_ENT_insAcc)){
+		if(isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_insAcc)){
 			return true;
 		}
 		

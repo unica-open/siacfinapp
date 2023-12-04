@@ -32,8 +32,20 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="row-fluid">
 
     <div class="span12 contentPage">
-    
-        <s:form id="nuovoAccertamentoOrdinativo" action="nuovoAccertamentoOrdinativo.do" method="post">
+    	
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form id="nuovoAccertamentoOrdinativo" action="nuovoAccertamentoOrdinativo" method="post">
+		
+		<!-- per modalOrdinativo.jsp -->
+		<s:set var="eliminaQuotaOrdinativoAction" value="%{'nuovoAccertamentoOrdinativo_eliminaQuotaOrdinativo'}" />
+		<s:set var="eliminaProvvisorioAction" value="%{'nuovoAccertamentoOrdinativo_eliminaProvvisorio'}" />
+		<s:set var="forzaInserisciQuotaAccertamentoAction" value="%{'nuovoAccertamentoOrdinativo_forzaInserisciQuotaAccertamento'}" />
+		<s:set var="forzaAggiornaQuotaAccertamentoAction" value="%{'nuovoAccertamentoOrdinativo_forzaAggiornaQuotaAccertamento'}" />
+		
+		<!-- per transazioneElementare.jsp -->
+		<s:set var="codiceSiopeChangedAction" value="%{'nuovoAccertamentoOrdinativo_codiceSiopeChanged'}" />
+		<s:set var="confermaPdcAction" value="%{'nuovoAccertamentoOrdinativo_confermaPdc'}" />	
+			
 		<!--#include virtual="include/alertErrorSuccess.html" --> 
 		<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 		<h3>Nuovo accertamento</h3> 
@@ -74,15 +86,18 @@ SPDX-License-Identifier: EUPL-1.2
 			</div>
 		</div>
 		
+					
        	<s:include value="/jsp/ordinativo/include/modalOrdinativo.jsp" />
 		
 		<p class="margin-medium">
 			<!-- <a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> -->
 			<%-- <s:include value="/jsp/include/indietro.jsp" /> --%>
-			<s:submit cssClass="btn" method="indietroDaAccertamento" value="indietro" name="indietro" />   
+			<!-- task-131 <s:submit cssClass="btn" method="indietroDaAccertamento" value="indietro" name="indietro" /> -->
+			<s:submit cssClass="btn" action="nuovoAccertamentoOrdinativo_indietroDaAccertamento" value="indietro" name="indietro" />  
 			<a class="btn btn-secondary" href="">annulla</a>    
 			<!-- <a class="btn btn-primary pull-right" type="button" value="" href="FIN-InsOrdinativoStep2.shtml">salva</a> -->
-			<s:submit cssClass="btn btn-primary pull-right" method="salva" value="salva" name="salva" />  
+			<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" method="salva" value="salva" name="salva" /> -->
+			<s:submit cssClass="btn btn-primary pull-right" action="nuovoAccertamentoOrdinativo_salva" value="salva" name="salva" />  
 		</p>     
 		<!--#include virtual="include/modal.html" --> 
       </s:form>

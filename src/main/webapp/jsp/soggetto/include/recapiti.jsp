@@ -2,7 +2,7 @@
 SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
 SPDX-License-Identifier: EUPL-1.2
 --%>
-  <%@taglib prefix="display" uri="/display-tags"%>
+<%@taglib prefix="display" uri="/display-tags"%>
 <%@ taglib uri="/struts-tags" prefix="s" %>
 
 
@@ -34,8 +34,6 @@ SPDX-License-Identifier: EUPL-1.2
 			  <display:column title="" > 
 			  
 			  
-			  				     <s:set name="idIndirizzo" value="%{#attr.tabAggiornaIndirizziID.indirizzoId}" />
-			  
 			  
 			  
 <%-- 			  <s:if test="%{#attr.tabAggiornaIndirizziID.indirizzoIdProvvisorio != null && #attr.tabAggiornaIndirizziID.indirizzoIdProvvisorio != ''}"> --%>
@@ -55,7 +53,7 @@ SPDX-License-Identifier: EUPL-1.2
 	                <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
 			     	<ul class="dropdown-menu pull-right" id="ul_action">
 		     			 
-		     			 	<li><a data-indirizzo_id="<s:property value="#idIndirizzo" />"
+		     			 	<li><a data-indirizzo_id="<s:property value="#attr.tabAggiornaIndirizziID.indirizzoId" />"
 		     			 		data-indirizzo_id_provvisorio="<s:property value="#attr.tabAggiornaIndirizziID.indirizzoIdProvvisorio"/>"	
 		     			 		data-tipo_indirizzo="<s:property value="#attr.tabAggiornaIndirizziID.idTipoIndirizzo"/>"	
 		     			 		data-principale="<s:property value="#attr.tabAggiornaIndirizziID.principale"/>"	
@@ -71,11 +69,12 @@ SPDX-License-Identifier: EUPL-1.2
 		     			 		data-toggle="collapse" 
 		     			 		data-target="#insInd">aggiorna</a></li>
 
-					<s:set name="aggiornaRecapitiUrl">${param.aggiornaRecapitiUrl}</s:set>
+	    <s:set var="aggiornaRecapitiUrl" value="%{'aggiornaRecapiti'}"/>          
+						
 
 			  		<li><a href="<s:url action="%{#aggiornaRecapitiUrl}">
 				        	 <s:param name="idIndirizzoProvvisorio" value="#attr.tabAggiornaIndirizziID.indirizzoIdProvvisorio" />
-			   		         <s:param name="idIndirizzo" value="#idIndirizzo" />
+			   		         <s:param name="idIndirizzo" value="#attr.tabAggiornaIndirizziID.indirizzoId" />
 				         <s:param name="pressedButton">eliminaIndirizzo</s:param>
                      </s:url>" data-toggle="modal" class="linkEliminaSoggetto">elimina</a></li>      
                          
@@ -147,14 +146,14 @@ SPDX-License-Identifier: EUPL-1.2
  					 	<s:if test="controlloAvviso(#attr.tabAggiornaRecapitiID.avviso)">si</s:if>
 					 </display:column>
 					 <display:column title="" >
-					    
+					    <!-- qui va messo il pezzo mancante di if ed else -->
 					    <s:if test="%{#attr.tabAggiornaRecapitiID.uidProvvisiorio != null && #attr.tabAggiornaRecapitiID.uidProvvisiorio != ''}">
-					    	<s:url id="updateUrl" action="aggiornaRecapiti.do">
+					    	<s:url var="updateUrl" action="aggiornaRecapiti.do">
 					     		<s:param name="uid" value="%{#attr.tabAggiornaRecapitiID.uidProvvisiorio}" />
 	                     	</s:url>
 					    </s:if>
 					    <s:else>
-					    	<s:url id="updateUrl" action="aggiornaRecapiti.do">
+					    	<s:url var="updateUrl" action="aggiornaRecapiti.do">
 					     		<s:param name="uid" value="%{#attr.tabAggiornaRecapitiID.uid}" />
 	                     	</s:url>
 					    </s:else>
@@ -226,7 +225,7 @@ SPDX-License-Identifier: EUPL-1.2
 	 -->
 	 <s:textfield id="pec" name="recapito.pec" cssClass="span2" />
 	 
-	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label>-->
+	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label> -->
      <span class="al">
      <!-- 
 	 <label class="radio inline">
@@ -255,7 +254,7 @@ SPDX-License-Identifier: EUPL-1.2
 	 <input id="mail" name="mail" class="span2" type="text"/>
 	 -->
 	  <s:textfield id="mail" name="recapito.email"  cssClass="span2"  />
-	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label>-->
+	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label> -->
      <span class="al">
      <!-- 
 	 <label class="radio inline"> <input type="checkbox"> Avviso</label>
@@ -286,10 +285,11 @@ SPDX-License-Identifier: EUPL-1.2
                      </fieldset>  
                      <p>
                          <p class="marginLarge">
-                     		 <a class="btn" href="<s:url method="pulisciContatto"/>">annulla inserimento</a>
+                         <!-- task-131 <a class="btn" href="<s:url method="pulisciContatto"/>"> -->
+                     		 <a class="btn" href="<s:url action="%{#pulisciContattoAction}"/>">annulla inserimento</a>
                      	 </p>	         
-                     	 <s:submit name="salvaRecapito" value="carica" method="salvaRecapito" 
-                        		  cssClass="btn" data-target="#instelefono" data-toggle="collapse" />  
+                     	 <!-- task-131 <s:submit name="salvaRecapito" value="carica" method="salvaRecapito" cssClass="btn"/> -->  
+                     	 <s:submit name="salvaRecapito" value="carica" action="%{#salvaRecapitoAction}" cssClass="btn"/>
                        <!--  <a class="btn" href="#"  data-toggle="collapse" data-target="#instelefono">salva</a> -->  
                      </p>
 

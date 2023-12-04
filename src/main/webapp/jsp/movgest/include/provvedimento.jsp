@@ -86,7 +86,8 @@ SPDX-License-Identifier: EUPL-1.2
 	       	</span> 	       
 	       	
 	       <%-- <s:if test="%{!flagValido}"> --%>
-	       <s:if test="abilitatoModificaProvvedimento()">
+	       <%-- SIAC-7976 aggiunto in AND mostraCompilazioneGuidataProvvedimento() --%>
+	       <s:if test="abilitatoModificaProvvedimento() && mostraCompilazioneGuidataProvvedimento()">
 	      		<span class="radio guidata"><a id="linkCompilazioneGuidataProvvedimento" href="#guidaProv" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
 	       </s:if>
 	      	
@@ -138,8 +139,11 @@ SPDX-License-Identifier: EUPL-1.2
    <s:hidden name="idPassaggioAlbero" id="idPassaggioAlbero" value="%{step1Model.provvedimento.CodiceStrutturaAmministrativa}"/>
    <s:hidden name="idPassaggioLivello" id="idPassaggioLivello" value="%{step1Model.provvedimento.livello}"/>
    
-   	<s:url method="consultaModificheProvvedimento" var="consultaModificheProvvedimento" />
-	<s:url method="consultaModificheProvvedimentoSub" var="consultaModificheProvvedimentoSub" />
+   <!-- task-131 <s:url method="consultaModificheProvvedimento" var="consultaModificheProvvedimento" /> -->
+   <!-- task-131 <s:url method="consultaModificheProvvedimentoSub" var="consultaModificheProvvedimentoSub" />	-->
+	 
+	<s:url action="%{#consultaModificheProvvedimentoAction}" var="consultaModificheProvvedimento" />
+	<s:url action="%{#consultaModificheProvvedimentoSubAction}" var="consultaModificheProvvedimentoSub" />
 
 	<s:hidden id="consultaModificheProvvedimento" value="%{consultaModificheProvvedimento}" />
 	<s:hidden id="consultaModificheProvvedimentoSub" value="%{consultaModificheProvvedimentoSub}" />

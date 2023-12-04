@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacfinapp.frontend.ui.action.soggetto.ConsultaSoggettoAction;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -21,7 +21,7 @@ public class ConsultaSoggettoCecAction extends ConsultaSoggettoAction {
 	protected String getCodificaAmbito() {
 		//settiamo l'ambito
 		//in questo caso cec:
-		return Constanti.AMBITO_CEC;
+		return CostantiFin.AMBITO_CEC;
 	}
 
 }

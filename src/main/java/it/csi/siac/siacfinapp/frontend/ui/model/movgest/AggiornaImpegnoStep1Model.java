@@ -40,6 +40,13 @@ public class AggiornaImpegnoStep1Model extends GenericFinModel{
 	//da riaccertamento
 	private List<String> daRiaccertamento = new ArrayList<String>();
 	
+	//SIAC-6997
+	//da reanno:
+	private String reanno;
+	private List<String> daReanno = new ArrayList<String>();
+	
+	 
+ 
 	//impl pluriennale
 	private List<String> implPluriennale = new ArrayList<String>();	
 	
@@ -175,6 +182,35 @@ public class AggiornaImpegnoStep1Model extends GenericFinModel{
 	public void setDaRiaccertamento(List<String> daRiaccertamento) {
 		this.daRiaccertamento = daRiaccertamento;
 	}
+	
+	//SIAC-6997
+	/**
+	 * @return the daReanno
+	 */
+	public List<String> getDaReanno() {
+		return daReanno;
+	}
+	/**
+	 * @param daReanno the daReanno to set
+	 */
+	public void setDaReanno(List<String> daReanno) {
+		this.daReanno = daReanno;
+	}
+	
+	
+	/**
+	 * @return the reanno
+	 */
+	public String getReanno() {
+		return reanno;
+	}
+	/**
+	 * @param reanno the reanno to set
+	 */
+	public void setReanno(String reanno) {
+		this.reanno = reanno;
+	}
+	
 	public List<String> getImplPluriennale() {
 		return implPluriennale;
 	}

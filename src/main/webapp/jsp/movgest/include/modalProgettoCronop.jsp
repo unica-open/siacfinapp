@@ -72,18 +72,20 @@ SPDX-License-Identifier: EUPL-1.2
 
 		<div id="gestioneRisultatoRicercaProgetti" style="clear:both; padding-top:3px;">
 			<s:include value="/jsp/movgest/include/risultatoRicercaElencoProgettiCronop.jsp" />
+			<%-- SIAC-7610 --%>
+			<s:hidden id="HIDDEN_idSpesaCronoprogramma" name="step1Model.idSpesaCronoprogramma" />
 		</div>
 
 	</div>
 	
 	<div class="modal-footer">
      <s:if test="oggettoDaPopolareImpegno()"> 
-		<s:submit cssClass="btn btn-primary" data-dismiss="modal"
-			aria-hidden="true" value="Conferma" method="selezionaProgettoCronop"></s:submit>
+		<!-- task-131 <s:submit cssClass="btn btn-primary" aria-hidden="true" value="Conferma" method="selezionaProgettoCronop"></s:submit>-->
+		<s:submit cssClass="btn btn-primary" aria-hidden="true" value="Conferma" action="%{#selezionaProgettoCronopAction}"></s:submit>
 	</s:if>
 	<s:else>
-		<s:submit cssClass="btn btn-primary" data-dismiss="modal"
-			aria-hidden="true" value="Conferma" method="selezionaProgetto"></s:submit>
+		<!--<s:submit cssClass="btn btn-primary" aria-hidden="true" value="Conferma" method="selezionaProgetto"></s:submit>-->
+		<s:submit cssClass="btn btn-primary" aria-hidden="true" value="Conferma" action="%{#selezionaProgettoAction}"></s:submit>
 	</s:else>
 	</div>
 </div>
@@ -98,7 +100,8 @@ SPDX-License-Identifier: EUPL-1.2
 		var url='';
 		
 		if(codice!=''){
-			url = '<s:url method="ricercaProgetto"/>';
+			//task-131 --> url = '<s:url method="ricercaProgetto"/>';
+			url = '<s:url action="%{#ricercaProgettoAction}"/>';
 			
 			$.ajax({
 				
@@ -111,7 +114,8 @@ SPDX-License-Identifier: EUPL-1.2
 			});
 		}else	{
 			$.ajax({
-				url: '<s:url method="pulisciRicercaProgetto"/>',
+				//task-131 --> url: '<s:url method="pulisciRicercaProgetto"/>',
+				url: '<s:url action="%{#pulisciRicercaProgettoAction}"/>',				
 			    success: function(data)  {
 				    $("#gestioneRisultatoRicercaProgetti").html(data);
 				}
@@ -133,7 +137,8 @@ SPDX-License-Identifier: EUPL-1.2
 			}
 
 			$.ajax({
-				url: '<s:url method="ricercaProgetto"/>',
+				//task-131 --> url: '<s:url method="ricercaProgetto"/>',
+				url: '<s:url action="%{#ricercaProgettoAction}"/>',
 				type: 'POST',
 				data: $(".parametroRicercaProgetto").serialize(),
 			    success: function(data)  {

@@ -11,18 +11,18 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfin2ser.model.SubdocumentoSpesa;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RegolarizzaCartaContabile;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RegolarizzaCartaContabileResponse;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
@@ -90,7 +90,7 @@ public class GestRigheCartaAction extends WizardRegolarizzaCartaAction {
 		}
 		
 		//verifica di abilitazione:
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_regCarta)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_regCarta)){
 			addPersistentActionError(ErroreFin.UTENTE_NON_ABILITATO.getErrore("").getCodice() + " "+ErroreFin.UTENTE_NON_ABILITATO.getErrore("").getDescrizione());
 			return "elencoCarta";
 		}
@@ -141,7 +141,7 @@ public class GestRigheCartaAction extends WizardRegolarizzaCartaAction {
 		PreDocumentoCarta rigaSelezionata = dettaglioRigaSelezionata(getCkRigaSelezionata());
 		if(FinUtility.haImpegnoOrSubImpegno(rigaSelezionata)){
 			String msg = "La riga indicata e' gia' collegata ad un movimento";
-			addErrore(ErroreCore.VALORE_NON_VALIDO.getErrore("Riga " + rigaSelezionata.getNumero(), msg));	
+			addErrore(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Riga " + rigaSelezionata.getNumero(), msg));	
 		}
 		
 		// se il controllo ha settato errori:

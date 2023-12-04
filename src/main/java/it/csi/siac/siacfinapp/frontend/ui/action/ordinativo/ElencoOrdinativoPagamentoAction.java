@@ -4,13 +4,17 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.ordinativo;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import java.util.List;
+
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
+import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
+import it.csi.siac.siacfinser.CostantiFin;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -27,9 +31,16 @@ public class ElencoOrdinativoPagamentoAction extends ActionKeyRicercaOrdinativoP
 		this.model.setTitolo("Elenco ordinativi pagamento");
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	@BreadCrumb("%{model.titolo}")
 	public String execute() throws Exception {
+		//SIAC-7831 - passo a sessione in quanto il prepare della GenericFinAction cancella sempre gli errori
+		if(sessionHandler.containsKey(FinSessionParameter.ERRORI_AZIONE_PRECEDENTE)) {
+			addErrori((List<Errore>) sessionHandler.getParametro(FinSessionParameter.ERRORI_AZIONE_PRECEDENTE));
+			//cnacello il parametro
+			sessionHandler.setParametro(FinSessionParameter.ERRORI_AZIONE_PRECEDENTE, null);
+		}
 		
 		// se la ricerca torna degli errori ritorna
 		// degli errori torno sulla form di ricerca 
@@ -52,11 +63,11 @@ public class ElencoOrdinativoPagamentoAction extends ActionKeyRicercaOrdinativoP
 			returnValue=true;
 		}
 		
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGMAN)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGMAN)){
 			returnValue=false;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_ANNULLATO) || stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_QUIETANZATO)) {
+		if (stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_ANNULLATO) || stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_QUIETANZATO)) {
 			returnValue=false;
 		}						
 		
@@ -74,23 +85,23 @@ public class ElencoOrdinativoPagamentoAction extends ActionKeyRicercaOrdinativoP
 			return false;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_ANNULLATO)) {
+		if (stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_ANNULLATO)) {
 			return false;
 		}
 		
 		
-		boolean isAggiornaAbilitatoOPSPEAggMan = isAzioneAbilitata(CodiciOperazioni.OP_SPE_aggMan);
-		boolean isAggiornaAbilitatoOPSPEVarMan = isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan);
+		boolean isAggiornaAbilitatoOPSPEAggMan = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_aggMan);
+		boolean isAggiornaAbilitatoOPSPEVarMan = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan);
 				
-		if (stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_INSERITO) && !isAggiornaAbilitatoOPSPEAggMan) {
+		if (stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_INSERITO) && !isAggiornaAbilitatoOPSPEAggMan) {
 			return false;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_TRASMESSO) && !isAggiornaAbilitatoOPSPEVarMan) {
+		if (stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_TRASMESSO) && !isAggiornaAbilitatoOPSPEVarMan) {
 			return false;
 		}
 		
-		if ((stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_QUIETANZATO)|| stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_FIRMATO))  && !isAggiornaAbilitatoOPSPEVarMan) {
+		if ((stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_QUIETANZATO)|| stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_FIRMATO))  && !isAggiornaAbilitatoOPSPEVarMan) {
 			return false;
 		}
 		

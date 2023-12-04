@@ -26,9 +26,10 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-        <s:form id="inserisciSoggetto" action="inserisciSoggettoCec.do" method="post">
-        <h3>Inserisci un nuovo soggetto</h3>
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form id="inserisciSoggetto" action="inserisciSoggettoCec" method="post">
+        <!-- task-224 -->
+        <h3>Inserisci un nuovo soggetto di Cassa Economale</h3>
         
         
          <s:if test="hasActionErrors()">
@@ -212,8 +213,11 @@ SPDX-License-Identifier: EUPL-1.2
       
         <p> 
 <%--           <a class="btn btn-link" href="<s:url method="pulisci"/>">annulla</a>  --%>
- 		 <s:submit name="annullaControlla" value="annulla" method="pulisci" cssClass="btn" /> 
-         <s:submit name="controllaDati" value="controlla dati" method="controllaDati" cssClass="btn" /> 
+ 		 <!--task-131 <s:submit name="annullaControlla" value="annulla" method="pulisci" cssClass="btn" /> --> 
+         <!--task-131 <s:submit name="controllaDati" value="controlla dati" method="controllaDati" cssClass="btn" /> --> 
+		 <s:submit name="annullaControlla" value="annulla" action="inserisciSoggettoCec_pulisci" cssClass="btn" /> 
+         <s:submit name="controllaDati" value="controlla dati" action="inserisciSoggettoCec_controllaDati" cssClass="btn" /> 
+		 	
         </p>
         
          <s:hidden name="parametroRicercaControllaDati"/>	
@@ -393,7 +397,7 @@ SPDX-License-Identifier: EUPL-1.2
              
 <%--          	   <a class="btn btn-link" href="<s:url method="pulisci"/>">annulla</a> --%>
          	   <s:submit name="pulisciFondo" value="annulla" method="pulisci" cssClass="btn btn-link" />
-               <s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary pull-right" />
+               <s:submit name="prosegui" value="prosegui" action="inserisciSoggettoCec_prosegui" cssClass="btn btn-primary pull-right" />
           </p>
              
              

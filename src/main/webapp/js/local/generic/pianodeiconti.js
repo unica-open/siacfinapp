@@ -41,6 +41,35 @@ var settingProvvisoriCassa = {
 	};
 
 
+var settingCompetente = {
+		check: {
+			enable: true,
+			chkStyle: "radio",
+			radioType: "all"
+		},
+		data: {
+			simpleData: {
+				enable: true
+			}
+		},
+		callback: {
+			// anche se seleziona la descrizione
+			// deve ceccare il radio button
+			onClick: zTreeClickComp,
+			onCheck: onCheckCompetente
+		}
+	};
+
+
+function zTreeClickComp(event ,treeId, treeNode) {
+	var treeObj = $.fn.zTree.getZTreeObj(treeId);
+	if (treeNode!=null) {
+		$('#strutturaSelezionataCompetente').val(treeNode.uid);
+		treeObj.checkNode(treeNode, true, true);
+
+	}
+    return (treeNode.id !== 1);
+};
 
 function zTreeClick(event ,treeId, treeNode) {
 	var treeObj = $.fn.zTree.getZTreeObj(treeId);
@@ -193,6 +222,7 @@ function setCheck() {
 	//alert('setCheck');
 	//alert('setCheck - type: '+type);
 	var supportComponents = {};
+	type="all";
 	setting.check.radioType = type;
 	showCode('setting.check.radioType = "' + type + '";');
 	settingWithCallbackElementoPdcTransazioneElementare.check.radioType = type;
@@ -287,6 +317,20 @@ function setCheck() {
 		dataContoEconomicoSiopeSpesa += "struttAmmOriginale=" + $("#struttAmmOriginale").val(); 
 		trovatoParametroDtCESSpesa = true;
 	} 
+	if (typeof $("#struttAmmOriginaleCompetente") !== 'undefined' && $("#struttAmmOriginaleCompetente").val() != null) {
+		
+		if (trovatoParametro) {
+			dataPianoDeiConti += "&";
+		}
+		dataPianoDeiConti += "struttAmmOriginaleCompetente=" + $("#struttAmmOriginaleCompetente").val();
+		trovatoParametro = true;
+		
+		if (trovatoParametroDtCESSpesa) {
+			dataContoEconomicoSiopeSpesa += "&";
+		}
+		dataContoEconomicoSiopeSpesa += "struttAmmOriginaleCompetente=" + $("#struttAmmOriginaleCompetente").val(); 
+		trovatoParametroDtCESSpesa = true;
+	} 
 	if (typeof $("#idPianoDeiContiCapitoloPadrePerAggiorna") !== 'undefined' && $("#idPianoDeiContiCapitoloPadrePerAggiorna").val() != null) {
 		if (trovatoParametro) {
 			dataPianoDeiConti += "&";
@@ -331,6 +375,13 @@ function setCheck() {
 	
 	supportComponents = {"#siopeTransazioneElementare": settingWithCallbackSiopeSpesaTransazioneElementare};
 	chiamataAjaxPerPopolaTree('ajax/siopeSpesaAjax.do', dataPianoDeiConti, 'listaSiopeSpesa', supportComponents);
+	
+	//SIAC-7477
+	supportComponents = {
+			"#strutturaAmministrativaCompetente" :settingCompetente};
+	
+	chiamataAjaxPerPopolaTree('ajax/strutturaAmministrativeCompetenteAjax.do', dataContoEconomicoSiopeSpesa, 'listaStrutturaAmministrativeCompetente', supportComponents);
+
 
 }
 
@@ -373,6 +424,10 @@ function gestisciChangeTreeNode(boolTree, suffix, treeId, treeNode) {
 
 function onCheckProvvisoriCassa(e, treeId, treeNode) {
 	$('#strutturaSelezionataSuPagina').val(treeNode.uid);
+}
+
+function onCheckCompetente(e, treeId, treeNode) {
+	$('#strutturaSelezionataCompetente').val(treeNode.uid);
 }
 
 function onCheckElementoPdcTransazioneElementare(e, treeId, treeNode) {
@@ -556,6 +611,12 @@ function chiamataAjaxPerPopolaTree(url, data, listaDiRiferimento, supportCompone
         			$("#spinnerStruttAmmOrdinativoIncasso").addClass("hideContent");
         		}
         		
+        		//SIAC-6997
+        		if(k=="#strutturaAmministrativaCompetente"){
+        			
+        			$("#spinnerStrutturaAmministrativaCompetente").addClass("hideContent");
+        		}
+        		
         		
         		
 //        		spinnerStruttAmmRicercaCapitolo strutturaAmministrativaRicercaCapitolo *
@@ -604,9 +665,13 @@ $(document).ready(function() {
  	   var $ztreeId = $('#' + ztreeId);
  	   var ztree = $.fn.zTree.getZTreeObj(ztreeId);
  	   
- 	   var updateAccordion = function(text) {
- 		   $ztreeId.closest('.accordion').find('.accordion-toggle').text(text);
- 	   };
+	   	var updateAccordion = function(text) {
+			//SIAC-7583
+			//non sostuisco il valore in caso l'accordion sia della transazione elementare
+			var accordion = $ztreeId.closest('.accordion').find('.accordion-toggle');
+			accordion.text().indexOf('Transazione elementare') === -1 ? accordion.text(text) : $.noop();
+			//
+	   	};
 
  	   var fnClick = ztree.setting.callback.onClick || function(){};
  	   var fnCheck = ztree.setting.callback.onCheck || function(){};

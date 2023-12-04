@@ -16,19 +16,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.DatiOpzionaliElencoSubTuttiConSoloGliIds;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzato;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
@@ -38,7 +38,6 @@ import it.csi.siac.siacfinser.model.carta.CartaContabile;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaCartaContabile;
 import it.csi.siac.siacfinser.model.ric.RicercaImpegnoK;
 
@@ -83,7 +82,7 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 		}
 		
 	   	//abilitazione o meno alla funzione
-	   	if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_ricCarta)){
+	   	if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_ricCarta)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 		}
 		
@@ -143,13 +142,13 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 		if (model.getNumeroCartaDa()!=null && !model.getNumeroCartaDa().trim().equals("") && model.getNumeroCartaA()!=null && !model.getNumeroCartaA().trim().equals("")) {
 			
 			if(Integer.valueOf(model.getNumeroCartaDa())>Integer.valueOf(model.getNumeroCartaA())){
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Numero Carta Da/Numero Carta A","(Numero Carta Da deve essere minore di Numero Carta A)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Numero Carta Da/Numero Carta A","(Numero Carta Da deve essere minore di Numero Carta A)"));
 			}
 			
 		}
 			
 		if (model.getNumeroCartaDa()==null && model.getNumeroCartaA()!=null) {
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Numero Carta Da/Numero Carta A","(Non e' possibile inserire Numero Carta A senza Numero Carta Da)"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Numero Carta Da/Numero Carta A","(Non e' possibile inserire Numero Carta A senza Numero Carta Da)"));
 		}
 		
 		// stato
@@ -163,7 +162,7 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 			
 		}else if(!(model.getDescrizioneCarta().length()>2)){
 			    noInputData = false;
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("descrizione carta","(inserire almeno 3 caratteri)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("descrizione carta","(inserire almeno 3 caratteri)"));
 		}else{
 			// lunghezza giusta quindi nessun errore
 			noInputData = false;
@@ -188,7 +187,7 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 					// parse della data e in caso di eccezione errore !!
 					parsedTimeDa=df.parse(model.getDataScadenzaCartaDa());
 				} catch (ParseException e) {
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza Da",""));				}
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza Da",""));				}
 			}
 
 			// coerenza date inserite e corretta formattazione
@@ -202,17 +201,17 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 				try {
 					parsedTimeA=df.parse(model.getDataScadenzaCartaA());
 				} catch (ParseException e) {
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza A",""));				
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza A",""));				
 				}
 			}
 
 			// controllo sulle date scadenza secondo cdu
 			if (parsedTimeDa==null && parsedTimeA!=null) {
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza Da/Data Scadenza A","(Non e' possibile inserire Data Scadenza A senza Data Scadenza Da)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza Da/Data Scadenza A","(Non e' possibile inserire Data Scadenza A senza Data Scadenza Da)"));
 			}
 			
 			if (parsedTimeDa!=null && parsedTimeA!=null && parsedTimeDa.after(parsedTimeA)) {
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza Da/Data Scadenza A","(Data Scadenza Da deve essere minore di Data Scadenza A)"));
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza Da/Data Scadenza A","(Data Scadenza Da deve essere minore di Data Scadenza A)"));
 			}
 
 		}
@@ -357,7 +356,7 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 		rip.setEnte(sessionHandler.getEnte());
 		rip.setRichiedente(sessionHandler.getRichiedente());
 		RicercaImpegnoK k = new RicercaImpegnoK();
-		k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		if(annoimpegno!=null)
 			k.setAnnoImpegno(new Integer(annoimpegno));
 		if(numeroimpegno!=null)
@@ -367,15 +366,13 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 		//Richiedo alcuni dati opzionali:
 		DatiOpzionaliElencoSubTuttiConSoloGliIds datiOpzionaliElencoSubTuttiConSoloGliIds = new DatiOpzionaliElencoSubTuttiConSoloGliIds();
 		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaDisponibileLiquidareEDisponibilitaInModifica(true);
-		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaVociMutuo(true);
-		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaMutui(true);
 		rip.setDatiOpzionaliElencoSubTuttiConSoloGliIds(datiOpzionaliElencoSubTuttiConSoloGliIds );
 		
 		//esclude il caricamento di tutti i sub con i dati pesanti:
 		rip.setCaricaSub(false);
 		//
 		
-		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 		
 		
 		if (respRk != null && respRk.getImpegno() != null) {
@@ -390,12 +387,7 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 					model.setImpegnoPopup(impegno);
 					model.setHasImpegnoSelezionatoPopup(true);
 					model.setHasImpegnoSelezionatoXPopup(true);
-					List<VoceMutuo> listaVociMutuo = new ArrayList<VoceMutuo>();
-					if(impegno!=null && impegno.getListaVociMutuo()!=null && impegno.getListaVociMutuo().size()>0){
-						listaVociMutuo = impegno.getListaVociMutuo();
-						model.setHasMutui(true);
-					}
-					model.setListaVociMutuo(listaVociMutuo);
+
 				
 				
 				//verifico se presenti subimpegni, in questo caso popolo la tabella
@@ -453,7 +445,7 @@ public class RicercaCartaAction extends ActionKeyRicercaCartaAction {
 		
 		CapitoloImpegnoModel capitolo = new CapitoloImpegnoModel();
 		model.setCapitolo(capitolo);
-		model.getCapitolo().setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		model.getCapitolo().setAnno(sessionHandler.getAnnoBilancio());
 		
 		model.setAnnoImpegno(null);
 		model.setNumeroImpegno(null);

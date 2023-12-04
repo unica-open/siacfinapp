@@ -93,7 +93,8 @@ SPDX-License-Identifier: EUPL-1.2
 			if(caricaTitolo){
 			
 		        $.ajax({
-					url: '<s:url method="remodpagamento"></s:url>',
+					//task-131 url: '<s:url method="remodpagamento"></s:url>',
+					url: '<s:url action="%{#remodpagamentoAction}"></s:url>',
 					type: "POST",
 					data: data, 
 				    success: function(data)  {
@@ -113,7 +114,8 @@ SPDX-License-Identifier: EUPL-1.2
 			}else{
 				// non carica il titolo
 				 $.ajax({
-						url: '<s:url method="remodpagamento"></s:url>',
+						//task-131 url: '<s:url method="remodpagamento"></s:url>',
+						url: '<s:url action="%{#remodpagamentoAction}"></s:url>',
 						type: "POST",
 						data: data, 
 					    success: function(data)  {

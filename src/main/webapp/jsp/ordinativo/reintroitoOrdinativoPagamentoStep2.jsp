@@ -171,18 +171,22 @@ SPDX-License-Identifier: EUPL-1.2
         
 		<p class="margin-medium"> 
 		<s:include value="/jsp/include/indietroSubmit.jsp" /> 
-		<s:submit cssClass="btn btn-secondary" method="annullaStep2" value="annulla" name="annulla" />
+		<!-- task-131 <s:submit cssClass="btn btn-secondary" method="annullaStep2" value="annulla" name="annulla" /> -->
+		<!-- task-131 <s:submit cssClass="btn btn-secondary" action="reintroitoOrdinativoPagamentoStep2_annullaStep2" value="annulla" name="annulla" /> -->
+		<s:submit cssClass="btn btn-secondary" action="reintroitoOrdinativoPagamentoStep2_annullaStep2" value="annulla" name="annulla" />
 		
-        <s:submit id="eseguiReintroito" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina"
-         method="preCheckCoerenzaSoggetti" value="esegui" name="esegui" />
+        <!-- task-131 <s:submit id="eseguiReintroito" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina" method="preCheckCoerenzaSoggetti" value="esegui" name="esegui" /> -->
+        <s:submit id="eseguiReintroito" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina" action="reintroitoOrdinativoPagamentoStep2_preCheckCoerenzaSoggetti" value="esegui" name="esegui" />
         
         <a id="linkMsgCheckSoggetti" href="#msgControlloSoggetti" style="display: none;" data-toggle="modal"></a>
         
         <a id="linkMsgCheckPianiDeiConti" href="#msgControlloPianiDeiConti" style="display: none;" data-toggle="modal"></a>
         
         
-		<s:submit id="controllaDispCassa" cssClass="btn btn-secondary pull-right" method="controlloDispDiCassa" value="controllo disponibilita di cassa" name="controllo disponibilita di cassa" />
-		<s:submit id="controllaDispLiq" cssClass="btn btn-secondary pull-right" method="controlloDispLiquidare" value="controllo disponibilita a liquidare" name="controllo disponibilita a liquidare" />
+		<!-- task-131 <s:submit id="controllaDispCassa" cssClass="btn btn-secondary pull-right" method="controlloDispDiCassa" value="controllo disponibilita di cassa" name="controllo disponibilita di cassa" /> -->
+		<s:submit id="controllaDispCassa" cssClass="btn btn-secondary pull-right" action="reintroitoOrdinativoPagamentoStep2_controlloDispDiCassa" value="controllo disponibilita di cassa" name="controllo disponibilita di cassa" />
+		<!-- task-131 <s:submit id="controllaDispLiq" cssClass="btn btn-secondary pull-right" method="controlloDispLiquidare" value="controllo disponibilita a liquidare" name="controllo disponibilita a liquidare" /> -->
+		<s:submit id="controllaDispLiq" cssClass="btn btn-secondary pull-right" action="reintroitoOrdinativoPagamentoStep2_controlloDispLiquidare" value="controllo disponibilita a liquidare" name="controllo disponibilita a liquidare" />	
 		
 		</p>  
 		
@@ -198,8 +202,8 @@ SPDX-License-Identifier: EUPL-1.2
 		      </div>
 		      <div class="modal-footer">
 		        <button class="btn" data-dismiss="modal" aria-hidden="true">no</button>
-		        <s:submit id="eseguiReintroito1" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina"
-        		 method="preCheckCoerenzaPianoDeiConti" value="si" name="si" data-dismiss="modal" />
+		        <!-- task-131 <s:submit id="eseguiReintroito1" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina" method="preCheckCoerenzaPianoDeiConti" value="si" name="si" /> -->
+		        <s:submit id="eseguiReintroito1" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina" action="reintroitoOrdinativoPagamentoStep2_preCheckCoerenzaPianoDeiConti" value="si" name="si" />
 		      </div>
 		</div>   
 		
@@ -215,8 +219,8 @@ SPDX-License-Identifier: EUPL-1.2
 		      </div>
 		      <div class="modal-footer">
 		        <button class="btn" data-dismiss="modal" aria-hidden="true">no</button>
-		        <s:submit id="eseguiReintroito2" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina"
-        		 method="prosegui" value="si" name="si" data-dismiss="modal" />
+		        <!-- task-131 <s:submit id="eseguiReintroito2" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina" method="prosegui" value="si" name="si" /> -->
+		        <s:submit id="eseguiReintroito2" disabled="elaborazioneAvviata" cssClass="btn btn-primary pull-right freezePagina" action="reintroitoOrdinativoPagamentoStep2_prosegui" value="si" name="si" />
 		      </div>
 		</div>      
 
@@ -245,7 +249,8 @@ SPDX-License-Identifier: EUPL-1.2
     		console.log($el.data('compilazioneGuidata'));
     		
     		$.ajax({
-                url: '<s:url method="azzeraModaleImpegno"></s:url>',
+                //task-131 url: '<s:url method="azzeraModaleImpegno"></s:url>',
+                url: '<s:url action="reintroitoOrdinativoPagamentoStep2_azzeraModaleImpegno"></s:url>',
                 type: "GET",
                 data: {riferimentoRigaSelezionata: selezionato },
              	success: function(data){
@@ -261,7 +266,8 @@ SPDX-License-Identifier: EUPL-1.2
     		console.log($el.data('compilazioneGuidataAcc'));
     		
     		$.ajax({
-                url: '<s:url method="azzeraModaleAccertamento"></s:url>',
+                //task-131 url: '<s:url method="azzeraModaleAccertamento"></s:url>',
+                 url: '<s:url action="reintroitoOrdinativoPagamentoStep2_azzeraModaleAccertamento"></s:url>',
                 type: "GET",
                 data: {riferimentoRigaSelezionata: selezionato },
              	success: function(data){
@@ -277,7 +283,8 @@ SPDX-License-Identifier: EUPL-1.2
     		var value = $target.val();
     		//Carico i dati in tabella "Modalita' di pagamento"		
     		$.ajax({
-    			url: '<s:url method="saveOnChangeElementoRigaOrdinaivi"></s:url>',
+    			//task-131 url: '<s:url method="saveOnChangeElementoRigaOrdinaivi"></s:url>',
+    			url: '<s:url action="reintroitoOrdinativoPagamentoStep2_saveOnChangeElementoRigaOrdinaivi"></s:url>',
     			type: "GET",
     			data: $(".hiddenGestoreToggle").serialize() + "&name=" + name + "&value=" + value, 
     		});			

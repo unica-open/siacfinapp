@@ -54,7 +54,8 @@ SPDX-License-Identifier: EUPL-1.2
 				if (supportId != null && supportId.length > 0) {
 	// 				$("#idSoggettoDaAggiornare").val(supportId[1]);
 					$.ajax({
-						url: '<s:url method="eliminaDocDaTabella"></s:url>',
+						// task-131 url: '<s:url method="eliminaDocDaTabella"></s:url>',
+						url: '<s:url action="aggiornaRigaDaMovimento_eliminaDocDaTabella"></s:url>',
 						type: "GET",
 						data: {idDocDaEliminare: supportId[1] },
 					    success: function(data)  {

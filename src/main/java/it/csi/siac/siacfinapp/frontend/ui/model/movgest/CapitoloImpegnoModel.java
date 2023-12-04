@@ -14,6 +14,7 @@ import it.csi.siac.siacbilser.model.ImportiCapitoloEG;
 import it.csi.siac.siacbilser.model.ImportiCapitoloUG;
 import it.csi.siac.siacbilser.model.TipoFinanziamento;
 import it.csi.siac.siacbilser.model.VincoliCapitoloUEGest;
+import it.csi.siac.siacbilser.model.wrapper.ImportiCapitoloPerComponente;
 import it.csi.siac.siaccorser.model.ClassificatoreGenerico;
 import it.csi.siac.siaccorser.model.Entita.StatoEntita;
 import it.csi.siac.siaccorser.model.TipoClassificatore;
@@ -52,6 +53,9 @@ public class CapitoloImpegnoModel extends GenericFinModel {
 	//flag impegnabile:
 	private boolean flagImpegnabile;
 	
+	//task-55
+	private boolean flagCapitoloDaNonInserire;
+	
 	//lista vincoli ug gest:
 	private List<VincoliCapitoloUEGest> listaVincoliCapitoloUEGest;
 	
@@ -66,6 +70,55 @@ public class CapitoloImpegnoModel extends GenericFinModel {
 	
 	//tipo finanziamento:
 	private TipoFinanziamento finanziamento;
+	
+	//SIAC-7439
+	private Integer componenteBilancioUid;
+	private List<ImportiCapitoloPerComponente> listaComponentiBilancio = new ArrayList<ImportiCapitoloPerComponente>();
+	private Integer componenteBilancioUidReturn;
+	private Integer uidCapitoloFromAjax;
+
+	/**
+	 * @return the uidCapitoloFromAjax
+	 */
+	public Integer getUidCapitoloFromAjax() {
+		return uidCapitoloFromAjax;
+	}
+
+	/**
+	 * @param uidCapitoloFromAjax the uidCapitoloFromAjax to set
+	 */
+	public void setUidCapitoloFromAjax(Integer uidCapitoloFromAjax) {
+		this.uidCapitoloFromAjax = uidCapitoloFromAjax;
+	}
+
+	/**
+	 * @return the listaComponentiBilancio
+	 */
+	public List<ImportiCapitoloPerComponente> getListaComponentiBilancio() {
+		return listaComponentiBilancio;
+	}
+
+	/**
+	 * @param listaComponentiBilancio the listaComponentiBilancio to set
+	 */
+	public void setListaComponentiBilancio(List<ImportiCapitoloPerComponente> listaComponentiBilancio) {
+		this.listaComponentiBilancio = listaComponentiBilancio;
+	}
+	
+	/**
+	 * @return the componenteBilancioUid
+	 */
+	public Integer getComponenteBilancioUid() {
+		return componenteBilancioUid;
+	}
+	/**
+	 * @param componenteBilancioUid the componenteBilancioUid to set
+	 */
+	public void setComponenteBilancioUid(Integer componenteBilancioUid) {
+		this.componenteBilancioUid = componenteBilancioUid;
+	}
+	
+	////
 	
 	public String getCup() {
 		return cup;
@@ -411,6 +464,31 @@ public class CapitoloImpegnoModel extends GenericFinModel {
 	public void setCodiceMacroAggregato(String codiceMacroAggregato) {
 		this.codiceMacroAggregato = codiceMacroAggregato;
 	}
+
+	/**
+	 * @return the componenteBilancioUidReturn
+	 */
+	public Integer getComponenteBilancioUidReturn() {
+		return componenteBilancioUidReturn;
+	}
+
+	/**
+	 * @param componenteBilancioUidReturn the componenteBilancioUidReturn to set
+	 */
+	public void setComponenteBilancioUidReturn(Integer componenteBilancioUidReturn) {
+		this.componenteBilancioUidReturn = componenteBilancioUidReturn;
+	}
+	
+	//task-55
+	public boolean isFlagCapitoloDaNonInserire() {
+		return flagCapitoloDaNonInserire;
+	}
+
+	public void setFlagCapitoloDaNonInserire(boolean flagCapitoloDaNonInserire) {
+		this.flagCapitoloDaNonInserire = flagCapitoloDaNonInserire;
+	}
+	
+	
 	
 	
 }

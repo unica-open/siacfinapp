@@ -9,15 +9,17 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.EsistenzaProgettoResponse;
 
 
@@ -91,11 +93,18 @@ public class RicercaAccertamentoAction extends WizardRicercaMovGestAction {
 			competenzeListApp.add("Residui");
 			competenzeListApp.add("Correnti");
 			competenzeListApp.add("Futuri");
+			competenzeListApp.add("Residui ROR");
 			setCompetenzeList(competenzeListApp);
 			model.getRicercaModel().setAnnoMovimento(sessionHandler.getAnnoEsercizio()); // qui è l'accertamento
 		}catch(Exception e){
 			log.debug("prepara", e.getMessage());
 		}
+		
+		//SIAC-6997
+		List<String> listaDaReanno = new ArrayList<String>();
+		listaDaReanno.add(SI);
+		listaDaReanno.add(NO);
+		model.getStep1Model().setDaReanno(listaDaReanno);
 
 	}
 	
@@ -118,6 +127,35 @@ public class RicercaAccertamentoAction extends WizardRicercaMovGestAction {
 	public String execute() throws Exception {
 		setMethodName("execute");
 
+		
+		//SIAC-6997
+		model.setRicercaTipoROR(false);
+		//SIAC-7704
+		model.setSkipControlloBloccoRagioneria(true);
+//		if(
+//			(sessionHandler.getAzioneRichiesta()!= null && sessionHandler.getAzioneRichiesta().getAzione()!= null && sessionHandler.getAzioneRichiesta().getAzione().getNome()!= null
+//			&& (sessionHandler.getAzioneRichiesta().getAzione().getNome().equals(AzioniConsentite.LEGGI_ACC_ROR_DECENTRATO.getNomeAzione())||
+//			sessionHandler.getAzioneRichiesta().getAzione().getNome().equals(AzioniConsentite.LEGGI_ACC_ROR.getNomeAzione()))) //ROR DECENTRATO ACTION
+//			){
+//			//AZIONE RICERCA ROR
+//			if(CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO.equals(sessionHandler.getFaseBilancio())){ // PREDISPOSIZIONE CONSUNTIVO)
+//					model.setRicercaTipoROR(true);
+//				}
+//				else{
+//					return "erroreRicercaFase";
+//				}
+//		}
+		
+		
+		setAzioniDecToCheck(AzioneConsentitaEnum.OP_ENT_gestAccROR.getNomeAzione()+ ","+AzioneConsentitaEnum.OP_ENT_gestAccRORdecentrato.getNomeAzione()); //SOLO PER AZIONI ROR
+		if( checkAzioniDec() 
+				&& CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO.equals(sessionHandler.getFaseBilancio())	){ //SOLO PER PREDISPOSIZIONE CONSUNTIVO  
+			model.setRicercaTipoROR(true);
+		}
+		
+		
+		
+		
 		resetPageNumberTableId("ricercaAccertamentoID");
 		
 		//Pulisco i campi
@@ -146,6 +184,9 @@ public class RicercaAccertamentoAction extends WizardRicercaMovGestAction {
 		
 		//disabilito il caricamento degli alberi inutili per questo scenario (in AjaxAction.java):
 		azzeraRicaricheAlberi();
+		
+		//SIAC-6997
+		model.getStep1Model().setReanno(NO);
 		
 		return SUCCESS;
 	}
@@ -295,6 +336,10 @@ public class RicercaAccertamentoAction extends WizardRicercaMovGestAction {
 				}
 				if(model.getRicercaModel().getCompetenze().equalsIgnoreCase("Tutti")){
 					model.getRicercaModel().setCompetenzaTutti(true);
+				}
+				//SIAC-6997
+				if(model.getRicercaModel().getCompetenze().equalsIgnoreCase("Residui ROR")){
+					model.getRicercaModel().setCompetenzaResiduiRor(true);
 				}
 			}
 

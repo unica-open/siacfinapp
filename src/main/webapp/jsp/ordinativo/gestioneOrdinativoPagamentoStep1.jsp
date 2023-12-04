@@ -39,8 +39,37 @@ SPDX-License-Identifier: EUPL-1.2
     <div class="span12 contentPage">  
     <!-- PAOLO -->
 <%--       <s:form id="gestioneOrdinativoPagamentoStep1" action="gestioneOrdinativoPagamentoStep1.do" method="post">   --%>
-      <s:form id="%{labels.FORM}" action="%{labels.FORM}.do" method="post" cssClass="form-horizontal">
-		 <s:include value="/jsp/include/actionMessagesErrors.jsp" />
+      <s:form id="%{labels.FORM}" action="%{labels.FORM}" method="post" cssClass="form-horizontal">
+      	<s:if test="oggettoDaPopolarePagamento()">
+			<s:set var="oggetto" value="%{'Pagamento'}" />
+			<!-- per collegaOrdinativiPagamento.jsp -->
+			<s:set var="aggiungiOrdinativoDaCollegareAction" value="%{'gestioneOrdinativoPagamentoStep1_aggiungiOrdinativoDaCollegare'}" />
+			<s:set var="eliminaOrdinativoCollegatoAction" value="%{'gestioneOrdinativoPagamentoStep1_eliminaOrdinativoCollegato'}" />
+			<s:set var="confermaAggiungiOrdinativoDaCollegareAction" value="%{'gestioneOrdinativoPagamentoStep1_confermaAggiungiOrdinativoDaCollegare'}" />
+			
+			<!-- per datiEntitaOrdinativo.jsp -->
+			<s:set var="controllaDisponibilitaSottocontoVincolatoAction" value="%{'gestioneOrdinativoPagamentoStep1_controllaDisponibilitaSottocontoVincolato'}" />	   		           								
+			<s:set var="resedeAction" value="%{'gestioneOrdinativoPagamentoStep1_resede'}" />	
+			<s:set var="caricaTitoloModPagAction" value="%{'gestioneOrdinativoPagamentoStep1_caricaTitoloModPag'}" />				
+			<!-- per sediSecondarieOrdinativo.jsp -->
+			<s:set var="remodpagamentoAction" value="%{'gestioneOrdinativoPagamentoStep1_remodpagamento'}" />				
+		</s:if>
+		<s:else>
+			<s:set var="oggetto" value="%{'Incasso'}" />
+			<!-- per collegaOrdinativiIncasso.jsp -->
+			<s:set var="aggiungiOrdinativoDaCollegareAction" value="%{'gestioneOrdinativoIncassoStep1_aggiungiOrdinativoDaCollegare'}" />
+			<s:set var="eliminaOrdinativoCollegatoAction" value="%{'gestioneOrdinativoIncassoStep1_eliminaOrdinativoCollegato'}" />	   		           						
+			<s:set var="confermaAggiungiOrdinativoDaCollegareAction" value="%{'gestioneOrdinativoIncassoStep1_confermaAggiungiOrdinativoDaCollegare'}" />
+			
+			<!-- per datiEntitaOrdinativo.jsp -->
+			<s:set var="controllaDisponibilitaSottocontoVincolatoAction" value="%{'gestioneOrdinativoIncassoStep1_controllaDisponibilitaSottocontoVincolato'}" />	   		           								
+			<s:set var="resedeAction" value="%{'gestioneOrdinativoIncassoStep1_resede'}" />	
+			<s:set var="caricaTitoloModPagAction" value="%{'gestioneOrdinativoIncassoStep1_caricaTitoloModPag'}" />
+			<!-- per sediSecondarieOrdinativo.jsp -->
+			<s:set var="remodpagamentoAction" value="%{'gestioneOrdinativoIncassoStep1_remodpagamento'}" />					
+		</s:else>
+		
+		<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 		 
 		<s:hidden id="liquidazioneTrovata" name="liquidazioneTrovata"/>
 		<s:hidden id="accertamentoTrovato" name="accertamentoTrovato"/>
@@ -73,8 +102,8 @@ SPDX-License-Identifier: EUPL-1.2
 			            Numero 
 				        <s:textfield id="numeroLiquidazione" name="gestioneOrdinativoStep1Model.numeroLiquidazione" cssClass="span2" onkeyup="return checkItNumbersOnly(event)"/>	
 					 	<span id="searchLiq">
-					 		<s:submit id="cercaLiquidazioneInsOrPag" cssClass="btn btn-primary" method="cercaLiquidazione" value="cerca" name="cerca" />
-					 		<!-- <a class="btn btn-primary">cerca</a> -->
+					 		<!-- task-131 <s:submit id="cercaLiquidazioneInsOrPag" cssClass="btn btn-primary" method="cercaLiquidazione" value="cerca" name="cerca" /> -->
+					 		<s:submit id="cercaLiquidazioneInsOrPag" cssClass="btn btn-primary" action="gestioneOrdinativoPagamentoStep1_cercaLiquidazione" value="cerca" name="cerca" />
 					 	</span>
 					</div>
 				</div>
@@ -95,7 +124,8 @@ SPDX-License-Identifier: EUPL-1.2
 		              <s:textfield id="numeroSubAcc" name="gestioneOrdinativoStep1Model.numeroSubAcc" cssClass="span1" maxlength="7" onkeyup="return checkItNumbersOnly(event)"/>  
 	              	
 		              <span id="searchLiq">
-						<s:submit id="cercaAccertamentoInsOrPag" cssClass="btn btn-primary" method="cercaAccertamento" value="cerca" name="cerca" />
+						<!-- task-131 <s:submit id="cercaAccertamentoInsOrPag" cssClass="btn btn-primary" method="cercaAccertamento" value="cerca" name="cerca" /> -->
+					 	<s:submit id="cercaAccertamentoInsOrPag" cssClass="btn btn-primary" action="gestioneOrdinativoIncassoStep1_cercaAccertamento" value="cerca" name="cerca" />	
 					  </span>	
 		             </div>
 	              </div>
@@ -176,11 +206,70 @@ SPDX-License-Identifier: EUPL-1.2
 					<s:hidden id="ricaricaSiopeSpesa" name="teSupport.ricaricaSiopeSpesa"/>
 		   <!----------------------------- HIDDEN PER GESTIONE ALBERI ----------------------------------->
 			
+			
+			
+			 <s:if test="oggettoDaPopolarePagamento()">
+				<!--per modale provvedimento e elimina (incluse in modal.jsp) -->
+		        <s:set var="selezionaProvvedimentoAction" value="%{'gestioneOrdinativoPagamentoStep1_selezionaProvvedimento'}" />
+		    	<s:set var="clearRicercaProvvedimentoAction" value="%{'gestioneOrdinativoPagamentoStep1_clearRicercaProvvedimento'}" />	          
+		    	<s:set var="ricercaProvvedimentoAction" value="%{'gestioneOrdinativoPagamentoStep1_ricercaProvvedimento'}" />	
+		    	
+		    	<s:set var="eliminaAction" value="%{'gestioneOrdinativoPagamentoStep1_elimina'}" />	  
+	            
+	            <s:set var="ricercaCapitoloAction" value="%{'gestioneOrdinativoPagamentoStep1_ricercaCapitolo'}" />	                    
+				<s:set var="pulisciRicercaCapitoloAction" value="%{'gestioneOrdinativoPagamentoStep1_pulisciRicercaCapitolo'}" />
+	        	<s:set var="selezionaCapitoloAction" value="%{'gestioneOrdinativoPagamentoStep1_selezionaCapitolo'}" />
+	        	<s:set var="visualizzaDettaglioCapitoloAction" value="%{'gestioneOrdinativoPagamentoStep1_visualizzaDettaglioCapitolo'}" />
+	        
+	        		
+				<!--  per soggetto -->
+				<s:set var="selezionaSoggettoAction" value="%{'gestioneOrdinativoPagamentoStep1_selezionaSoggetto'}" />
+				<s:set var="pulisciRicercaSoggettoAction" value="%{'gestioneOrdinativoPagamentoStep1_pulisciRicercaSoggetto'}" />	          
+				<s:set var="ricercaSoggettoAction" value="%{'gestioneOrdinativoPagamentoStep1_ricercaSoggetto'}" />	    
+				<s:set var="listaClasseSoggettoChangedAction" value="%{'gestioneOrdinativoPagamentoStep1_listaClasseSoggettoChanged'}" />	        		    	   
+		     
+		     	<!-- per modalOrdinativo.jsp -->
+				<s:set var="eliminaQuotaOrdinativoAction" value="%{'gestioneOrdinativoPagamentoStep1_eliminaQuotaOrdinativo'}" />
+				<s:set var="eliminaProvvisorioAction" value="%{'gestioneOrdinativoPagamentoStep1_eliminaProvvisorio'}" />
+				<s:set var="forzaInserisciQuotaAccertamentoAction" value="%{'gestioneOrdinativoPagamentoStep1_forzaInserisciQuotaAccertamento'}" />
+				<s:set var="forzaAggiornaQuotaAccertamentoAction" value="%{'gestioneOrdinativoPagamentoStep1_forzaAggiornaQuotaAccertamento'}" />
+						     	
+		     </s:if>
+		     <s:else>
+		        <!--per modale provvedimento e elimina (incluse in modal.jsp) -->
+		        <s:set var="selezionaProvvedimentoAction" value="%{'gestioneOrdinativoIncassoStep1_selezionaProvvedimento'}" />
+		    	<s:set var="clearRicercaProvvedimentoAction" value="%{'gestioneOrdinativoIncassoStep1_clearRicercaProvvedimento'}" />	          
+		    	<s:set var="ricercaProvvedimentoAction" value="%{'gestioneOrdinativoIncassoStep1_ricercaProvvedimento'}" />
+		    	
+		    	<s:set var="eliminaAction" value="%{'gestioneOrdinativoIncassoStep1_elimina'}" />	  
+	            
+	            <s:set var="ricercaCapitoloAction" value="%{'gestioneOrdinativoIncassoStep1_ricercaCapitolo'}" />                    
+				<s:set var="pulisciRicercaCapitoloAction" value="%{'gestioneOrdinativoIncassoStep1_pulisciRicercaCapitolo'}" />
+	        	<s:set var="selezionaCapitoloAction" value="%{'gestioneOrdinativoIncassoStep1_selezionaCapitolo'}" />
+	        	<s:set var="visualizzaDettaglioCapitoloAction" value="%{'gestioneOrdinativoIncassoStep1_visualizzaDettaglioCapitolo'}" />
+	        
+				<!--  per soggetto -->
+				<s:set var="selezionaSoggettoAction" value="%{'gestioneOrdinativoIncassoStep1_selezionaSoggetto'}" />
+				<s:set var="pulisciRicercaSoggettoAction" value="%{'gestioneOrdinativoIncassoStep1_pulisciRicercaSoggetto'}" />	          
+				<s:set var="ricercaSoggettoAction" value="%{'gestioneOrdinativoIncassoStep1_ricercaSoggetto'}" />	    
+				<s:set var="listaClasseSoggettoChangedAction" value="%{'gestioneOrdinativoIncassoStep1_listaClasseSoggettoChanged'}" />	           
+		    	
+		    	<!-- per modalOrdinativo.jsp -->
+				<s:set var="eliminaQuotaOrdinativoAction" value="%{'gestioneOrdinativoIncassoStep1_eliminaQuotaOrdinativo'}" />
+				<s:set var="eliminaProvvisorioAction" value="%{'gestioneOrdinativoIncassoStep1_eliminaProvvisorio'}" />
+				<s:set var="forzaInserisciQuotaAccertamentoAction" value="%{'gestioneOrdinativoIncassoStep1_forzaInserisciQuotaAccertamento'}" />
+				<s:set var="forzaAggiornaQuotaAccertamentoAction" value="%{'gestioneOrdinativoIncassoStep1_forzaAggiornaQuotaAccertamento'}" />
+				
+		     </s:else>	                       	
+           
+	         
 			<s:hidden id="strutturaSelezionataSuPagina" name="strutturaSelezionataSuPagina"></s:hidden>
 			
             <!-- Modal -->
-            <s:include value="/jsp/include/modalSoggetto.jsp" />	
-            <s:include value="/jsp/include/modalProvvedimenti.jsp" />
+            <s:include value="/jsp/include/modalSoggetto.jsp" />
+            
+             <s:include value="/jsp/include/modalProvvedimenti.jsp" />
+            
             <s:include value="/jsp/include/modalCapitolo.jsp" />
             <s:hidden id="strutturaDaInserimento"  name="strutturaDaInserimento"></s:hidden>
             <!-- Fine Modal -->
@@ -196,17 +285,20 @@ SPDX-License-Identifier: EUPL-1.2
        	<s:include value="/jsp/ordinativo/include/modalOrdinativo.jsp" />
        	
 		<p class="margin-medium"> <s:include value="/jsp/include/indietro.jsp" />    
-		<s:submit cssClass="btn btn-secondary" method="annullaStep1" value="annulla" name="annulla" />
-        <s:submit id="proseguiInsOrdInc" cssClass="btn btn-primary pull-right" method="prosegui" value="prosegui" name="prosegui" />
+		<!-- task-131 <s:submit cssClass="btn btn-secondary" method="annullaStep1" value="annulla" name="annulla" /> -->
+        <!-- task-131 <s:submit id="proseguiInsOrdInc" cssClass="btn btn-primary pull-right" method="prosegui" value="prosegui" name="prosegui" /> -->
+		<s:submit cssClass="btn btn-secondary" action="gestioneOrdinativo%{#oggetto}Step1_annullaStep1" value="annulla" name="annulla" />
+		<s:submit id="proseguiInsOrdInc" cssClass="btn btn-primary pull-right" action="gestioneOrdinativo%{#oggetto}Step1_prosegui" value="prosegui" name="prosegui" />
 		
 		<s:if test="sonoInAggiornamento() && gestioneOrdinativoStep2Model.listaSubOrdinativiPagamenti.size() > 0">
-			<s:submit  cssClass="btn btn-primary pull-right freezePagina" method="aggiornaOrdinativo" value="salva" name="salva" />
+			<!-- task-131 <s:submit  cssClass="btn btn-primary pull-right freezePagina" method="aggiornaOrdinativo" value="salva" name="salva" /> -->
+			<s:submit  cssClass="btn btn-primary pull-right freezePagina" action="gestioneOrdinativo%{#oggetto}Step1_aggiornaOrdinativo" value="salva" name="salva" />
 		</s:if>
 		
 		 
 		<s:if test="sonoInAggiornamentoIncasso() && gestioneOrdinativoStep2Model.listaSubOrdinativiIncasso.size() > 0">
-				<s:submit cssClass="btn btn-primary pull-right freezePagina" method="aggiornaOrdinativoIncasso" id="aggiornaOrdIncasso" value="salva" name="salva" ondblclick="this.disabled=true;"   />
-				
+			<!-- task-131 <s:submit cssClass="btn btn-primary pull-right freezePagina" method="aggiornaOrdinativoIncasso" id="aggiornaOrdIncasso" value="salva" name="salva" ondblclick="this.disabled=true;"   /> -->
+			<s:submit cssClass="btn btn-primary pull-right freezePagina"action="gestioneOrdinativo%{#oggetto}Step1_aggiornaOrdinativoIncasso" id="aggiornaOrdIncasso" value="salva" name="salva" ondblclick="this.disabled=true;"   />				
 		</s:if>
 		</p>       
 
@@ -216,98 +308,15 @@ SPDX-License-Identifier: EUPL-1.2
 </div>	
 
 
-
-
 <script type="text/javascript">
-
-
-
-
-<!-- READY COMUNE A PAGAMENTO E INCASSO -->
-	$(document).ready(function() {
-
-
-
-
-		$("#flagDaTrasmettere").click(function() {
-			if (! $(this).attr('readonly')) {
-				if (this.checked) {
-					$("#HIDDEN_flagDaTrasmettere").remove();
-				} else {
-					$(this).after('<input type="hidden" name="gestioneOrdinativoStep1Model.ordinativo.flagDaTrasmettere" id="HIDDEN_flagDaTrasmettere" value="false" />');
-				}
-			}
-		});
-
-
-
-
-
-		
-		$("#linkCompilazioneGuidataCapitolo").click(function(){
-			initRicercaGuidataCapitolo(
-					$("#capitolo").val(), 
-					$("#articolo").val(),
-					$("#ueb").val()
-				
-			);
-		});
-		
-		
-		$("#cercaCapitoloSubmit").click(function(){
-			$("#capitolo").attr("disabled", true);
-			$("#articolo").attr("disabled", true);
-			$("#ueb").attr("disabled", true);
-		});
-		
-		
-		$("#linkCompilazioneGuidataSoggetto").click(function(){
-			initRicercaGuidataSoggetto(
-				$("#codCreditoreLiquidazione").val(),
-				null
-			);
-		});
-		
-		
-		  
-	    $('#Note').keyup(function(){ 
-	    			    	
-	    	var text = $(this).val();
-	    	
-	        var size = text.length;  
-	    			  
-	        if(size > 500){  
-
-	            var newText = text.substr(0, 500);  
-	   
-	            $(this).val(newText);  
-	        }  		        
-	   
-	    });  
-	    
-		
-		$("#listaNoteTesoriere").change(function() {
-					    			
-			$("#Note").val($("#listaNoteTesoriere option:selected").text());
-			
-		});
-		
-		$("#listaTipiCausale").change(function() {
-			var selezionata = $("#listaTipiCausale").val();
-			
-			$.ajax({
-				url: '<s:url method="tipoCausaleEntrataChanged"></s:url>',
-				type: "GET",
-				data: $(".hiddenGestoreToggle").serialize() + "&selezionata=" + selezionata
-			}).then(function(data)  {
-		    	$("#refreshTendinoCausali").html(data);
-			});	
-			
-		});	
-		
-	});
-
+	//task-131 var tipoCausaleEntrataChangedUrl = '<s:url method="tipoCausaleEntrataChanged"></s:url>';
+	var tipoCausaleEntrataChangedUrl = '<s:url action="gestioneOrdinativo%{#oggetto}Step1_tipoCausaleEntrataChanged"></s:url>';
 </script>
+
+<script src="${jspath}ordinativo/gestioneOrdinativoPagamentoStep1.js" type="text/javascript"></script>
+
+
+
 
 <s:if test="oggettoDaPopolarePagamento()">
 
@@ -373,9 +382,10 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		$("#codCreditoreLiquidazione").change(function(){
 			var cod = $("#codCreditoreLiquidazione").val();
-			//Carico i dati in tabella "Modalit√† di pagamento"		
+			//Carico i dati in tabella "Modalita† di pagamento"		
 			$.ajax({
-				url: '<s:url method="modpagamento"></s:url>',
+				//task-131 url: '<s:url method="modpagamento"></s:url>',
+				url: '<s:url action="gestioneOrdinativoPagamentoStep1_modpagamento"></s:url>',
 				type: "GET",
 				data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 			    success: function(data)  {
@@ -383,7 +393,8 @@ SPDX-License-Identifier: EUPL-1.2
 			    	// $("#openSediSEC").click(); 
 			    	 //Carico i dati in tabella "Sedi secondarie"
 					$.ajax({
-						url: '<s:url method="sedisecondarie"></s:url>',
+						//task-131 url: '<s:url method="sedisecondarie"></s:url>',
+						url: '<s:url action="gestioneOrdinativoPagamentoStep1_sedisecondarie"></s:url>',
 						type: "GET",
 						data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 					    success: function(data)  {
@@ -391,7 +402,8 @@ SPDX-License-Identifier: EUPL-1.2
 					    	
 					    	
 					    	$.ajax({
-								url: '<s:url method="aggiornaAvviso"></s:url>',
+					    		//task-131 url: '<s:url method="aggiornaAvviso"></s:url>',
+					    		url: '<s:url action="gestioneOrdinativoPagamentoStep1_aggiornaAvviso"></s:url>',
 								type: "GET",
 							    success: function(data)  {
 							    	$("#aggiornaAvviso").html(data);
@@ -466,7 +478,6 @@ SPDX-License-Identifier: EUPL-1.2
 	   
 		$(document).ready(function() {
 
-
 		<s:if test="sonoInAggiornamentoIncasso()">
 			$("#flagDaTrasmettere").attr('readonly', true).click(function(e){
 				return false;
@@ -534,9 +545,10 @@ SPDX-License-Identifier: EUPL-1.2
 			
 			$("#codCreditoreLiquidazione").change(function(){
 				var cod = $("#codCreditoreLiquidazione").val();
-				//Carico i dati in tabella "Modalit√† di pagamento"		
+				//Carico i dati in tabella "Modalita'† di pagamento"		
 				$.ajax({
-					url: '<s:url method="sediIncasso"></s:url>',
+					//task-131 url: '<s:url method="sediIncasso"></s:url>',
+					url: '<s:url action="gestioneOrdinativoIncassoStep1_sediIncasso"></s:url>',
 					type: "GET",
 					data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 				    success: function(data)  {
@@ -544,7 +556,8 @@ SPDX-License-Identifier: EUPL-1.2
 				    	// $("#openSediSEC").click(); 
 				    	 //Carico i dati in tabella "Sedi secondarie"
 				    	$.ajax({
-							url: '<s:url method="aggiornaAvviso"></s:url>',
+							//task-131 url: '<s:url method="aggiornaAvviso"></s:url>',
+							url: '<s:url action="gestioneOrdinativoIncassoStep1_aggiornaAvviso"></s:url>',
 							type: "GET",
 						    success: function(data)  {
 						    	$("#aggiornaAvviso").html(data);

@@ -9,13 +9,14 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggetto;
@@ -52,7 +53,12 @@ public class ElencoSoggettiAction extends WizardRicercaSoggettoAction{
 		//invoco il prepare della super classe:
 		super.prepare();
 		//setto il titolo:
-		this.model.setTitolo("Elenco Soggetti");
+		//task-224
+		if(AzioneConsentitaEnum.OP_CEC_SOG_leggiSogg.getNomeAzione().equals(sessionHandler.getAzione().getNome())) {
+			this.model.setTitolo("Elenco Soggetti Cassa Economale");
+		}else {
+			this.model.setTitolo("Elenco Soggetti");
+		}
 		setStatus(true);
 	}	
 
@@ -265,8 +271,8 @@ public class ElencoSoggettiAction extends WizardRicercaSoggettoAction{
 	 */
 	public boolean isAbilitato(Integer decodificaOperazione, String codiceStato, String utenteUltimaModifica) {
 		boolean abilitato = false;
-		boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-		boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+		boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+		boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 		String supportStato = (codiceStato != null && stack(codiceStato) != null) ? stack(codiceStato).toString() : null;
 		String supportUtenteUltimaModifica = (utenteUltimaModifica != null && stack(utenteUltimaModifica) != null) ? stack(utenteUltimaModifica).toString() : null;
 		if (supportStato != null && !"".equalsIgnoreCase(supportStato) && decodificaOperazione != null) {
@@ -278,23 +284,9 @@ public class ElencoSoggettiAction extends WizardRicercaSoggettoAction{
 				if (CodiciStatoSoggetto.VALIDO.toString().equalsIgnoreCase(supportStato)) {
 					abilitato = gestSogg || gestSoggDec;
 				} else if (CodiciStatoSoggetto.PROVVISORIO.toString().equalsIgnoreCase(supportStato)) {
-					if(gestSogg){
-						//sono il master
-						abilitato = false;
-					} else{
-						//sono decentrato
-						boolean sonoUltimoAModificare = decentratoSuPropriaOccorrenza(supportUtenteUltimaModifica);
-						abilitato = sonoUltimoAModificare;
-					}
-				}else if (CodiciStatoSoggetto.IN_MODIFICA.toString().equalsIgnoreCase(supportStato)) {
-					if(gestSogg){
-						//sono il master
-						abilitato = false;
-					} else{
-						//sono decentrato
-						boolean sonoUltimoAModificare = decentratoSuPropriaOccorrenza(supportUtenteUltimaModifica);
-						abilitato = sonoUltimoAModificare;
-					}
+					abilitato = decentratoSuPropriaOccorrenza(supportUtenteUltimaModifica);
+				} else if (CodiciStatoSoggetto.IN_MODIFICA.toString().equalsIgnoreCase(supportStato)) {
+					abilitato = decentratoSuPropriaOccorrenza(supportUtenteUltimaModifica);
 				}
 				break;
 			case ANNULLA:
@@ -318,7 +310,7 @@ public class ElencoSoggettiAction extends WizardRicercaSoggettoAction{
 			case VALIDA:
 				if (CodiciStatoSoggetto.BLOCCATO.toString().equalsIgnoreCase(supportStato) || CodiciStatoSoggetto.SOSPESO.toString().equalsIgnoreCase(supportStato) || CodiciStatoSoggetto.PROVVISORIO.toString().equalsIgnoreCase(supportStato)
 						|| CodiciStatoSoggetto.IN_MODIFICA.toString().equalsIgnoreCase(supportStato)) {
-					abilitato = gestSogg;
+					abilitato = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_validaSogg, sessionHandler.getAzioniConsentite());
 				}
 				break;
 			case COLLEGA:
@@ -370,8 +362,7 @@ public class ElencoSoggettiAction extends WizardRicercaSoggettoAction{
 	 * @return boolean 
 	 */
 	private boolean decentratoSuPropriaOccorrenza(String utenteUltimaModifica) {
-		boolean isDecentratoSuPropriaOccorrenza = isUtenteLoggato(utenteUltimaModifica);
-		return isDecentratoSuPropriaOccorrenza;
+		return isUtenteLoggato(utenteUltimaModifica);
 	}
 	
 	/**

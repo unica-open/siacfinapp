@@ -65,30 +65,48 @@ SPDX-License-Identifier: EUPL-1.2
 		 <s:if test="null!=gestioneOrdinativoStep1Model.listaDistinta">
 		 	<s:if test="gestioneOrdinativoStep1Model.listaDistinta.size() == 1">
 			 	 <s:select list="gestioneOrdinativoStep1Model.listaDistinta" id="listaDistinta"
-			 	 		   name="gestioneOrdinativoStep1Model.ordinativo.distinta.codice" cssClass="span4" 
+			 	 		   name="gestioneOrdinativoStep1Model.ordinativo.distinta.codice" cssClass="span3" 
 		           		   listKey="codice" listValue="codice+' - '+descrizione" />
 		 	</s:if>
 		 	<s:else>
 			  <s:select list="gestioneOrdinativoStep1Model.listaDistinta" id="listaDistinta" headerKey="" 
-	           		   headerValue="" name="gestioneOrdinativoStep1Model.ordinativo.distinta.codice" cssClass="span4" 
+	           		   headerValue="" name="gestioneOrdinativoStep1Model.ordinativo.distinta.codice" cssClass="span3" 
 	           		   listKey="codice" listValue="codice+' - '+descrizione" />
 	        </s:else>  		      
-	      </s:if>      		   
- 		  <span class="al"> 
+	      </s:if>      
+	      </div>
+	</div>		   
+	<%-- SIAC-8779 --%>
+	<div class="control-group">
+		<label class="control-label" for="ctTesoriere">Conto del tesoriere *</label>
+		<div class="controls">
+ 	<%-- 	  <span class="al"> 
 			<label class="radio inline" for="ctTesoriere">Conto del tesoriere *</label>
- 		  </span> 
+ 		  </span> --%> 
  		  <s:if test="null!=gestioneOrdinativoStep1Model.listaContoTesoriere">
- 		  	<s:if test="gestioneOrdinativoStep1Model.listaContoTesoriere.size() == 1">
-	 		  	<s:select list="gestioneOrdinativoStep1Model.listaContoTesoriere" id="listacontoTesoreria" 
-	 		  	           name="gestioneOrdinativoStep1Model.ordinativo.contoTesoreria.codice" cssClass="span4" 
-		           		   listKey="codice" listValue="codice+' - '+descrizione" />
- 		  	</s:if>
- 		  	<s:else>
-	 		  <s:select list="gestioneOrdinativoStep1Model.listaContoTesoriere" id="listacontoTesoreria" headerKey=""  
-	           		   headerValue="" name="gestioneOrdinativoStep1Model.ordinativo.contoTesoreria.codice" cssClass="span4" 
-	           		   listKey="codice" listValue="codice+' - '+descrizione" />
-            </s:else>
-          </s:if> 		      
+ 	 		  <s:select list="gestioneOrdinativoStep1Model.listaContoTesoriere" id="listacontoTesoreria" headerKey=""  
+	           		   headerValue="" name="gestioneOrdinativoStep1Model.ordinativo.contoTesoreria.codice" cssClass="span3" 
+	           		   listKey="codice + ':' + vincolato" listValue="codice+' - '+descrizione" />
+ 
+ 		 	<span class="hide" id='conto-tesoriere-selected'><s:property value="gestioneOrdinativoStep1Model.ordinativo.contoTesoreria.codice" /></span>
+ 
+ 			<s:if test="abilitatoGestioneContiVincolati">
+ 			 <s:if test="null != gestioneOrdinativoStep1Model.ordinativo.contoTesoreriaSenzaCapienza.codice">
+          	 - conto di pertinenza <s:property value="gestioneOrdinativoStep1Model.ordinativo.contoTesoreriaSenzaCapienza.codice"/>
+          	 <s:hidden name="gestioneOrdinativoStep1Model.ordinativo.contoTesoreriaSenzaCapienza.codice" />
+          </s:if>	
+			<span class="hide al" id="controllaDisponibilitaSottocontoVincolato">
+				<!-- task-131 <s:submit cssClass="btn btn-primary" method="controllaDisponibilitaSottocontoVincolato"  value="controlla disponibilita' sottoconto vincolato" name="controllaDisponibilitaSottocontoVincolato" /> -->
+				<s:submit cssClass="btn btn-primary" action="%{#controllaDisponibilitaSottocontoVincolatoAction}"  value="controlla disponibilita' sottoconto vincolato" name="controllaDisponibilitaSottocontoVincolato" />
+					
+					<span id="controllaDisponibilitaSottocontoVincolatoStr">
+					<s:if test="disponibilitaSottocontoVincolatoStr != null"><s:property value="disponibilitaSottocontoVincolatoStr"/></s:if>
+					</span>
+			</span>
+			</s:if>
+
+          </s:if> 
+         	      		      
 		</div>
 	</div>
 	
@@ -105,12 +123,12 @@ SPDX-License-Identifier: EUPL-1.2
 		  	<s:if test="gestioneOrdinativoStep1Model.listaNoteTesoriere.size() == 1">
 		  	  <s:select list="gestioneOrdinativoStep1Model.listaNoteTesoriere" id="listaNoteTesoriere" 
 		  	           name="gestioneOrdinativoStep1Model.ordinativo.noteTesoriere.codice" cssClass="span9" 
-	           		   listKey="codice" listValue="codice+' - '+descrizione" disabled="!isCampoAbilitatoInAggiornamento('TESORIERE')" />
+	           		   listKey="codice" listValue="codice+' - '+ descrizione" disabled="!isCampoAbilitatoInAggiornamento('TESORIERE')" />
 		  	</s:if>
 		  	<s:else>
 	 		  <s:select list="gestioneOrdinativoStep1Model.listaNoteTesoriere" id="listaNoteTesoriere" headerKey=""  
 	           		   headerValue="" name="gestioneOrdinativoStep1Model.ordinativo.noteTesoriere.codice" cssClass="span9" 
-	           		   listKey="codice" listValue="codice+' - '+descrizione" disabled="!isCampoAbilitatoInAggiornamento('TESORIERE')" />
+	           		   listKey="codice" listValue="codice+' - '+ descrizione" disabled="!isCampoAbilitatoInAggiornamento('TESORIERE')" />
 	        </s:else>   		   
           </s:if> 	
           </div>

@@ -32,7 +32,8 @@ SPDX-License-Identifier: EUPL-1.2
 						                         	rimuovi</a>
 						                         </li>
 						                         <li>
-						                         	<s:url id='urlModifica' action="gestioneClassi" method='goEditMode'>
+						                         	<%-- task-131 <s:url id='urlModifica' action="gestioneClassi" method='goEditMode'> --%>
+						                         	<s:url var='urlModifica' action="gestioneClassi_goEditMode">
 						                         		<s:param name="uidClasseDaModificare" value="%{#attr.ricercaClasseID.uid}" />
 						                         	</s:url>
 						                         	<s:a href="%{urlModifica}">modifica</s:a>
@@ -65,7 +66,8 @@ SPDX-License-Identifier: EUPL-1.2
     </div>
     <div class="modal-footer">
       <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-      <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="rimuoviClasse"/>
+      <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="rimuoviClasse"/> -->
+      <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="gestioneClassi_rimuoviClasse"/>
     </div>
   </div>
   

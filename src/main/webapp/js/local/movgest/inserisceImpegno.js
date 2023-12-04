@@ -4,6 +4,8 @@
 */
 $(function(){
 	
+	var actionForm = $('form').attr('action');
+	
 	$(document).ready(function() {
 
 		var radioPluriennaleNo = $("#radioPluriennaleNo");
@@ -12,6 +14,9 @@ $(function(){
  		var bloccoRiaccertato = $("#bloccoRiaccertato");
 		var riaccertatoNo = $("#riaccertatoNo");
 		var riaccertatoSi = $("#riaccertatoSi");
+		
+		var reannoNo = $("#reannoNo");
+		var reannoSi = $("#reannoSi");
 		
 		var bloccoNumero = $("#bloccoNumero");
 		
@@ -24,26 +29,22 @@ $(function(){
 		var bilPrecInPredispConsuntivo = $("#bilPrecInPredispConsuntivo").val();
 		var bilAttualeInPredispConsuntivo = $("#bilAttualeInPredispConsuntivo").val();
 		
-		
 		if(annoDigitato<annoDiEsercizio && bilPrecInPredispConsuntivo == 'true'){
 			bloccoNumero.show();
 		} else {
 			bloccoNumero.hide();
 		}
 		
-// 		var annoImpRiacc = $("#annoImpRiacc");
-// 		var numImpRiacc = $("#numImpRiacc");
-
 		if (radioPluriennaleNo.is(':checked')) {
 			bloccoPluriennali.hide();
 		}
 		if (radioPluriennaleSi.is(':checked')) {
 			bloccoPluriennali.show();
 		}
-		if (riaccertatoNo.is(':checked')) {
+		if (riaccertatoNo.is(':checked') || reannoNo.is(':checked')) {
 			bloccoRiaccertato.hide();
 		}
-		if (riaccertatoSi.is(':checked')) {	
+		if (riaccertatoSi.is(':checked') || reannoSi.is(':checked')) {	
 			bloccoRiaccertato.show();
 		}
 		
@@ -102,6 +103,11 @@ $(function(){
 
 		var treeObj = $.fn.zTree.getZTreeObj("strutturaAmministrativaInserimentoProvvedimento");
 			var strutturaAmministrativaParam = "";
+			var splitted = actionForm && actionForm.split('.do');
+			var urlToSend;
+			if(!splitted || splitted.length === 0){
+				return;
+			}
 			if (treeObj != null) {
 				var selectedNode = treeObj.getCheckedNodes(true);
 				selectedNode.forEach(function(currentNode) {
@@ -109,10 +115,18 @@ $(function(){
 				});
 			}
 			
+			
+			urlToSend = splitted[0] + "_clearInserimentoProvvedimento.do";
+			
 			$.ajax({
-				url: '<s:url method="clearInserimentoProvvedimento"/>',
+				url: urlToSend,
 				success: function(data)  {
-					$("#gestioneEsitoInserimentoProvvedimento").html(data);
+					//$("#gestioneEsitoInserimentoProvvedimento").html(data);
+					$("#gestioneRisultatoRicercaProgCronop").html(
+				    		data.trim().length  > 0 ?
+				    		data :
+				    		"Non esistono Progetti/cronoprogrammi per il provvedimento digitato"
+				    );
 				}
 			});
 
@@ -130,9 +144,14 @@ $(function(){
 		});
 		
 		$("#listaClasseSoggetto").change(function(){
+			var splitted = actionForm && actionForm.split('.do');
+			if(!splitted || splitted.legth === 0){
+				return;
+			}
+			var urlToSend = splitted[0] + "_listaClasseSoggettoChanged.do"
 			$("#codCreditore").val("");
 			$.ajax({
-				url: '<s:url method="listaClasseSoggettoChanged"/>',
+				url: urlToSend,
 				success: function(data)  {
 				    $("#refreshHeaderSoggetto").html(data);
 				}
@@ -154,11 +173,14 @@ $(function(){
 	    	initRicercaGuidataProgetto($("#progetto").val());
 		});
 		
+		
+	
+	
 		$("#progetto").change(function(){
 			var cod = $("#progetto").val();
 			//Carico i dati in tabella "Modalità di pagamento"		
 			$.ajax({
-				url: '/siacfinapp/inserisceImpegno!codiceProgettoChanged.do',
+				url: '/siacfinapp/inserisceImpegno_codiceProgettoChanged.do',
 				type: "GET",
 				data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 			    success: function(data)  {
@@ -200,6 +222,7 @@ $(function(){
 			$("#capitolo").attr("disabled", true);
 			$("#articolo").attr("disabled", true);
 			$("#ueb").attr("disabled", true);
+			
 		});
 		
 		radioPluriennaleNo.change(function(){
@@ -219,6 +242,7 @@ $(function(){
 				radioPluriennaleSi.prop('checked', false);
 			} else {
 				riaccertatoNo.prop('checked', true);
+				reannoNo.prop('checked', true);
 				$("#annoImpRiacc").val("");
 				$("#numImpRiacc").val("");
 				bloccoPluriennali.show();
@@ -227,22 +251,48 @@ $(function(){
 			
 		});
 		
-		
-		
-		
-		riaccertatoNo.change(function(){
-			$("#annoImpRiacc").val("");
-			$("#numImpRiacc").val("");
-			bloccoRiaccertato.hide();
-		});
-		
-		riaccertatoSi.change(function(){
+		//SIAC-6997
+		function gestioneRiaccertatoFlagSi(){
 			radioPluriennaleNo.prop('checked', true);
 			$("#numeroPluriennali").val("");
 			bloccoRiaccertato.show();
 			bloccoPluriennali.hide();
+		}
+		
+		function gestioneRiaccertatoFlagNo(){
+			$("#annoImpRiacc").val("");
+			$("#numImpRiacc").val("");
+			bloccoRiaccertato.hide();
+		}
+		
+		reannoNo.change(function(){
+			if(riaccertatoNo.is(':checked')){
+				gestioneRiaccertatoFlagNo();
+			}
 		});
 		
+		riaccertatoNo.change(function(){
+			if(reannoNo.is(':checked')){
+				gestioneRiaccertatoFlagNo();
+			}
+		});
+		
+		riaccertatoSi.change(function(){
+			gestioneRiaccertatoFlagSi();
+			if(reannoSi.is(':checked')){
+				reannoNo.prop('checked', true);
+				reannoSi.prop('checked', false);
+			}
+		});
+		
+		reannoSi.change(function(){
+			gestioneRiaccertatoFlagSi();
+			if(riaccertatoSi.is(':checked')){
+				riaccertatoNo.prop('checked', true);
+				riaccertatoSi.prop('checked', false);
+			}
+		});
+		//FINE SIAC-6997
 		
 		prenotazioneNo.change(function(){
 			bloccoPrenotatoLiquidabile.hide();
@@ -268,13 +318,14 @@ $(function(){
         var valore = cbObj.checked;
         $("#hiddenPerPrenotazioneLiquidabile").val(valore);
 	}
-	
+	//SIAC-7653
+	$('#prenotatoLiquidabileCheckBox').off('click').on('click', impostaValorePrenotatoLiquidabile)
 	
 	$("#guidaProgCronop").on('shown', function(){
 		$.ajax({
 			//url: '<s:url method="ricercaCronop"/>',
 			
-			url: '/siacfinapp/inserisceImpegno!ricercaCronop.do',
+			url: '/siacfinapp/inserisceImpegno_ricercaCronop.do',
 			type: 'POST',
 		    success: function(data)  {
 			    $("#gestioneRisultatoRicercaProgCronop").html(
@@ -294,7 +345,10 @@ $(function(){
 	
 	var hasCronop = $('#cronoprogramma').val() === undefined ? false : $('#cronoprogramma').val().length > 0;
 	$('#cup').attr('readonly', hasCronop);
-	$('#descrImpegno').attr('readonly', hasCronop);
+
+// SIAC-7817	
+//	$('#descrImpegno').attr('readonly', hasCronop);
+	$('#descrImpegno').attr('readonly', false);
 	
 	$('#conferma-modal-cronop').click(function() {
 		var spesaSel = $('.speseProgetti:checked');
@@ -302,7 +356,7 @@ $(function(){
 		if (spesaSel.length > 0) {
 			$('#linkCompilazioneGuidataProgetto').attr('disabled', true).attr('href', '#');
 			$('#cup').attr('readonly', true);
-			$('#descrImpegno').attr('readonly', true);
+			//$('#descrImpegno').attr('readonly', true); // SIAC-7817
 			if (spesaSel.data('capitolo').length > 0) $('#capitolo').attr('readonly', true);
 			if (spesaSel.data('articolo').length > 0) $('#articolo').attr('readonly', true);
 			
@@ -330,5 +384,15 @@ $(function(){
 	$('#radioPrevistoCorrispettivoSi').click(function() {
 		$('#radioPrevistaFatturaNo').trigger('click');
 	});
+
+	//SIAC-8075-CMTO
+	$('#annoImpegno').on('blur', function(){
+		if(new BigNumber($('#annoImpegno').val()).comparedTo(new BigNumber($('#anno').val())) < 0){
+			$('#vincoliImpegno').slideUp();	
+		} else {
+			$('#vincoliImpegno').slideDown();
+		}
+	});
+  
 	
 });

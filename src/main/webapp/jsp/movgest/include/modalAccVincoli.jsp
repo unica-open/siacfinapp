@@ -82,8 +82,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div> 
 	
 	<div class="modal-footer">
-		<s:submit id="confermaAccVincoli" name="confermaAcc" value="conferma" data-dismiss="modal"
-			  	  method="selezionaAccPerVincolo" cssClass="btn btn-primary" aria-hidden="true" />
+		<!--task-131 <s:submit id="confermaAccVincoli" name="confermaAcc" value="conferma"  method="selezionaAccPerVincolo" cssClass="btn btn-primary" aria-hidden="true" /> -->
+		<s:submit id="confermaAccVincoli" name="confermaAcc" value="conferma"  action="%{#selezionaAccPerVincoloAction}" cssClass="btn btn-primary" aria-hidden="true" />
 <!-- 		<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button> -->
 	</div>
 </div>

@@ -15,7 +15,7 @@ import it.csi.siac.siaccorser.model.Operatore;
  * @author 
  *
  */
-public class TestLoginHandler extends LoginHandler {
+public class TestLoginHandler implements LoginHandler {
 
 	/**
 	 * 

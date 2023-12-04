@@ -4,13 +4,13 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.ordinativo;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
+import it.csi.siac.siacfinser.CostantiFin;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -51,16 +51,16 @@ public class ElencoOrdinativoIncassoAction extends WizardRicercaOrdinativoAction
 			returnValue=false;
 		}
 		
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_ENT_AGGORDINC)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_AGGORDINC)){
 			returnValue=false;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_ANNULLATO)) {
+		if (stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_ANNULLATO)) {
 			returnValue=false;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_TRASMESSO) || stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_FIRMATO)) {
-		}else if(!stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_INSERITO)) {
+		if (stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_TRASMESSO) || stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_FIRMATO)) {
+		}else if(!stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_INSERITO)) {
 			returnValue=false;
 		}
 		
@@ -78,21 +78,21 @@ public class ElencoOrdinativoIncassoAction extends WizardRicercaOrdinativoAction
 			returnValue=false;
 		}
 
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_ENT_AGGORDINC)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_AGGORDINC)){
 			returnValue=false;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_ANNULLATO)) {
+		if (stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_ANNULLATO)) {
 			returnValue=false;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_TRASMESSO) || 
-				stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_FIRMATO) || 
-				stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_QUIETANZATO)) {
-			if (!isAzioneAbilitata(CodiciOperazioni.OP_ENT_VARORDINC)) {
+		if (stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_TRASMESSO) || 
+				stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_FIRMATO) || 
+				stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_QUIETANZATO)) {
+			if (!isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_VARORDINC)) {
 				returnValue=false;
 			}
-		}else if(!stato.equalsIgnoreCase(Constanti.D_ORDINATIVO_STATO_INSERITO)) {
+		}else if(!stato.equalsIgnoreCase(CostantiFin.D_ORDINATIVO_STATO_INSERITO)) {
 			returnValue=false;
 		}
 		

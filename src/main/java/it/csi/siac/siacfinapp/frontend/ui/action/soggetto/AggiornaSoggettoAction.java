@@ -11,20 +11,23 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import org.apache.struts2.dispatcher.Parameter;
+
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
 import it.csi.siac.siacfinapp.frontend.ui.util.codicefiscale.CFGenerator;
 import it.csi.siac.siacfinapp.frontend.ui.util.codicefiscale.VerificaPartitaIva;
 import it.csi.siac.siacfinapp.frontend.ui.util.comparator.ComparatorModalitaPagamentoSoggettoByCodice;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNome;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNomeResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComuni;
@@ -83,8 +86,8 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 	    
 	    // flag sesso
 	    List<String> listaRadioSesso = new ArrayList<String>();
-	    listaRadioSesso.add(Constanti.MASCHIO.toLowerCase());
-	    listaRadioSesso.add(Constanti.FEMMINA.toLowerCase());
+	    listaRadioSesso.add(CostantiFin.MASCHIO.toLowerCase());
+	    listaRadioSesso.add(CostantiFin.FEMMINA.toLowerCase());
 	    model.setRadioSesso(listaRadioSesso);
 	    
 	    // per evitare errori
@@ -94,7 +97,12 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 	    debug(methodName, " eccomi ");
 	    
 		//setto il titolo:
-		this.model.setTitolo("Aggiorna Soggetto");
+	    //task-224
+	    if(AzioneConsentitaEnum.OP_CEC_SOG_leggiSogg.getNomeAzione().equals(sessionHandler.getAzione().getNome())) {
+	    	this.model.setTitolo("Aggiorna Soggetto Cassa Economale");
+		}else {
+			this.model.setTitolo("Aggiorna Soggetto");	
+		}
 	}	
 	
 	@Override
@@ -140,10 +148,10 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 					//NON E' PG  PGI --> e' persona fisica
 					if(response.getSoggettoInModifica().getSesso().equals(Sesso.MASCHIO)){
 						//MASCHIO
-						response.getSoggettoInModifica().setSessoStringa(Constanti.MASCHIO.toLowerCase());
+						response.getSoggettoInModifica().setSessoStringa(CostantiFin.MASCHIO.toLowerCase());
 					} else {
 						//FEMMINA
-						response.getSoggettoInModifica().setSessoStringa(Constanti.FEMMINA.toLowerCase());
+						response.getSoggettoInModifica().setSessoStringa(CostantiFin.FEMMINA.toLowerCase());
 					}
 				}else{
 					//E' PG  PGI --> persona giuridica
@@ -186,10 +194,10 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 					
 					if(Sesso.MASCHIO.equals(response.getSoggetto().getSesso())){
 						//maschio
-						response.getSoggetto().setSessoStringa(Constanti.MASCHIO.toLowerCase());
+						response.getSoggetto().setSessoStringa(CostantiFin.MASCHIO.toLowerCase());
 					} else if(Sesso.FEMMINA.equals(response.getSoggetto().getSesso())) {
 						//femmina
-						response.getSoggetto().setSessoStringa(Constanti.FEMMINA.toLowerCase());
+						response.getSoggetto().setSessoStringa(CostantiFin.FEMMINA.toLowerCase());
 					} else if(response.getSoggetto().getSesso()==null){
 						//e' nullo puo' capitare per dati sporchi da migrazioni varie,
 						//mi riconduco ad una casistica non definita:
@@ -321,9 +329,11 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 		
 		debug(methodName, "presenza in request "+getRequest().containsKey("dettaglioSoggetto.tipoOnereId"));
 		
-		String[] idComune = (String[])getRequest().get("dettaglioSoggetto.comuneNascita.uid");
-		
-		if (idComune == null || "".equalsIgnoreCase(idComune[0])) {
+		//task-131 
+		//String[] idComune = (String[])getRequest().get("dettaglioSoggetto.comuneNascita.uid");
+		Parameter idComune = getRequest().get("dettaglioSoggetto.comuneNascita.uid");
+		//if (idComune == null || "".equalsIgnoreCase(idComune[0])) {
+		if (idComune == null || "".equalsIgnoreCase(idComune.getValue())) {
 			//id comune non presente, va cercato per nome
 			
 			//preparo la request:
@@ -338,12 +348,12 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 			//analizzo la response del servizio:
 			if (response != null && response.getListaComuni() != null && response.getListaComuni().size() > 0 && response.getListaComuni().get(0).getCodice() != null) {
 				//comune trovato
-				model.getDettaglioSoggetto().getComuneNascita().setComuneIstatCode(response.getListaComuni().get(0).getCodice());
-				model.setIdComune(response.getListaComuni().get(0).getCodice());
+				model.getDettaglioSoggetto().getComuneNascita().setCodiceIstat(response.getListaComuni().get(0).getCodice());
+				model.setCodiceIstatComune(response.getListaComuni().get(0).getCodice());
 			} else {
 				//comune non trovato
-				model.getDettaglioSoggetto().getComuneNascita().setComuneIstatCode("");
-				model.setIdComune("");
+				model.getDettaglioSoggetto().getComuneNascita().setCodiceIstat("");
+				model.setCodiceIstatComune("");
 			}
 		}
 		
@@ -403,12 +413,6 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 		checkCampiFEL(listaErrori);
 		
 		
-		if(!listaErrori.isEmpty()) {
-			// ci sono errori
-			addErrori(listaErrori);
-			return INPUT;
-		} 
-		
 		
 		// se tutto ribalto le date
 		debug(methodName, "valore data nascita "+getDataNascitaStringa());
@@ -426,16 +430,13 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 			}
 			
 		}else if(!(cfGen.verificaFormaleCodiceFiscale(model.getDettaglioSoggetto().getCodiceFiscale().toUpperCase().trim()) || cfGen.verificaFormaleCodiceFiscaleNumerico(model.getDettaglioSoggetto().getCodiceFiscale().toUpperCase().trim()))){
-			addActionError("Codice fiscale non formalmente valido");			
+			listaErrori.add(ErroreCore.FORMATO_NON_VALIDO.getErrore("codice fiscale", "Codice fiscale non formalmente valido"));			
 			return INPUT;
 		}else{
 			if (cfGen.verificaFormaleCodiceFiscale(model.getDettaglioSoggetto().getCodiceFiscale().toUpperCase().trim())){
 				if (!model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode().equals("PG") && !model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode().equals("PGI")){
 					valoriCodiceFisc = cfGen.scorporaCF(model.getDettaglioSoggetto().getCodiceFiscale().toUpperCase().trim());
-					String temp = controlloCampiPopolatiDaCF(valoriCodiceFisc);
-					if (temp.equals(INPUT)) {
-						return INPUT;
-					}
+					controlloCampiPopolatiDaCF(valoriCodiceFisc, listaErrori);
 				}
 			} else if(!cfGen.verificaFormaleCodiceFiscaleNumerico(model.getDettaglioSoggetto().getCodiceFiscale().toUpperCase().trim())){
 				//perche' qui non fa nulla
@@ -443,7 +444,11 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 		}
 		
 		
-		
+		if(!listaErrori.isEmpty()) {
+			// ci sono errori
+			addErrori(listaErrori);
+			return INPUT;
+		} 
 		
 		return GOTO_AGGIORNA_RECAPITI;
 	}
@@ -472,7 +477,7 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 					}
 					else
 					{
-						Errore erroreSoggetto= ErroreFin.CANALEPA_ERROREPR.getErrore("Se il CanalePA � PR, devi valorizzare corretamente l'emailPec o il codice destinatario deve eseere di 7 zeri");
+						Errore erroreSoggetto= ErroreFin.CANALEPA_ERROREPR.getErrore("Se il CanalePA e PR, devi valorizzare corretamente l'emailPec o il codice destinatario deve eseere di 7 zeri");
 						listaErrori.add(erroreSoggetto);
 					}
 				}
@@ -505,10 +510,9 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 	}
 	
 	
-	private String controlloCampiPopolatiDaCF(String cfDaRimappare){
+	private void controlloCampiPopolatiDaCF(String cfDaRimappare, List<Errore> listaErrori){
 		setMethodName("controlloCampiPopolatiDaCF");
 		
-		String variabile="";
 		
 		StringTokenizer st = new StringTokenizer(cfDaRimappare, "||");
 		int cont = 0;
@@ -563,58 +567,53 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 		String dataConfronto=anno+"-"+mese+"-"+gg;
 		String sessoConfronto="";
 		
-		if(sesso.equalsIgnoreCase(Constanti.SESSO_M)){
+		if(sesso.equalsIgnoreCase(CostantiFin.SESSO_M)){
 			//MASCHIO
-			sessoConfronto=Constanti.MASCHIO.toLowerCase();
-		}else if(sesso.equalsIgnoreCase(Constanti.SESSO_F)){
+			sessoConfronto=CostantiFin.MASCHIO.toLowerCase();
+		}else if(sesso.equalsIgnoreCase(CostantiFin.SESSO_F)){
 			//FEMMINA
-			sessoConfronto=Constanti.FEMMINA.toLowerCase();
+			sessoConfronto=CostantiFin.FEMMINA.toLowerCase();
 		}
 		
-		String erroreConfronto = null;
-		
-		ComuneNascita comune = cercaComune(codiceCatastaleComune);
-		
-		if (comune != null) {
-			String comuneConfronto = comune.getDescrizione();
-
-			if (!WebAppConstants.CODICE_ITALIA.equals(comune.getNazioneCode())) {
-				if (!model.getDettaglioSoggetto().getComuneNascita().getNazioneCode().equalsIgnoreCase(comune.getNazioneCode())){
-					//errore su stato
-					erroreConfronto = "stato";
-				}
-			} else if (comuneConfronto != null && !comuneConfronto.equalsIgnoreCase(model.getDettaglioSoggetto().getComuneNascita().getDescrizione())){
-				//errore su comune
-				erroreConfronto = "comune";
-			}
-				
-		}	
+		if (! validNazioneOComune(codiceCatastaleComune)) {
+			listaErrori.add(new Errore("", "Stato o comune di nascita non coerenti con il codice fiscale"));
+		}
 
 		if (dataConfronto != null && !dataConfronto.equals(ObjectUtils.toString(model.getDettaglioSoggetto().getDataNascita()))){
-			//errore su data di nascita
-			erroreConfronto = "data di nascita";
+			listaErrori.add(new Errore("", "Data di nascita non coerente con il codice fiscale"));
 		}
 
 		if (sessoConfronto != null && !sessoConfronto.equalsIgnoreCase(ObjectUtils.toString(model.getDettaglioSoggetto().getSessoStringa()))){
-			//errore su sesso
-			erroreConfronto = "sesso";
+			listaErrori.add(new Errore("", "Sesso non coerente con il codice fiscale"));
 		}
-
-		//Confronto tra i dati ottenuti dal CF a cio' che e' stato inserito succesivamente
-		if (erroreConfronto != null) {
-			addActionError(String.format("I valori inseriti non combaciano con il Codice Fiscale (%s)", erroreConfronto));
-			variabile= INPUT;
-		}
-		
-		return variabile;
 	}
 	
+	private boolean validNazioneOComune(String codiceCatastaleComune) {
+		List<ComuneNascita> comuni = cercaComune(codiceCatastaleComune);
+
+		if (comuni == null || comuni.isEmpty()) {
+			return true;
+		}
+		
+		for (ComuneNascita comune : comuni) {
+			if (!WebAppConstants.CODICE_ITALIA.equals(comune.getNazioneCode())) {
+				if (model.getDettaglioSoggetto().getComuneNascita().getNazioneCode().equalsIgnoreCase(comune.getNazioneCode())) {
+					return true;
+				}
+			} else if (comune.getDescrizione() != null && comune.getDescrizione().equalsIgnoreCase(model.getDettaglioSoggetto().getComuneNascita().getDescrizione())){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	/**
 	 * Gestisce la chiamata a cercaComuni
 	 * @param codiceCatastale
 	 * @return
 	 */
-	private ComuneNascita cercaComune(String codiceCatastale) {
+	private List<ComuneNascita> cercaComune(String codiceCatastale) {
 		
 		//Compongo la request per il servizio:
 		ListaComuni listaComuni = new ListaComuni();
@@ -627,7 +626,7 @@ public class AggiornaSoggettoAction extends AggiornaSoggettoGenericAction{
 		//Analizzo la response:
 		if (!(lcr.isFallimento() || lcr.getListaComuni() == null || lcr.getListaComuni().isEmpty())){
 			//comune trovato
-			return lcr.getListaComuni().get(0);
+			return lcr.getListaComuni();
 		}
 		
 		//comune non trovato:

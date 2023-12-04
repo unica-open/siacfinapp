@@ -21,26 +21,39 @@ SPDX-License-Identifier: EUPL-1.2
   
 <div class="container-fluid-banner">
 
-
-
-
 <a name="A-contenuti" title="A-contenuti"></a>
 </div>
+
 <!--corpo pagina-->
 <!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
 <iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
 
-
+<s:set var="gestisciForwardAction" value="%{'ricercaImpegno_gestisciForward'}" />
+<s:set var="siSalvaAction" value="%{'ricercaImpegno_siSalva'}" />	 
+<s:set var="siProseguiAction" value="%{'ricercaImpegno_siProsegui'}" />	
+<s:set var="annullaSubImpegnoAction" value="%{'ricercaImpegno_annullaSubImpegno'}" />	 
+<s:set var="annullaSubAccertamentoAction" value="%{'ricercaImpegno_annullaSubAccertamento'}" />	 
+<s:set var="annullaMovGestSpesaAction" value="%{'ricercaImpegno_annullaMovGestSpesa'}" />	 
+<s:set var="eliminaSubImpegnoAction" value="%{'ricercaImpegno_eliminaSubImpegno'}" />	 
+<s:set var="eliminaSubAccertamentoAction" value="%{'ricercaImpegno_eliminaSubAccertamento'}" />
+<s:set var="forzaProseguiAction" value="%{'ricercaImpegno_forzaProsegui'}" />	          
+<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'ricercaImpegno_forzaSalvaPluriennaleAccertamento'}" />	          
+<s:set var="salvaConByPassDodicesimiAction" value="%{'ricercaImpegno_salvaConByPassDodicesimi'}" />	          
+	
  
 
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span12 ">  
       <div class="contentPage"> 
-        <s:form method="post" action="ricercaImpegno.do" id="ricercaImpegno">
+        <s:form method="post" action="ricercaImpegno" id="ricercaImpegno">
             <s:include value="/jsp/include/actionMessagesErrors.jsp" />
           
-          <h3>Ricerca Impegno</h3>
+          <h3>Ricerca Impegno
+          <s:if test="%{ricercaTipoROR == true}">
+              	ROR
+          </s:if> 
+          </h3>
           <p>&Egrave; necessario inserire almeno un criterio di ricerca.</p>  
          
          <!----------------------------- HIDDEN PER GESTIONE ALBERI ----------------------------------->
@@ -62,7 +75,8 @@ SPDX-License-Identifier: EUPL-1.2
           <div class="step-content">
          <div class="step-pane active" id="step1"> <br>
           <p>
-          	<s:submit name="cerca" value="cerca" method="ricercaImpegni" cssClass="btn btn-primary pull-right" />
+          	<!-- task-131 <s:submit name="cerca" value="cerca" method="ricercaImpegni" cssClass="btn btn-primary pull-right" /> -->
+          	<s:submit name="cerca" value="cerca" action="ricercaImpegno_ricercaImpegni" cssClass="btn btn-primary pull-right" />         	
           </p><br>
            <h4>Impegno</h4>
           
@@ -87,7 +101,8 @@ SPDX-License-Identifier: EUPL-1.2
             <div class="control-group">
 				<div class="control-label">Escludi annullati</div>
 				<div class="controls">
-   						<s:checkbox id="escludiAnnullatiCheckBox" name="model.ricercaModel.escludiAnnullati" onclick="impostaValoreEscludiAnnullati()"/>  		   
+						<!-- SIAC-8157 rimosso onclick="impostaValoreEscludiAnnullati()" -->
+   						<s:checkbox id="escludiAnnullatiCheckBox" name="model.ricercaModel.escludiAnnullati" />  		   
 				</div>
 			</div>
             
@@ -158,25 +173,87 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
             </div>
             
-            <div class="control-group">
-    			<span class="control-label">Da riaccertamento</span>
-    			<div class="controls">    
-  				<!--CHIEDERE COME GESTIRE QUESTI RADIO  -->
-      				<s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza pb-1" list="step1Model.daRiaccertamento" onclick="changeRiacc();"></s:radio> 
-
-      				<!-- CAMPI VISIBILI SE RADIOBUTTON SI=CHECKED -->       
-      				<span class="riaccVisible">
-      					&nbsp; <s:textfield onkeyup="return checkItNumbersOnly(event)" id="annoImpRiacc" name="model.ricercaModel.annoImpRiacc" cssClass="span1 " title="Anno" />&nbsp;
-      					<s:textfield onkeyup="return checkItNumbersOnly(event)" id="numImpRiacc" cssClass="lbTextSmall span2 " title="Numero" name="model.ricercaModel.numeroImpRiacc"/>
-     			 	</span>
-     		 	<!-- FINE CAMPI VISIBILI -->      
-   			 </div>
-  			</div>
+            <!-- SIAC-7501 -->
+           	<div class="control-group">
+		  		<table class="span10 ">
+		  			<tr>
+		  				<td class="span4 ">
+		  					<span class="control-label">Da riaccertamento</span>
+		  					<div class="controls">    
+					      		<s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)"></s:radio> 
+					    	</div>
+		  				</td>
+		  				<td rowspan="3" valign="middle" width="90%" class="span8 ">
+		  					<span class="riaccVisible" id="bloccoRiaccertato">
+	      						&nbsp; 
+	      						<s:textfield onkeyup="return checkItNumbersOnly(event)" id="annoImpRiacc" name="model.ricercaModel.annoImpRiacc" cssClass="span2 " title="Anno" />&nbsp;
+	      						<s:textfield onkeyup="return checkItNumbersOnly(event)" id="numImpRiacc" cssClass="lbTextSmall span4 " title="Numero" name="model.ricercaModel.numeroImpRiacc"/>
+	     			 		</span>
+		  				</td>			
+		  			</tr>
+		  			<tr><td>&nbsp;</td></tr>
+		  			<!-- inizio SIAC-6997 -->
+		  			<tr>
+		  				<td class="span4 ">
+		  					<span class="control-label">Da reimputazione in corso d&rsquo;anno</span>
+		  					<div class="controls">
+					      		<s:radio id="reanno" name="step1Model.reanno" cssClass="flagResidenza" list="step1Model.daReanno" onclick="check(this.value)"></s:radio>
+					    	</div>
+		  				</td>
+		  			</tr>
+		  		</table>
+		  	</div>
+           	<!-- div class="control-group">
+   				<span class="control-label">Da riaccertamento</span>
+   				<div class="controls">    
+ 						<s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)"></s:radio> 
+      				<span class="riaccVisible" id="bloccoRiaccertato">
+     						&nbsp; 
+     						<s:textfield onkeyup="return checkItNumbersOnly(event)" id="annoImpRiacc" name="model.ricercaModel.annoImpRiacc" cssClass="span1 " title="Anno" />&nbsp;
+     						<s:textfield onkeyup="return checkItNumbersOnly(event)" id="numImpRiacc" cssClass="lbTextSmall span2 " title="Numero" name="model.ricercaModel.numeroImpRiacc"/>
+    			 		</span>
+  			 		</div>
+ 				</div>
+ 				<div class="control-group">
+	    		<span class="control-label">Da reimputazione in corso d&rsquo;anno</span>
+	    		<div class="controls">    
+	        		<s:radio id="reanno" name="step1Model.reanno" cssClass="flagResidenza" list="step1Model.daReanno" onclick="check(this.value)"></s:radio>
+	    		</div>
+	  		</div-->
+  			
+  			
+  			
+  				<div class="control-group">      
+				          <label class="control-label">Struttura Compentente</label>
+				          <div class="controls">   
+				            <s:hidden name="step1Model.strutturaSelezionataCompetente" id="strutturaSelezionataCompetente" />
+				                           
+				            <div class="accordion span9" class="struttAmmCompetente">
+				              <div class="accordion-group">
+				                <div class="accordion-heading">    
+				                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmmCompetente" href="#4n">
+				                 Seleziona la Struttura competente
+				                  <i class="icon-spin icon-refresh spinner" id="spinnerStrutturaAmministrativaCompetente"></i></a>
+				                </div>
+				                <div id="4n" class="accordion-body collapse">
+				                  <div class="accordion-inner" id="strutturaAmministrativaCompetenteDiv">
+				                    <ul id="strutturaAmministrativaCompetente" class="ztree treeStruttAmm"></ul>
+				                  </div>
+				                  <div class="accordion-inner" id="strutturaAmministrativaCompetenteWait">
+				                    Attendere prego..
+				                  </div>
+				                  
+				                </div>
+				              </div>
+				            </div>
+				          </div>
+				        </div>
+  			
   			
             <div class="control-group">
             	<label class="control-label" >Impegno di origine</label>
               	<div class="controls">	
-              	<s:textfield id="annoImpOrigine" onkeyup="return checkItNumbersOnly(event)" name="model.ricercaModel.annoImpOrigine" maxLength="4" cssClass="span1" title="Anno"/>	
+              	<s:textfield id="annoImpOrigine" onkeyup="return checkItNumbersOnly(event)" name="model.ricercaModel.annoImpOrigine" maxlength="4" cssClass="span1" title="Anno"/>	
               	<s:textfield id="numeroImpOrigine" onkeyup="return checkItNumbersOnly(event)" name="model.ricercaModel.numeroImpOrigine" cssClass="lbTextSmall span2" title="Numero"/>	
               				        
               	</div>
@@ -189,25 +266,61 @@ SPDX-License-Identifier: EUPL-1.2
             <div id="refreshHeaderCapitolo">
             	<s:include value="/jsp/movgest/include/headerCapitolo.jsp"/>
             </div>
-            <s:include value="/jsp/movgest/include/capitolo.jsp" />
+            <!-- SIAC-7349 -->
+<%--             <s:include value="/jsp/movgest/include/capitolo.jsp" /> --%>
+            <s:if test="componenteBilancioCapitoloAttivo">
+				 <s:include value="/jsp/movgest/include/capitoloComponentiBilancio.jsp" /> 
+			</s:if>
+			<s:else>
+				 <s:include value="/jsp/movgest/include/capitolo.jsp" />
+			</s:else>
+            
+            <s:set var="consultaModificheProvvedimentoAction" value="%{'ricercaImpegno_consultaModificheProvvedimento'}" />
+			<s:set var="consultaModificheProvvedimentoSubAction" value="%{'ricercaImpegno_consultaModificheProvvedimentoSub'}" />
+           
             <s:include value="/jsp/movgest/include/provvedimento.jsp" />
               
             <s:hidden id="strutturaSelezionataSuPagina" name="strutturaSelezionataSuPagina"></s:hidden> 
             
-            <s:hidden id="hiddenPerEscludiAnnullati" name="model.ricercaModel.hiddenPerEscludiAnnullati" />
+            <s:hidden id="hiddenPerEscludiAnnullati" name="model.ricercaModel.hiddenPerEscludiAnnullati" value="false" />
             
             <div id="refreshHeaderSoggetto">
             	<s:include value="/jsp/movgest/include/headerSoggetto.jsp"/>
             </div>
             <s:include value="/jsp/movgest/include/soggetto.jsp" />  
 			
-			<!-- Modal -->
-             <s:include value="/jsp/movgest/include/modal.jsp" /> 
-             
+			<!--per modale provvedimento e elimina (incluse in modal.jsp) -->
+		    <s:set var="selezionaProvvedimentoAction" value="%{'ricercaImpegno_selezionaProvvedimento'}" />
+			<s:set var="clearRicercaProvvedimentoAction" value="%{'ricercaImpegno_clearRicercaProvvedimento'}" />	          
+       		<s:set var="ricercaProvvedimentoAction" value="%{'ricercaImpegno_ricercaProvvedimento'}" />	          
+       		<s:set var="eliminaAction" value="%{'ricercaImpegno_elimina'}" />	  
+                  
+              
             <!--modale progetto -->
+            <s:set var="selezionaProgettoCronopAction" value="%{'ricercaImpegno_selezionaProgettoCronop'}" />	          
+            <s:set var="selezionaProgettoAction" value="%{'ricercaImpegno_selezionaProgetto'}" />		
+            <s:set var="pulisciRicercaProgettoAction" value="%{'ricercaImpegno_pulisciRicercaProgetto'}" />	          
+            <s:set var="ricercaProgettoAction" value="%{'ricercaImpegno_ricercaProgetto'}" />	          
+            <s:set var="codiceProgettoChangedAction" value="%{'ricercaImpegno_codiceProgettoChanged'}" /> 
+	                
+	        <s:set var="ricercaCapitoloAction" value="%{'ricercaImpegno_ricercaCapitolo'}" />
+	        <s:set var="pulisciRicercaCapitoloAction" value="%{'ricercaImpegno_pulisciRicercaCapitolo'}" />
+	        <s:set var="selezionaCapitoloAction" value="%{'ricercaImpegno_selezionaCapitolo'}" />
+	        <s:set var="visualizzaDettaglioCapitoloAction" value="%{'ricercaImpegno_visualizzaDettaglioCapitolo'}" />
+	        
+	       
+	        <!--  per soggetto -->
+			<s:set var="selezionaSoggettoAction" value="%{'ricercaImpegno_selezionaSoggetto'}" />
+			<s:set var="pulisciRicercaSoggettoAction" value="%{'ricercaImpegno_pulisciRicercaSoggetto'}" />	          
+			<s:set var="ricercaSoggettoAction" value="%{'ricercaImpegno_ricercaSoggetto'}" />	    
+			<s:set var="listaClasseSoggettoChangedAction" value="%{'ricercaImpegno_listaClasseSoggettoChanged'}" />
+	                    
+            <s:include value="/jsp/movgest/include/modal.jsp" /> 
+          
 			<s:include value="/jsp/movgest/include/modalProgettoCronop.jsp"/>	
 			<!--/modale progetto -->
-             
+           
+				
             <!-- Fine Modal -->
             
             
@@ -218,9 +331,10 @@ SPDX-License-Identifier: EUPL-1.2
             
             <s:include value="/jsp/include/indietro.jsp" /> 
 
-             <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary" />
-             <s:submit id="cerca" name="cerca" value="cerca" method="ricercaImpegni" cssClass="btn btn-primary pull-right" />
-             
+            <!-- task-131  <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary" /> -->
+             <s:submit name="annulla" value="annulla" action="ricercaImpegno_annulla" cssClass="btn btn-secondary" />          
+            <!-- task-131 <s:submit id="cerca" name="cerca" value="cerca" method="ricercaImpegni" cssClass="btn btn-primary pull-right" /> -->
+          	<s:submit id="cerca" name="cerca" value="cerca" action="ricercaImpegno_ricercaImpegni" cssClass="btn btn-primary pull-right" />         	 
              </p> 
             
                   
@@ -236,34 +350,6 @@ SPDX-License-Identifier: EUPL-1.2
 
 
 <script src="/siacfinapp/js/local/movgest/ricercaImpegno.js" type="text/javascript"></script>
-
-<script>
-
-  function changeRiacc(){
-		var riaccertatoNo = $("#riaccertatoNo");
-		var riaccertatoSi = $("#riaccertatoSi");
-		var annoImpRiacc = $("#annoImpRiacc");
-		var numImpRiacc = $("#numImpRiacc");
-		var riaccVisible = $('.riaccVisible');
-		if (riaccertatoNo.is(':checked')) {
-			riaccVisible.hide();
-			annoImpRiacc.hide();
-			numImpRiacc.hide();
-		}
-		if (riaccertatoSi.is(':checked')) {
-			riaccVisible.show();
-			annoImpRiacc.show();
-			numImpRiacc.show();
-		}
-	}
-
-  function impostaValoreEscludiAnnullati(){
-		cbObj = document.getElementById("escludiAnnullatiCheckBox");
-	  var valore = cbObj.checked;
-	  $("#hiddenPerEscludiAnnullati").val(valore);
-	}
-
-</script>
 
 
 <s:include value="/jsp/include/footer.jsp" />

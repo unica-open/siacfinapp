@@ -32,8 +32,9 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="row-fluid">
 		<div class="span12 ">
 			<div class="contentPage"> 
-			
-				<s:form id="mainForm" method="post" action="elencoLiquidazioni.do">  
+				
+				<%-- SIAC-7952 rimuovo .do dalla action --%>
+				<s:form id="mainForm" method="post" action="elencoLiquidazioni">  
 
 <s:include value="/jsp/include/actionMessagesErrors.jsp" />
 		<h3>Elenco liquidazioni</h3>		
@@ -67,9 +68,6 @@ SPDX-License-Identifier: EUPL-1.2
 	        <s:else>
 	        	<s:property value="%{#attr.ricercaLiquidazioniID.impegno.annoMovimento}" /> / <s:property value="%{#attr.ricercaLiquidazioniID.impegno.numero.intValue()}" />
 	        </s:else>
-	        <s:if test="isMaggioreDiZero(#attr.ricercaLiquidazioniID.numeroMutuo)">
-	        	- <s:property value="%{#attr.ricercaLiquidazioniID.numeroMutuo}" /> 
-	        </s:if>
 		</display:column> 
 		<display:column title="Capitolo" >
 			<s:property value="%{#attr.ricercaLiquidazioniID.capitoloUscitaGestione.annoCapitolo}"/> / <s:property value="%{#attr.ricercaLiquidazioniID.capitoloUscitaGestione.numeroCapitolo}"/> / <s:property value="%{#attr.ricercaLiquidazioniID.capitoloUscitaGestione.numeroArticolo}"/> / <s:property value="%{#attr.ricercaLiquidazioniID.capitoloUscitaGestione.numeroUEB}"/> 
@@ -86,14 +84,15 @@ SPDX-License-Identifier: EUPL-1.2
                       decorator="it.csi.siac.siacfinapp.frontend.ui.util.displaytag.ConverterEuro"/>
 
 		<display:column title="">
-		<s:url id="aggiornaLiquidazioneUrl" action="inserisciLiquidazioneStep3Aggiorna.do" escapeAmp="false">
+		<%-- task-131<s:url id="aggiornaLiquidazioneUrl" action="inserisciLiquidazioneStep3Aggiorna.do" escapeAmp="false"> --%>
+		<s:url var="aggiornaLiquidazioneUrl" action="inserisciLiquidazioneStep3Aggiorna.do" escapeAmp="false">
 			<s:param name="anno" value="%{#attr.ricercaLiquidazioniID.annoLiquidazione}" />
 			<s:param name="numero" value="%{#attr.ricercaLiquidazioniID.numeroLiquidazione}" />
 	   	</s:url>
 		    	<div class="btn-group">
 		    		<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
 		    		<ul class="dropdown-menu pull-right">
-                  	 	<s:url id="consultaUrl" action="consultaLiquidazione.do" escapeAmp="false">
+                  	 	<s:url var="consultaUrl" action="consultaLiquidazione.do" escapeAmp="false">
 			        		<s:param name="anno" value="%{#attr.ricercaLiquidazioniID.annoLiquidazione}" />
 			        		<s:param name="numero" value="%{#attr.ricercaLiquidazioniID.numeroLiquidazione}" />			        				        	
 	                    </s:url>
@@ -143,7 +142,9 @@ SPDX-License-Identifier: EUPL-1.2
         <p>
 		<s:if test="isAbilitatoInserisciLiquidazione() || isAbilitatoInserisciLiquidazioneMan()">
 			<s:if test="isFaseBilancioAbilitata()">
-				<s:submit name="inserisci" value="inserisci liquidazione" method="inserisciLiquidazione" cssClass="btn btn-secondary" />
+				<!-- task-131 <s:submit name="inserisci" value="inserisci liquidazione" method="inserisciLiquidazione" cssClass="btn btn-secondary" /> -->
+				<s:submit name="inserisci" value="inserisci liquidazione" action="elencoLiquidazioni_inserisciLiquidazione" cssClass="btn btn-secondary" />
+				
 			</s:if>	
 		</s:if>	
 		</p>

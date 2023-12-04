@@ -8,19 +8,20 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacbilser.model.Progetto;
 import it.csi.siac.siacbilser.model.TipoProgetto;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.MovimentoConsulta;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegno;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegnoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AnnullaMovimentoSpesa;
@@ -106,7 +107,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 	protected RicercaSubImpegniDiUnImpegnoResponse executeRicercaSubImpegni() {
 
 		RicercaSubImpegniDiUnImpegno ricercaSubImpegniDiUnImpegno = convertiModelPerChiamataServizioRicercaSubImpegni();
-		RicercaSubImpegniDiUnImpegnoResponse respoSub = movimentoGestionService.ricercaSubImpegniDiUnImpegno(ricercaSubImpegniDiUnImpegno );
+		RicercaSubImpegniDiUnImpegnoResponse respoSub = movimentoGestioneFinService.ricercaSubImpegniDiUnImpegno(ricercaSubImpegniDiUnImpegno );
 		
 		if(respoSub.isFallimento()){
 			addErrori(methodName, respoSub);
@@ -136,7 +137,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 		debug(methodName, "entro nel reload ");
 		
 		RicercaSubImpegniDiUnImpegno ricercaSubImpegniDiUnImpegno = convertiModelPerChiamataServizioRicercaSubImpegni();
-		RicercaSubImpegniDiUnImpegnoResponse respoSub = movimentoGestionService.ricercaSubImpegniDiUnImpegno(ricercaSubImpegniDiUnImpegno );
+		RicercaSubImpegniDiUnImpegnoResponse respoSub = movimentoGestioneFinService.ricercaSubImpegniDiUnImpegno(ricercaSubImpegniDiUnImpegno );
 		
 		//Controllo che il servizio non restituisca errori
 		if(respoSub.isFallimento()) {
@@ -165,11 +166,11 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 		RicercaSubImpegniDiUnImpegno riImpChiave = new RicercaSubImpegniDiUnImpegno();
 		RicercaImpegnoK pRicercaImpegnoK = new RicercaImpegnoK();
 		
-		pRicercaImpegnoK.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		pRicercaImpegnoK.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		pRicercaImpegnoK.setAnnoImpegno(model.getImpegnoInAggiornamento().getAnnoMovimento());
 		pRicercaImpegnoK.setCaricaDatiUlteriori(true);
 		pRicercaImpegnoK.setCaricaSediEModalitaPagamento(true);
-		pRicercaImpegnoK.setNumeroImpegno(model.getImpegnoInAggiornamento().getNumero());
+		pRicercaImpegnoK.setNumeroImpegno(model.getImpegnoInAggiornamento().getNumeroBigDecimal());
 		
 		riImpChiave.setpRicercaImpegnoK(pRicercaImpegnoK);
 		ricercaSubImpegniDiUnImpegno.setpRicercaImpegnoK(riImpChiave.getpRicercaImpegnoK());
@@ -198,7 +199,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 		mc.setTipoMovimento(MovimentoConsulta.IMPEGNO);
 		// movimento
 		mc.setAnno(String.valueOf(sub.getAnnoMovimento()));
-		mc.setNumero(String.valueOf(sub.getNumero()));
+		mc.setNumero(String.valueOf(sub.getNumeroBigDecimal()));
 		mc.setDescrizione(sub.getDescrizione());
 	    mc.setImporto(sub.getImportoAttuale());
 	    mc.setImportoIniziale(sub.getImportoIniziale());
@@ -216,7 +217,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 	
 	    // descrizione impegno del subimpegno
 	    Impegno impegno = model.getImpegnoInAggiornamento();
-		String descImpegno = impegno.getAnnoMovimento() + "/" + impegno.getNumero() + 
+		String descImpegno = impegno.getAnnoMovimento() + "/" + impegno.getNumeroBigDecimal() + 
 			" - " + impegno.getDescrizione() +
 			" - " + convertiBigDecimalToImporto(impegno.getImportoAttuale()) + 
 			" (" +  impegno.getDescrizioneStatoOperativoMovimentoGestioneSpesa() + " dal " + convertDateToString(impegno.getDataStatoOperativoMovimentoGestioneSpesa()) + ")";	
@@ -224,7 +225,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 	
 	    // disponibilita
 	    mc.setDisponibilitaSub(sub.getDisponibilitaSubimpegnare());
-	    mc.setTotaleSub(sub.getTotaleSubImpegni());
+	    mc.setTotaleSub(sub.getTotaleSubImpegniBigDecimal());
 	    
 	    // provvedimento
 	    if (sub.getAttoAmministrativo() != null) {
@@ -289,8 +290,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 
 	public String annullaSubImpegno(){
 		setMethodName("annullaSubImpegno");
-		AnnullaMovimentoSpesaResponse response = movimentoGestionService.annullaMovimentoSpesa(convertiModelPerChiamataServizioAnnulla(getUidSubDaAnnullare()));
-	
+		AnnullaMovimentoSpesaResponse response = movimentoGestioneFinService.annullaMovimentoSpesa(convertiModelPerChiamataServizioAnnulla(getUidSubDaAnnullare()));
 		
 		if(!response.isFallimento()){
 			
@@ -309,7 +309,13 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 			addActionMessage(ErroreFin.OPERAZIONE_EFFETTUATA_CORRETTAMENTE.getCodice() + " " 
 	                + ErroreFin.OPERAZIONE_EFFETTUATA_CORRETTAMENTE.getErrore("").getDescrizione());
 			
+			//SIAC-8034
+			resetPageNumberTableId("ricercaSubImpegniID");
+			
 			return GOTO_AGGIORNA_SUBIMPEGNO;
+		}else {
+			//SIAC-7853
+			addErrori(response);
 		}
 		return SUCCESS;
 	}
@@ -322,7 +328,8 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 		request.setBilancio(creaOggettoBilancio());
 		Impegno impegno = new Impegno();
 		impegno.setAnnoMovimento(model.getImpegnoInAggiornamento().getAnnoMovimento());
-		impegno.setNumero(model.getImpegnoInAggiornamento().getNumero());
+		impegno.setNumeroBigDecimal(model.getImpegnoInAggiornamento().getNumeroBigDecimal());
+		impegno.setUid(model.getImpegnoInAggiornamento().getUid());
 		
 		SubImpegno subImpegnoIntero = FinUtility.getById(model.getImpegnoInAggiornamento().getElencoSubImpegni(), Integer.valueOf(uid));
 		List<SubImpegno> listaSubImpegnos = new ArrayList<SubImpegno>();
@@ -372,13 +379,17 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 			}
 			
 
-			AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna); 
+			AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna); 
 			
 			
 			if(!response.isFallimento() && response.getImpegno()!= null){
 				//OTTIMIZZAZIONI APRILE 2016, il servizio aggiorna non restituisce piu' l'impegno per non rischiare timeout a caricarlo...
 				forceReload=true;
 				model.setImpegnoRicaricatoDopoInsOAgg(null);
+				
+				//SIAC-8034
+				resetPageNumberTableId("ricercaSubImpegniID");
+				
 				return GOTO_AGGIORNA_SUBIMPEGNO;
 			}else{
 				addErrori(response.getErrori());
@@ -393,7 +404,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 		if(model.getImpegnoRicaricatoDopoInsOAgg()!= null){
 			model.setListaSubimpegni(model.getImpegnoRicaricatoDopoInsOAgg().getElencoSubImpegni());
 			model.setDisponibilitaSubImpegnare(model.getImpegnoRicaricatoDopoInsOAgg().getDisponibilitaSubimpegnare());
-			model.setTotaleSubImpegno(model.getImpegnoRicaricatoDopoInsOAgg().getTotaleSubImpegni());
+			model.setTotaleSubImpegno(model.getImpegnoRicaricatoDopoInsOAgg().getTotaleSubImpegniBigDecimal());
 			model.setImpegnoInAggiornamento(model.getImpegnoRicaricatoDopoInsOAgg());
 			setImpegnoToUpdate(model.getImpegnoRicaricatoDopoInsOAgg());
 			caricaDati(true);
@@ -411,7 +422,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 		//SIAC-4949 IMPEGNI e ACCERTAMENTI Aggiornamento per decentrati CR 912
 		// quando l'utente ha il'azione DecentratoP deve essere disabilitata l'azione AGGIORNA e ANNULLA 
 		//dei subimpegni/subaccertamenti definitivi 
-		if(stato.equals("D") && isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentratoP)){
+		if(stato.equals("D") && isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentratoP)){
 			return false;
 		}
 		//
@@ -445,7 +456,7 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 		//SIAC-4949 IMPEGNI e ACCERTAMENTI Aggiornamento per decentrati CR 912
 		// quando l'utente ha il'azione DecentratoP deve essere disabilitata l'azione AGGIORNA e ANNULLA 
 		//dei subimpegni/subaccertamenti definitivi 
-		if(stato.equals("D") && isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentratoP)){
+		if(stato.equals("D") && isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentratoP)){
 			return false;
 		}
 		//
@@ -467,6 +478,12 @@ public class AggiornaSubimpegnoAction extends AggiornaSubGenericAction {
 
 	public void setStatus(boolean status) {
 		this.status = status;
+	}
+	
+	@Override
+	//SIAC-7667
+	protected boolean isPerimetroSanitarioCongruenteConGsa(CapitoloImpegnoModel capitolo) {
+		return capitolo.getCodicePerimetroSanitarioSpesa() != null && CODICE_PERIMETRO_SANITARIO_SPESA_GSA.equals(capitolo.getCodicePerimetroSanitarioSpesa());
 	}
 
 }

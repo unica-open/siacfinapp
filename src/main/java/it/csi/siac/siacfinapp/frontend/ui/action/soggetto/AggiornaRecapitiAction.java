@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -17,13 +17,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.Normalizzatore;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.IndirizzoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.RecapitoModel;
-import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggetto;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggettoProvvisorio;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggettoResponse;
@@ -59,8 +59,12 @@ public class AggiornaRecapitiAction extends AggiornaSoggettoGenericAction {
 		super.prepare();
 		
 		//setto il titolo:
-		this.model.setTitolo("Aggiorna recapiti");
-		
+		//task-224
+	    if(AzioneConsentitaEnum.OP_CEC_SOG_leggiSogg.getNomeAzione().equals(sessionHandler.getAzione().getNome())) {
+	    	this.model.setTitolo("Aggiorna recapiti Cassa Economale");
+		}else {
+			this.model.setTitolo("Aggiorna recapiti");
+		}
 		// carico le liste della pagina
 		caricaListeInserisciIndirizzoSoggetto();
 	}	
@@ -231,7 +235,7 @@ public class AggiornaRecapitiAction extends AggiornaSoggettoGenericAction {
 		ValidationUtils.validaCampiAggiornamentoIndirizzi(listaErrori, getIndirizzoSoggetto());
 				
 		if(null!=getIndirizzoSoggetto() &&
-			StringUtils.isEmpty(getIndirizzoSoggetto().getIdComune())){
+			StringUtils.isEmpty(getIndirizzoSoggetto().getCodiceIstatComune())){
 			
 			debug(methodName, "verifico la nazione ");
 			
@@ -240,7 +244,7 @@ public class AggiornaRecapitiAction extends AggiornaSoggettoGenericAction {
 				if (comunePerNomeResponse == null || comunePerNomeResponse.isFallimento() || comunePerNomeResponse.getListaComuni() == null || comunePerNomeResponse.getListaComuni().size() == 0 || comunePerNomeResponse.getListaComuni().get(0).getId() == null) {
 					listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Comune"));
 				} else {
-					getIndirizzoSoggetto().setIdComune(comunePerNomeResponse.getListaComuni().get(0).getCodice());
+					getIndirizzoSoggetto().setCodiceIstatComune(comunePerNomeResponse.getListaComuni().get(0).getCodice());
 					getIndirizzoSoggetto().setComune(comunePerNomeResponse.getListaComuni().get(0).getDescrizione());
 				}
 			}		
@@ -319,7 +323,7 @@ public class AggiornaRecapitiAction extends AggiornaSoggettoGenericAction {
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -337,7 +341,7 @@ public class AggiornaRecapitiAction extends AggiornaSoggettoGenericAction {
 		//SIAC-6847
 		//a seguito della SIAC-5722 i soggetti di ambito CEC non devono seguire le operazioni legate al soggetto provvisorio
 		//eseguo il controllo che non siano di AMBITO_CEC
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO) 
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite()) 
 				&& (aggiornaSoggetto.getCodificaAmbito() != null 
 				&& aggiornaSoggetto.getCodificaAmbito().equals("AMBITO_CEC") == false)) {
 			//CASO PROVVISORIO

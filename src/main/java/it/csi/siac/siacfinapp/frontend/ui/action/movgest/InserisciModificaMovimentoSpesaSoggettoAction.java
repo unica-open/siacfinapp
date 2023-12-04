@@ -4,6 +4,7 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegno;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegnoResponse;
 import it.csi.siac.siacfinser.model.Impegno;
@@ -70,6 +71,28 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 	private Boolean tipoMovimentoImpegno; 
 	private String soggettoDesiderato;
 	
+	//SIAC-7738 Inizio  FL 25/08/2020 riporto modifiche relative alla 7349
+	private String minImp;
+	private String maxImp;
+	private String minSub;
+	private String maxSub;
+	private String minAnche;
+	private String maxAnche;
+	//IMPORTI CALCOLATI
+	private String minImportoCalcolato;
+	private String maxImportoCalcolato;
+	private String minImportoSubCalcolato;
+	private String maxImportoSubCalcolato;
+	private BigDecimal minImportoImpegnoApp;
+	private BigDecimal maxImportoImpegnoApp;
+	private BigDecimal minImportoSubApp;
+	private BigDecimal maxImportoSubApp;
+	
+	//SIAC-7349
+	private BigDecimal minImportoImpegnoCompApp;
+	private BigDecimal maxImportoImpegnoCompApp;
+	//SIAC-7738 Fine  FL 25/08/2020 riporto modifiche relative alla 7349
+	
 	private AttoAmministrativo am;
 	
 	private String aperturaIniziale;
@@ -105,8 +128,8 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 			//solo quelli con stato DEFINTIVO:
 			for(SubImpegno sub : model.getListaSubimpegni()){
 				if(sub.getStatoOperativoMovimentoGestioneSpesa().equals("D")){
-					if(sub.getNumero() != null){
-						numeroSubImpegnoList.add(String.valueOf(sub.getNumero()));
+					if(sub.getNumeroBigDecimal() != null){
+						numeroSubImpegnoList.add(String.valueOf(sub.getNumeroBigDecimal()));
 					}		
 				}
 			}
@@ -154,7 +177,176 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 		
 		//tipo movimento impegno a true:
 		tipoMovimentoImpegno = true;
+		
+		//SIAC-7738 Inizio  FL 25/08/2020 riporto modifiche relative alla 7349
+
+		
+		//Calcolo importi
+		
+		if(model.getDisponibilitaImpegnoModifica()==null){
+			model.setDisponibilitaImpegnoModifica(BigDecimal.ZERO);
+		}
+		
+		//FIX PER JIRA SIAC-3801
+		//minImportoImpegnoApp = minoreTraDisponibileInModificaEDispAVincolare().negate();
+
+		// RM JIRA 5371
+		minImportoImpegnoApp = model.getDisponibilitaImpegnoModifica().negate();
+		
+		//SIAC-7349
+		//Per come calcocata questa disponibilità (valore impegnato - liquidazioni)
+		//il limite sinistro della singola componente equivale a quello dell'impegno
+		//in quanto esso è riferito alla componente stessa
+		minImportoImpegnoCompApp = minImportoImpegnoApp;
+		
+
+		
+		
+		//
+		
+		if(model.getImpegnoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
+			maxImportoImpegnoApp = new BigDecimal(0);
+			//SIAC-7349
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		} else if(model.getImpegnoInAggiornamento().isFlagDaRiaccertamento()){
+			maxImportoImpegnoApp = new BigDecimal(0);
+			//SIAC-7349
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		} else {
+			//SIAC-580
+			
+			if(model.getStep1Model().getAnnoImpegno().intValue() == model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() ){
+				// anno corrente
+				maxImportoImpegnoApp = model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getImportiCapitolo().getDisponibilitaImpegnareAnno1();
+				//SIAC-7349 fare in modo di ottenere il valore degli importi capitolo della componente
+				maxImportoImpegnoCompApp = getDisponibilitaModifica(0);
+			}else if(model.getStep1Model().getAnnoImpegno().intValue()  == (model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() +1) ){
+//				anno  +1
+				maxImportoImpegnoApp = model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getImportiCapitolo().getDisponibilitaImpegnareAnno2();
+				//SIAC-7349 fare in modo di ottenere il valore degli importi capitolo della componente
+				maxImportoImpegnoCompApp = getDisponibilitaModifica(1);
+			}else if(model.getStep1Model().getAnnoImpegno().intValue()  == (model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() +2) ){
+//				anno +2
+				maxImportoImpegnoApp = model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getImportiCapitolo().getDisponibilitaImpegnareAnno3();
+				//SIAC-7349 fare in modo di ottenere il valore degli importi capitolo della componente
+				maxImportoImpegnoCompApp = getDisponibilitaModifica(2);
+			
+			//SIAC-6990
+			//si consente l'inserimento delle modifiche solo sui tre anni successivi (inerenti alla disponibilita' massima dei capitoli)
+			}else{
+				//  da GESTIRE NELLA PAGINA
+//				addErrore(new Errore("FIN_ERR_0289", "Impossibile inserire modifiche superiori alla durata dei capitoli"));
+				model.setFlagSuperioreTreAnni(true);
+				return;
+			}
+		}
+		
+		if(minImportoImpegnoApp == null){
+			//pongo a zero
+			minImportoImpegnoApp = new BigDecimal(0);
+			
+		}
+		
+		//SIAC-7349
+		if(minImportoImpegnoCompApp == null){
+			//pongo a zero
+			minImportoImpegnoCompApp = new BigDecimal(0);
+		}
+		
+		if(maxImportoImpegnoApp == null){
+			//pongo a zero
+			maxImportoImpegnoApp = new BigDecimal(0);
+		}
+		
+		//SIAC-7349
+		if(maxImportoImpegnoCompApp == null){
+			//pongo a zero
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		}
+		
+		
+		//GESTIONE FLAG SDF:
+		if(model.getImpegnoInAggiornamento().isFlagSDF()){
+			maxImportoImpegnoApp = new BigDecimal(0);
+		}
+		
+		//SIAC-7349 importo a zero il maxImportoImpegnoCompApp come fatto in precedenza, a determinate condizioni
+		if(model.getImpegnoInAggiornamento().isFlagSDF()){
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		}
+		
+		if(maxImportoImpegnoApp.compareTo(new BigDecimal(0)) < 0){
+			maxImportoImpegnoApp = new BigDecimal(0);
+		}
+		
+		//SIAC-7349 importo a zero il maxImportoImpegnoCompApp come fatto in precedenza, a determinate condizioni
+		if(maxImportoImpegnoCompApp.compareTo(new BigDecimal(0)) < 0){
+			maxImportoImpegnoCompApp = new BigDecimal(0);
+		}
+		
+		
+		
+		//Setto il massimo e i minimo nelle variabili finali:
+		setMaxImp(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+		model.setMaxImpMod(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+		setMinImp(convertiBigDecimalToImporto(minImportoImpegnoApp));
+		model.setMinImpMod(convertiBigDecimalToImporto(minImportoImpegnoApp));
+		
+		setMinImportoCalcolato(convertiBigDecimalToImporto(minImportoImpegnoApp));
+		model.setMinImportoCalcolatoMod(convertiBigDecimalToImporto(minImportoImpegnoApp));
+		setMaxImportoCalcolato(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+		model.setMaxImportoCalcolatoMod(convertiBigDecimalToImporto(maxImportoImpegnoApp));
+		
+		//SIAC-7349
+		model.setMinImportoImpComp(convertiBigDecimalToImporto(minImportoImpegnoCompApp));
+		model.setMaxImportoImpComp(convertiBigDecimalToImporto(maxImportoImpegnoCompApp));
+		
+		//SIAC-7349 non aggiunte e non valorizzati gli attributi nel model -> minImportoCalcolatoCompMod e maxImportoCalcolatoCompMod  
+		//per presunta inutilità
+		
+		//SIAC-7738 Fine  FL 25/08/2020 riporto modifiche relative alla 7349
+		
 	}
+	
+	
+	//SIAC-7738 Inizio FL 25/08/2020 riporto modifiche relative alla 7349
+
+	//SIAC-7349 - SR90 - MR - 03/2020 - Metodo per ottenere la disponibilita della componente
+	private BigDecimal getDisponibilitaModifica(int i) {
+
+		if(model.getImportiComponentiCapitolo() == null || model.getImportiComponentiCapitolo().isEmpty()){
+			return BigDecimal.ZERO;	
+		}else{
+			if(i==0){				
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}				
+			}else if(i==1){
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}
+			}else if (i==2){
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}
+			}			
+		}			
+		return BigDecimal.ZERO;	
+	}
+		//SIAC-7349 - End
+	//SIAC-7738 Fine  FL 25/08/2020 riporto modifiche relative alla 7349
 	
 	/**
 	 * Metodo execute della action
@@ -208,11 +400,11 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				
 				//itero tra i sub cercando quello selezionato:
 				for(SubImpegno sub : model.getListaSubimpegni()){
-					if(String.valueOf(sub.getNumero()).equals(getSubSelected())){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equals(getSubSelected())){
 						//trovato
 						
 						//Setto i dati del sug trovato:
-						setNumeroSubImpegno(String.valueOf(sub.getNumero()));
+						setNumeroSubImpegno(String.valueOf(sub.getNumeroBigDecimal()));
 						
 						if(sub.getSoggetto()!=null){
 							Soggetto soggCloned = clone(sub.getSoggetto());
@@ -266,7 +458,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 		if(subSelected!=null){	
 			//cerco su lista sub quello selezionato:
 			for(SubImpegno sub : model.getListaSubimpegni()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					//trovato
 					Soggetto soggCloned = clone(sub.getSoggetto());
 					setSoggettoSubEffettivo(soggCloned);
@@ -351,10 +543,13 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				for(SubImpegno subImpegno : listaSubImpegni){
 					String stato = subImpegno.getStatoOperativoMovimentoGestioneSpesa();
 					if(stato.equalsIgnoreCase("D")){
-						listaErrori.add(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("entita: subimpegno " + subImpegno.getNumero(),"DEFINITIVO"));
+						listaErrori.add(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("entita: subimpegno " + subImpegno.getNumeroBigDecimal(),"DEFINITIVO"));
 					}
 				}
 			}
+			
+			//SIAC-8506
+			controllaLunghezzaMassimaDescrizioneMovimento(getDescrizione(), listaErrori);
 			
 			//controllo esistenza soggetto o classe associato a impegno
 			if((model.getStep1Model().getSoggettoImpegno()==null || StringUtils.isEmpty(model.getStep1Model().getSoggettoImpegno().getCodiceSoggetto()))
@@ -461,7 +656,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				
 				modSpesa.setTipoModificaMovimentoGestione(getIdTipoMotivo());
 				modSpesa.setDescrizione(getDescrizione());
-				modSpesa.setTipoMovimento(Constanti.MODIFICA_TIPO_IMP);
+				modSpesa.setTipoMovimento(CostantiFin.MODIFICA_TIPO_IMP);
 				
 				//16 FEBBRAIO 207 salvo soggettoPrimaDiAggiorna per ripristinarlo in caso di errori
 				Soggetto soggettoPrimaDiAggiorna = clone(model.getStep1Model().getSoggettoImpegno());
@@ -501,7 +696,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				}
 				
 				//richiamo il servizio di aggiornamento:
-				AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna);
+				AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna);
 				model.setProseguiConWarning(false);
 				
 				//analizzo la risposta del servizio:
@@ -589,7 +784,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 			
 			//controllo esistenza soggetto associato a subimpegno
 			for(SubImpegno sub : model.getListaSubimpegni()){
-				if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+				if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 					if(sub.getSoggetto().getCodiceSoggetto()==null){
 						listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Soggetto per il sub impegno non presente"));
 					}
@@ -600,7 +795,9 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 			boolean soggettoSubAttualeValidatoDaServizio = false;
 			
 			//controllo validita' soggetto
-			if (model.getSoggettoSubAttuale().getCodiceSoggetto() != null && !"".equals(model.getSoggettoSubAttuale().getCodiceSoggetto())) {
+			//SIAC-7867
+			if (model.getSoggettoSubAttuale() != null && model.getSoggettoSubAttuale().getCodiceSoggetto() != null 
+					&& !"".equals(model.getSoggettoSubAttuale().getCodiceSoggetto())) {
 				SoggettoImpegnoModel soggettoDaVerificare = new SoggettoImpegnoModel();
 				soggettoDaVerificare.setCodCreditore(model.getSoggettoSubAttuale().getCodiceSoggetto());
 
@@ -624,7 +821,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				List<ModificaMovimentoGestioneSpesa> modificheList = new ArrayList<ModificaMovimentoGestioneSpesa>();
 					
 				for(SubImpegno sub : model.getListaSubimpegni()){
-					if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 						modificheList = sub.getListaModificheMovimentoGestioneSpesa();
 					}
 				}
@@ -643,7 +840,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				
 				// Carico info soggetto OLD
 				for(SubImpegno sub : model.getListaSubimpegni()){
-					if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 						modSpesa.setSoggettoOldMovimentoGestione(sub.getSoggetto());
 					}
 				}	
@@ -676,7 +873,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				
 				modSpesa.setTipoModificaMovimentoGestione(getIdTipoMotivo());
 				modSpesa.setDescrizione(getDescrizione());
-				modSpesa.setTipoMovimento(Constanti.MODIFICA_TIPO_SIM);
+				modSpesa.setTipoMovimento(CostantiFin.MODIFICA_TIPO_SIM);
 								
 				//inserisco nel model il provvedimento dell'impegno (per mantanerlo uguale in modo da variare solo quello della modifica)
 				if(getAm()!=null && getAm().getAnno()!=0){
@@ -688,7 +885,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				
 				List<SubImpegno> nuovaSubImpegnoList = new ArrayList<SubImpegno>();
 				for(SubImpegno sub : model.getListaSubimpegni()){
-					if(String.valueOf(sub.getNumero()).equalsIgnoreCase(subSelected)){
+					if(String.valueOf(sub.getNumeroBigDecimal()).equalsIgnoreCase(subSelected)){
 						sub.setListaModificheMovimentoGestioneSpesa(modificheList);
 					}
 					nuovaSubImpegnoList.add(sub);
@@ -743,7 +940,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 				}
 				
 				
-				AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna);
+				AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna);
 				model.setProseguiConWarning(false);
 				
 				if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
@@ -805,7 +1002,10 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 			for(SubImpegno subImpegno : listaSubImpegni){
 				if(subImpegno.getSoggetto()!=null){
 					String stato = subImpegno.getStato().name();
-					if(stato.equalsIgnoreCase(Constanti.STATO_VALIDO) && model.getSoggettoSubAttuale().getCodiceSoggetto().equalsIgnoreCase(subImpegno.getSoggetto().getCodiceSoggetto())){							
+					//SIAC-7867
+					if(CostantiFin.STATO_VALIDO.equalsIgnoreCase(stato) && model.getSoggettoSubAttuale() != null 
+							&& model.getSoggettoSubAttuale().getCodiceSoggetto() != null && subImpegno.getSoggetto().getCodiceSoggetto() != null
+							&& model.getSoggettoSubAttuale().getCodiceSoggetto().equalsIgnoreCase(subImpegno.getSoggetto().getCodiceSoggetto())){							
 						errorWarning = ErroreFin.DATO_SOGGETTO_PRESENTE.getErrore("Creditore ", subImpegno.getSoggetto().getCodiceSoggetto() + " " + subImpegno.getSoggetto().getDenominazione());
 					}
 				}
@@ -871,7 +1071,7 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 					//soggetto trovato
 					
 					//controllo sullo stato:
-					if(s.getStatoOperativo() != null && (!s.getStatoOperativo().name().equalsIgnoreCase(Constanti.STATO_VALIDO)) && (!s.getStatoOperativo().name().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA))){
+					if(s.getStatoOperativo() != null && (!s.getStatoOperativo().name().equalsIgnoreCase(CostantiFin.STATO_VALIDO)) && (!s.getStatoOperativo().name().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA))){
 						//stato non compatibile
 						listaErrori.add(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("entita: soggetto " + s.getCodiceSoggetto(), s.getStatoOperativo().name()));
 						addErrori(listaErrori);
@@ -1194,5 +1394,263 @@ public class InserisciModificaMovimentoSpesaSoggettoAction extends ActionKeyAggi
 	public void setAperturaIniziale(String aperturaIniziale) {
 		this.aperturaIniziale = aperturaIniziale;
 	}
-	
+
+	//SIAC-7738 Inizio FL 25/08/2020 riporto modifiche relative alla 7349
+	/**
+	 * @return the minImp
+	 */
+	public String getMinImp()
+	{
+		return minImp;
+	}
+
+	/**
+	 * @param minImp the minImp to set
+	 */
+	public void setMinImp(String minImp)
+	{
+		this.minImp = minImp;
+	}
+
+	/**
+	 * @return the maxImp
+	 */
+	public String getMaxImp()
+	{
+		return maxImp;
+	}
+
+	/**
+	 * @param maxImp the maxImp to set
+	 */
+	public void setMaxImp(String maxImp)
+	{
+		this.maxImp = maxImp;
+	}
+
+	/**
+	 * @return the minSub
+	 */
+	public String getMinSub()
+	{
+		return minSub;
+	}
+
+	/**
+	 * @param minSub the minSub to set
+	 */
+	public void setMinSub(String minSub)
+	{
+		this.minSub = minSub;
+	}
+
+	/**
+	 * @return the maxSub
+	 */
+	public String getMaxSub()
+	{
+		return maxSub;
+	}
+
+	/**
+	 * @param maxSub the maxSub to set
+	 */
+	public void setMaxSub(String maxSub)
+	{
+		this.maxSub = maxSub;
+	}
+
+	/**
+	 * @return the minAnche
+	 */
+	public String getMinAnche()
+	{
+		return minAnche;
+	}
+
+	/**
+	 * @param minAnche the minAnche to set
+	 */
+	public void setMinAnche(String minAnche)
+	{
+		this.minAnche = minAnche;
+	}
+
+	/**
+	 * @return the maxAnche
+	 */
+	public String getMaxAnche()
+	{
+		return maxAnche;
+	}
+
+	/**
+	 * @param maxAnche the maxAnche to set
+	 */
+	public void setMaxAnche(String maxAnche)
+	{
+		this.maxAnche = maxAnche;
+	}
+
+	/**
+	 * @return the minImportoCalcolato
+	 */
+	public String getMinImportoCalcolato()
+	{
+		return minImportoCalcolato;
+	}
+
+	/**
+	 * @param minImportoCalcolato the minImportoCalcolato to set
+	 */
+	public void setMinImportoCalcolato(String minImportoCalcolato)
+	{
+		this.minImportoCalcolato = minImportoCalcolato;
+	}
+
+	/**
+	 * @return the maxImportoCalcolato
+	 */
+	public String getMaxImportoCalcolato()
+	{
+		return maxImportoCalcolato;
+	}
+
+	/**
+	 * @param maxImportoCalcolato the maxImportoCalcolato to set
+	 */
+	public void setMaxImportoCalcolato(String maxImportoCalcolato)
+	{
+		this.maxImportoCalcolato = maxImportoCalcolato;
+	}
+
+	/**
+	 * @return the minImportoSubCalcolato
+	 */
+	public String getMinImportoSubCalcolato()
+	{
+		return minImportoSubCalcolato;
+	}
+
+	/**
+	 * @param minImportoSubCalcolato the minImportoSubCalcolato to set
+	 */
+	public void setMinImportoSubCalcolato(String minImportoSubCalcolato)
+	{
+		this.minImportoSubCalcolato = minImportoSubCalcolato;
+	}
+
+	/**
+	 * @return the maxImportoSubCalcolato
+	 */
+	public String getMaxImportoSubCalcolato()
+	{
+		return maxImportoSubCalcolato;
+	}
+
+	/**
+	 * @param maxImportoSubCalcolato the maxImportoSubCalcolato to set
+	 */
+	public void setMaxImportoSubCalcolato(String maxImportoSubCalcolato)
+	{
+		this.maxImportoSubCalcolato = maxImportoSubCalcolato;
+	}
+
+	/**
+	 * @return the minImportoImpegnoApp
+	 */
+	public BigDecimal getMinImportoImpegnoApp()
+	{
+		return minImportoImpegnoApp;
+	}
+
+	/**
+	 * @param minImportoImpegnoApp the minImportoImpegnoApp to set
+	 */
+	public void setMinImportoImpegnoApp(BigDecimal minImportoImpegnoApp)
+	{
+		this.minImportoImpegnoApp = minImportoImpegnoApp;
+	}
+
+	/**
+	 * @return the maxImportoImpegnoApp
+	 */
+	public BigDecimal getMaxImportoImpegnoApp()
+	{
+		return maxImportoImpegnoApp;
+	}
+
+	/**
+	 * @param maxImportoImpegnoApp the maxImportoImpegnoApp to set
+	 */
+	public void setMaxImportoImpegnoApp(BigDecimal maxImportoImpegnoApp)
+	{
+		this.maxImportoImpegnoApp = maxImportoImpegnoApp;
+	}
+
+	/**
+	 * @return the minImportoSubApp
+	 */
+	public BigDecimal getMinImportoSubApp()
+	{
+		return minImportoSubApp;
+	}
+
+	/**
+	 * @param minImportoSubApp the minImportoSubApp to set
+	 */
+	public void setMinImportoSubApp(BigDecimal minImportoSubApp)
+	{
+		this.minImportoSubApp = minImportoSubApp;
+	}
+
+	/**
+	 * @return the maxImportoSubApp
+	 */
+	public BigDecimal getMaxImportoSubApp()
+	{
+		return maxImportoSubApp;
+	}
+
+	/**
+	 * @param maxImportoSubApp the maxImportoSubApp to set
+	 */
+	public void setMaxImportoSubApp(BigDecimal maxImportoSubApp)
+	{
+		this.maxImportoSubApp = maxImportoSubApp;
+	}
+
+	/**
+	 * @return the minImportoImpegnoCompApp
+	 */
+	public BigDecimal getMinImportoImpegnoCompApp()
+	{
+		return minImportoImpegnoCompApp;
+	}
+
+	/**
+	 * @param minImportoImpegnoCompApp the minImportoImpegnoCompApp to set
+	 */
+	public void setMinImportoImpegnoCompApp(BigDecimal minImportoImpegnoCompApp)
+	{
+		this.minImportoImpegnoCompApp = minImportoImpegnoCompApp;
+	}
+
+	/**
+	 * @return the maxImportoImpegnoCompApp
+	 */
+	public BigDecimal getMaxImportoImpegnoCompApp()
+	{
+		return maxImportoImpegnoCompApp;
+	}
+
+	/**
+	 * @param maxImportoImpegnoCompApp the maxImportoImpegnoCompApp to set
+	 */
+	public void setMaxImportoImpegnoCompApp(BigDecimal maxImportoImpegnoCompApp)
+	{
+		this.maxImportoImpegnoCompApp = maxImportoImpegnoCompApp;
+	}
+
+	//SIAC-7738 Fine  FL 25/08/2020 riporto modifiche relative alla 7349	
 }

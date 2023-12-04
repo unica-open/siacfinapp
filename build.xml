@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
 SPDX-License-Identifier: EUPL-1.2
@@ -285,6 +286,7 @@ SPDX-License-Identifier: EUPL-1.2
 </target>
 
 <target name="replace-context-path" description="Replace context-path">
+	<!-- 
 	<if>
 		<equals arg1="${target.fornitore}" arg2="fin" />
 		<then>
@@ -296,7 +298,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<replace file="${conf-target}/ear/META-INF/application.xml" token="/${context-path}" value="/${context-path-tst-fin}"/>
 		</then>
 	</if>
-
+ 	-->
 </target>	
 	
 	
@@ -317,6 +319,10 @@ SPDX-License-Identifier: EUPL-1.2
 			<include name="${web-module-name}.war" />
 		</fileset>
 	</ear>
+</target>
+	
+<target name="copy-to-local-jboss">
+		<copy file="C:/SORGENTI-SIAC/SIAC-PROLOGIC/siacfinapp/target/build/archives/local/siacfinapp.ear" todir="${jboss.local.deploy}" />
 </target>
 
 <!-- -->

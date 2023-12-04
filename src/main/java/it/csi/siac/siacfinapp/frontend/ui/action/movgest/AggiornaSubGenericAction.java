@@ -9,22 +9,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import it.csi.siac.siacfinapp.frontend.ui.model.movgest.MovimentoConsulta;
-
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
 public class AggiornaSubGenericAction extends WizardAggiornaMovGestAction {
 
 	private static final long serialVersionUID = 1L;
 
-	protected String uidPerDettaglioSub;
-	protected String uidSubDaAnnullare;
-	protected String numeroSubDaAnnullare;
-	protected String uidSubDaEliminare;
-	protected String numeroSubDaEliminare;
 	protected boolean ricaricaDopoInserimento = false;
-	
-	
 	
 	protected void caricaLabelsAggiornaSub() {
 		if (oggettoDaPopolareSubimpegno()) {
@@ -58,7 +49,7 @@ public class AggiornaSubGenericAction extends WizardAggiornaMovGestAction {
 				model.getStep1Model().getStatoOperativo().equalsIgnoreCase("D")){
 			
 			ritorno = true;
-		}else{
+		} else {
 			
 			/*
 			 * per potersi vedere il bottone il bialncio deve essere
@@ -68,37 +59,36 @@ public class AggiornaSubGenericAction extends WizardAggiornaMovGestAction {
 			 * O - Predisposizione Consuntivo 
 			 */
 			
-			if(sessionHandler.getFaseBilancio()!= null && !(sessionHandler.getFaseBilancio().equalsIgnoreCase("E") ||  
+			if(sessionHandler.getFaseBilancio() != null && !(sessionHandler.getFaseBilancio().equalsIgnoreCase("E") ||  
 					sessionHandler.getFaseBilancio().equalsIgnoreCase("G") || 
 					sessionHandler.getFaseBilancio().equalsIgnoreCase("A") || 
 					sessionHandler.getFaseBilancio().equalsIgnoreCase("O") )){
-				
-				
+
 				ritorno = true;
 				
-			}else ritorno = false;
+			} else {
+				ritorno = false;
+			}
 			
 		}
 		
-			
-			
 		return ritorno;
 	}
 	
-	public String inserisciSubimpegno() {
-		inserisciSub();
-		return GOTO_GESTIONE_SUBIMPEGNO;
-	}
-	
-	public void inserisciSub() {
-		setIdSubImpegno(null);
-		setInserimentoSubimpegno(true);
-		model.setProseguiConWarningControlloSoggetti(false);
-		model.getStep1ModelSubimpegno().setOperazioneInserimento(true);
-		
-		//FIX per JIRA SIAC-3426:
-		model.setSubDettaglio(new MovimentoConsulta());
-	}
+//	public String inserisciSubimpegno() {
+//		inserisciSub();
+//		return GOTO_GESTIONE_SUBIMPEGNO;
+//	}
+//	
+//	public void inserisciSub() {
+//		setIdSubImpegno(null);
+//		setInserimentoSubimpegno(true);
+//		model.setProseguiConWarningControlloSoggetti(false);
+//		model.getStep1ModelSubimpegno().setOperazioneInserimento(true);
+//		
+//		//FIX per JIRA SIAC-3426:
+//		model.setSubDettaglio(new MovimentoConsulta());
+//	}
 	
 	/* **************************************************************************** */
 	/*  Controllo bottoniera 														*/
@@ -160,46 +150,6 @@ public class AggiornaSubGenericAction extends WizardAggiornaMovGestAction {
 	/*  Getter / setter																*/
 	/* **************************************************************************** */
 	
-	public String getUidPerDettaglioSub() {
-		return uidPerDettaglioSub;
-	}
-
-	public void setUidPerDettaglioSub(String uidPerDettaglioSub) {
-		this.uidPerDettaglioSub = uidPerDettaglioSub;
-	}
-
-	public String getUidSubDaAnnullare() {
-		return uidSubDaAnnullare;
-	}
-
-	public void setUidSubDaAnnullare(String uidSubDaAnnullare) {
-		this.uidSubDaAnnullare = uidSubDaAnnullare;
-	}
-
-	public String getNumeroSubDaAnnullare() {
-		return numeroSubDaAnnullare;
-	}
-
-	public void setNumeroSubDaAnnullare(String numeroSubDaAnnullare) {
-		this.numeroSubDaAnnullare = numeroSubDaAnnullare;
-	}
-
-	public String getUidSubDaEliminare() {
-		return uidSubDaEliminare;
-	}
-
-	public void setUidSubDaEliminare(String uidSubDaEliminare) {
-		this.uidSubDaEliminare = uidSubDaEliminare;
-	}
-
-	public String getNumeroSubDaEliminare() {
-		return numeroSubDaEliminare;
-	}
-
-	public void setNumeroSubDaEliminare(String numeroSubDaEliminare) {
-		this.numeroSubDaEliminare = numeroSubDaEliminare;
-	}
-
 	public boolean isRicaricaDopoInserimento() {
 		return ricaricaDopoInserimento;
 	}

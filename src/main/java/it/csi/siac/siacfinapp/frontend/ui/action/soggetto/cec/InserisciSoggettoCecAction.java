@@ -7,15 +7,12 @@ package it.csi.siac.siacfinapp.frontend.ui.action.soggetto.cec;
 
 
 
-import java.util.List;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siacfinapp.frontend.ui.action.soggetto.InserisciSoggettoAction;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 
 
 
@@ -30,11 +27,11 @@ public class InserisciSoggettoCecAction extends InserisciSoggettoAction {
 	protected String getCodiceAmbito() {
 		//ritorniamo la codifica 
 		//dell'ambito, cec in questo caso
-		return Constanti.AMBITO_CEC;
+		return CostantiFin.AMBITO_CEC;
 	}
 	
 	@Override
-	protected void checkCampiFEL(List<Errore> listaErrori) {
+	protected void checkCampiFEL() {
 		//SIAC-6834
 	}
 }

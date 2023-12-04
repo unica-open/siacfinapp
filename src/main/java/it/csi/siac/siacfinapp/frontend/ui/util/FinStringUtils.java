@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 
 public class FinStringUtils {
 	
@@ -264,7 +264,7 @@ public class FinStringUtils {
 	}
 	
 	public final static boolean stringToBooleanForDb(String s) {
-		if (Constanti.TRUE.equals(s)) {
+		if (CostantiFin.TRUE.equals(s)) {
 			return true;
 		}
 		

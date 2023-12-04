@@ -10,16 +10,22 @@ SPDX-License-Identifier: EUPL-1.2
 		<interceptors>
 
 			<!-- Interceptor di log prima e a termine dell'invocazione -->
-			<interceptor name="logInterceptor" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+			<interceptor name="logInterceptor" class="it.csi.siac.siaccommonapp.interceptor.LogInterceptor" />
 
 			<!-- Interceptor per la gestione degli errori di conversione <interceptor name="siacConversionErrorInterceptor" class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" /> -->
 
-			<!-- Interceptor per la gestione dei breadcrumb -->
+			<!-- Interceptor per la gestione dei breadcrumb --> 
+			<!-- task-131 -->
+			<!-- 
 			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
-				<param name="defaultRewindMode">AUTO</param>
-				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+  				<param name="defaultRewindMode">AUTO</param>
+  				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
 			</interceptor>
-
+			-->
+			 <interceptor name="breadCrumbs" class="xyz.timedrain.arianna.plugin.BreadCrumbInterceptor">
+				<param name="defaultRewindMode">AUTO</param>
+				<param name="defaultComparator">xyz.timedrain.arianna.plugin.NameComparator</param>
+			</interceptor>
 			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
 			<interceptor name="redirectMessage" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.RedirectMessageInterceptor" />
 
@@ -30,6 +36,8 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="servletConfig" />
 				<interceptor-ref name="i18n" />
 				<interceptor-ref name="actionData" />
+					<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
 				<interceptor-ref name="prepare" />
 				<interceptor-ref name="redirectMessage" />
 				<interceptor-ref name="chain" />
@@ -57,8 +65,6 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="breadCrumbs" />
 
 
-				<!-- Interceptor di log -->
-				<interceptor-ref name="logInterceptor" />
 
 			</interceptor-stack>
 		</interceptors>
@@ -79,13 +85,81 @@ SPDX-License-Identifier: EUPL-1.2
 			</result>
 	  </action>
 	  
+	  <!-- task-131 -->
+	  <action name="ricercaContoCorrente_cerca" class="ricercaContoCorrenteAction" method="cerca">
+			<result name="success">/jsp/saldo/ricercaContoCorrente.jsp</result>
+			<result name="input">/jsp/saldo/ricercaContoCorrente.jsp</result>
+
+	 		<result name="cerca" type="redirectAction">
+				<param name="actionName">aggiornaContoCorrente</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+	  </action>
+	  
+	  <!-- task-131 -->
+	  <action name="ricercaContoCorrente_execute" class="ricercaContoCorrenteAction" method="execute">
+			<result name="success">/jsp/saldo/ricercaContoCorrente.jsp</result>
+			<result name="input">/jsp/saldo/ricercaContoCorrente.jsp</result>
+
+	 		<result name="cerca" type="redirectAction">
+				<param name="actionName">aggiornaContoCorrente</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+	  </action>
+	  
 	  <action name="aggiornaContoCorrente" class="aggiornaContoCorrenteAction">
 			<result name="success">/jsp/saldo/aggiornaContoCorrente.jsp</result>
 			<result name="input">/jsp/saldo/aggiornaContoCorrente.jsp</result>
-	
 	 </action>
 	
-	  <action name="consultaContoCorrente" class="consultaContoCorrenteAction">
+	 <!-- task-131 -->
+	 <action name="aggiornaContoCorrente_inserisciAddebito" class="aggiornaContoCorrenteAction" method="inserisciAddebito">
+			<result name="success">/jsp/saldo/aggiornaContoCorrente.jsp</result>
+			<result name="input">/jsp/saldo/aggiornaContoCorrente.jsp</result>
+	 </action>
+	 <!-- task-131 -->
+	 <action name="aggiornaContoCorrente_aggiornaSaldo" class="aggiornaContoCorrenteAction" method="aggiornaSaldo">
+			<result name="success">/jsp/saldo/aggiornaContoCorrente.jsp</result>
+			<result name="input">/jsp/saldo/aggiornaContoCorrente.jsp</result>
+	 </action>
+	 <!-- task-131 -->
+	 <action name="aggiornaContoCorrente_eliminaAddebito" class="aggiornaContoCorrenteAction" method="eliminaAddebito">
+			<result name="success">/jsp/saldo/aggiornaContoCorrente.jsp</result>
+			<result name="input">/jsp/saldo/aggiornaContoCorrente.jsp</result>
+	 </action>
+	 <!-- task-131 -->
+	 <action name="aggiornaContoCorrente_aggiornaAddebiti" class="aggiornaContoCorrenteAction" method="aggiornaAddebiti">
+			<result name="success">/jsp/saldo/aggiornaContoCorrente.jsp</result>
+			<result name="input">/jsp/saldo/aggiornaContoCorrente.jsp</result>
+	 </action>
+	 
+	 <action name="consultaContoCorrente" class="consultaContoCorrenteAction">
+			<result name="success">/jsp/saldo/consultaContoCorrente.jsp</result>
+			<result name="input">/jsp/saldo/consultaContoCorrente.jsp</result>
+
+	 		<result name="cerca" type="redirectAction">
+				<param name="actionName">consultaDettaglioContoCorrente</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+	  </action>
+	  
+	  <!-- task-131 -->
+	  <action name="consultaContoCorrente_cerca" class="consultaContoCorrenteAction" method="cerca">
+			<result name="success">/jsp/saldo/consultaContoCorrente.jsp</result>
+			<result name="input">/jsp/saldo/consultaContoCorrente.jsp</result>
+
+	 		<result name="cerca" type="redirectAction">
+				<param name="actionName">consultaDettaglioContoCorrente</param>
+				<param name="namespace">/</param>
+				<param name="method">execute</param>
+			</result>
+	  </action>
+	 	
+	  <!-- task-131 -->
+	  <action name="consultaContoCorrente_execute" class="consultaContoCorrenteAction" method="execute">
 			<result name="success">/jsp/saldo/consultaContoCorrente.jsp</result>
 			<result name="input">/jsp/saldo/consultaContoCorrente.jsp</result>
 

@@ -31,8 +31,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-        <s:form id="consultaSoggetto" action="consultaSoggetto.do" method="post">
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form id="consultaSoggetto" action="consultaSoggetto" method="post">
         
         <h3 class="step-pane">Soggetto <s:property value="dettaglioSoggetto.codiceSoggetto"/> - <s:property value="dettaglioSoggetto.denominazione"/> </h3>
         
@@ -120,7 +120,8 @@ SPDX-License-Identifier: EUPL-1.2
 			    </li>
 			    <li>
 			    <dfn>Stato/Provincia/Comune</dfn>
-			    <dl><s:property value="dettaglioSoggetto.comuneNascita.nazioneDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.regioneDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.codiceBelfiore"/>&nbsp;</dl>
+			    <!-- task-223 -->
+			    <dl><s:property value="dettaglioSoggetto.comuneNascita.nazioneDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.provinciaDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.codiceBelfiore"/>&nbsp;</dl>
 			    </li>
 			    <li>
 			    <dfn>Note</dfn>

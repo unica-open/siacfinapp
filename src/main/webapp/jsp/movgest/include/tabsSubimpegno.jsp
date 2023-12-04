@@ -12,9 +12,12 @@ SPDX-License-Identifier: EUPL-1.2
 	<li class="active">
 		<a href="#"><s:property value="%{labels.OGGETTO_GENERICO}"/></a>
 	</li>
+
 	<s:if test="!disabilitaTabModificheAggiornamento()">
-		<li>
-			<a id="gotoElencoMovimentoSpesa_false" class="confermaFinApp">Modifiche</a>
-		</li>
+		<s:if test="abilitaTabModificheImpAcc()">
+			<li>
+				<a id="gotoElencoMovimentoSpesa_false" class="confermaFinApp">Modifiche</a>
+			</li>
+		</s:if>	
 	</s:if>	
 </ul>

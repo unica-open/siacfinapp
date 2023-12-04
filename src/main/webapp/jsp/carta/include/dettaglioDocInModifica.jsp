@@ -23,7 +23,8 @@ SPDX-License-Identifier: EUPL-1.2
 			</div>
 		</div>
 		<div class="modal-footer">
-			<s:submit id="confermaAggiornamentoRigaDoc" name="conferma" value="conferma" cssClass="btn btn-primary" data-dismiss="modal" method="aggiornaRigaDoc"/>
+			<!-- task-131 <s:submit id="confermaAggiornamentoRigaDoc" name="conferma" value="conferma" cssClass="btn btn-primary" method="aggiornaRigaDoc"/>-->
+			<s:submit id="confermaAggiornamentoRigaDoc" name="conferma" value="conferma" cssClass="btn btn-primary" action="regolazioneCarta_aggiornaRigaDoc"/>
 <!-- 			<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button> -->
 		</div>
 		

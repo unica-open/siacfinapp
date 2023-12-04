@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import org.apache.commons.lang.StringUtils;
 
 import it.csi.siac.siaccorser.model.StrutturaAmministrativoContabile;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaProvvisorioDiCassa;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaProvvisorioDiCassaResponse;
 import it.csi.siac.siacfinser.model.provvisoriDiCassa.ProvvisorioDiCassa;
@@ -55,7 +55,7 @@ public class WizardAggiornaProvvisorioAction extends AbstractGestioneProvvisiori
 		aggiornaProvvisorio.setBilancio(sessionHandler.getBilancio());
 		
 		//Anno Esercizio/Bilancio
-		provvisorioDaAggiornare.setAnno(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		provvisorioDaAggiornare.setAnno(sessionHandler.getAnnoBilancio());
 		
 		//Provvisorio di cassa	
 		
@@ -393,21 +393,21 @@ public class WizardAggiornaProvvisorioAction extends AbstractGestioneProvvisiori
 
 	public boolean isUtenteAmministratore(){
 		if (isAmministratore == null)
-			isAmministratore = isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGPROVVCASSA);
+			isAmministratore = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGPROVVCASSA);
 
 		return isAmministratore;
 	}
 
 	public boolean isUtenteDecentrato(){
 		if (isDecentrato == null)
-			isDecentrato = isAzioneAbilitata(CodiciOperazioni.OP_OIL_AGG_DEC_PROVV_CASSA) && !isUtenteAmministratore();
+			isDecentrato = isAzioneConsentita(AzioneConsentitaEnum.OP_OIL_AGG_DEC_PROVV_CASSA) && !isUtenteAmministratore();
 
 		return isDecentrato;
 	}
 
 	public boolean isUtenteLettore(){
 		if (isLettore == null)
-			isLettore = isAzioneAbilitata(CodiciOperazioni.OP_SPE_LEGGIPROVVCASSA) && !isUtenteDecentrato()
+			isLettore = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_LEGGIPROVVCASSA) && !isUtenteDecentrato()
 					&& !isUtenteAmministratore();
 
 		return isLettore;

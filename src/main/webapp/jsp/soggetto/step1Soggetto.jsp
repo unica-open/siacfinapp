@@ -26,8 +26,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-        <s:form id="inserisciSoggetto" action="inserisciSoggetto.do" method="post">
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form id="inserisciSoggetto" action="inserisciSoggetto" method="post">
         <h3>Inserisci un nuovo soggetto</h3>
         
         
@@ -228,8 +228,14 @@ SPDX-License-Identifier: EUPL-1.2
 			</span>
 			</div>
 		</div> 
-		  
-		  
+	
+		<div class="control-group">
+			<label class="control-label" for=IstitutoDiCredito id="istitutoDiCred">Istituto di credito</label>
+			<div class="controls">
+                 <s:checkbox id="flagIstitutoDiCredito"  name="flagIstitutoDiCredito" /> 
+			</div>
+		</div> 
+	
     <div id="dati-durc" class="hide">
 		  
            <div class="control-group">
@@ -306,9 +312,11 @@ SPDX-License-Identifier: EUPL-1.2
       <!--#include virtual="sogg_anagrafica.html" -->
       
         <p> 
-<%--           <a class="btn btn-link" href="<s:url method="pulisci"/>">annulla</a>  --%>
- 		 <s:submit name="annullaControlla" value="annulla" method="pulisci" cssClass="btn" /> 
-         <s:submit name="controllaDati" value="controlla dati" method="controllaDati" cssClass="btn" /> 
+<%--     <a class="btn btn-link" href="<s:url method="pulisci"/>">annulla</a>  --%>
+ 		 <!--task-131 <s:submit name="annullaControlla" value="annulla" method="pulisci" cssClass="btn" /> -->
+ 		 <!--task-131 <s:submit name="controllaDati" value="controlla dati" method="controllaDati" cssClass="btn" /> -->
+         <s:submit name="annullaControlla" value="annulla" action="inserisciSoggetto_pulisci" cssClass="btn" /> 
+         <s:submit name="controllaDati" value="controlla dati" action="inserisciSoggetto_controllaDati" cssClass="btn" />  
         </p>
         
          <s:hidden name="parametroRicercaControllaDati"/>	
@@ -440,7 +448,7 @@ SPDX-License-Identifier: EUPL-1.2
                 -->
 <%--                  <s:if test="isNazioniPresenti()"> --%>
                   <s:if test="null!=nazioni">
- 	                <s:select list="nazioni" id="idNazione" name="idNazione"  
+ 	                <s:select list="nazioni" id="idNazione" name="idNazione" headerKey="" headerValue=""
  	                	          listKey="codice" listValue="descrizione"/>
  	              </s:if>
  	                	           
@@ -451,7 +459,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<input id="comune" name="comune" class="lbTextSmall span3" type="text" placeholder="comune"/> Provincia: xxxx
                 -->
 			    <s:textfield id="comune" name="comune" cssClass="lbTextSmall span3"/>
-     			<s:hidden id="comuneId" name="idComune"></s:hidden>    
+     			<s:hidden id="codiceIstatComune" name="codiceIstatComune"></s:hidden>    
 			</div>
 		    </div>    
 
@@ -516,8 +524,11 @@ SPDX-License-Identifier: EUPL-1.2
                <s:include value="/jsp/include/indietro.jsp" />
              
 <%--          	   <a class="btn btn-link" href="<s:url method="pulisci"/>">annulla</a> --%>
-         	   <s:submit name="pulisciFondo" value="annulla" method="pulisci" cssClass="btn btn-link" />
-               <s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary pull-right" />
+         	   <!-- task-131 <s:submit name="pulisciFondo" value="annulla" method="pulisci" cssClass="btn btn-link" /> -->
+               <!-- task-131 <s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary pull-right" /> -->
+               <s:submit name="pulisciFondo" value="annulla" action="inserisciSoggetto_pulisci" cssClass="btn btn-link" />
+               <s:submit name="prosegui" value="prosegui" action="inserisciSoggetto_prosegui" cssClass="btn btn-primary pull-right" />
+                
           </p>
              
              

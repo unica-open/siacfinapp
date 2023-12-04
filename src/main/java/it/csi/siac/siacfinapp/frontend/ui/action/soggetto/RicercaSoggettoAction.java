@@ -8,18 +8,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import org.apache.struts2.dispatcher.Parameter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNome;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNomeResponse;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -35,7 +37,12 @@ public class RicercaSoggettoAction extends WizardRicercaSoggettoAction{
 		//carico le liste:
 		caricaListePerRicercaSoggetto();
 		//setto il titolo:
-		this.model.setTitolo("Ricerca Soggetto");
+		//task-224
+		if(AzioneConsentitaEnum.OP_CEC_SOG_leggiSogg.getNomeAzione().equals(sessionHandler.getAzione().getNome())) {
+			this.model.setTitolo("Ricerca Soggetto Cassa Economale");
+		}else {
+			this.model.setTitolo("Ricerca Soggetto");	
+		}
 	}	
 	
 	@Override
@@ -104,9 +111,11 @@ public class RicercaSoggettoAction extends WizardRicercaSoggettoAction{
 				}
 			}
 			if (model.getSesso() != null || !model.getComune().isEmpty()){
-				String[] idComune = (String[]) getRequest().get("idComune");
-				if (idComune == null || "".equalsIgnoreCase(idComune[0])){
-					
+				//task-131
+				//String[] idComune = (String[]) getRequest().get("idComune");
+				Parameter idComune = getRequest().get("idComune");
+				//if (idComune == null || "".equalsIgnoreCase(idComune[0])){
+				if (idComune == null || "".equalsIgnoreCase(idComune.getValue())){	
 					//preparo la request per il servizio findComunePerNome:
 					ListaComunePerNome comunePerNome = new ListaComunePerNome();
 					comunePerNome.setCodiceNazione(model.getIdNazione().toString());
@@ -219,8 +228,8 @@ public class RicercaSoggettoAction extends WizardRicercaSoggettoAction{
 		//Creazione della lista relativa al sesso
 		if (model.getListaSesso() == null || model.getListaSesso().size() == 0) {
 			model.setListaSesso(new ArrayList<String>());
-			model.getListaSesso().add(Constanti.SESSO_M);
-			model.getListaSesso().add(Constanti.SESSO_F);
+			model.getListaSesso().add(CostantiFin.SESSO_M);
+			model.getListaSesso().add(CostantiFin.SESSO_F);
 		}
 		//Caricamento liste dinamiche
 		caricaListeRicercaSoggetto();

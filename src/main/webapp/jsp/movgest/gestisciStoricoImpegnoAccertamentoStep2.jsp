@@ -74,17 +74,21 @@ SPDX-License-Identifier: EUPL-1.2
 				            </span>
 				            <s:textfield id="numeroSubAccertamento" cssClass="lbTextSmall span2" name="storicoImpegnoAccertamentoInModifica.subAccertamento.numero" onkeyup="return checkItNumbersOnly(event)"  maxlength="6"/>       
 			        	
-			        	<s:submit id="inserimentoStoricoSubmit" cssClass="btn btn-primary freezePagina" method="inserisciStorico" value="inserisci" name="inserisci" />
-			        	<s:submit id="aggiornamentoStoricoSubmit" cssClass="btn btn-primary freezePagina hide" method="aggiornaStorico" value="aggiorna" name="aggiorna" />
+			        	<!-- task-131 <s:submit id="inserimentoStoricoSubmit" cssClass="btn btn-primary freezePagina" method="inserisciStorico" value="inserisci" name="inserisci" /> -->
+			        	<!-- task-131 <s:submit id="aggiornamentoStoricoSubmit" cssClass="btn btn-primary freezePagina hide" method="aggiornaStorico" value="aggiorna" name="aggiorna" /> -->
+			        	<s:submit id="inserimentoStoricoSubmit" cssClass="btn btn-primary freezePagina" action="gestisciStoricoImpegnoAccertamentoStep2_inserisciStorico" value="inserisci" name="inserisci" />
+			        	<s:submit id="aggiornamentoStoricoSubmit" cssClass="btn btn-primary freezePagina hide" action="gestisciStoricoImpegnoAccertamentoStep2_aggiornaStorico" value="aggiorna" name="aggiorna" />			        	
 			        	</div>
 			        </div>
 			  	</fieldset>
 			  	
+			  	<s:set var="eliminaAction" value="%{'gestisciStoricoImpegnoAccertamentoStep2_elimina'}" />	                                
 			  	<s:include value="/jsp/include/modalElimina.jsp" />
 				  	
 				<p class="margin-medium"> 
 					<s:include value="/jsp/include/indietroSubmit.jsp" /> 
-					<s:submit cssClass="btn btn-secondary" method="annullaStep2" value="annulla" name="annulla" />
+					<!-- task-131 <s:submit cssClass="btn btn-secondary" method="annullaStep2" value="annulla" name="annulla" /> -->
+					<s:submit cssClass="btn btn-secondary" action="gestisciStoricoImpegnoAccertamentoStep2_annullaStep2" value="annulla" name="annulla" />
 				</p>      
 		    
             </div>

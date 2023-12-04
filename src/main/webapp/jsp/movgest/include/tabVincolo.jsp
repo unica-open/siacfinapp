@@ -6,7 +6,7 @@ SPDX-License-Identifier: EUPL-1.2
 <%@taglib prefix="display" uri="/display-tags"%>
 <%@taglib prefix="s" uri="/struts-tags" %>
 
-<div class="step-pane active" id="vincoliImpegno">
+<div class="step-pane active nascosto" id="vincoliImpegno">
 	<div class="accordion" >
 		<div class="accordion-group">
 			
@@ -75,6 +75,11 @@ SPDX-License-Identifier: EUPL-1.2
 											
 							<display:column title="Importo Vincolo" property="importo"     
 											decorator="it.csi.siac.siacfinapp.frontend.ui.util.displaytag.ConverterEuro"/>
+							
+							<s:if test="model.operazioneAggiorna">
+							 	<display:column title="-di cui pending per reimp. provv." property="diCuiPending"     
+									decorator="it.csi.siac.siacfinapp.frontend.ui.util.displaytag.ConverterEuro"/>
+							</s:if>
 											
 							<display:column title="" class="tab_Right">
 							    
@@ -215,11 +220,11 @@ SPDX-License-Identifier: EUPL-1.2
 								</fieldset>
 								  
 								<p> 
-									<s:submit name="annullaVincolo" id="annullaVincolo" data-toggle="collapse" data-target="#NewVincolo"  
-									          value="annulla" method="annullaValoriVincolo"  cssClass="btn btn-secondary" />
-									          
-									<s:submit name="aggiungiVincolo" id="aggiungiVincolo"  value="aggiungi vincolo" 
-											  method="aggiungiVincolo" cssClass="btn btn-primary pull-right" />
+									<!--task-131 <s:submit name="annullaVincolo" id="annullaVincolo" value="annulla" method="annullaValoriVincolo"  cssClass="btn btn-secondary" /> -->
+									<!--task-131 <s:submit name="aggiungiVincolo" id="aggiungiVincolo"  value="aggiungi vincolo" method="aggiungiVincolo" cssClass="btn btn-primary pull-right" /> -->
+									<s:submit name="annullaVincolo" id="annullaVincolo" value="annulla" action="%{#annullaValoriVincoloAction}"  cssClass="btn btn-secondary" />
+									<s:submit name="aggiungiVincolo" id="aggiungiVincolo"  value="aggiungi vincolo" action="%{#aggiungiVincoloAction}" cssClass="btn btn-primary pull-right" />
+								
 								</p>
 							</div>
 						</div>
@@ -272,9 +277,11 @@ SPDX-License-Identifier: EUPL-1.2
 		$(".linkAggiornaVincolo").click(function() {
 			var supportId = $(this).attr("id").split("_");
 			$.ajax({
-				url: '<s:url method="dettaglioAggiornaVincolo"/>',
-				type: 'POST',
-				data: 'annoAccPerAggiorna=' + supportId[1] +'&numeroAccPerAggiorna=' + supportId[2],
+				//task-131 url: '<s:url method="dettaglioAggiornaVincolo"/>', 
+				//task-202 aggiornaVincoloOperazione 
+				url: '<s:url action="%{#dettaglioAggiornaVincoloAction}"/>',				
+				type: 'POST',                                                                                                      
+				data: 'annoAccPerAggiorna=' + supportId[1] +'&numeroAccPerAggiorna=' + supportId[2] + '&aggiornaVincoloOperazione=<s:property value="%{#aggiornaVincoloOperazione}"/>',
 			    success: function(data)  {
 				    $("#divDettaglioAggiornaVincolo").html(data);
 				}
@@ -284,9 +291,10 @@ SPDX-License-Identifier: EUPL-1.2
 		$(".linkAvanzoAggiornaVincolo").click(function() {
 			var supportId = $(this).attr("id").split("_");
 			$.ajax({
-				url: '<s:url method="dettaglioAvanzoAggiornaVincolo"/>',
+				//task-131 url: '<s:url method="dettaglioAvanzoAggiornaVincolo"/>',
+				url: '<s:url action="%{#dettaglioAvanzoAggiornaVincoloAction}"/>',				
 				type: 'POST',
-				data: 'uidAvanzoVincoloPerAggiorna=' + supportId[1],
+				data: 'uidAvanzoVincoloPerAggiorna=' + supportId[1] + '&aggiornaVincoloOperazione=<s:property value="%{#aggiornaVincoloOperazione}"/>',
 			    success: function(data)  {
 				    $("#divDettaglioAvanzoAggiornaVincolo").html(data);
 				}
@@ -297,8 +305,10 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		$("#linkAggiornaImpegnoConVincolo").click(function() {
 			$.ajax({
-				url: '<s:url method="dettaglioAggiornaImportoConVincoli"/>',
+				//task-131 url: '<s:url method="dettaglioAggiornaImportoConVincoli"/>',
+				url: '<s:url action="%{#dettaglioAggiornaImportoConVincoliAction}"/>',				
 				type: 'POST',
+				data: 'aggiornaVincoloOperazione=<s:property value="%{#aggiornaVincoloOperazione}"/>',		    
 			    success: function(data)  {
 				    $("#divDettaglioAggiornaImportoConVincolo").html(data);
 				}
@@ -318,8 +328,9 @@ SPDX-License-Identifier: EUPL-1.2
 			$("#campiRicerca").attr("class", "accordion-body collapse in");
 			$("#campiRicerca").attr("style", "height: auto");
 			$.ajax({
-				url: '<s:url method="pulisciRicercaAccPerVincoli"/>',
-			    success: function(data)  {
+				//task-131 url: '<s:url method="pulisciRicercaAccPerVincoli"/>',
+				url: '<s:url action="%{#pulisciRicercaAccPerVincoliAction}"/>',				
+				success: function(data)  {
 				    $("#gestioneRisultatoRicercaAcc").html(data);
 				}
 			});
@@ -329,7 +340,8 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		$("#ricercaGuidataAccPerVincoli").click(function() {
 			$.ajax({
-				url: '<s:url method="ricercaAccertamentoPerVincoli"/>',
+				//task-131 url: '<s:url method="ricercaAccertamentoPerVincoli"/>',
+				url: '<s:url action="%{#ricercaAccertamentoPerVincoliAction}"/>',				
 				type: 'POST',
 				data: $(".parametroRicercaAccertamento").serialize(),
 				success: function(data)  {
@@ -346,8 +358,8 @@ SPDX-License-Identifier: EUPL-1.2
 	    $("#listaAvanzovincoloId").change(function() {
 	    	refreshImportoResiduoAvanzo();
 		});
-		
-		
+	    
+		$('#vincoliImpegno').removeClass('nascosto');
 	}); 
 	
 	
@@ -371,7 +383,8 @@ SPDX-License-Identifier: EUPL-1.2
 	function refreshImportoResiduoAvanzo(){
 		var idAvanzo = $("#listaAvanzovincoloId").val();
 		$.ajax({
-			url: '<s:url method="dettaglioImportoResiduoAvanzoSelezionato"></s:url>',
+			//task-131 url: '<s:url method="dettaglioImportoResiduoAvanzoSelezionato"></s:url>',
+			url: '<s:url action="%{#dettaglioImportoResiduoAvanzoSelezionatoAction}"/>',	
 			type: "GET",
 			data: $(".hiddenGestoreToggle").serialize() + "&idAvanzo=" + idAvanzo, 
 		    success: function(data)  {
@@ -421,7 +434,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-		<s:submit id="submitBtnEliminaVincolo" name="btnEliminaVinc" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaVincolo"/>
+		<!--task-131 <s:submit id="submitBtnEliminaVincolo" name="btnEliminaVinc" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaVincolo"/> -->
+		<s:submit id="submitBtnEliminaVincolo" name="btnEliminaVinc" value="si, prosegui" cssClass="btn btn-primary"  action="%{#eliminaVincoloAction}"/>
 	</div>
 </div>  
 
@@ -436,7 +450,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-		<s:submit id="submitBtnEliminaVincolo" name="btnEliminaVinc" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaAvanzoVincolo"/>
+		<!-- task-131 <s:submit id="submitBtnEliminaVincolo" name="btnEliminaVinc" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaAvanzoVincolo"/> -->
+		<s:submit id="submitBtnEliminaVincolo" name="btnEliminaVinc" value="si, prosegui" cssClass="btn btn-primary"  action="%{#eliminaAvanzoVincoloAction}"/>
 	</div>
 </div> 
 

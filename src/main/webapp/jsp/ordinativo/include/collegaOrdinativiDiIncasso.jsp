@@ -118,10 +118,10 @@ SPDX-License-Identifier: EUPL-1.2
 								</fieldset>
 								  
 								<p> 
-									<s:submit name="aggiungiOrdinativoDaCollegare" id="aggiungiOrdinativoDaCollegare"  value="collega" 
-											  method="aggiungiOrdinativoDaCollegare" cssClass="btn btn-primary pull-right" />
+									<!-- task-131 <s:submit name="aggiungiOrdinativoDaCollegare" id="aggiungiOrdinativoDaCollegare"  value="collega"  method="aggiungiOrdinativoDaCollegare" cssClass="btn btn-primary pull-right" /> -->
+									<s:submit name="aggiungiOrdinativoDaCollegare" id="aggiungiOrdinativoDaCollegare"  value="collega"  action="%{#aggiungiOrdinativoDaCollegareAction}" cssClass="btn btn-primary pull-right" />
 											  
-									  <a id="linkMsgAggiungiQuietanzato" href="#msgAggiungiQuietanzato" style="display: none;" data-toggle="modal"></a>
+									<a id="linkMsgAggiungiQuietanzato" href="#msgAggiungiQuietanzato" style="display: none;" data-toggle="modal"></a>
 								</p>
 								
 							</div>
@@ -157,8 +157,8 @@ SPDX-License-Identifier: EUPL-1.2
 	      </div>
 	      <div class="modal-footer">
 	        <button class="btn" data-dismiss="modal" aria-hidden="true">no</button>
-	        <s:submit id="aggiungiConfermaId" cssClass="btn btn-primary pull-right freezePagina"
-       		 method="confermaAggiungiOrdinativoDaCollegare" value="si" name="si" data-dismiss="modal" />
+	        <!--task-131 <s:submit id="aggiungiConfermaId" cssClass="btn btn-primary pull-right freezePagina" method="confermaAggiungiOrdinativoDaCollegare" value="si" name="si" />-->
+	        <s:submit id="aggiungiConfermaId" cssClass="btn btn-primary pull-right freezePagina" action="%{#confermaAggiungiOrdinativoDaCollegareAction}" value="si" name="si" />
 	      </div>
 	</div>
 	
@@ -224,7 +224,9 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-		<s:submit id="submitBtnEliminaOrdinativoCollegato" name="btnEliminaOrdinativoCollegato" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaOrdinativoCollegato"/>
+		<!-- task-131 <s:submit id="submitBtnEliminaOrdinativoCollegato" name="btnEliminaOrdinativoCollegato" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaOrdinativoCollegato"/> -->
+		<s:submit id="submitBtnEliminaOrdinativoCollegato" name="btnEliminaOrdinativoCollegato" value="si, prosegui" cssClass="btn btn-primary"  action="%{#eliminaOrdinativoCollegatoAction}"/>
+		
 	</div>
 </div>  
 <!--/modale elimina -->

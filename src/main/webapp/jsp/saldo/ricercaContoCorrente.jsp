@@ -21,78 +21,65 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12 contentPage">
-			
-       			 <s:form  method="post" cssClass="form-horizontal" id="form">
-       			 
-			<s:include value="/jsp/include/actionMessagesErrors.jsp" />
-					
+				 <s:form  method="post" cssClass="form-horizontal" id="form">
+       				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 					
 					<h3>Ricerca conto corrente</h3>
 
-
-					
-					
 					<div class="step-content">
-			<div class="step-pane active" id="step1">
+						<div class="step-pane active" id="step1">
+							<fieldset class="form-horizontal margin-large">
+
+							<div class="control-group">
+								<label class="control-label" for="anno">Anno *</label>
 			
-			<fieldset class="form-horizontal margin-large">
+								<div class="controls">
+								<s:select id="anno" list="elencoAnniBilancio" name="criteriRicerca.anno" cssClass="span1"  />
+								</div>
+							</div>
 
+							<div class="control-group">
+								<label for="conto" class="control-label">Conto corrente *</label>
+								<div class="controls">
+									<s:hidden id="codiceConto" name="criteriRicerca.contoCorrente" />
+									<s:select id="conto" list="elencoContiCorrenti" name="criteriRicerca.idClassifConto" cssClass="span3"
+										headerKey="" 
+										headerValue="" 
+										listKey="uid" 
+										disabled="%{elencoContiCorrenti.empty}"
+										listValue="%{codice + ' - ' + descrizione}" />
+								</div>
+							</div>
 
-
-				<div class="control-group">
-					<label class="control-label" for="anno">Anno *</label>
-
-					<div class="controls">
-					<s:select id="anno" list="elencoAnniBilancio" name="criteriRicerca.anno" cssClass="span1"  />
+							<div class="control-group">
+								<label class="control-label" for="">Data</label>
+								<div class="controls">
+									<span class="al">
+										<label for="dataInizio" class="radio inline">Da</label>
+									</span>
+									<input type="text" name="criteriRicerca.dataInizioStr" value="" id="dataInizio" 
+										class="lbTextSmall span2 datepicker" placeholder="gg/mm/aaaa" tabindex="-1">
+									<span class="al">
+										<label for="dataFine" class="radio inline">A</label>
+									</span>
+									<input type="text" name="criteriRicerca.dataFineStr" value="" id="dataFine" 
+										class="lbTextSmall span2 datepicker" placeholder="gg/mm/aaaa" tabindex="-1">
+								</div>
+							</div>
+							</fieldset>  
+						</div>
 					</div>
-				</div>
-
-
-				<div class="control-group">
-					<label for="conto" class="control-label">Conto corrente *</label>
-					<div class="controls">
-						<s:hidden id="codiceConto" name="criteriRicerca.contoCorrente" />
-						<s:select id="conto" list="elencoContiCorrenti" name="criteriRicerca.idClassifConto" cssClass="span3"
-							headerKey="" 
-							headerValue="" 
-							listKey="uid" 
-							disabled="%{elencoContiCorrenti.empty}"
-							listValue="%{codice + ' - ' + descrizione}" />
-					</div>
-				</div>
-
-				<div class="control-group">
-					<label class="control-label" for="">Data</label>
-					<div class="controls">
-						<span class="al">
-							<label for="dataInizio" class="radio inline">Da</label>
-						</span>
-						<input type="text" name="criteriRicerca.dataInizioStr" value="" id="dataInizio" 
-							class="lbTextSmall span2 datepicker" placeholder="gg/mm/aaaa" tabindex="-1">
-						<span class="al">
-							<label for="dataFine" class="radio inline">A</label>
-						</span>
-						<input type="text" name="criteriRicerca.dataFineStr" value="" id="dataFine" 
-							class="lbTextSmall span2 datepicker" placeholder="gg/mm/aaaa" tabindex="-1">
-					</div>
-				</div>
-				
-			</fieldset>  
-
-		</div>
-		</div>
-			
-          <p class="margin-medium">
-			  <a class="btn btn-secondary" href="<s:property value="#urlCruscotto" />">indietro</a>   
-			  <a class="btn btn-secondary" href="ricercaContoCorrente.do">annulla</a>
-			  
- 			  <s:submit cssClass="btn btn-primary pull-right" method="cerca" value="cerca" />  
- 			  <s:submit id="reload" cssClass="nascosto" method="execute" value="" />  
-
-		  </p>
-		  
-		  
-				</s:form>
+					<p class="margin-medium">
+					  <a class="btn btn-secondary" href="<s:property value="#urlCruscotto" />">indietro</a>   
+					  <!--  task-131 <a class="btn btn-secondary" href="ricercaContoCorrente.do">annulla</a> -->
+					  <a class="btn btn-secondary" href="ricercaContoCorrente">annulla</a> 
+					  
+		 			  <!--  task-131 <s:submit cssClass="btn btn-primary pull-right" method="cerca" value="cerca" />  -->
+		 			  <!--  task-131 <s:submit id="reload" cssClass="nascosto" method="execute" value="" /> -->  
+					  <s:submit cssClass="btn btn-primary pull-right" action="ricercaContoCorrente_cerca" value="cerca" />
+					  <s:submit id="reload" cssClass="nascosto" action="ricercaContoCorrente_execute" value="" />		  	
+		  			</p>
+		  		</s:form>
 			</div>
 		</div>
 	</div>

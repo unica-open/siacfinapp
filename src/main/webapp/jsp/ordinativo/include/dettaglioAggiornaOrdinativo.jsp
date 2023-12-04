@@ -10,6 +10,15 @@ SPDX-License-Identifier: EUPL-1.2
 	<h4>Quota Numero: <s:property value="gestioneOrdinativoStep2Model.dettaglioQuotaOrdinativoModel.numeroQuota"/></h4>		 
 </div>
 
+
+<s:if test="oggettoDaPopolarePagamento()">
+	<s:set var="aggiornaQuotaOrdinativoAction" value="%{'gestioneOrdinativoPagamentoStep2_aggiornaQuotaOrdinativo'}" />	   		           								
+</s:if>
+<s:else>
+	<s:set var="aggiornaQuotaOrdinativoAction" value="%{'gestioneOrdinativoIncassoStep2_aggiornaQuotaOrdinativo'}" />	   		           								
+</s:else>
+
+
 <div class="modal-body">
 	<fieldset class="form-horizontal">
 		<div class="control-group">
@@ -81,7 +90,9 @@ SPDX-License-Identifier: EUPL-1.2
        
 </div>
 <div class="modal-footer">
-	<s:submit id="submitBtnAggOrdinativo" name="btnAggOrdinativo" value="conferma" cssClass="btn btn-primary" method="aggiornaQuotaOrdinativo"/>
+	<!-- task-131 <s:submit id="submitBtnAggOrdinativo" name="btnAggOrdinativo" value="conferma" cssClass="btn btn-primary" method="aggiornaQuotaOrdinativo"/> -->
+	<s:submit id="submitBtnAggOrdinativo" name="btnAggOrdinativo" value="conferma" cssClass="btn btn-primary" action="%{#aggiornaQuotaOrdinativoAction}"/>
+
 </div>
 
 <script type="text/javascript" src="${jspathexternal}datepicker/bootstrap-datepicker.js"></script>

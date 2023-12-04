@@ -7,15 +7,15 @@ package it.csi.siac.siacfinapp.frontend.ui.action.ordinativo;
 import java.util.List;
 
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.model.liquidazione.Liquidazione;
 import it.csi.siac.siacfinser.model.ordinativo.Ordinativo.StatoOperativoOrdinativo;
 import it.csi.siac.siacfinser.model.ordinativo.SubOrdinativoPagamento;
@@ -195,9 +195,11 @@ public class GestioneOrdinativoPagamentoStep2Action extends ActionKeyGestioneOrd
 
         boolean presentiQuote = false;
         if(model.isSonoInAggiornamento()){
-        	if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.TRASMESSO) && isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan)){
+        	if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.TRASMESSO) && 
+        			isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan)){
         		presentiQuote= false;
-        	}else if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.INSERITO) && isAzioneAbilitata(CodiciOperazioni.OP_SPE_aggMan)){
+        	}else if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.INSERITO) && 
+        			isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_aggMan)){
 				if(model.getGestioneOrdinativoStep2Model().getListaSubOrdinativiPagamenti()!=null && model.getGestioneOrdinativoStep2Model().getListaSubOrdinativiPagamenti().size()>0 && model.getGestioneOrdinativoStep1Model().getOrdinativo().isFlagCopertura()){
 					presentiQuote = true;
 				}
@@ -222,7 +224,7 @@ public class GestioneOrdinativoPagamentoStep2Action extends ActionKeyGestioneOrd
 	public boolean abilitaNuovaLiquidazione(){
 		// se e' presente l'operazione OP_SPE_insLiqMan 
 		// allora puo inserire nuova liquidazione
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_insLiqMan);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_insLiqMan);
 	}
 	
 	
@@ -231,11 +233,11 @@ public class GestioneOrdinativoPagamentoStep2Action extends ActionKeyGestioneOrd
     	String eUnImpegno = "impegno";
     	
     	if(liquidazione.getSubImpegno()!= null){
-	    	if(!FinStringUtils.isEmpty(liquidazione.getSubImpegno().getNumero().toString())){
+	    	if(!FinStringUtils.isEmpty(liquidazione.getSubImpegno().getNumeroBigDecimal().toString())){
 	    		eUnImpegno= "subImpegno";
 	    	}
     	}else if(liquidazione.getImpegno().getElencoSubImpegni()!= null && liquidazione.getImpegno().getElencoSubImpegni().get(0)!= null){
-    		if(!FinStringUtils.isEmpty(liquidazione.getImpegno().getElencoSubImpegni().get(0).getNumero().toString())){
+    		if(!FinStringUtils.isEmpty(liquidazione.getImpegno().getElencoSubImpegni().get(0).getNumeroBigDecimal().toString())){
     			eUnImpegno= "elencoSub";
     		}
     	}

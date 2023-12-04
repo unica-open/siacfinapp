@@ -333,4 +333,5 @@ SPDX-License-Identifier: EUPL-1.2
 	
 
 	</script>
-	
+	<!-- SIAC-7349 -->
+<script type="text/javascript" src="${jspathexternal}jquery.bs.overlay.js"></script>

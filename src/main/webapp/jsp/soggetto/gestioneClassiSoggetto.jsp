@@ -35,8 +35,14 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="row-fluid">
 <div class="span12 ">
 
-<s:form id="gestioneClassiSoggetto" action="gestioneClassiSoggetto.do" method="post" focusElement="cerca" >
-
+<%-- SIAC-7952 rimuovo .do dalla action --%>
+<s:form id="gestioneClassiSoggetto" action="gestioneClassiSoggetto" method="post" focusElement="cerca" >
+	<!--  per soggetto -->
+	<s:set var="ricercaSoggettoAction" value="%{'gestioneClassiSoggetto_ricercaSoggetto'}"/> 
+	<s:set var="selezionaSoggettoAction" value ="%{'gestioneClassiSoggetto_selezionaSoggetto'}"/>
+	<s:set var="pulisciRicercaSoggettoAction" value="%{'gestioneClassiSoggetto_pulisciRicercaSoggetto'}" />	          
+	<s:set var="listaClasseSoggettoChangedAction" value="%{'gestioneClassiSoggetto_listaClasseSoggettoChanged'}" />	
+										
 
   <!--modale soggetto -->
 	<s:include value="/jsp/include/modalSoggetto.jsp"/>	
@@ -102,7 +108,8 @@ SPDX-License-Identifier: EUPL-1.2
 		<br/>
 		<p>
 		   <s:a cssClass="btn btn-secondary" href="${redirect.cruscotto}">indietro</s:a>
-		   <s:submit name="gestisciSelezionata" id="gestisciSelezionata" value="gestisci selezionata" method="gestisciSelezionata" cssClass="btn btn-primary pull-right" />  
+		   <!-- task-131 <s:submit name="gestisciSelezionata" id="gestisciSelezionata" value="gestisci selezionata" method="gestisciSelezionata" cssClass="btn btn-primary pull-right" /> -->
+		   <s:submit name="gestisciSelezionata" id="gestisciSelezionata" value="gestisci selezionata" action="gestioneClassiSoggetto_gestisciSelezionata" cssClass="btn btn-primary pull-right" />  
 		</p>
 	 
 	 
@@ -126,7 +133,7 @@ SPDX-License-Identifier: EUPL-1.2
 							   
 							   <h3>Aggiungere un soggetto alla classe</h3>
 							   <p>Da qui puoi aggiungere soggetti dalla classe:</p>  
-								
+													
 								<div id="refreshHeaderSoggetto">
 					            	<s:include value="/jsp/soggetto/include/headerSoggettoPerGestioneClassi.jsp"/>
 					            </div>
@@ -135,7 +142,8 @@ SPDX-License-Identifier: EUPL-1.2
 							 <div class="Border_line"></div> 
 							 
 							 <p>
-						  		 <s:submit name="aggiungiSoggetto" id="aggiungiSoggetto" value="aggiungi soggetto" method="aggiungiSoggettoAllaClasse" cssClass="btn btn-primary pull-left" />  
+						  		 <!-- task-131 <s:submit name="aggiungiSoggetto" id="aggiungiSoggetto" value="aggiungi soggetto" method="aggiungiSoggettoAllaClasse" cssClass="btn btn-primary pull-left" /> -->  
+								 <s:submit name="aggiungiSoggetto" id="aggiungiSoggetto" value="aggiungi soggetto" action="gestioneClassiSoggetto_aggiungiSoggettoAllaClasse" cssClass="btn btn-primary pull-left" />
 							 </p>
 							 
 							 <br/>

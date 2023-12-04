@@ -208,7 +208,7 @@ public class InserisciModificaMovimentoSpesaAccStep2Action extends ActionKeyAggi
 				int i = 0;
 				for(Accertamento app : accList){
 					if(i != 0){
-						addPersistentActionMessage("FIN_INF_0070, Movimento inserito ( movimento=Accertamento, anno = " + app.getAnnoMovimento() +  ", numero= "+ app.getNumero() +" )");
+						addPersistentActionMessage("FIN_INF_0070, Movimento inserito ( movimento=Accertamento, anno = " + app.getAnnoMovimento() +  ", numero= "+ app.getNumeroBigDecimal() +" )");
 					}
 					i++;
 				}
@@ -253,7 +253,7 @@ public class InserisciModificaMovimentoSpesaAccStep2Action extends ActionKeyAggi
 		
 			model.getStep1Model().setRiaccertato("si");
 			
-			AggiornaAccertamentoResponse responseModificaMovimentoEntrata = movimentoGestionService.aggiornaAccertamento(convertiModelPerChiamataServizioAggiornaAccertamenti(true));
+			AggiornaAccertamentoResponse responseModificaMovimentoEntrata = movimentoGestioneFinService.aggiornaAccertamento(convertiModelPerChiamataServizioAggiornaAccertamenti(true));
 			
 			if(responseModificaMovimentoEntrata.isFallimento() || (responseModificaMovimentoEntrata.getErrori() != null && responseModificaMovimentoEntrata.getErrori().size() > 0)){
 				debug(methodName, "Errore nella risposta del servizio");
@@ -374,7 +374,7 @@ public class InserisciModificaMovimentoSpesaAccStep2Action extends ActionKeyAggi
 	//Funzione per il controllo della disponibilita' del capitolo sugli importi degli accertamenti pluriennali
 	private boolean controlloImportiAccertamentiPlur(int annoAccertamentoPlur, BigDecimal importoPlur){
 		boolean erroreImporti = false;
-		Integer annoEsercio = Integer.valueOf(sessionHandler.getAnnoEsercizio());
+		Integer annoEsercio = sessionHandler.getAnnoBilancio();
 		Integer annoAccertamentoPlurInt=Integer.valueOf(annoAccertamentoPlur);
 		
 	    if (annoAccertamentoPlurInt != null && annoAccertamentoPlurInt.compareTo(annoEsercio + 2) <= 0) {

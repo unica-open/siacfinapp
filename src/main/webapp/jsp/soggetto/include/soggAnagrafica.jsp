@@ -186,6 +186,12 @@ SPDX-License-Identifier: EUPL-1.2
 			  </div>
           </div>
 
+			<div class="control-group">
+			<label class="control-label" for=IstitutoDiCredito id="istitutoDiCred">Istituto di credito</label>
+			<div class="controls">
+                 <s:checkbox id="flagIstitutoDiCredito"  name="dettaglioSoggetto.flagIstitutoDiCredito" /> 
+			</div>
+		</div> 
     </div>
            
            

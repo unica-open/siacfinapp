@@ -63,13 +63,15 @@ SPDX-License-Identifier: EUPL-1.2
 	<script type="text/javascript">	
 		$('.idModCreditore').change(function() {
 	        $.ajax({
-				url: '<s:url method="resede"></s:url>',
+	        	//task-131 url: '<s:url method="resede"></s:url>',
+				url: '<s:url action="%{#resedeAction}"/>',
 				type: "POST",
 				data: $(".idModCreditore").serialize(), 
 			    success: function(data)  {
 			    	$("#refreshSediSecondarie").html(data);
 			        $.ajax({
-						url: '<s:url method="caricaTitoloModPag"></s:url>',
+						//task-131 url: '<s:url method="caricaTitoloModPag"></s:url>',
+						url: '<s:url action="%{#caricaTitoloModPagAction}"/>',
 						type: "POST",
 						data: $(".idModCreditore").serialize(), 
 					    success: function(data)  {

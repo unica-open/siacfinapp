@@ -5,9 +5,12 @@
 package it.csi.siac.siacfinapp.frontend.ui.action.ajax;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,20 +20,39 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import it.csi.siac.siacbilser.business.utility.capitolo.ComponenteImportiCapitoloPerAnnoHelper;
+import it.csi.siac.siacbilser.frontend.webservice.CapitoloUscitaGestioneService;
 import it.csi.siac.siacbilser.frontend.webservice.ClassificatoreBilService;
+import it.csi.siac.siacbilser.frontend.webservice.ComponenteImportiCapitoloService;
+import it.csi.siac.siacbilser.frontend.webservice.TipoComponenteImportiCapitoloService;
 import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiTreePianoDeiConti;
 import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiTreePianoDeiContiResponse;
 import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiTreeSiope;
 import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiTreeSiopeResponse;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaComponenteImportiCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaComponenteImportiCapitoloResponse;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaCapitoloUscitaGestione;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaCapitoloUscitaGestioneResponse;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipoComponenteImportiCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipoComponenteImportiCapitoloResponse;
+import it.csi.siac.siacbilser.model.CapitoloUscitaPrevisione;
 import it.csi.siac.siacbilser.model.ElementoPianoDeiConti;
+import it.csi.siac.siacbilser.model.ImpegnabileComponenteImportiCapitolo;
 import it.csi.siac.siacbilser.model.SiopeEntrata;
 import it.csi.siac.siacbilser.model.SiopeSpesa;
+import it.csi.siac.siacbilser.model.TipoComponenteImportiCapitolo;
+import it.csi.siac.siacbilser.model.TipoDettaglioComponenteImportiCapitolo;
+import it.csi.siac.siacbilser.model.ric.RicercaSinteticaCapitoloUGest;
+import it.csi.siac.siacbilser.model.wrapper.ImportiCapitoloPerComponente;
 import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabile;
 import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabileResponse;
+import it.csi.siac.siaccorser.model.paginazione.ParametriPaginazione;
 import it.csi.siac.siacfinapp.frontend.ui.action.GenericFinAction;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.ajax.AjaxModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.GestoreDatiAlberoModel;
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
+import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinser.frontend.webservice.ClassificatoreFinService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComuni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComuniResponse;
@@ -58,12 +80,27 @@ public class AjaxAction extends GenericFinAction<AjaxModel>{
 	private boolean ricaricaAlberoPianoDeiConti = true;
 	
 	private String struttAmmOriginale;
+	private String struttAmmOriginaleCompetente;
 	
 	private boolean ricaricaStrutturaAmministrativa = true;
 	private boolean ricaricaSiopeSpesa = true;
 			
 	private boolean daRicerca = false;
 	
+	//SIAC-7349
+	private String radioCodiceCapitolo;
+	private Integer numCapitolo;
+	private Integer anno;
+	private Integer articolo;
+	private String azione;
+	
+	//SIAC-7349
+	@Autowired protected ComponenteImportiCapitoloService componenteImportiCapitoloService;
+	@Autowired protected TipoComponenteImportiCapitoloService tipoComponenteImportiCapitoloService;
+	
+	@Autowired
+	protected transient CapitoloUscitaGestioneService capitoloUscitaGestioneService;
+
 	@Autowired
 	protected transient ClassificatoreBilService classificatoreBilService;
 	@Autowired
@@ -200,7 +237,7 @@ public class AjaxAction extends GenericFinAction<AjaxModel>{
 	public String getPianoDeiContiCompleto() throws Exception {
 		if (ricaricaAlberoPianoDeiConti) {
 			LeggiTreePianoDeiConti lpdc = new LeggiTreePianoDeiConti();
-			lpdc.setAnno(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			lpdc.setAnno(sessionHandler.getAnnoBilancio());
 			lpdc.setIdEnteProprietario(sessionHandler.getEnte().getUid());
 			lpdc.setRichiedente(sessionHandler.getRichiedente());
 			//Inserita if per ricerca PDC su modalCapitolo troppo lenta
@@ -285,7 +322,55 @@ public class AjaxAction extends GenericFinAction<AjaxModel>{
 		
 		return SUCCESS;
 	}
+
 	
+	//SIAC-7477
+	/**
+	 * utilizzato per popolare l'albero della struttura amministrativa
+	 * @return
+	 * @throws Exception
+	 */
+	public String getStrutturaAmministrativaCompetente() throws Exception {
+		if(ricaricaStrutturaAmministrativa){
+			
+			List<GestoreDatiAlberoModel> listaStruttureAmministrativeTmpSupport = new ArrayList<GestoreDatiAlberoModel>();
+			
+			// JIRA - 1648 
+			// l'albero della struttura va sempre visualizzato tutto
+			LeggiStrutturaAmminstrativoContabile lsa = buildStrutturaAmminstrativoContabileRequest();
+			LeggiStrutturaAmminstrativoContabileResponse responseLsa = getStrutturaAmministrativaCached(lsa);
+			model.setListaStrutturaAmministrativeCompetente(new ArrayList<GestoreDatiAlberoModel>());
+			listaStruttureAmministrativeTmpSupport = creaAlberoStrutturaAmministrativa(responseLsa.getListaStrutturaAmmContabile(), false);
+			
+		    //PUO' essere indicato un valore iniziale checkato:
+			if(!StringUtils.isEmpty(struttAmmOriginaleCompetente)){
+				Integer uidIniziale = new Integer(struttAmmOriginaleCompetente);
+				for(GestoreDatiAlberoModel it: listaStruttureAmministrativeTmpSupport){
+					if(it!=null && it.getUid()==uidIniziale.intValue()){
+						it.setChecked(true);
+						break;
+					}
+				}
+			}
+			
+			model.setListaStrutturaAmministrativeCompetente(listaStruttureAmministrativeTmpSupport);
+		}
+		// ordinamento della struttura amministrativa
+		if(model.getListaStrutturaAmministrativeCompetente()!=null && model.getListaStrutturaAmministrativeCompetente().size()>0){
+			sessionHandler.setParametro(FinSessionParameter.ELENCO_STRUTTURA_AMMINISTRATIVA_COMPETENTE, model.getListaStrutturaAmministrativeCompetente());
+			Collections.sort(model.getListaStrutturaAmministrativeCompetente(), new Comparator<GestoreDatiAlberoModel>() {
+
+				@Override
+				public int compare(GestoreDatiAlberoModel o1, GestoreDatiAlberoModel o2) {
+					return o1.getCodice().compareTo(o2.getCodice());
+				}
+				
+			});
+		}
+		
+		return SUCCESS;
+	}
+
 	/**
 	 * utlizzato per generare chiavi univoche da mettere in cache l'albero siope
 	 * @return
@@ -304,7 +389,7 @@ public class AjaxAction extends GenericFinAction<AjaxModel>{
 	private LeggiTreeSiope buildSiopeRequest(){
 				LeggiTreeSiope leggiTreeSiope = new LeggiTreeSiope();
 				leggiTreeSiope.setRichiedente(sessionHandler.getRichiedente());
-				leggiTreeSiope.setAnno(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+				leggiTreeSiope.setAnno(sessionHandler.getAnnoBilancio());
 				leggiTreeSiope.setIdEnteProprietario(sessionHandler.getEnte().getUid());
 				leggiTreeSiope.setIdCodificaPadre(Integer.valueOf(idPianoDeiConti));
 		return leggiTreeSiope;
@@ -316,10 +401,10 @@ public class AjaxAction extends GenericFinAction<AjaxModel>{
 	 */
 	private LeggiTreePianoDeiConti buildPianoDeiContiRequest(){
 		LeggiTreePianoDeiConti lpdc = new LeggiTreePianoDeiConti();
-		lpdc.setAnno(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		lpdc.setAnno(sessionHandler.getAnnoBilancio());
 		lpdc.setIdEnteProprietario(sessionHandler.getEnte().getUid());
 		lpdc.setRichiedente(sessionHandler.getRichiedente());
-		if (idMacroaggregato != null){
+		if (idMacroaggregato != null && !StringUtils.isBlank(idMacroaggregato)){
 			lpdc.setIdCodificaPadre(Integer.valueOf(idMacroaggregato));
 		}
 		return lpdc;
@@ -561,6 +646,297 @@ public class AjaxAction extends GenericFinAction<AjaxModel>{
 		model.getListaSiopeSpesa().add(supportElementoSiopeEntrata);
 	}
 	
+	
+	
+	/**
+	 * SIAC 7349
+	 * Servizio per il recupero delle componenti impegnabili
+	 * chiamato all'interno della modale
+	 * @return
+	 */
+	public String getComponentiBilancioCapitolo() {
+		List<ImportiCapitoloPerComponente> resultList = new ArrayList<ImportiCapitoloPerComponente>();
+		int uidCapitoloSelezionato=0;
+		if(!isEmpty(getRadioCodiceCapitolo())){
+			uidCapitoloSelezionato = Integer.valueOf(getRadioCodiceCapitolo()).intValue();
+			boolean abilitaControlloStanziamento = false;//SOLO SE DA INSERISCI
+			if(AZIONE_INSERISCI.equals(getAzione())){
+				abilitaControlloStanziamento = true;
+			}
+			loadComponentiBilancioCapitolo( uidCapitoloSelezionato, resultList,abilitaControlloStanziamento);
+		}
+		/*
+		 * COMPOSIZIONE DEL FILTRO
+		 * Per la selezione delle componenti
+		 */
+		
+		List<ImportiCapitoloPerComponente> resultListCompleto = new ArrayList<ImportiCapitoloPerComponente>();
+		RicercaTipoComponenteImportiCapitolo r = new RicercaTipoComponenteImportiCapitolo();
+		r.setDataOra(new Date());
+		r.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+		r.setRichiedente(sessionHandler.getRichiedente());
+		RicercaTipoComponenteImportiCapitoloResponse respo = new RicercaTipoComponenteImportiCapitoloResponse();
+		if(AZIONE_RICERCA.equals(getAzione())){
+			respo = tipoComponenteImportiCapitoloService.ricercaTipoComponenteImportiCapitoloTotali(r);
+		}
+		//TODO
+		if(AZIONE_INSERISCI.equals(getAzione())){
+			respo = tipoComponenteImportiCapitoloService.ricercaTipoComponenteImportiCapitoloImpegnabili(r);
+		}
+		if(respo!= null && respo.getListaTipoComponenteImportiCapitolo()!= null && !respo.getListaTipoComponenteImportiCapitolo().isEmpty()){
+			for(TipoComponenteImportiCapitolo tcic : respo.getListaTipoComponenteImportiCapitolo()){
+				ImportiCapitoloPerComponente  icpcWrapper = new ImportiCapitoloPerComponente();
+				icpcWrapper.setUidComponente(tcic.getUid());
+				icpcWrapper.setTipoComponenteImportiCapitolo(tcic);
+				resultListCompleto.add(icpcWrapper);
+			}
+			
+		}
+		
+		model.setListaComponentiBilancioCompleta(resultListCompleto);
+		
+		model.setListaComponentiBilancio(resultList);
+		return SUCCESS;
+	}
+	
+	
+	
+	
+	/*
+	 * VECCHIA IMPLEMENTAZIONE CON
+	 * DIPENDENZA DAL CAPITOLO
+	 * 
+	 */
+//	public String getComponentiBilancioDaCapitolo() {
+//		List<ImportiCapitoloPerComponente> resultList = new ArrayList<ImportiCapitoloPerComponente>();
+//		int maxElementi = 5;
+//		if(getNumCapitolo()!= null && getAnno()!= null && getArticolo()!= null){
+//			CapitoloImpegnoModel capitoloDiRiferimento = new CapitoloImpegnoModel();
+//			capitoloDiRiferimento.setArticolo(getArticolo());
+//			capitoloDiRiferimento.setAnno(getAnno());
+//			capitoloDiRiferimento.setNumCapitolo(getNumCapitolo());
+//			RicercaSinteticaCapitoloUscitaGestione req = new RicercaSinteticaCapitoloUscitaGestione();
+//			RicercaSinteticaCapitoloUGest ru = new RicercaSinteticaCapitoloUGest();
+//			ru.setAnnoEsercizio(capitoloDiRiferimento.getAnno());
+//			ru.setNumeroCapitolo(capitoloDiRiferimento.getNumCapitolo());
+//			ru.setNumeroArticolo(capitoloDiRiferimento.getArticolo());
+//			ParametriPaginazione parametriPaginazione = new ParametriPaginazione();
+//			parametriPaginazione.setElementiPerPagina(maxElementi);
+//			parametriPaginazione.setNumeroPagina(0);
+//			req.setParametriPaginazione(parametriPaginazione);
+//			req.setEnte(sessionHandler.getEnte());
+//			req.setRichiedente(sessionHandler.getRichiedente());
+//			req.setRicercaSinteticaCapitoloUGest(ru);
+//			//invoco il servizio ricercaSinteticaCapitoloUscitaGestione:
+//			RicercaSinteticaCapitoloUscitaGestioneResponse res = capitoloUscitaGestioneService.ricercaSinteticaCapitoloUscitaGestione(req);
+//			if(res!= null && res.getCapitoli()!= null && !res.getCapitoli().isEmpty()){
+//				int uidCaptolo = res.getCapitoli().get(0).getUid();
+//				model.setUidCapitolo(uidCaptolo);
+//				boolean abilitaControlloStanziamento = false;//SOLO SE DA INSERISCI
+//				if(AZIONE_INSERISCI.equals(getAzione())){
+//					abilitaControlloStanziamento = true;
+//				}
+//				loadComponentiBilancioCapitolo( uidCaptolo, resultList,abilitaControlloStanziamento);
+//			}
+//		}		
+//		
+//		model.setListaComponentiBilancio(resultList);
+//		
+//		return SUCCESS;
+//	}
+
+	
+	private void loadComponentiBilancioCapitolo(int uidCapitoloSelezionato, 
+			List<ImportiCapitoloPerComponente> resultList, boolean abilitaControlloImporto){
+		RicercaComponenteImportiCapitolo request = new RicercaComponenteImportiCapitolo();
+		request.setDataOra(new Date());
+		request.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+		request.setRichiedente(sessionHandler.getRichiedente());
+		request.setCapitolo(new CapitoloUscitaPrevisione());
+		request.getCapitolo().setUid(uidCapitoloSelezionato);
+		request.setAbilitaCalcoloDisponibilita(true);
+		RicercaComponenteImportiCapitoloResponse resComponenti = componenteImportiCapitoloService.ricercaComponenteImportiCapitolo(request);
+		if(resComponenti!= null){
+			List<ImportiCapitoloPerComponente> importiComponentiCapitolo  = ComponenteImportiCapitoloPerAnnoHelper.toComponentiImportiCapitoloPerAnno(resComponenti.getListaImportiCapitolo());
+			
+			
+			//SIAC-7349 - GS - Start - 28/07/2020 - Nuovo metodo per mostrare componenti nel triennio senza stanziamento
+			if(resComponenti.getListaImportiCapitoloTriennioNoStanz() != null &&  !resComponenti.getListaImportiCapitoloTriennioNoStanz().isEmpty()) {
+				Integer annoEsercizio = sessionHandler.getAnnoBilancio();
+				importiComponentiCapitolo = ComponenteImportiCapitoloPerAnnoHelper.toComponentiImportiCapitoloPerTriennioNoStanz(importiComponentiCapitolo, resComponenti.getListaImportiCapitoloTriennioNoStanz(), annoEsercizio);
+			}
+			//SIAC-7349 - End
+			
+			
+			
+			
+			if(importiComponentiCapitolo!= null && !importiComponentiCapitolo.isEmpty()){
+				
+				Map<Integer, Integer> mapComponentiStanziamentiValidi = new HashMap<Integer, Integer>();
+				for(ImportiCapitoloPerComponente icpc :importiComponentiCapitolo){
+					if(icpc.getTipoComponenteImportiCapitolo()!= null){
+						if(abilitaControlloImporto){
+							//INSERIMENTO
+							if(icpc.getTipoComponenteImportiCapitolo().getImpegnabileComponenteImportiCapitolo()!= null
+									&& (ImpegnabileComponenteImportiCapitolo.SI.name().equals(icpc.getTipoComponenteImportiCapitolo().getImpegnabileComponenteImportiCapitolo().name())
+									)){
+								mapComponentiStanziamentiValidi.put( icpc.getUidComponente(),  icpc.getUidComponente());
+								buildListaDisponibilita(mapComponentiStanziamentiValidi, icpc,resultList);
+								}
+						}else{
+							//RICERCA
+							mapComponentiStanziamentiValidi.put( icpc.getUidComponente(),  icpc.getUidComponente());
+							buildListaDisponibilita(mapComponentiStanziamentiValidi, icpc,resultList);
+							
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+	
+	
+	private void buildListaDisponibilita(Map<Integer, Integer> mapComponentiStanziamentiValidi, 
+			ImportiCapitoloPerComponente icpc, List<ImportiCapitoloPerComponente> resultList){
+		if(icpc.getTipoDettaglioComponenteImportiCapitolo()!= null && mapComponentiStanziamentiValidi.containsKey(icpc.getUidComponente())
+				&& icpc.getTipoDettaglioComponenteImportiCapitolo().name().equals(TipoDettaglioComponenteImportiCapitolo.DISPONIBILITAIMPEGNARE.name())){
+			
+			if( icpc.getDettaglioAnno0()!= null && icpc.getDettaglioAnno0().getImporto()!= null){
+				BigDecimal importoDisponibilita0 = icpc.getDettaglioAnno0().getImporto();
+				if(importoDisponibilita0.compareTo(BigDecimal.ZERO)<0){
+					icpc.getDettaglioAnno0().setDisponibilita(FinUtility.importoFormatter(BigDecimal.ZERO));
+				}else{
+					icpc.getDettaglioAnno0().setDisponibilita(FinUtility.importoFormatter(importoDisponibilita0));
+				}
+				
+			}
+			if( icpc.getDettaglioAnno1()!= null && icpc.getDettaglioAnno1().getImporto()!= null){
+				BigDecimal importoDisponibilita1 = icpc.getDettaglioAnno1().getImporto();
+				if(importoDisponibilita1.compareTo(BigDecimal.ZERO)<0){
+					icpc.getDettaglioAnno1().setDisponibilita(FinUtility.importoFormatter(BigDecimal.ZERO));
+				}else{
+					icpc.getDettaglioAnno1().setDisponibilita(FinUtility.importoFormatter(importoDisponibilita1));
+				}
+				
+				
+			}
+			if(icpc.getDettaglioAnno2()!= null && icpc.getDettaglioAnno2().getImporto()!= null){
+				BigDecimal importoDisponibilita2 =icpc.getDettaglioAnno2().getImporto();
+				if(importoDisponibilita2.compareTo(BigDecimal.ZERO)<0){
+					icpc.getDettaglioAnno2().setDisponibilita(FinUtility.importoFormatter(BigDecimal.ZERO));
+				}else{
+					icpc.getDettaglioAnno2().setDisponibilita(FinUtility.importoFormatter(importoDisponibilita2));
+				}
+				
+				
+			}
+			//SETTING UID 
+			icpc.setUidComponente(icpc.getTipoComponenteImportiCapitolo().getUid());
+			resultList.add(icpc);
+		}
+		
+		
+	}
+	
+	
+	
+	private void checkStanziamentoValido(Map<Integer, Integer> mapComponentiStanziamentiValidi, 
+			ImportiCapitoloPerComponente icpc, int uidComponente){
+		if((icpc.getDettaglioAnno0()!= null && icpc.getDettaglioAnno0().getImporto() != null && icpc.getDettaglioAnno0().getAnnoCompetenza() >= sessionHandler.getBilancio().getAnno() && icpc.getDettaglioAnno0().getImporto().intValue()>0)
+				|| (icpc.getDettaglioAnno1()!= null && icpc.getDettaglioAnno1().getImporto() != null && icpc.getDettaglioAnno1().getAnnoCompetenza() >= sessionHandler.getBilancio().getAnno() && icpc.getDettaglioAnno1().getImporto().intValue()>0)
+				|| (icpc.getDettaglioAnno2()!= null && icpc.getDettaglioAnno2().getImporto() != null && icpc.getDettaglioAnno2().getAnnoCompetenza() >= sessionHandler.getBilancio().getAnno() && icpc.getDettaglioAnno2().getImporto().intValue()>0)
+				){
+			mapComponentiStanziamentiValidi.put(uidComponente, uidComponente);
+		}
+	}
+	
+//	private void checkStanziamentoValido(Map<Integer, Integer> mapComponentiStanziamentiValidi, 
+//			 int annoPartenzaDisponibilita, DettaglioComponenteImportiCapitolo dcic, int uidComponente){
+//		
+//		if(annoPartenzaDisponibilita >= sessionHandler.getBilancio().getAnno() && dcic!= null && dcic.getImporto()!= null
+//				&& dcic.getImporto().intValue()>0){
+//			mapComponentiStanziamentiValidi.put(uidComponente, uidComponente);
+//		}
+//	}
+	
+	
+	public String getComponentiBilancioTotali() {
+		List<ImportiCapitoloPerComponente> resultList = new ArrayList<ImportiCapitoloPerComponente>();
+		RicercaTipoComponenteImportiCapitolo r = new RicercaTipoComponenteImportiCapitolo();
+		r.setDataOra(new Date());
+		r.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+		r.setRichiedente(sessionHandler.getRichiedente());
+		RicercaTipoComponenteImportiCapitoloResponse respo = tipoComponenteImportiCapitoloService.ricercaTipoComponenteImportiCapitoloTotali(r);
+		if(respo!= null && respo.getListaTipoComponenteImportiCapitolo()!= null && !respo.getListaTipoComponenteImportiCapitolo().isEmpty()){
+			for(TipoComponenteImportiCapitolo tcic : respo.getListaTipoComponenteImportiCapitolo()){
+				//METTIAMO SOLO ID E DESCRIZIONE
+				ImportiCapitoloPerComponente  icpcWrapper = new ImportiCapitoloPerComponente();
+				icpcWrapper.setUidComponente(tcic.getUid());
+				icpcWrapper.setTipoComponenteImportiCapitolo(tcic);
+				resultList.add(icpcWrapper);
+			}
+		}
+		
+		model.setListaComponentiBilancio(resultList);
+		return SUCCESS;
+	}
+	
+	
+	
+	public String getComponentiBilancioDaCapitolo() {
+		int maxElementi = 5;
+		if(getNumCapitolo()!= null && getAnno()!= null && getArticolo()!= null){
+			CapitoloImpegnoModel capitoloDiRiferimento = new CapitoloImpegnoModel();
+			capitoloDiRiferimento.setArticolo(getArticolo());
+			capitoloDiRiferimento.setAnno(getAnno());
+			capitoloDiRiferimento.setNumCapitolo(getNumCapitolo());
+			RicercaSinteticaCapitoloUscitaGestione req = new RicercaSinteticaCapitoloUscitaGestione();
+			RicercaSinteticaCapitoloUGest ru = new RicercaSinteticaCapitoloUGest();
+			ru.setAnnoEsercizio(capitoloDiRiferimento.getAnno());
+			ru.setNumeroCapitolo(capitoloDiRiferimento.getNumCapitolo());
+			ru.setNumeroArticolo(capitoloDiRiferimento.getArticolo());
+			ParametriPaginazione parametriPaginazione = new ParametriPaginazione();
+			parametriPaginazione.setElementiPerPagina(maxElementi);
+			parametriPaginazione.setNumeroPagina(0);
+			req.setParametriPaginazione(parametriPaginazione);
+			req.setEnte(sessionHandler.getEnte());
+			req.setRichiedente(sessionHandler.getRichiedente());
+			req.setRicercaSinteticaCapitoloUGest(ru);
+			//invoco il servizio ricercaSinteticaCapitoloUscitaGestione:
+			RicercaSinteticaCapitoloUscitaGestioneResponse res = capitoloUscitaGestioneService.ricercaSinteticaCapitoloUscitaGestione(req);
+			if(res!= null && res.getCapitoli()!= null && !res.getCapitoli().isEmpty()){
+				int uidCaptolo = res.getCapitoli().get(0).getUid();
+				model.setUidCapitolo(uidCaptolo);
+			}
+		}	
+		
+		List<ImportiCapitoloPerComponente> resultList = new ArrayList<ImportiCapitoloPerComponente>();
+		RicercaTipoComponenteImportiCapitolo r = new RicercaTipoComponenteImportiCapitolo();
+		r.setDataOra(new Date());
+		r.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+		r.setRichiedente(sessionHandler.getRichiedente());
+		RicercaTipoComponenteImportiCapitoloResponse respo = tipoComponenteImportiCapitoloService.ricercaTipoComponenteImportiCapitoloImpegnabili(r);
+		if(respo!= null && respo.getListaTipoComponenteImportiCapitolo()!= null && !respo.getListaTipoComponenteImportiCapitolo().isEmpty()){
+			for(TipoComponenteImportiCapitolo tcic : respo.getListaTipoComponenteImportiCapitolo()){
+				//METTIAMO SOLO ID E DESCRIZIONE
+				ImportiCapitoloPerComponente  icpcWrapper = new ImportiCapitoloPerComponente();
+				icpcWrapper.setUidComponente(tcic.getUid());
+				icpcWrapper.setTipoComponenteImportiCapitolo(tcic);
+				resultList.add(icpcWrapper);
+			}
+		}
+		
+		model.setListaComponentiBilancio(resultList);
+		return SUCCESS;
+	
+		
+	}
+	
+	
+	
+	
 	/* **************************************************************************** */
 	/*  Getter / setter																*/
 	/* **************************************************************************** */
@@ -654,5 +1030,95 @@ public class AjaxAction extends GenericFinAction<AjaxModel>{
 	public void setStruttAmmOriginale(String struttAmmOriginale) {
 		this.struttAmmOriginale = struttAmmOriginale;
 	}
+
+	/**
+	 * @return the struttAmmOriginaleCompetente
+	 */
+	public String getStruttAmmOriginaleCompetente() {
+		return struttAmmOriginaleCompetente;
+	}
+
+	/**
+	 * @param struttAmmOriginaleCompetente the struttAmmOriginaleCompetente to set
+	 */
+	public void setStruttAmmOriginaleCompetente(String struttAmmOriginaleCompetente) {
+		this.struttAmmOriginaleCompetente = struttAmmOriginaleCompetente;
+	}
+
+	/**
+	 * @return the radioCodiceCapitolo
+	 */
+	public String getRadioCodiceCapitolo() {
+		return radioCodiceCapitolo;
+	}
+
+	/**
+	 * @param radioCodiceCapitolo the radioCodiceCapitolo to set
+	 */
+	public void setRadioCodiceCapitolo(String radioCodiceCapitolo) {
+		this.radioCodiceCapitolo = radioCodiceCapitolo;
+	}
+	
+	
+
+	
+	
+	public Integer getNumCapitolo() {
+		return numCapitolo;
+	}
+
+	/**
+	 * @param numCapitolo the numCapitolo to set
+	 */
+	public void setNumCapitolo(Integer numCapitolo) {
+		this.numCapitolo = numCapitolo;
+	}
+
+	/**
+	 * @return the anno
+	 */
+	public Integer getAnno() {
+		return anno;
+	}
+
+	/**
+	 * @return the articolo
+	 */
+	public Integer getArticolo() {
+		return articolo;
+	}
+
+	/**
+	 * @param anno the anno to set
+	 */
+	public void setAnno(Integer anno) {
+		this.anno = anno;
+	}
+
+	/**
+	 * @param articolo the articolo to set
+	 */
+	public void setArticolo(Integer articolo) {
+		this.articolo = articolo;
+	}
+
+	/**
+	 * @return the azione
+	 */
+	public String getAzione() {
+		return azione;
+	}
+
+	/**
+	 * @param azione the azione to set
+	 */
+	public void setAzione(String azione) {
+		this.azione = azione;
+	}
+
+	
+	
+	
+	
 	
 }

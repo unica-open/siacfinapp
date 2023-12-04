@@ -4,6 +4,8 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
+
 /**
  * classe utilizzata per la definizione univoca del modello dati in sessione
  * ed anche per la renderizzazione automatica delle label a seconda
@@ -38,6 +40,26 @@ public class ActionKeyAggiornaAccertamento extends WizardAggiornaSubMovGestActio
 	public boolean sonoInInserimento(){
 		return false;
 	}
+	
+	/**
+	 * SIAC-7976
+	 * A seguito della SIAC-7804 si slega il controllo sullo stato del movimento in caso
+	 * di movimento decentrato dal metodo generico isAbilitatoAggiornaAnnullaAccertamento().
+	 * 
+	 * @return boolean
+	 */
+	@Override
+	public boolean mostraCompilazioneGuidataProvvedimento() {
+		// se decentrato dobbiamo assicurarci che sia un movimento in stato PROVVISORIO
+//		return (("PROVVISORIO".equals(model.getAccertamentoInAggiornamento().getDescrizioneStatoOperativoMovimentoGestioneEntrata()) 
+//				&& isAbilitatoGestisciAccertamentoDec()) 
+//				// controllo per le modifiche di importo e soggetto 
+//				|| (isAbilitatoGestisciAccertamentoDec() && permettoCompilazioneProvvedimentoActionDEC()))
+//				// abilito in caso non sia un decentrato
+//				|| !isAbilitatoGestisciAccertamentoDec();
+		return super.mostraCompilazioneGuidataProvvedimento();
+	}
+	
 	
 	/**
 	 * caricamento della label aggiornamento
@@ -115,5 +137,10 @@ public class ActionKeyAggiornaAccertamento extends WizardAggiornaSubMovGestActio
 //	protected boolean condizioniRedirezioneContabilitaGeneraleSpecifiche() {
 //		return model.getStep1ModelSubimpegno() != null && model.getStep1ModelSubimpegno().getFlagFattura() != null? webAppSiNoToBool(model.getStep1ModelSubimpegno().getFlagFattura()) : false;
 //	}
+	@Override
+	//SIAC-7667
+	protected boolean isPerimetroSanitarioCongruenteConGsa(CapitoloImpegnoModel capitolo) {
+		return capitolo.getCodicePerimetroSanitarioEntrata() != null && CODICE_PERIMETRO_SANITARIO_ENTRATA_GSA.equals(capitolo.getCodicePerimetroSanitarioEntrata());
+	}
 	
 }

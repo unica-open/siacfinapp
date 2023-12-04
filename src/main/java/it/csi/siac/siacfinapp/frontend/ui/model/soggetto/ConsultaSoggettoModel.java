@@ -7,6 +7,7 @@ package it.csi.siac.siacfinapp.frontend.ui.model.soggetto;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.csi.siac.siaccommonapp.handler.session.SessionHandler;
 import it.csi.siac.siacfinser.model.soggetto.modpag.ModalitaPagamentoSoggetto;
 import it.csi.siac.siacfinser.model.soggetto.sedesecondaria.SedeSecondariaSoggetto;
 
@@ -23,8 +24,6 @@ public class ConsultaSoggettoModel extends GenericoDettaglioSoggettoModel {
 	public ConsultaSoggettoModel(){
 		//chiamo il costruttore della super classe:
 		super();
-		//setto il titolo:
-		setTitolo("Consulta Soggetto");
 	}
 	
 	//GETTER E SETTER:

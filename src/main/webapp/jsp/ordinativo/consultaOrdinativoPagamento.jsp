@@ -18,12 +18,21 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="container-fluid-banner">
 		<a name="A-contenuti" title="A-contenuti"></a>
 	</div>
+	
+	<s:set var="cambiaTabFolderAction" value="%{'consultaOrdinativoPagamento_cambiaTabFolder'}" />
+					
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12 contentPage">
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 				<s:form id="consultaOrdinativoPagamento" method="post" cssClass="form-horizontal">
-
+					<!-- per modalOrdinativo.jsp -->
+					<s:set var="eliminaQuotaOrdinativoAction" value="%{'consultaOrdinativoPagamento_eliminaQuotaOrdinativo'}" />
+					<s:set var="eliminaProvvisorioAction" value="%{'consultaOrdinativoPagamento_eliminaProvvisorio'}" />
+					<s:set var="forzaInserisciQuotaAccertamentoAction" value="%{'consultaOrdinativoPagamento_forzaInserisciQuotaAccertamento'}" />
+					<s:set var="forzaAggiornaQuotaAccertamentoAction" value="%{'consultaOrdinativoPagamento_forzaAggiornaQuotaAccertamento'}" />
+	
+					
 <!-- ************************************************************************************* -->
 					<h3>Consulta ordinativo <s:property value="ordinativoPagamento.numero"/> del <s:property value="%{ordinativoPagamento.dataEmissione}"/> - <s:property value="ordinativoPagamento.descrizione"/></h3>
 					
@@ -102,6 +111,12 @@ SPDX-License-Identifier: EUPL-1.2
 											<dfn>Conto tesoriere</dfn> 
 											<dl><s:property value="ordinativoPagamento.contoTesoreria.codice"/> - <s:property value="ordinativoPagamento.contoTesoreria.descrizione"/></dl>
 										</li>
+										<s:if test="null != ordinativoPagamento.contoTesoreriaSenzaCapienza">
+											<li>
+												<dfn>Conto tesoriere di pertinenza</dfn> 
+												<dl><s:property value="ordinativoPagamento.contoTesoreriaSenzaCapienza.codice"/> - <s:property value="ordinativoPagamento.contoTesoreriaSenzaCapienza.descrizione"/></dl>
+											</li>
+										</s:if>
 										<li>
 											<dfn>Allegato cartaceo</dfn> 
 											<dl>
@@ -313,8 +328,10 @@ SPDX-License-Identifier: EUPL-1.2
 											<dl><s:property value="%{ordinativoPagamento.datiOrdinativoTrasmesso.dataQuietanza}"/></dl>
 										</li>
 										<li>
-											<dfn>Cro</dfn> 
-											<dl><s:property value="ordinativoPagamento.datiOrdinativoTrasmesso.cro"/></dl>
+											<dfn>Numero quietanza</dfn> 
+											<dl><s:property value="ordinativoPagamento.datiOrdinativoTrasmesso.numeroQuietanza"/></dl>
+											<%-- <dfn>Cro</dfn> 
+											<dl><s:property value="ordinativoPagamento.datiOrdinativoTrasmesso.cro"/></dl> --%>
 										</li>
 										<li>
 											<dfn>Data firma</dfn> 
@@ -684,7 +701,8 @@ SPDX-License-Identifier: EUPL-1.2
 	$(".linkQuotePagInc").click(function() {
 		var supportId = $(this).attr("id").split("_");
 		$.ajax({
-			url: '<s:url method="dettaglioQuoteOrdinativoPagamentoInc"/>',
+			//task-131 --> url: '<s:url method="dettaglioQuoteOrdinativoPagamentoInc"/>',
+			url: '<s:url action="consultaOrdinativoPagamento_dettaglioQuoteOrdinativoPagamentoInc"/>',
 			type: 'POST',
 			data: 'numeroOrdinativoSelezionato=' + supportId[1],
 		    success: function(data)  {
@@ -696,7 +714,8 @@ SPDX-License-Identifier: EUPL-1.2
 	$(".linkQuotePagPag").click(function() {
 		var supportId = $(this).attr("id").split("_");
 		$.ajax({
-			url: '<s:url method="dettaglioQuoteOrdinativoPagamentoPag"/>',
+			//task-131 --> url: '<s:url method="dettaglioQuoteOrdinativoPagamentoPag"/>',
+			url: '<s:url action="consultaOrdinativoPagamento_dettaglioQuoteOrdinativoPagamentoPag"/>',
 			type: 'POST',
 			data: 'numeroOrdinativoSelezionato=' + supportId[1],
 		    success: function(data)  {

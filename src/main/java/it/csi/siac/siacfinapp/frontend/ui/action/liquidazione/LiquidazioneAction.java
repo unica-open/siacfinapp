@@ -25,7 +25,7 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoMode
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.DatiOpzionaliElencoSubTuttiConSoloGliIds;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzato;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
@@ -36,7 +36,6 @@ import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.liquidazione.Liquidazione;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaSoggettoK;
 import it.csi.siac.siacfinser.model.ric.RicercaImpegnoK;
 import it.csi.siac.siacfinser.model.siopeplus.SiopeAssenzaMotivazione;
@@ -55,7 +54,7 @@ public abstract class LiquidazioneAction<M extends LiquidazioneModel> extends Ge
 	 * @return
 	 */
 	public boolean isEnteAbilitatoAggiornaImportoLiq(){
-		return Constanti.AGGIORNA_IMPORTO_LIQ.equals(sessionHandler.getEnte().getGestioneLivelli().get(TipologiaGestioneLivelli.AGGIORNA_IMPORTO_LIQ));
+		return CostantiFin.AGGIORNA_IMPORTO_LIQ.equals(sessionHandler.getEnte().getGestioneLivelli().get(TipologiaGestioneLivelli.AGGIORNA_IMPORTO_LIQ));
 	}
 	
 	/**
@@ -91,7 +90,7 @@ public abstract class LiquidazioneAction<M extends LiquidazioneModel> extends Ge
 		RicercaImpegnoPerChiaveOttimizzato rip = builRequestPerRicercaImpegnoCompilazioneGuidata(annoimpegno, numeroimpegno);
 		
 		//invoco il servizio di ricerca:
-		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 
 		//analizzo la response del servizio:
 		if (respRk != null && respRk.getImpegno() != null) {
@@ -118,12 +117,6 @@ public abstract class LiquidazioneAction<M extends LiquidazioneModel> extends Ge
 					model.setDescrizioneImpegnoPopup(impegno.getDescrizione());
 					model.setHasImpegnoSelezionatoPopup(true);
 					model.setHasImpegnoSelezionatoXPopup(true);
-					List<VoceMutuo> listaVociMutuo = new ArrayList<VoceMutuo>();
-					if(impegno!=null && impegno.getListaVociMutuo()!=null && impegno.getListaVociMutuo().size()>0){
-						listaVociMutuo = impegno.getListaVociMutuo();
-						model.setHasMutui(true);
-					}
-					model.setListaVociMutuo(listaVociMutuo);
 				
 				
 				//verifico se presenti subimpegni, in questo caso popolo la tabella
@@ -137,7 +130,7 @@ public abstract class LiquidazioneAction<M extends LiquidazioneModel> extends Ge
 					// prendo solo i sub che NON sono annullati
 					for(int i = 0; i < elencoSubImpegni.size(); i++){
 						SubImpegno subImp = clone(elencoSubImpegni.get(i));
-						if(!subImp.getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_ANNULLATO)){
+						if(!subImp.getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_ANNULLATO)){
 							
 							// caso in cui il subimpegnp NON ha capitolo, gli imposto quello dell'impegno:
 							if(subImp.getCapitoloUscitaGestione()==null){
@@ -250,7 +243,7 @@ public abstract class LiquidazioneAction<M extends LiquidazioneModel> extends Ge
 		
 		//chiave di ricerca dell'impegno:
 		RicercaImpegnoK k = new RicercaImpegnoK();
-		k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		if(annoimpegno!=null){
 			//anno
 			k.setAnnoImpegno(new Integer(annoimpegno));
@@ -523,15 +516,19 @@ public abstract class LiquidazioneAction<M extends LiquidazioneModel> extends Ge
 	    }
 	    
 	    //Motivazione assenza cig "Da definire in fase di liquidazione" non valida per la liquidazione:
-	    if(Constanti.ASSENZA_CIG_DA_DEFINIRE_IN_FASE_DI_LIQUIDAZIONE.equalsIgnoreCase(modelLiq.getMotivazioneAssenzaCig())){
+	    if(CostantiFin.ASSENZA_CIG_DA_DEFINIRE_IN_FASE_DI_LIQUIDAZIONE.equalsIgnoreCase(modelLiq.getMotivazioneAssenzaCig())){
 	    	//SIAC-5526
-	    	listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("CIG", "Cig da definire in fase di liquidazione non accettabile"));
+	    	//SIAC-7904
+//	    	listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("CIG", "Cig da definire in fase di liquidazione non accettabile"));
+	    	listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("motivo assenza cig :"  + CostantiFin.ASSENZA_CIG_DA_DEFINIRE_IN_FASE_DI_LIQUIDAZIONE,"selezionare una motivazione valida"));
 	    }
 	    
 	    //Motivazione assenza cig "CIG in corso di definizione" non valida per la liquidazione:
-	    if(Constanti.ASSENZA_CIG_CODE_IN_CORSO_DI_DEFINIZIONE.equalsIgnoreCase(modelLiq.getMotivazioneAssenzaCig())){
+	    if(CostantiFin.ASSENZA_CIG_CODE_IN_CORSO_DI_DEFINIZIONE.equalsIgnoreCase(modelLiq.getMotivazioneAssenzaCig())){
 	    	//SIAC-5543
-	    	listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("CIG", "Cig in corso di definizione non accettabile"));
+	    	//SIAC-7904
+//	    	listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("CIG", "Cig in corso di definizione non accettabile"));
+	    	listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("motivo assenza cig :"  + CostantiFin.ASSENZA_CIG_CODE_IN_CORSO_DI_DEFINIZIONE,"selezionare una motivazione valida"));
 	    }
 	}
 	

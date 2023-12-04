@@ -7,6 +7,7 @@ package it.csi.siac.siacfinapp.frontend.ui.model.movgest;
 import java.util.ArrayList;
 import java.util.List;
 
+import it.csi.siac.siacbilser.model.TipoComponenteImportiCapitolo;
 import it.csi.siac.siacfinapp.frontend.ui.model.GenericFinModel;
 
 
@@ -23,6 +24,8 @@ public class GestisciImpegnoStep3Model extends GenericFinModel {
 	
 	private boolean checkproseguiPlurAcc;
 	
+	//SIAC-7349
+	private List<TipoComponenteImportiCapitolo> tipoComponenteImportiCapitolo = new ArrayList<TipoComponenteImportiCapitolo>();
 
 
 	/**
@@ -78,8 +81,18 @@ public class GestisciImpegnoStep3Model extends GenericFinModel {
 		this.checkproseguiPlurAcc = checkproseguiPlurAcc;
 	}
 
- 
+	/**
+	 * @return the tipoComponenteImportiCapitolo
+	 */
+	public List<TipoComponenteImportiCapitolo> getTipoComponenteImportiCapitolo() {
+		return tipoComponenteImportiCapitolo;
+	}
 	
-	
+	/**
+	 * @param tipoComponenteImportiCapitolo the tipoComponenteImportiCapitolo to set
+	 */
+	public void setTipoComponenteImportiCapitolo(List<TipoComponenteImportiCapitolo> tipoComponenteImportiCapitolo) {
+		this.tipoComponenteImportiCapitolo = tipoComponenteImportiCapitolo;
+	}
 	
 }

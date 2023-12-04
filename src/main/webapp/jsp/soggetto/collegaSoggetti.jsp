@@ -77,13 +77,15 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="span12 ">
 
 <div class="contentPage">  
-	<s:form method="post" action="collegaSoggetti.do">
+	<%-- SIAC-7952 rimuovo .do dalla action --%>
+	<s:form method="post" action="collegaSoggetti">
 	<s:include value="/jsp/include/actionMessagesErrors.jsp" /> 
 
 <h3>Soggetti concatenati</h3>
 
 <h4> Successivi </h4>
-<display:table name="soggettiSuccessivi" class="table table-hover" summary="riepilogo soggetti successivi" pagesize="10" requestURI="collegaSoggetti.do" uid="soggettoSuccessivoID">
+<display:table name="soggettiSuccessivi" class="table table-hover" summary="riepilogo soggetti successivi" pagesize="10" 
+requestURI="collegaSoggetti.do" uid="soggettoSuccessivoID">
         <display:column title="Codice" property="codiceSoggetto" style="width:82px; height:36px;"/>
         <display:column title="Codice Fiscale" property="codiceFiscale" style="width:231px; height:36px;"/>
         <display:column title="Partita IVA" property="partitaIva"style="width:120px; height:36px;"/>
@@ -96,7 +98,9 @@ SPDX-License-Identifier: EUPL-1.2
 </display:table>                         
 <h4> Precedenti </h4>
 <s:hidden name="azioneDaEseguire" id="azioneDaEseguire"/>
-<display:table name="soggettiPrecedenti" class="table table-hover" summary="riepilogo soggetti precedenti" pagesize="10" requestURI="collegaSoggetti.do" uid="soggettoPrecedenteID">
+
+<display:table name="soggettiPrecedenti" class="table table-hover" summary="riepilogo soggetti precedenti" 
+pagesize="10" requestURI="collegaSoggetti.do" uid="soggettoPrecedenteID">
         <display:column title="Codice" property="codiceSoggetto"/>
         <display:column title="Codice Fiscale" property="codiceFiscale" />
         <display:column title="Partita IVA" property="partitaIva"/>
@@ -104,7 +108,8 @@ SPDX-License-Identifier: EUPL-1.2
         <display:column title="Stato" property="statoOperativo"/>
         <display:column title="Tipo Collegamento" property="tipoLegame"/>
         <display:column title="">
-        	<s:url id="deleteUrl" action="collegaSoggetti.do"> 
+        	<%-- task-131 <s:url id="deleteUrl" action="collegaSoggetti.do"> --%> 
+  		    <s:url var="deleteUrl" action="collegaSoggetti"> 
   		    	<s:param name="soggettoPrecedenteDaAnnullare" value="%{#attr.soggettoPrecedenteID.codiceSoggetto}" />
    			</s:url>
             <button class="btn" onclick="document.getElementById('azioneDaEseguire').value='${deleteUrl}'"  >
@@ -134,8 +139,10 @@ SPDX-License-Identifier: EUPL-1.2
 		</div>
 	</fieldset>
 	<p>
-		<s:submit name="annulla" value="annulla" method="annullaRicerca" cssClass="btn" />
-		<s:submit name="cerca" value="cerca" method="cerca" cssClass="btn" />
+		<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaRicerca" cssClass="btn" /> -->
+		<!-- task-131 <s:submit name="cerca" value="cerca" method="cerca" cssClass="btn" /> -->
+		<s:submit name="annulla" value="annulla" action="collegaSoggetti_annullaRicerca" cssClass="btn" />
+		<s:submit name="cerca" value="cerca" action="collegaSoggetti_cerca" cssClass="btn" />
 	</p>
 <s:if test="soggettiRicerca != null && soggettiRicerca.size() > 0">
 	<h5>Risultati della ricerca</h5>
@@ -170,7 +177,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" data-aria-hidden="true">no, indietro</button>
-		<s:submit id="btnCreaLegame" name="btnCreaLegame" value="si, prosegui" cssClass="btn btn-primary" method="creaLegame"/>
+		<!-- task-131 <s:submit id="btnCreaLegame" name="btnCreaLegame" value="si, prosegui" cssClass="btn btn-primary" method="creaLegame"/> -->
+		<s:submit id="btnCreaLegame" name="btnCreaLegame" value="si, prosegui" cssClass="btn btn-primary" action="collegaSoggetti_creaLegame"/>
 	</div>
 </div>   
 <p class="marginLarge"> 

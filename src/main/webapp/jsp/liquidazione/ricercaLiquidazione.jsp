@@ -34,7 +34,8 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="row-fluid">
 		<div class="span12 contentPage">
     
-			<s:form method="post" action="ricercaLiquidazione.do" id="ricercaLiquidazione">
+    		<%-- SIAC-7952 rimuovo .do dalla action --%>
+			<s:form method="post" action="ricercaLiquidazione" id="ricercaLiquidazione">
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 			
 			
@@ -42,7 +43,11 @@ SPDX-License-Identifier: EUPL-1.2
 					
 					<div class="step-content">	
 					<div class="step-pane active" id="step1"> 
-					<p class="margin-medium"><s:submit id="cerca" name="cerca" value="cerca" method="ricercaLiquidazioni" cssClass="btn btn-primary pull-right" /> </p>						
+					<p class="margin-medium">
+						<!-- task-131 <s:submit id="cerca" name="cerca" value="cerca" method="ricercaLiquidazioni" cssClass="btn btn-primary pull-right" />--> 
+						<s:submit id="cerca" name="cerca" value="cerca" action="ricercaLiquidazione_ricercaLiquidazioni" cssClass="btn btn-primary pull-right" />
+					</p>						
+						
 					<br>
 					<h4 class="step-pane">Liquidazione</h4>
 					
@@ -65,13 +70,6 @@ SPDX-License-Identifier: EUPL-1.2
 							</div>
 						</div>
 						
-						<h4 class="step-pane">Mutuo</h4>
-						<div class="control-group">
-							<label class="control-label" for="mutuo">Numero mutuo</label>
-							<div class="controls">
-								<s:textfield id="numeroMutuo" onkeyup="return checkItNumbersOnly(event)" name="model.numeroMutuoString" cssClass="lbTextSmall span1"/>
-							</div>
-						</div>								
 					</fieldset>
 			
 			<s:include value="/jsp/liquidazione/include/impegnoric.jsp" />	
@@ -87,10 +85,24 @@ SPDX-License-Identifier: EUPL-1.2
             	<s:include value="/jsp/liquidazione/include/headerSoggettoLiquidazione.jsp"/>
             </div>
             <s:include value="/jsp/liquidazione/include/soggettoLiquidazione.jsp" />  
-			<!-- Modal -->
-                     
+			
+			<s:set var="selezionaProvvedimentoAction" value="%{'ricercaLiquidazione_selezionaProvvedimento'}" />
+		    <s:set var="clearRicercaProvvedimentoAction" value="%{'ricercaLiquidazione_clearRicercaProvvedimento'}" />	          
+		    <s:set var="ricercaProvvedimentoAction" value="%{'ricercaLiquidazione_ricercaProvvedimento'}" />	              
+            
+			<s:set var="selezionaSoggettoAction" value="%{'ricercaLiquidazione_selezionaSoggetto'}" />
+			<s:set var="pulisciRicercaSoggettoAction" value="%{'ricercaLiquidazione_pulisciRicercaSoggetto'}" />	          
+			<s:set var="ricercaSoggettoAction" value="%{'ricercaLiquidazione_ricercaSoggetto'}" />	    
+			
+			<s:set var="ricercaCapitoloAction" value="%{'ricercaLiquidazione_ricercaCapitolo'}" />
+			<s:set var="pulisciRicercaCapitoloAction" value="%{'ricercaLiquidazione_pulisciRicercaCapitolo'}" />
+	        <s:set var="selezionaCapitoloAction" value="%{'ricercaLiquidazione_selezionaCapitolo'}" />
+	         <s:set var="visualizzaDettaglioCapitoloAction" value="%{'ricercaLiquidazione_visualizzaDettaglioCapitolo'}" />
+	        
+		    
+		    <!-- Modal -->
             <s:include value="/jsp/include/modalProvvedimenti.jsp" />
-            <s:include value="/jsp/include/modalSoggetto.jsp" />
+		    <s:include value="/jsp/include/modalSoggetto.jsp" />
             <s:include value="/jsp/include/modalCapitolo.jsp" />
             
              <div id="capitoloTab" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="capitoloTabLabel" aria-hidden="true">
@@ -134,7 +146,12 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		              </div>
 		            </div>  
-	        <s:include value="/jsp/include/modalImpegno.jsp" />
+		    <s:set var="confermaCompGuidataAction" value="%{'ricercaLiquidazione_confermaCompGuidata'}" />	  						        
+	        <s:set var="ricercaGuidataImpegnoAction" value="%{'ricercaLiquidazione_ricercaGuidataImpegno'}" />	          
+			<s:set var="ricercaImpegnoCompilazioneGuidataAction" value="%{'ricercaLiquidazione_ricercaImpegnoCompilazioneGuidata'}" />	          
+			<s:set var="selezionaImpegnoCompilazioneGuidataAction" value="%{'ricercaLiquidazione_confermaCompGuidata'}" />	          
+		
+			<s:include value="/jsp/liquidazione/include/modalImpegno.jsp" />
                  
             <!-- Fine Modal -->
             <br/> <br/> 
@@ -154,8 +171,10 @@ SPDX-License-Identifier: EUPL-1.2
             
             <s:include value="/jsp/include/indietro.jsp" /> 
             
-			<s:submit name="annulla" value="annulla" method="annullaRicercaLiquidazioni" cssClass="btn btn-secondary" />
-			<s:submit id="cerca2" name="cerca2" value="cerca" method="ricercaLiquidazioni" cssClass="btn btn-primary pull-right" />
+			<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaRicercaLiquidazioni" cssClass="btn btn-secondary" /> -->
+			<!-- task-131 <s:submit id="cerca2" name="cerca2" value="cerca" method="ricercaLiquidazioni" cssClass="btn btn-primary pull-right" /> -->
+			<s:submit name="annulla" value="annulla" action="ricercaLiquidazione_annullaRicercaLiquidazioni" cssClass="btn btn-secondary" />
+			<s:submit id="cerca2" name="cerca2" value="cerca" action="ricercaLiquidazione_ricercaLiquidazioni" cssClass="btn btn-primary pull-right" />
 				</p>     
   
 

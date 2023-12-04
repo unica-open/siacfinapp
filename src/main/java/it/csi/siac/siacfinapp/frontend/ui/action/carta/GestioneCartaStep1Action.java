@@ -9,18 +9,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.TipologiaGestioneLivelli;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaCartaContabilePerChiave;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaCartaContabilePerChiaveResponse;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
@@ -79,12 +79,12 @@ public class GestioneCartaStep1Action extends ActionKeyGestioneCartaAction {
 	public String execute() throws Exception {
 		
 		//settiamo le intestazioni firme impostate per l'ente:
-		model.setIntestazioneFirma1(getCodiceLivelloByTipo(TipologiaGestioneLivelli.FIRMA_CARTA_1));
-		model.setIntestazioneFirma2(getCodiceLivelloByTipo(TipologiaGestioneLivelli.FIRMA_CARTA_2));
+		model.setIntestazioneFirma1(getTipologiaGestioneLivelli(TipologiaGestioneLivelli.FIRMA_CARTA_1));
+		model.setIntestazioneFirma2(getTipologiaGestioneLivelli(TipologiaGestioneLivelli.FIRMA_CARTA_2));
 		//
 		
 		//controlliamo lo stato del bilancio:
-		controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()), "GESTIONE", "CARTA CONTABILE");
+		controlloStatoBilancio(sessionHandler.getAnnoBilancio(), "GESTIONE", "CARTA CONTABILE");
 
 		if(!model.isAggiornamento()){
 			//non siamo nello scenario di aggiornamento
@@ -98,11 +98,11 @@ public class GestioneCartaStep1Action extends ActionKeyGestioneCartaAction {
 		}
 		
 		if (!model.isAggiornamento()) {
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_INSCARTA)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_INSCARTA)){
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			}
 		} else {
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA)){
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			}
 		}
@@ -256,12 +256,12 @@ public class GestioneCartaStep1Action extends ActionKeyGestioneCartaAction {
 		if (model.isAggiornamento()) {
 			if (model.getStatoOperativoCarta()!=null && 
 					model.getStatoOperativoCarta().equalsIgnoreCase(CartaContabile.StatoOperativoCartaContabile.PROVVISORIO.toString())) {
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA) && !isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) && !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
 					model.getStatoOperativoCarta().equalsIgnoreCase(CartaContabile.StatoOperativoCartaContabile.COMPLETATO.toString())) {
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
@@ -295,7 +295,7 @@ public class GestioneCartaStep1Action extends ActionKeyGestioneCartaAction {
 			if (model.getStatoOperativoCarta()!=null && 
 					!model.getStatoOperativoCarta().equalsIgnoreCase(CartaContabile.StatoOperativoCartaContabile.PROVVISORIO.toString())) {
 				disable=true;
-			} else if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA) && !isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+			} else if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) && !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 				disable=true;
 			}
 		}
@@ -308,18 +308,18 @@ public class GestioneCartaStep1Action extends ActionKeyGestioneCartaAction {
 		List<Errore> listaErrori= new ArrayList<Errore>();
 
 		if (model.isAggiornamento()) {
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA)){
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 				return INPUT;
 			}
 		} else {
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_INSCARTA)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_INSCARTA)){
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 				return INPUT;
 			}
 		}
 		
-		if(controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()),"Gestione","Carta Contabile")){
+		if(controlloStatoBilancio(sessionHandler.getAnnoBilancio(),"Gestione","Carta Contabile")){
 			return INPUT;
 		}
 

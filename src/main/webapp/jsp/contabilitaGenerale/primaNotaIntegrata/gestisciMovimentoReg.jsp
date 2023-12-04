@@ -21,7 +21,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 				<h3><s:property value="campoTitoloPagina"/></h3>
 				<h4>Inserimento prima nota integrata</h4>
-				<h4><s:property value="intestazioneRichiesta" escape="false"/></h4>
+				<h4><s:property value="intestazioneRichiesta" escapeHtml="false"/></h4>
 				
 				<div class="accordion" id="accordionMovimento">
 					<div class="accordion-group">
@@ -61,7 +61,7 @@ SPDX-License-Identifier: EUPL-1.2
 									<div class="controls">
 										<s:select list="listaCausaleEP" id="uidCausaleEP" name="causaleEP.uid"
 												cssClass="span6 selectCausaleEP" headerKey="" headerValue=""
-												listKey="uid" listValue="%{codice + ' - ' + descrizione}" data-causale-EP="" disabled="%{aggiornamento}"/>
+												listKey="uid" listValue="%{codice + ' - ' + descrizione}" disabled="%{aggiornamento}"/>
 									</div>
 								</div>
 								<div class="control-group">

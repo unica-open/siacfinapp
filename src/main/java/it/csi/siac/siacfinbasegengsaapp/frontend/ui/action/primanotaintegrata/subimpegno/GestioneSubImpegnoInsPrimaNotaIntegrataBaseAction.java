@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import it.csi.siac.siacbilser.model.ElementoPianoDeiConti;
 import it.csi.siac.siaccommonapp.util.exception.WebServiceInvocationFailureException;
@@ -41,7 +42,8 @@ public abstract class GestioneSubImpegnoInsPrimaNotaIntegrataBaseAction<M extend
 	/** Per la serializzazione */
 	private static final long serialVersionUID = 8985890954785351729L;
 
-	@Autowired private transient MovimentoGestioneService movimentoGestioneService;
+	@Autowired @Qualifier("movimentoGestioneFinService")
+	private transient MovimentoGestioneService movimentoGestioneFinService;
 	
 	/** Nome del model del completamento e validazione dell'accertamento. Modulo GEN */
 	public static final String MODEL_SESSION_NAME_COMPLETA_VALIDA_INS_SUBIMPEGNO_FIN = "CompletaValidaSubImpegnoInsPrimaNotaIntegrataFINModel";
@@ -107,7 +109,7 @@ public abstract class GestioneSubImpegnoInsPrimaNotaIntegrataBaseAction<M extend
 			RicercaImpegnoPerChiaveOttimizzato request = model.creaRequestRicercaImpegnoPerChiaveOttimizzato(subImpegno);
 			logServiceRequest(request);
 			
-			RicercaImpegnoPerChiaveOttimizzatoResponse response = movimentoGestioneService.ricercaImpegnoPerChiaveOttimizzato(request);
+			RicercaImpegnoPerChiaveOttimizzatoResponse response = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(request);
 			logServiceResponse(response);
 			
 			// Controllo gli errori
@@ -202,7 +204,7 @@ public abstract class GestioneSubImpegnoInsPrimaNotaIntegrataBaseAction<M extend
 		.append("/")
 		.append(subImpegno.getNumeroImpegnoPadre().toPlainString())
 		.append("-")
-		.append(subImpegno.getNumero().toPlainString());
+		.append(subImpegno.getNumeroBigDecimal().toPlainString());
 		return sub.toString();
 	}
 

@@ -8,7 +8,7 @@ SPDX-License-Identifier: EUPL-1.2
 <s:include value="/jsp/include/actionMessagesErrors.jsp" />
 <s:if test="progettoTrovato">
 	<h4>Elenco progetti</h4>     
-	    <!--     TABELLE       RIEPILOGO   con azioni -->
+	<%--     TABELLE       RIEPILOGO   con azioni --%>
 	<display:table name="listaRicercaProgetto"  
 	                 class="table table-striped table-bordered table-hover" 
 	                 summary="riepilogo progetti"

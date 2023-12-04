@@ -6,94 +6,71 @@ The original copyright notice and the license, under which CSI-Piemonte received
 are set forth below. You can find the original source code at the link set hereafter.
 Please refer to the accompanying credits file for additional notices.
 
-[Apache 2.0](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/APACHE%202.0-LICENSE.txt) \
+[Apache 2.0](../lib/third-party-licenses/APACHE%202.0-LICENSE.txt)\
 cglib,2.2.2\
 commons-beanutils,1.8.3\
 commons-codec,1.7\
 commons-collections,3.2.1\
-commons-dbcp,1.2.2\
-commons-fileupload,1.2.2\
+commons-fileupload,1.4\
 commons-httpclient,3.1\
 commons-lang,2.6\
-commons-logging,1.1\
-commons-lang3,3.1\
-commons-pool,1.5.2\
-cxf-api,2.4.6-redhat-1\
-freemarker,2.3.22\
-hibernate-validator,4.2.0.Final-redhat-1\
+commons-logging,1.2\
+commons-lang3,3.8.1\
+freemarker,2.3.31\
 jackson-core-asl,1.9.2-redhat-1\
 jackson-mapper-asl,1.9.2-redhat-1\
-javassist,3.16.1-GA\
+javassist,3.20.0-GA\
 jtype,0.1.1-redhat-1\
 log4j,1.2.15\
-ognl,3.0.19\
-spring-aop,3.1.1.RELEASE\
-spring-asm,3.1.1.RELEASE\
-spring-beans,3.1.1.RELEASE\
-spring-context,3.1.1.RELEASE\
-spring-core,3.1.1.RELEASE\
-spring-data-commons-core,1.4.0.RELEASE\
-spring-data-jpa,1.2.0.RELEASE\
-spring-expression,3.1.1.RELEASE\
-spring-jdbc,3.1.1.RELEASE\
-spring-orm,3.1.1.RELEASE\
-spring-test,3.1.1.RELEASE\
-spring-tx,3.1.1.RELEASE\
-spring-web,3.1.1.RELEASE\
-spring-webmvc,3.1.1.RELEASE\
-struts2-arianna-plugin,0.5.1\
-struts2-core,2.3.32\
-struts2-json-plugin,2.3.1.2\
-struts2-spring-plugin,2.3.32\
-validation-api,1.0.0.GA-redhat-1\
-xwork-core,2.3.32\
+log4j-api,2.17.1\
+ognl,3.1.29\
+remincl,1.0.3\
+spring-aop,4.3.25.RELEASE\
+spring-beans,4.3.26.RELEASE\
+spring-context,4.3.26.RELEASE\
+spring-core,4.3.26.RELEASE\
+spring-expression,4.3.26.RELEASE\
+spring-test,4.3.26.RELEASE\
+spring-web,4.3.26.RELEASE\
+struts2-arianna-plugin,0.7-beta.1\
+struts2-core,2.5.30\
+struts2-json-plugin,2.5.30\
+struts2-spring-plugin,2.5.30\
+util-perf,1.0.2\
 bootstrap,2.1.1\
 prettify
 
-[Artistic 1.0](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/ARTISTIC%201.0-LICENSE.txt) \
+[Artistic 1.0](../lib/third-party-licenses/ARTISTIC%201.0-LICENSE.txt)\
 displaytag,1.2
 
-[BSD 3-Clause License](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/BSD%203-CLAUSE-LICENSE.txt) \
+[BSD 3-Clause License](../lib/third-party-licenses/BSD%203-CLAUSE-LICENSE.txt)\
 asm,3.3.1\
 antlr,2.7.7-redhat-1\
 datatable,1.9.4
 
-[BSD 4-Clause License](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/BSD%204-CLAUSE-LICENSE.txt) \
-dom4j,1.6.1\
+[BSD 4-Clause License](../lib/third-party-licenses/BSD%204-CLAUSE-LICENSE.txt)\
 dom4j,1.6.1-redhat-1
 
-[Common Development and Distribution License (CDDL) 1.0](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/CDDL%201.0-LICENSE.txt) \
-jboss-ejb-api_3.1_spec,1.0.2.Final-redhat-1\
-jboss-jstl-api_1.2_spec,1.0.3.Final-redhat-1\
-jboss-servlet-api_3.0_spec,1.0.1.Final-redhat-1\
-jboss-transaction-api_1.1_spec,1.0.1.Final-redhat-1
+[Common Development and Distribution License (CDDL) 1.0](../lib/third-party-licenses/CDDL%201.0-LICENSE.txt)\
+jboss-servlet-api_3.0_spec,1.0.1.Final-redhat-1
 
-[Eclipse Public License 1.0](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/EPL%201.0-LICENSE.txt) \
-hibernate-jpa-2.0-api,1.0.1.Final-redhat-1\
+[Eclipse Public License 1.0](../lib/third-party-licenses/EPL%201.0-LICENSE.txt)\
+aspectjrt,1.8.13\
 junit,4.11
 
-[GNU General Public License 1.0](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/GPL%201.0-LICENSE.txt) \
-jboss-jstl-api_1.2_spec,1.0.3.Final-redhat-1
-
-[GNU General Public License 2.0](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/GPL%202.0-LICENSE.txt) \
-jboss-ejb-api_3.1_spec,1.0.2.Final-redhat-1\
+[GNU General Public License 2.0](../lib/third-party-licenses/GPL%202.0.txt)\
 jboss-servlet-api_3.0_spec,1.0.1.Final-redhat-1\
-jboss-transaction-api_1.1_spec,1.0.1.Final-redhat-1\
 datatable,1.9.4
 
-[GNU General Public License 3.0](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/GPL%203.0-LICENSE.txt) \
+[GNU General Public License 3.0](../lib/third-party-licenses/GPL%203.0-LICENSE.txt)\
 bwizard
 
-[GNU Lesser General Public License 2.1](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/LGPL%202.1-LICENSE.txt) \
-javassist,3.16.1-GA\
-hibernate-core,4.1.3.Final-redhat-1\
-jboss-jsp-api_2.2_spec,1.0.1.Final-redhat-1\
-hibernate-commons-annotations,4.0.1.Final-redhat-1\
-hibernate-entitymanager,4.1.3.Final-redhat-1\
-jboss-logging,3.1.1.GA-redhat-1
+[GNU Lesser General Public License 2.1](../lib/third-party-licenses/LGPL%202.1-LICENSE.txt)\
+javassist,3.20.0-GA
 
-[MIT License](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/MIT-LICENSE.txt) \
-slf4j-api,1.5.8\
+[MIT License](../lib/third-party-licenses/MIT-LICENSE.txt)\
+jcl-over-slf4j,1.7.25\
+slf4j-api,1.7.25\
 slf4j-jdk14,1.5.8\
 bignumber,2.4.0\
 bootbox,3.3.0\
@@ -105,33 +82,8 @@ placeholders,3.0.2\
 upbootstrap-typeahead,0.0.3\
 ztree,3.5.12
 
-[Mozilla Public License 1.1](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/MPL%201.1-LICENSE.txt) \
-javassist,3.16.1-GA
-
-[PostgreSQL License](https://github.com/unica-open/contabilia/blob/master/third-party-licenses/POSTGRESQL-LICENSE.txt) \
-postgresql,9.4-1201.jdbc4
+[Mozilla Public License 1.1](../lib/third-party-licenses/MPL%201.1-LICENSE.txt)\
+javassist,3.20.0-GA
 
 Public Domain\
 aopalliance,1.0.0
-
-
-[CSI](https://github.com/unica-open/contabilia/blob/master/Copyrights.txt) \
-csi-apachesoap,1.4.6\
-csi-core,1.4.6\
-csi-ejb,1.4.6\
-csi-ejb-weblogic,1.4.6\
-csi-rmi,1.4.6\
-csi-stadapter,1.4.6\
-csi-tools,1.4.6\
-custom-component,1.0.1\
-custom-component-attr,1.0.1\
-iridev2-pep-intf,2.0.0\
-remincl,1.0.2\
-shibboleth-shibfilter,1.0.0\
-ssobart-audit-client,1.0.0\
-ssobart-client,2.1.1\
-ssobart-client-pepauth,1.1.0\
-util-beanlocatorfactory,1.0.1\
-util-perf,1.0.1\
-util-struts2-csitemplate,1.0.1\
-util-struts2-csitemplate-sisp,1.0.1

@@ -16,7 +16,6 @@ SPDX-License-Identifier: EUPL-1.2
     <include file="struts-movgest-imp.xml" />
     <include file="struts-movgest-acc.xml" />
 	<include file="struts-fragments.xml" />
-	<include file="struts-mutuo.xml" />
 	<include file="struts-saldo.xml" />
 	<include file="struts-liquidazione.xml"/>
 	<include file="struts-ordinativo-pag.xml"/>

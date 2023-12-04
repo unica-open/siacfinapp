@@ -86,6 +86,14 @@ SPDX-License-Identifier: EUPL-1.2
 									<dd>
 										<s:property value="getContattoStr('PEC')" default="-" />&nbsp;
 									</dd>
+									
+
+									<dt>Codice destinatario / IPA</dt>
+									<dd>
+										<s:property value="selectedSede.codDestinatario" default="-" />&nbsp;
+									</dd>
+
+									
 									<dt>Utente Inserimento</dt>
 								    <dd><s:property value="selectedSede.utenteCreazione" />&nbsp;</dd>
 								    <dt>Data Inserimento</dt>

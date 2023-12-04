@@ -31,8 +31,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-        <s:form method="post" action="validaSoggetto.do">
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form method="post" action="validaSoggetto">
    
    <s:if test="hasActionErrors()">
 		<%-- Messaggio di ERROR --%>
@@ -99,7 +99,8 @@ SPDX-License-Identifier: EUPL-1.2
 	    <dt>Data di nascita</dt>
 	    <dd><s:property value="%{dettaglioSoggetto.dataNascita}"/>&nbsp;</dd>
 	    <dt>Stato/Provincia/Comune</dt>
-	    <dd><s:property value="dettaglioSoggetto.comuneNascita.nazioneDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.siglaProvincia"/>/<s:property value="dettaglioSoggetto.comuneNascita.codiceBelfiore"/>&nbsp;</dd>
+	    <!-- task-226 -->
+	    <dd><s:property value="dettaglioSoggetto.comuneNascita.nazioneDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.provinciaDesc"/>/<s:property value="dettaglioSoggetto.comuneNascita.codiceBelfiore"/>&nbsp;</dd>
 	    <dt>Note</dt>
 	    <dd><s:property value="dettaglioSoggetto.note"/>&nbsp;</dd>
 	    
@@ -216,7 +217,8 @@ SPDX-License-Identifier: EUPL-1.2
 	    <s:if test="%{dettaglioSoggetto.codDestinatario != dettaglioSoggettoMod.codDestinatario}"><dd><span style="background-color:yellow"><s:property value="%{dettaglioSoggettoMod.codDestinatario}"/></span>&nbsp;</dd></s:if>
 	    <s:else><dd><s:property value="%{dettaglioSoggettoMod.codDestinatario}"/>&nbsp;</dd></s:else>
 	    <dt>email PEC</dt>
-	    <s:if test="%{dettaglioSoggetto.emailPec != dettaglioSoggettoMod.emailPec}"><dd><span style="background-color:yellow"><s:property value="dettaglioSoggettoMod.emailPec"/></span>&nbsp;</dd></s:if>
+	    <s:if test="%{dettaglioSoggetto.emailPec != dettaglioSoggettoMod.emailPec}"><dd><span style="background-color:yellow">
+	    	<s:property value="dettaglioSoggettoMod.emailPec"/></span>&nbsp;</dd></s:if>
 	    <s:else><dd><s:property value="dettaglioSoggettoMod.emailPec"/>&nbsp;</dd></s:else>	    
     </dl>           
 	</div>
@@ -236,7 +238,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" data-aria-hidden="true">no, indietro</button>
-		<s:submit id="submitRifiutaBtn" name="rifiutaSoggetto" value="si, prosegui" cssClass="btn btn-primary" method="rifiutaSoggetto"/>
+		<!-- task-131 <s:submit id="submitRifiutaBtn" name="rifiutaSoggetto" value="si, prosegui" cssClass="btn btn-primary" method="rifiutaSoggetto"/> -->
+		<s:submit id="submitRifiutaBtn" name="rifiutaSoggetto" value="si, prosegui" cssClass="btn btn-primary" action="validaSoggetto_rifiutaSoggetto"/>
 	</div>
 </div>  
  <!--/modale rifiuta -->
@@ -252,7 +255,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" data-aria-hidden="true">no, indietro</button>
-		<s:submit id="submitValidaBtn" name="validaSoggetto" value="si, prosegui" cssClass="btn btn-primary" method="validaSoggetto"/>
+		<!-- task-131 <s:submit id="submitValidaBtn" name="validaSoggetto" value="si, prosegui" cssClass="btn btn-primary" method="validaSoggetto"/> -->
+		<s:submit id="submitValidaBtn" name="validaSoggetto" value="si, prosegui" cssClass="btn btn-primary" action="validaSoggetto_validaSoggetto"/>
 	</div>
 </div>  
  <!--/modale rifiuta -->

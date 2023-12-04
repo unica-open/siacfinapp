@@ -10,14 +10,21 @@ SPDX-License-Identifier: EUPL-1.2
 		<interceptors>
 
 			<!-- Interceptor di log prima e a termine dell'invocazione -->
-			<interceptor name="logInterceptor" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+			<interceptor name="logInterceptor" class="it.csi.siac.siaccommonapp.interceptor.LogInterceptor" />
 
 			<!-- Interceptor per la gestione degli errori di conversione <interceptor name="siacConversionErrorInterceptor" class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" /> -->
 
-			<!-- Interceptor per la gestione dei breadcrumb -->
+			<!-- Interceptor per la gestione dei breadcrumb --> 
+			<!-- task-131 -->
+			<!-- 
 			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+  				<param name="defaultRewindMode">AUTO</param>
+  				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+			-->
+			 <interceptor name="breadCrumbs" class="xyz.timedrain.arianna.plugin.BreadCrumbInterceptor">
 				<param name="defaultRewindMode">AUTO</param>
-				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+				<param name="defaultComparator">xyz.timedrain.arianna.plugin.NameComparator</param>
 			</interceptor>
 
 			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
@@ -26,13 +33,13 @@ SPDX-License-Identifier: EUPL-1.2
 			<interceptor-stack name="myStack">
 				<!-- Default Stack -->
 				<!-- Interceptor di log -->
-				<interceptor-ref name="logInterceptor" />
 				
 				<interceptor-ref name="exception" />
 				<interceptor-ref name="alias" />
 				<interceptor-ref name="servletConfig" />
 				<interceptor-ref name="i18n" />
 				<interceptor-ref name="actionData" />
+				<interceptor-ref name="logInterceptor" />
 				<interceptor-ref name="prepare" />
 				<interceptor-ref name="redirectMessage" />
 				<interceptor-ref name="chain" />
@@ -81,9 +88,489 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
 			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
 			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
-			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>
-			
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
 		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_remodpagamento" class="gestioneOrdinativoPagamentoStep1Action" method="remodpagamento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_resede" class="gestioneOrdinativoPagamentoStep1Action" method="resede">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_caricaTitoloModPag" class="gestioneOrdinativoPagamentoStep1Action" method="caricaTitoloModPag">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_cercaLiquidazione" class="gestioneOrdinativoPagamentoStep1Action" method="cercaLiquidazione">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_eliminaQuotaOrdinativo" class="gestioneOrdinativoPagamentoStep1Action" method="eliminaQuotaOrdinativo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_eliminaProvvisorio" class="gestioneOrdinativoPagamentoStep1Action" method="eliminaProvvisorio">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_forzaInserisciQuotaAccertamento" class="gestioneOrdinativoPagamentoStep1Action" method="forzaInserisciQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_forzaAggiornaQuotaAccertamento" class="gestioneOrdinativoPagamentoStep1Action" method="forzaAggiornaQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_annullaStep1" class="gestioneOrdinativoPagamentoStep1Action" method="annullaStep1">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_prosegui" class="gestioneOrdinativoPagamentoStep1Action" method="prosegui">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_aggiornaOrdinativo" class="gestioneOrdinativoPagamentoStep1Action" method="aggiornaOrdinativo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_aggiornaOrdinativoIncasso" class="gestioneOrdinativoPagamentoStep1Action" method="aggiornaOrdinativoIncasso">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_tipoCausaleEntrataChanged" class="gestioneOrdinativoPagamentoStep1Action" method="tipoCausaleEntrataChanged">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_modpagamento" class="gestioneOrdinativoPagamentoStep1Action" method="modpagamento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_sedisecondarie" class="gestioneOrdinativoPagamentoStep1Action" method="sedisecondarie">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_aggiornaAvviso" class="gestioneOrdinativoPagamentoStep1Action" method="aggiornaAvviso">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_aggiungiOrdinativoDaCollegare" class="gestioneOrdinativoPagamentoStep1Action" method="aggiungiOrdinativoDaCollegare">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_eliminaOrdinativoCollegato" class="gestioneOrdinativoPagamentoStep1Action" method="eliminaOrdinativoCollegato">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_confermaAggiungiOrdinativoDaCollegare" class="gestioneOrdinativoPagamentoStep1Action" method="confermaAggiungiOrdinativoDaCollegare">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_controllaDisponibilitaSottocontoVincolato" class="gestioneOrdinativoPagamentoStep1Action" method="controllaDisponibilitaSottocontoVincolato">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_selezionaProvvedimento" class="gestioneOrdinativoPagamentoStep1Action" method="selezionaProvvedimento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>		
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_clearRicercaProvvedimento" class="gestioneOrdinativoPagamentoStep1Action" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_ricercaProvvedimento" class="gestioneOrdinativoPagamentoStep1Action" method="ricercaProvvedimento">			
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>	
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>				
+		</action>
+		
+		<!-- task-131 -->
+	  	<action name="gestioneOrdinativoPagamentoStep1_ricercaCapitolo" class="gestioneOrdinativoPagamentoStep1Action" method="ricercaCapitolo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			 
+	  	</action>
+	  	<!-- task-131 -->
+	  	<action name="gestioneOrdinativoPagamentoStep1_selezionaCapitolo" class="gestioneOrdinativoPagamentoStep1Action" method="selezionaCapitolo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			 
+	  	</action><!-- task-131 -->
+	  	<action name="gestioneOrdinativoPagamentoStep1_visualizzaDettaglioCapitolo" class="gestioneOrdinativoPagamentoStep1Action" method="visualizzaDettaglioCapitolo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			 
+	  	</action>
+	  	<!-- task-131 -->
+	  	<action name="gestioneOrdinativoPagamentoStep1_pulisciRicercaCapitolo" class="gestioneOrdinativoPagamentoStep1Action" method="pulisciRicercaCapitolo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+		    <result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+			<result name="modpagamento">/jsp/ordinativo/include/modalitaPagamentoOrdinativo.jsp</result>
+			<result name="sedisecondarie">/jsp/ordinativo/include/sediSecondarieOrdinativo.jsp</result>
+			<result name="gotoGestioneOrdinativo">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="aggiornaAvviso">/jsp/ordinativo/include/avvisoAggiorna.jsp</result>			 
+	  	</action>
+	  
+	  	<!-- task-131 -->
+	  	<action name="gestioneOrdinativoPagamentoStep1_listaClasseSoggettoChanged" class="gestioneOrdinativoPagamentoStep1Action" method="listaClasseSoggettoChanged">
+			<result name="success">/jsp/movgest/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/movgest/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+		</action>
+		  
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep1_ricercaSoggetto" class="gestioneOrdinativoPagamentoStep1Action" method="ricercaSoggetto">
+			<result name="success">/jsp/movgest/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/movgest/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+	    </action>
+	  
+	    <!-- task-131 -->
+	  	<action name="gestioneOrdinativoPagamentoStep1_pulisciRicercaSoggetto" class="gestioneOrdinativoPagamentoStep1Action" method="pulisciRicercaSoggetto">
+			<result name="success">/jsp/movgest/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/movgest/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/ordinativo/include/headerSoggettoOrdinativo.jsp</result>
+	  	</action>
+	  
+	  	<!-- task-131 -->
+	  	<action name="gestioneOrdinativoPagamentoStep1_selezionaSoggetto" class="gestioneOrdinativoPagamentoStep1Action" method="selezionaSoggetto">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+	  	</action>
+	  
+	  	<!-- task-131 -->
+	  	<action name="gestioneOrdinativoPagamentoStep1_elimina" class="gestioneOrdinativoPagamentoStep1Action" method="elimina">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep1.jsp</result>
+	  	</action>
 		
 		<action name="gestioneOrdinativoPagamentoStep2" class="gestioneOrdinativoPagamentoStep2Action">
 			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
@@ -106,7 +593,503 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
 		</action>
 		
+		<!-- task-131 -->	
+		<action name="gestioneOrdinativoPagamentoStep2_ricaricaTEByIdLiquidazione" class="gestioneOrdinativoPagamentoStep2Action" method="ricaricaTEByIdLiquidazione">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+		
+		<!-- task-131 -->	
+		<action name="gestioneOrdinativoPagamentoStep2_salva" class="gestioneOrdinativoPagamentoStep2Action" method="salva">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_proseguiStep" class="gestioneOrdinativoPagamentoStep2Action" method="proseguiStep">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_aggiornaOrdinativo" class="gestioneOrdinativoPagamentoStep2Action" method="aggiornaOrdinativo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_aggiornaQuotaOrdinativo" class="gestioneOrdinativoPagamentoStep2Action" method="aggiornaQuotaOrdinativo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>	
+		
+				<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_eliminaQuotaOrdinativo" class="gestioneOrdinativoPagamentoStep2Action" method="eliminaQuotaOrdinativo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>				
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_eliminaProvvisorio" class="gestioneOrdinativoPagamentoStep2Action" method="eliminaProvvisorio">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>	
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_forzaInserisciQuotaAccertamento" class="gestioneOrdinativoPagamentoStep2Action" method="forzaInserisciQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>	
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_forzaAggiornaQuotaAccertamento" class="gestioneOrdinativoPagamentoStep2Action" method="forzaAggiornaQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>		
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_annullaInserimentoQuota" class="gestioneOrdinativoPagamentoStep2Action" method="annullaInserimentoQuota">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_dettaglioAggiornaQuota" class="gestioneOrdinativoPagamentoStep2Action" method="dettaglioAggiornaQuota">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_dettaglioConsultaQuota" class="gestioneOrdinativoPagamentoStep2Action" method="dettaglioConsultaQuota">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep2_inserisciQuota" class="gestioneOrdinativoPagamentoStep2Action" method="inserisciQuota">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>
+			<result name="aggiornaOrdinativo" type="redirectAction">
+			    <param name="actionName">gestioneOrdinativoPagamentoStep1</param>
+				<param name="numeroOrdinativo">${numeroOrdinativoStruts}</param>
+				<param name="annoOrdinativo">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="dettaglioAggiornaQuota">/jsp/ordinativo/include/dettaglioAggiornaOrdinativo.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneOrdinativoPagamentoStep3</result>
+			<result name="refreshTE" >/jsp/include/transazioneElementare.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+		</action>
+		
+				
 		<action name="gestioneOrdinativoPagamentoStep3" class="gestioneOrdinativoPagamentoStep3Action">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+				<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_eliminaQuotaOrdinativo" class="gestioneOrdinativoPagamentoStep3Action" method="eliminaQuotaOrdinativo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>		
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_eliminaProvvisorio" class="gestioneOrdinativoPagamentoStep3Action" method="eliminaProvvisorio">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_forzaInserisciQuotaAccertamento" class="gestioneOrdinativoPagamentoStep3Action" method="forzaInserisciQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_forzaAggiornaQuotaAccertamento" class="gestioneOrdinativoPagamentoStep3Action" method="forzaAggiornaQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_selezionaProvvisorio" class="gestioneOrdinativoPagamentoStep3Action" method="selezionaProvvisorio">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_aggiornaBottoniera" class="gestioneOrdinativoPagamentoStep3Action" method="aggiornaBottoniera">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_dettaglioAggiornaCoperture" class="gestioneOrdinativoPagamentoStep3Action" method="dettaglioAggiornaCoperture">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_cercaProvvisorio" class="gestioneOrdinativoPagamentoStep3Action" method="cercaProvvisorio">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_salvaProvvisori" class="gestioneOrdinativoPagamentoStep3Action" method="salvaProvvisori">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_pulisciProvvisorio" class="gestioneOrdinativoPagamentoStep3Action" method="pulisciProvvisorio">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_inserisciProvvisorio" class="gestioneOrdinativoPagamentoStep3Action" method="inserisciProvvisorio">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_aggiornaOrdinativo" class="gestioneOrdinativoPagamentoStep3Action" method="aggiornaOrdinativo">
+			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
+			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaOrdinativoPagamento</param>
+				<param name="numero">${numeroOrdinativoStruts}</param>
+				<param name="anno">${annoOrdinativoStruts}</param>
+			</result>
+			<result name="erroreFiloArianna" type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="gotoGestioneOrdinativo"  type="redirectAction">gestioneOrdinativoPagamentoStep1</result>
+			<result name="aggiornaRegolaProvv">/jsp/ordinativo/include/regolaProvvisorio.jsp</result>
+		    <result name="aggiornaBottoniera">/jsp/ordinativo/include/aggiornaBottoniera.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneOrdinativoPagamentoStep3_aggiornaCopertura" class="gestioneOrdinativoPagamentoStep3Action" method="aggiornaCopertura">
 			<result name="success">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
 			<result name="input">/jsp/ordinativo/gestioneOrdinativoPagamentoStep3.jsp</result>
 			<result name="dettaglioAggiornaCoperture">/jsp/ordinativo/include/dettaglioCoperture.jsp</result>
@@ -123,15 +1106,168 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		<action name="reintroitoOrdinativoPagamentoStep1" class="reintroitoOrdinativoPagamentoStep1Action">
 			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
-			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
-			
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>		
 			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
-			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
-			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
 			<result name="prosegui" type="redirectAction">reintroitoOrdinativoPagamentoStep2</result>
 		</action>
 		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep1_selezionaProvvedimento" class="reintroitoOrdinativoPagamentoStep1Action" method="selezionaProvvedimento">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>		
+		</action>
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep1_clearRicercaProvvedimento" class="reintroitoOrdinativoPagamentoStep1Action" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>	
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>				
+		</action>
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep1_ricercaProvvedimento" class="reintroitoOrdinativoPagamentoStep1Action" method="ricercaProvvedimento">			
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>	
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep1_cercaOrdinativoPagamento" class="reintroitoOrdinativoPagamentoStep1Action" method="cercaOrdinativoPagamento">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>		
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="prosegui" type="redirectAction">reintroitoOrdinativoPagamentoStep2</result>
+		</action>
+		<!-- task-131 -->	
+		<action name="reintroitoOrdinativoPagamentoStep1_annullaStep1" class="reintroitoOrdinativoPagamentoStep1Action" method="annullaStep1">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>		
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="prosegui" type="redirectAction">reintroitoOrdinativoPagamentoStep2</result>
+		</action>
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep1_prosegui" class="reintroitoOrdinativoPagamentoStep1Action" method="prosegui">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep1.jsp</result>		
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="prosegui" type="redirectAction">reintroitoOrdinativoPagamentoStep2</result>
+		</action>
+		
+		
 		<action name="reintroitoOrdinativoPagamentoStep2" class="reintroitoOrdinativoPagamentoStep2Action">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_annullaStep2" class="reintroitoOrdinativoPagamentoStep2Action" method="annullaStep2">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_controlloDispDiCassa" class="reintroitoOrdinativoPagamentoStep2Action" method="controlloDispDiCassa">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_controlloDispLiquidare" class="reintroitoOrdinativoPagamentoStep2Action" method="controlloDispLiquidare">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_preCheckCoerenzaSoggetti" class="reintroitoOrdinativoPagamentoStep2Action" method="preCheckCoerenzaSoggetti">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_preCheckCoerenzaPianoDeiConti" class="reintroitoOrdinativoPagamentoStep2Action" method="preCheckCoerenzaPianoDeiConti">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_prosegui" class="reintroitoOrdinativoPagamentoStep2Action" method="prosegui">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_azzeraModaleImpegno" class="reintroitoOrdinativoPagamentoStep2Action" method="azzeraModaleImpegno">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_azzeraModaleAccertamento" class="reintroitoOrdinativoPagamentoStep2Action" method="azzeraModaleAccertamento">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_saveOnChangeElementoRigaOrdinaivi" class="reintroitoOrdinativoPagamentoStep2Action" method="saveOnChangeElementoRigaOrdinaivi">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_confermaCompGuidataImpegno" class="reintroitoOrdinativoPagamentoStep2Action" method="confermaCompGuidataImpegno">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_ricercaAccertamentoCompilazioneGuidata" class="reintroitoOrdinativoPagamentoStep2Action" method="ricercaAccertamentoCompilazioneGuidata">
+			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
+			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
+			<result name="refreshPopupModalImpegno">/jsp/ordinativo/include/modalImpegnoReintroitoContent.jsp</result>
+			<result name="refreshPopupModalAccertamento">/jsp/ordinativo/include/modalAccertamentoReintroitoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="reintroitoOrdinativoPagamentoStep2_ricercaImpegnoCompilazioneGuidata" class="reintroitoOrdinativoPagamentoStep2Action" method="ricercaImpegnoCompilazioneGuidata">
 			<result name="success">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
 			<result name="input">/jsp/ordinativo/reintroitoOrdinativoPagamentoStep2.jsp</result>
 			<result name="erroreFiloArianna" type="redirectAction">reintroitoOrdinativoPagamentoStep1</result>
@@ -144,8 +1280,108 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
 			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
 <!-- 			<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
-			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>
-			
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_pulisciRicercaImpegno" class="nuovaLiquidazioneOrdinativoAction" method="pulisciRicercaImpegno">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+<!-- 			<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_eliminaQuotaOrdinativo" class="nuovaLiquidazioneOrdinativoAction" method="eliminaQuotaOrdinativo">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+<!-- 			<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_eliminaProvvisorio" class="nuovaLiquidazioneOrdinativoAction" method="eliminaProvvisorio">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+<!-- 			<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_forzaInserisciQuotaAccertamento" class="nuovaLiquidazioneOrdinativo" method="forzaInserisciQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+<!-- 			<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_forzaAggiornaQuotaAccertamento" class="nuovaLiquidazioneOrdinativoAction" method="forzaAggiornaQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+<!-- 			<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		
+		<!-- task-131 -->
+	    <action name="nuovaLiquidazioneOrdinativo_confermaCompGuidata" class="nuovaLiquidazioneOrdinativoAction" method="confermaCompGuidata">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_ricercaGuidataImpegno" class="nuovaLiquidazioneOrdinativoAction" method="ricercaGuidataImpegno">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_indietroDaLiquidazione" class="nuovaLiquidazioneOrdinativoAction" method="indietroDaLiquidazione">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+	<!-- 	<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_annullaInserimentoNuovaLiquidazione" class="nuovaLiquidazioneOrdinativoAction" method="annullaInserimentoNuovaLiquidazione">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+	<!-- 	<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_salva" class="nuovaLiquidazioneOrdinativoAction" method="salva">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+	<!-- 	<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_codiceSiopeChanged" class="nuovaLiquidazioneOrdinativoAction" method="codiceSiopeChanged">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+<!-- 			<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
+		</action>
+		<!-- task-131 -->
+		<action name="nuovaLiquidazioneOrdinativo_confermaPdc" class="nuovaLiquidazioneOrdinativoAction" method="confermaPdc">
+			<result name="success">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="input">/jsp/ordinativo/nuovaLiquidazioneOrdinativo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+<!-- 			<result name="vaiStep2">/jsp/ordinativo/gestioneOrdinativoPagamentoStep2.jsp</result>	 -->
+			<result name="vaiStep2" type="redirectAction">gestioneOrdinativoPagamentoStep2</result>			
 		</action>
 		
 		<action name="ricercaOrdinativoPagamento" class="ricercaOrdinativoPagamentoAction">
@@ -166,6 +1402,260 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
 		</action>
 		
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_selezionaProvvedimento" class="ricercaOrdinativoPagamentoAction" method="selezionaProvvedimento">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>	<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>		
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_clearRicercaProvvedimento" class="ricercaOrdinativoPagamentoAction" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>	
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>				
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_ricercaProvvedimento" class="ricercaOrdinativoPagamentoAction" method="ricercaProvvedimento">	
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>	
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+	    <action name="ricercaOrdinativoPagamento_confermaCompGuidata" class="ricercaOrdinativoPagamentoAction" method="confermaCompGuidata">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_ricercaGuidataImpegno" class="ricercaOrdinativoPagamentoAction" method="ricercaGuidataImpegno">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_selezionaSoggetto" class="ricercaOrdinativoPagamentoAction" method="selezionaSoggetto">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_selezionaSoggettoDue" class="ricercaOrdinativoPagamentoAction" method="selezionaSoggettoDue">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_pulisciRicercaSoggetto" class="ricercaOrdinativoPagamentoAction" method="pulisciRicercaSoggetto">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_ricercaSoggetto" class="ricercaOrdinativoPagamentoAction" method="ricercaSoggetto">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_ricercaSoggettoDue" class="ricercaOrdinativoPagamentoAction" method="ricercaSoggettoDue">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_listaClasseSoggettoChanged" class="ricercaOrdinativoPagamentoAction" method="listaClasseSoggettoChanged">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		
+		
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_ricercaOrdinativoPagamento" class="ricercaOrdinativoPagamentoAction" method="ricercaOrdinativoPagamento">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="ricercaOrdinativoPagamento_annullaRicercaOrdinativi" class="ricercaOrdinativoPagamentoAction" method="annullaRicercaOrdinativi">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		
+		<!-- task-247 -->
+		<action name="ricercaOrdinativoPagamento_ricercaCapitolo" class="ricercaOrdinativoPagamentoAction" method="ricercaCapitolo">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-247 -->
+		<action name="ricercaOrdinativoPagamento_pulisciRicercaCapitolo" class="ricercaOrdinativoPagamentoAction" method="pulisciRicercaCapitolo">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-247 -->
+		<action name="ricercaOrdinativoPagamento_selezionaCapitolo" class="ricercaOrdinativoPagamentoAction" method="selezionaCapitolo">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-247 -->
+		<action name="ricercaOrdinativoPagamento_visualizzaDettaglioCapitolo" class="ricercaOrdinativoPagamentoAction" method="visualizzaDettaglioCapitolo">
+			<result name="success">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/ricercaOrdinativoPagamento.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			
+			<result name="headerSoggettoDue">/jsp/ordinativo/include/headerSoggettoCessioneIncassoOrdinativoRicerca.jsp</result>
+			
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoOrdinativoPagamento" type="redirectAction">elencoOrdinativoPagamento</result>
+			<result name="goToRicercaOrdinativoPagamento" type="redirectAction">ricercaOrdinativoPagamento</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>		
+		
 		<action name="elencoOrdinativoPagamento" class="elencoOrdinativoPagamentoAction">
 			<result name="success">/jsp/ordinativo/elencoOrdinativoPagamento.jsp</result>
 			<result name="input">/jsp/ordinativo/elencoOrdinativoPagamento.jsp</result>
@@ -179,6 +1669,58 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="dettaglioQuoteOrdinativoPagamentoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoPag.jsp</result>
 			<result name="dettaglioQuoteOrdinativoPagamentoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoInc.jsp</result>
 		</action>
+		
+		<!-- task-131 -->
+	  	<action name="consultaOrdinativoPagamento_eliminaQuotaOrdinativo" class="consultaOrdinativoPagamentoAction" method="eliminaQuotaOrdinativo">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoPag.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoInc.jsp</result>
+	  	</action>
+		
+		<!-- task-131 -->
+	  	<action name="consultaOrdinativoPagamento_eliminaProvvisorio" class="consultaOrdinativoPagamentoAction" method="eliminaProvvisorio">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoPag.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoInc.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+	  	<action name="consultaOrdinativoPagamento_forzaInserisciQuotaAccertamento" class="consultaOrdinativoPagamentoAction" method="forzaInserisciQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoPag.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoInc.jsp</result>
+	  	</action>
+		<!-- task-131 -->
+		<action name="consultaOrdinativoPagamento_forzaAggiornaQuotaAccertamento" class="consultaOrdinativoPagamentoAction" method="forzaAggiornaQuotaAccertamento">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoPag.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoInc.jsp</result>
+	  	</action>
+	  	<!-- task-131 -->
+	  	<action name="consultaOrdinativoPagamento_cambiaTabFolder" class="consultaOrdinativoPagamentoAction" method="cambiaTabFolder">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoPag.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoInc.jsp</result>
+	  	</action>
+		<!-- task-131 -->
+	  	<action name="consultaOrdinativoPagamento_dettaglioQuoteOrdinativoPagamentoInc" class="consultaOrdinativoPagamentoAction" method="dettaglioQuoteOrdinativoPagamentoInc">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoPag.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoInc.jsp</result>
+	  	</action>
+	  	<!-- task-131 -->
+	  	<action name="consultaOrdinativoPagamento_dettaglioQuoteOrdinativoPagamentoPag" class="consultaOrdinativoPagamentoAction" method="dettaglioQuoteOrdinativoPagamentoPag">
+			<result name="success">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="input">/jsp/ordinativo/consultaOrdinativoPagamento.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoPag">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoPag.jsp</result>
+			<result name="dettaglioQuoteOrdinativoPagamentoInc">/jsp/ordinativo/include/dettaglioQuoteOrdinativoCollegatoPagamentoInc.jsp</result>
+	  	</action>
 		
 		<!--  
 		<action name="consultaOrdinativoPagamentoTabQuote" class="consultaOrdinativoPagamentoAction">

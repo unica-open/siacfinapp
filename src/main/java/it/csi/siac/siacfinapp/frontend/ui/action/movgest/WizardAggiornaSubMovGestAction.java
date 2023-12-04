@@ -23,6 +23,7 @@ import it.csi.siac.siacbilser.model.SiopeSpesa;
 import it.csi.siac.siaccorser.model.Bilancio;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ImpegniPluriennaliModel;
@@ -31,8 +32,7 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AnnullaMovimentoEntrata;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzato;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
@@ -57,6 +57,8 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 	private ProvvedimentoService provvedimentoService;
 
 	protected static final String CODICE_MOTIVO_RIACCERTAMENTO = "RIAC";
+
+	protected static final String PROSEGUI = "prosegui";
 
 	protected void pulisciSoggettoSelezionato() {
 		if (model != null) {
@@ -230,16 +232,10 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 			if (!soggettoDecentrato) {
 
 				if (!model.isProseguiConWarning()) {
-
-					addPersistentActionWarning(ErroreCore.INCONGRUENZA_NEI_PARAMETRI
-							.getErrore("il provvedimento deve essere diverso da quello del movimento di tipo "
-									+ tipoMovimentoGestione)
-							.getCodice()
-							+ " - "
-							+ ErroreCore.INCONGRUENZA_NEI_PARAMETRI
-									.getErrore("il provvedimento deve essere diverso da quello del movimento di tipo "
-											+ tipoMovimentoGestione)
-									.getDescrizione());
+					
+					addPersistentActionWarningFin(ErroreCore.INCONGRUENZA_NEI_PARAMETRI
+							.getErrore("il provvedimento deve essere diverso da quello del movimento di tipo " + tipoMovimentoGestione));
+					
 					erroreProvvedimento = true;
 					model.setProseguiConWarning(true);
 
@@ -359,7 +355,7 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 				for (SubImpegno itSubImp : model.getListaSubimpegni()) {
 					if (Integer.valueOf(getIdSubImpegno()) == (itSubImp.getUid())) {
 						model.getSubDettaglio().setDescrizione(itSubImp.getDescrizione());
-						model.getSubDettaglio().setNumero(itSubImp.getNumero().toString());
+						model.getSubDettaglio().setNumero(itSubImp.getNumeroBigDecimal().toString());
 						model.getSubDettaglio().setDisponibilitaLiquidare(itSubImp.getDisponibilitaLiquidare());
 						model.getSubDettaglio().setImportoIniziale(itSubImp.getImportoIniziale());
 					}
@@ -371,7 +367,7 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 					if (Integer.valueOf(getIdSubImpegno()) == (itSubAcc.getUid())) {
 
 						model.getSubDettaglio().setDescrizione(itSubAcc.getDescrizione());
-						model.getSubDettaglio().setNumero(itSubAcc.getNumero().toString());
+						model.getSubDettaglio().setNumero(itSubAcc.getNumeroBigDecimal().toString());
 						model.getSubDettaglio().setImportoIniziale(itSubAcc.getImportoIniziale());
 					}
 				}
@@ -486,15 +482,15 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 						rip.setEnte(sessionHandler.getEnte());
 						rip.setRichiedente(sessionHandler.getRichiedente());
 						RicercaImpegnoK k = new RicercaImpegnoK();
-						k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+						k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 						k.setAnnoImpegno(this.model.getAnnoImpegno());
 						k.setNumeroImpegno(new BigDecimal(this.model.getNumeroImpegno()));
 						rip.setCaricaSub(true);
-						k.setNumeroSubDaCercare(currentSubimpegno.getNumero());
+						k.setNumeroSubDaCercare(currentSubimpegno.getNumeroBigDecimal());
 						//
 						rip.setpRicercaImpegnoK(k);
 
-						RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService
+						RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService
 								.ricercaImpegnoPerChiaveOttimizzato(rip);
 
 						if (respRk != null && respRk.getImpegno() != null
@@ -528,7 +524,7 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 
 	protected boolean isResiduo() {
 		Integer annoImpegno = model.getStep1Model().getAnnoImpegno();
-		Integer annoEsercizio = Integer.parseInt(sessionHandler.getAnnoEsercizio());
+		Integer annoEsercizio = sessionHandler.getAnnoBilancio();
 		boolean residuo = annoImpegno.compareTo(annoEsercizio) < 0;
 		return residuo;
 	}
@@ -622,8 +618,8 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 		// FINE SIOPE PLUS
 
 		// NON SETTAVA IL NUMERO:
-		if (currentSubimpegno.getNumero() != null) {
-			model.getStep1ModelSubimpegno().setNumeroImpegno(currentSubimpegno.getNumero().intValue());
+		if (currentSubimpegno.getNumeroBigDecimal() != null) {
+			model.getStep1ModelSubimpegno().setNumeroImpegno(currentSubimpegno.getNumeroBigDecimal().intValue());
 		}
 
 		// stato operativo:
@@ -757,6 +753,10 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 	}
 
 	public String prosegui() {
+		return prosegui(false);
+	}
+	
+	protected String prosegui(boolean proseguiSalva) {
 		
 		List<Errore> errori = erroriSubimpegno();
 		boolean warngins = presenzaWarningsSubimpegno();
@@ -831,7 +831,7 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 				// nel caso in cui fossimo in predisposizione consuntivo..
 				// in modo che l'importo ritorni modificabile:
 				Integer annoImpegno = model.getStep1ModelSubimpegno().getAnnoImpegno();
-				Integer annoEsercizio = Integer.parseInt(sessionHandler.getAnnoEsercizio());
+				Integer annoEsercizio = sessionHandler.getAnnoBilancio();
 
 				boolean bilancioPrecInPredisposizioneConsuntivo = isBilancioPrecedenteInPredisposizioneConsuntivo();
 
@@ -879,11 +879,12 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 						// se la modifica e' una modifica importo, ed essa e'
 						// l'ultima modifica importo effettuata, la devo poter
 						// annullare, altrimenti no
-						if (movimento.getUid() == maxIdModImp && maxIdModImp != 0) {
-							abilitato = true;
-						} else {
+						// SIAC-8611 - disabilitare controllo su ultima modifica: posso aggiornare anche le precedenti (solo su impegni)
+						//if (movimento.getUid() == maxIdModImp && maxIdModImp != 0) {
+						abilitato = true;
+						/*} else {
 							abilitato = false;
-						}
+						}*/
 					}
 				}
 			} else {
@@ -1014,7 +1015,7 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 			if (tipo.equals(OggettoDaPopolareEnum.SUBIMPEGNO.toString())) {
 				for (int i = 0; i < elencoSubMovimenti.size(); i++) {
 					if (!((SubImpegno) elencoSubMovimenti.get(i)).getStatoOperativoMovimentoGestioneSpesa()
-							.equals(Constanti.MOVGEST_STATO_ANNULLATO)) {
+							.equals(CostantiFin.MOVGEST_STATO_ANNULLATO)) {
 						ris = true;
 						break;
 					}
@@ -1022,7 +1023,7 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 			} else if (tipo.equals(OggettoDaPopolareEnum.SUBACCERTAMENTO.toString())) {
 				for (int i = 0; i < elencoSubMovimenti.size(); i++) {
 					if (!((SubAccertamento) elencoSubMovimenti.get(i)).getStatoOperativoMovimentoGestioneEntrata()
-							.equals(Constanti.MOVGEST_STATO_ANNULLATO)) {
+							.equals(CostantiFin.MOVGEST_STATO_ANNULLATO)) {
 						ris = true;
 						break;
 					}
@@ -1048,6 +1049,25 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 		leggiStoricoProvvedimentoByMovimento(sub);
 
 		return "consultaModificheProvvedimento";
+	}
+	
+	
+	//SIAC-6997
+	public String consultaModificheStrutturaCompetente() throws Exception {
+		setMethodName("consultaModificheStrutturaCompetente");
+		MovimentoGestione sub = null;
+
+		if (oggettoDaPopolare.equals(OggettoDaPopolareEnum.SUBIMPEGNO)) {
+			sub = FinUtility.getById(model.getImpegnoInAggiornamento().getElencoSubImpegni(),
+					model.getStep1ModelSubimpegno().getUid());
+		} else if (oggettoDaPopolare.equals(OggettoDaPopolareEnum.SUBACCERTAMENTO)) {
+			sub = FinUtility.getById(model.getAccertamentoInAggiornamento().getElencoSubAccertamenti(),
+					model.getStep1ModelSubimpegno().getUid());
+		}
+
+		leggiStoricoStrutturaCompetenteByMovimento(sub);
+
+		return "consultaModificheStrutturaCompetente";
 	}
 
 	protected List<Errore> controlliReimputazioneEMotivoInAggiornamento(List<Errore> listaErrori, String tipoMov,
@@ -1107,6 +1127,9 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 				listaErrori.add(errore);
 			}
 
+		}else{
+			//SIAC-6997: [...ElaboratoRor...]Se REIMPUTAZIONE non settata deve essere nullo e non visualizzato
+			model.getMovimentoSpesaModel().setElaboratoRor(null);
 		}
 
 		if (tipoMotivo.equalsIgnoreCase(CODICE_MOTIVO_RIACCERTAMENTO)) {
@@ -1166,16 +1189,20 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 		}
 
 		WebAppConstants.Si.equals(reimputazione);
+		//SIAC-8826: permettere tipo reimp o reanno anche sul solo subaccertamento (senza modifica contestuale dell'accertamento)
 		boolean modificaSulSubSenzaIndicarneLaTestata = (tipoImpegno.equals("SubImpegno")
-				&& !"Modifica Anche Impegno".equalsIgnoreCase(abbina))
-				|| (tipoImpegno.equals("SubAccertamento") && !"Modifica Anche Accertamento".equalsIgnoreCase(abbina));
+				&& !"Modifica Anche Impegno".equalsIgnoreCase(abbina));
+		//		|| (tipoImpegno.equals("SubAccertamento") && !"Modifica Anche Accertamento".equalsIgnoreCase(abbina));
 
 		if (modificaSulSubSenzaIndicarneLaTestata && WebAppConstants.Si.equals(reimputazione)) {
 			// La modifica e' sul sub, ma non e' stato selezionato anche
 			// l'impegno, errore:
+			//SIAC-8826: permettere tipo reimp o reanno anche sul solo subaccertamento (senza modifica contestuale dell'accertamento)
+			//non entrer mai nel caso REIMPUTAZIONE_NON_PREVISTA_PER_I_SUB_ACC
 			Errore errore = tipoImpegno.equals("SubImpegno")
 					? ErroreFin.REIMPUTAZIONE_NON_PREVISTA_PER_I_SUB_IMP.getErrore()
 					: ErroreFin.REIMPUTAZIONE_NON_PREVISTA_PER_I_SUB_ACC.getErrore();
+			
 			listaErrori.add(errore);
 			return listaErrori;// questo errore maschera quelli dopo, perche'
 								// tanto l'utente dovra' mettere reimputazione
@@ -1328,9 +1355,18 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 		model.getMovimentoSpesaModel().setDaReimputazione(buildListaSiNo());
 	}
 
+	//SIAC-6997
+	protected void inizializzaElaboraRorReannoInInserimentoNelModel(){
+		//Reanno:
+		model.getMovimentoSpesaModel().setElaboratoRor(WebAppConstants.No);
+		model.getMovimentoSpesaModel().setAnnoReimputazione(null);
+		model.getMovimentoSpesaModel().setDaElaboratoRor(buildListaSiNo());
+	}
+	
 	protected <MMG extends ModificaMovimentoGestione> MMG settaDatiReimputazioneDalModel(MMG spesa) {
 		if (WebAppConstants.Si.equals(model.getMovimentoSpesaModel().getReimputazione())) {
 			spesa.setReimputazione(true);
+			spesa.setElaboraRorReanno(false);
 			spesa.setAnnoReimputazione(model.getMovimentoSpesaModel().getAnnoReimputazione());
 		} else {
 			spesa.setReimputazione(false);
@@ -1343,16 +1379,22 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 		// Reimputazione:
 		if (spesa.isReimputazione()) {
 			model.getMovimentoSpesaModel().setReimputazione(WebAppConstants.Si);
+			if(spesa.isElaboraRorReanno())
+				model.getMovimentoSpesaModel().setElaboratoRor(WebAppConstants.Si);
+			else
+				model.getMovimentoSpesaModel().setElaboratoRor(WebAppConstants.No);
 		} else {
 			model.getMovimentoSpesaModel().setReimputazione(WebAppConstants.No);
+			model.getMovimentoSpesaModel().setElaboratoRor(WebAppConstants.No);
 		}
 		model.getMovimentoSpesaModel().setAnnoReimputazione(spesa.getAnnoReimputazione());
 		model.getMovimentoSpesaModel().setDaReimputazione(buildListaSiNo());
+		model.getMovimentoSpesaModel().setDaElaboratoRor(buildListaSiNo());
 		//
 	}
 
 	protected List<Errore> controlloGestisciImpegnoDecentratoPerModifica(List<Errore> listaErrori) {
-		if (isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentratoP)) {
+		if (isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentratoP)) {
 			// il provveddimento deve essere provvisorio
 			if (!MOVGEST_PROVVISORIO.equals(model.getStep1Model().getProvvedimento().getStato())
 					|| model.getStep1Model().getProvvedimento().isParereRegolaritaContabile()) {
@@ -1381,7 +1423,7 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 
 		// Controllo gestisci decentrato: il provveddimento deve essere
 		// provvisorio
-		if (isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamentoDecentratoP)
+		if (isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoDecentratoP)
 				&& (!MOVGEST_PROVVISORIO.equals(model.getStep1Model().getProvvedimento().getStato())
 						|| model.getStep1Model().getProvvedimento().isParereRegolaritaContabile())) {
 
@@ -1389,6 +1431,15 @@ public class WizardAggiornaSubMovGestAction extends WizardAggiornaMovGestAction 
 			model.getStep1Model().setCheckproseguiMovimentoSpesa(false);
 		}
 		return listaErrori;
+	}
+
+	
+
+	
+	// SIAC-8563
+	public String proseguiSalva() throws Exception {
+		String ret = prosegui(true);
+		return PROSEGUI.equals(ret) ? "proseguiSalva" : ret;
 	}
 
 }

@@ -25,8 +25,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 <div class="row-fluid">
     <div class="span12 contentPage">
-    
-	<s:form method="post" action="aggiornaSediSecondarie.do">
+    <%-- SIAC-7952 rimuovo .do dalla action --%>
+	<s:form method="post" action="aggiornaSediSecondarie">
    
 	<s:if test="hasActionErrors()">
 		<%-- Messaggio di ERROR --%>
@@ -50,9 +50,12 @@ SPDX-License-Identifier: EUPL-1.2
  	</s:if>
  	
 	<ul class="nav nav-tabs">
-		<li><s:a action="aggiornaSoggetto" method="doExecute">Soggetto</s:a></li>
+		<li>
+			<!-- task-131 <s:a action="aggiornaSoggetto" method="doExecute">Soggetto</s:a></li> -->
+			<s:a action="aggiornaSoggetto_doExecute">Soggetto</s:a></li>
 		<li class="active"><a href="#">Sedi Secondarie</a></li>
-		<li><s:a action="modalitaPagamentoSoggetto">Modalit&agrave; pagamento</s:a></li>
+		<li>
+		<s:a action="modalitaPagamentoSoggetto">Modalit&agrave; pagamento</s:a></li>
 	</ul>
    
     <div class="tab-content">
@@ -226,7 +229,8 @@ SPDX-License-Identifier: EUPL-1.2
 			</div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" data-aria-hidden="true">no, indietro</button>
-				<s:submit id="submitRifiutaBtn" name="rifiutaSede" value="si, prosegui" cssClass="btn btn-primary" method="rifiutaSede"/>
+				<!-- task-131 <s:submit id="submitRifiutaBtn" name="rifiutaSede" value="si, prosegui" cssClass="btn btn-primary" method="rifiutaSede"/> -->
+				<s:submit id="submitRifiutaBtn" name="rifiutaSede" value="si, prosegui" cssClass="btn btn-primary" action="aggiornaSediSecondarie_rifiutaSede"/>
 			</div>
 		</div>
 		<!--/modale rifiuta -->
@@ -243,7 +247,8 @@ SPDX-License-Identifier: EUPL-1.2
 			</div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" data-aria-hidden="true">no, indietro</button>
-				<s:submit id="submitValidaBtn" name="validaSede" value="si, prosegui" cssClass="btn btn-primary" method="validaSede"/>
+				<!-- task-131 <s:submit id="submitValidaBtn" name="validaSede" value="si, prosegui" cssClass="btn btn-primary" method="validaSede"/> -->
+				<s:submit id="submitValidaBtn" name="validaSede" value="si, prosegui" cssClass="btn btn-primary" action="aggiornaSediSecondarie_validaSede"/>
 			</div>
 		</div>  
 		<!--/modale rifiuta -->

@@ -3,7 +3,9 @@
 *SPDX-License-Identifier: EUPL-1.2
 */
 $(function(){
-
+	var actionForm = $('form').attr('action');
+	var splitted = actionForm && actionForm.split('.do');
+	var baseUrl = splitted && splitted.length > 0? splitted[0] : "";
 	  
     function initRicercaGuidataCronop (codice, classe) {
     	$("#codCreditoreRicerca").val(codice);
@@ -14,7 +16,7 @@ $(function(){
 		$("#pivaRicerca").val("");
 		$("#denominazione").val("");
 		$.ajax({
-			url: '<s:url method="pulisciRicercaCronop"/>',
+			url: baseUrl + '!pulisciRicercaCronop.do',
 		    success: function(data)  {
 			    $("#gestioneRisultatoRicercaSoggetti").html(data);
 			}
@@ -24,7 +26,7 @@ $(function(){
 	$(document).ready(function() {
 		$("#ricercaGuidataCronop").click(function() {
 			$.ajax({
-				url: '<s:url method="ricercaCronop"/>',
+				url: baseUrl + '_ricercaCronop.do',
 				type: 'POST',
 				data: $(".parametroRicercaCronop").serialize(),
 			    success: function(data)  {

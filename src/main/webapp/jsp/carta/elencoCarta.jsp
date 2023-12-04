@@ -19,8 +19,8 @@ SPDX-License-Identifier: EUPL-1.2
   <body>     
   
   <s:include value="/jsp/include/header.jsp" />
-  
-  <s:form id="mainForm" method="post" action="elencoCarta.do">
+  <%-- SIAC-7952 rimuovo .do dalla action --%>
+  <s:form id="mainForm" method="post" action="elencoCarta">
   <div class="container-fluid-banner">
 
 	<a name="A-contenuti" title="A-contenuti"></a>
@@ -71,7 +71,8 @@ SPDX-License-Identifier: EUPL-1.2
 							<div class="btn-group"> 
 										<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
 										<ul class="dropdown-menu pull-right">
-											<s:url id="consultaUrl" action="consultaCartaContabile.do" escapeAmp="false">
+											<%-- task-131 <s:url id="consultaUrl" action="consultaCartaContabile.do" escapeAmp="false"> --%>
+								        	<s:url var="consultaUrl" action="consultaCartaContabile.do" escapeAmp="false">
 								        		<s:param name="anno" value="%{#attr.ricercaCarteContID.bilancio.anno}" />
 								        		<s:param name="numero" value="%{#attr.ricercaCarteContID.numero}" />			        				        	
 						                    </s:url>
@@ -80,7 +81,7 @@ SPDX-License-Identifier: EUPL-1.2
 											<li><a id="linkAnnulla_<s:property value="%{#attr.ricercaCarteContID.uid}"/>_<s:property value="%{#attr.ricercaCarteContID.numero}"/>_<s:property value="%{#attr.ricercaCarteContID.numero}"/>" href="#msgAnnullaCarta" data-toggle="modal" class="linkAnnullaCarta">annulla</a></li>
 										</s:if>
 										
-						    			<s:url id="aggiornaUrl" action="gestioneCartaStep1.do" escapeAmp="false">
+						    			<s:url var="aggiornaUrl" action="gestioneCartaStep1.do" escapeAmp="false">
 			        						<s:param name="annoCarta"   value="%{#attr.ricercaCarteContID.bilancio.anno}" />
 			        						<s:param name="numeroCarta" value="%{#attr.ricercaCarteContID.numero}" />
 					                    </s:url>
@@ -90,7 +91,7 @@ SPDX-License-Identifier: EUPL-1.2
 										</s:if>
 										
 										
-										<s:url id="regolarizzaUrl" action="gestRigheCarta.do" escapeAmp="false">
+										<s:url var="regolarizzaUrl" action="gestRigheCarta.do" escapeAmp="false">
 			        						<s:param name="anno"   value="%{#attr.ricercaCarteContID.bilancio.anno}" />
 			        						<s:param name="numero" value="%{#attr.ricercaCarteContID.numero}" />
 	                    				</s:url>
@@ -123,7 +124,7 @@ SPDX-License-Identifier: EUPL-1.2
 										</s:if>	
 										
 											
-										<s:url id="stampaUrl" action="stampaCartaContabile.do" escapeAmp="false">
+										<s:url var="stampaUrl" action="stampaCartaContabile.do" escapeAmp="false">
 			        						<s:param name="annoCarta"   value="%{#attr.ricercaCarteContID.bilancio.anno}" />
 			        						<s:param name="numeroCarta" value="%{#attr.ricercaCarteContID.numero}" />
 					                    </s:url>
@@ -163,7 +164,9 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaCarta"/>
+               <!-- task-131 -->
+				<!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaCarta"/> -->
+                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="elencoCarta_annullaCarta"/>
               </div>
             </div>  
             <!--/modale annulla Carta -->
@@ -193,7 +196,8 @@ SPDX-License-Identifier: EUPL-1.2
   
   				<div class="modal-footer">
 					<button class="btn" data-dismiss="modal" aria-hidden="true">annulla</button>
-               		<s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="trasmettiCarta"/>
+               		<!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="trasmettiCarta"/> -->
+            		<s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="elencoCarta_trasmettiCarta"/>
               	</div>
             </div>  
             <!--/modale Trasmetti Carta -->
@@ -209,7 +213,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="cambiaStatoCarta"/>
+               <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="cambiaStatoCarta"/> -->
+               <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="elencoCarta_cambiaStatoCarta"/>
               </div>
             </div>
             <!--/modale completa Carta -->

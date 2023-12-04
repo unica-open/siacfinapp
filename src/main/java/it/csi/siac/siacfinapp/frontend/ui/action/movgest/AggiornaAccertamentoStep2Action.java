@@ -7,7 +7,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -59,8 +59,8 @@ import it.csi.siac.siacfinser.model.errore.ErroreFin;
 			setMethodName("execute");
 			
 			// copio il valore di cup dalla prima pagina
-			teSupport.setCup(model.getStep1Model().getCup());
-			caricaMissione(model.getStep1Model().getCapitolo());
+			teSupport.setCup(model.getStep1Model().getCup());   
+			caricaMissione(model.getStep1Model().getCapitolo()); 
 			caricaProgramma(model.getStep1Model().getCapitolo());
 			// capitolo entrata non possiede il macroaggregato
 			// Jira - 1357 in caso di errore di caricamento dei dati
@@ -89,13 +89,29 @@ import it.csi.siac.siacfinser.model.errore.ErroreFin;
 			teSupport.setRicaricaSiopeSpesa(true);
 			//////////////////////////////////////////////////////////////////////////////////////////
 			
+			//siac-6997
+			recuperaDescrizioneStrutturaCompetente();
+			
 		    return SUCCESS;
 
 		}   
 		
+		
+		
+		public String executeSalva() throws Exception {
+			execute();  
+			return salva();
+		}
+
+
 		public String salva() throws Exception {
 			setMethodName("salva");
 			log.debug(methodName, "provo a salvare");
+
+			
+			model.resetErrori();
+			model.resetWarning(); 
+			model.resetMessaggi();
 			
 			//controlli provvedimento rispetto all'abilitazione a gestire l'accertamento decentrato:
 			String controlloProvv = provvedimentoConsentito();
@@ -137,16 +153,16 @@ import it.csi.siac.siacfinser.model.errore.ErroreFin;
 			//altrimenti si perde la transazione elementare per esito negativo:
 			copiaTransazioneElementareSupportSuModel(false);
 			//
-			
+	
 			//SIAC-6000
 			if(isNecessariaRichiestaConfermaUtentePerRedirezioneSuContabilitaGeneraleAggiornaAccertamento()) {
 				model.setSaltaInserimentoPrimaNota(false);
 				model.setRichiediConfermaRedirezioneContabilitaGenerale(true);
 				return INPUT;
 			}
-			//
+
 			
-			AggiornaAccertamentoResponse response = movimentoGestionService.aggiornaAccertamento(convertiModelPerChiamataServizioAggiornaAccertamentiStep2()); 
+			AggiornaAccertamentoResponse response = movimentoGestioneFinService.aggiornaAccertamento(convertiModelPerChiamataServizioAggiornaAccertamentiStep2()); 
 			
 			if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
 				model.setRichiediConfermaRedirezioneContabilitaGenerale(false);
@@ -179,8 +195,13 @@ import it.csi.siac.siacfinser.model.errore.ErroreFin;
 				model.setAccertamentoRicaricatoDopoInsOAgg(accertamentoReload);
 				
 				caricaDatiAccertamento(true);
+				//SIAC-8065 se trovo errori dal caricaDatiAccertamento torno indietro e li mostro
+				if(model.hasErrori()) {
+					return INPUT;
+				}
 				
 				creaMovGestModelCache();
+				
 				
 				//SIAC-6000
 				if(model.isEnteAbilitatoGestionePrimaNotaDaFinanziaria()

@@ -18,16 +18,19 @@ import org.springframework.util.StopWatch;
 import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siacbilser.model.CapitoloEntrataGestione;
 import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
+import it.csi.siac.siacbilser.model.Cronoprogramma;
 import it.csi.siac.siacbilser.model.Progetto;
-import it.csi.siac.siacbilser.model.StatoOperativoProgetto;
+import it.csi.siac.siacbilser.model.TipoDettaglioComponenteImportiCapitolo;
 import it.csi.siac.siacbilser.model.TipoProgetto;
-import it.csi.siac.siaccommon.util.JAXBUtility;
+import it.csi.siac.siacbilser.model.wrapper.ImportiCapitoloPerComponente;
 import it.csi.siac.siaccorser.frontend.webservice.ClassificatoreService;
 import it.csi.siac.siaccorser.model.Bilancio;
 import it.csi.siac.siaccorser.model.ClassificatoreGenerico;
 import it.csi.siac.siaccorser.model.TipologiaGestioneLivelli;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.GenericPopupAction;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
+import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.MovGestModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
@@ -35,16 +38,15 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciMovGestModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ImpegniPluriennaliModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ModificaConsulta;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.MovimentoConsulta;
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.MovimentoGestioneService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceAccertamenti;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceAccertamentiResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceImpegni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceImpegniResponse;
-import it.csi.siac.siacfinser.frontend.webservice.msg.ModificaImportoImpegnoSuAnniSuccessivi;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAvanzovincolo;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAvanzovincoloResponse;
 import it.csi.siac.siacfinser.model.Accertamento;
@@ -55,6 +57,7 @@ import it.csi.siac.siacfinser.model.codifiche.ClasseSoggetto;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
+import it.csi.siac.siacfinser.model.movgest.ComponenteBilancioImpegno;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestione;
 import it.csi.siac.siacfinser.model.siopeplus.SiopeAssenzaMotivazione;
 import it.csi.siac.siacfinser.model.siopeplus.SiopeTipoDebito;
@@ -66,12 +69,13 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 
 	protected final static String GOTO_ELENCO_IMPEGNI = "gotoElencoImpegni"; 
 	protected final static String GOTO_ELENCO_ACCERTAMENTI = "gotoElencoAccertamenti";
+	//SIAC-6992
+	protected final static String GOTO_ELENCO_IMPEGNI_ROR = "gotoElencoImpegniROR";
+	protected final static String GOTO_ELENCO_ACCERTAMENTI_ROR = "gotoElencoAccertamentiROR";
 	
 	@Autowired
 	protected transient ClassificatoreService classificatoreService;
 	
-	@Autowired
-	protected transient MovimentoGestioneService movimentoGestionService;
 	
 	protected String methodName;
 	
@@ -90,7 +94,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		reqAvanzoVincoli.setEnte(sessionHandler.getEnte());
 		reqAvanzoVincoli.setRichiedente(sessionHandler.getRichiedente());
 		reqAvanzoVincoli.setBilancio(sessionHandler.getBilancio());
-		RicercaAvanzovincoloResponse respAvanzoVincoli = movimentoGestionService.ricercaAvanzovincolo(reqAvanzoVincoli);
+		RicercaAvanzovincoloResponse respAvanzoVincoli = movimentoGestioneFinService.ricercaAvanzovincolo(reqAvanzoVincoli);
 		List<Avanzovincolo> listaAvanzoVincoli = respAvanzoVincoli.getElencoAvanzovincolo();
 		//setting nel model:
 		model.setListaAvanzovincolo(listaAvanzoVincoli);
@@ -114,7 +118,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 	}
 	
 	private boolean presenteCodiceLivello(TipologiaGestioneLivelli tipologiaGestioneLivelli){
-		String codiceByTipo = getCodiceLivelloByTipo(tipologiaGestioneLivelli);
+		String codiceByTipo = getTipologiaGestioneLivelli(tipologiaGestioneLivelli);
 		if(codiceByTipo!=null){
 			return true;
 		} else {
@@ -123,7 +127,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 	}
 	
 	public boolean isEnteAbilitatoParereFinanziario() {
-		return Constanti.GESTIONE_PARERE_FINANZIARIO.equals(sessionHandler.getEnte().getGestioneLivelli().get(TipologiaGestioneLivelli.GESTIONE_PARERE_FINANZIARIO));
+		return CostantiFin.GESTIONE_PARERE_FINANZIARIO.equals(sessionHandler.getEnte().getGestioneLivelli().get(TipologiaGestioneLivelli.GESTIONE_PARERE_FINANZIARIO));
 	}
 	
 	protected boolean isEnteAbilitatoUeb() {
@@ -163,7 +167,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		InserisceImpegniResponse resp = null;
 		
 		InserisceImpegni requestInserisci = null;
-
+		
 		if(pluriennale){
 			// qui ci passa quando allo step3, se l'impengo e' pluriennale, deve salvare n impegni quanti anni ho indicato nello step 1
 			requestInserisci = convertiModelCustomInRequestPluriennali(datiImpegno,annoScritturaEconomicoPatrimoniale);
@@ -179,6 +183,9 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			}
 		}
 		
+	//	String xml = JAXBUtility.marshall(requestInserisci);
+		
+		//TODO MA SERVE? SONO UGUALI
 		if (requestInserisci.getPrimoImpegnoDaInserire().getProgetto() != null) {
 			Progetto progetto = requestInserisci.getPrimoImpegnoDaInserire().getProgetto();
 			
@@ -188,11 +195,11 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		
 		
 		//Richiamo il service:
-		resp = movimentoGestionService.inserisceImpegni(requestInserisci);
+		resp = movimentoGestioneFinService.inserisceImpegni(requestInserisci);
 		
 		
 		stopwatch.stop();
-		stopWatchLogger.info(this.getClass().getName(), "inserisceImpegno",  stopwatch.getTotalTimeMillis());
+		stopWatchLogger.info("inserisceImpegno",  stopwatch.getTotalTimeMillis());
 		
 		/*
 		 *  FINE - STOPWATCH
@@ -216,15 +223,15 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		InserisceAccertamentiResponse resp = null;
 		
 		if(pluriennale){
-			resp = movimentoGestionService.inserisceAccertamenti(convertiModelCustomAccertamentiRequestPluriennali(datiAccertamento,annoScritturaEconomicoPatrimoniale));
+			resp = movimentoGestioneFinService.inserisceAccertamenti(convertiModelCustomAccertamentiRequestPluriennali(datiAccertamento,annoScritturaEconomicoPatrimoniale));
 		}else{
-			resp = movimentoGestionService.inserisceAccertamenti(convertiModelCustomAccertamentiRequest(datiAccertamento));
+			resp = movimentoGestioneFinService.inserisceAccertamenti(convertiModelCustomAccertamentiRequest(datiAccertamento));
 		}
 				
 				
 		
 		stopwatch.stop();
-		stopWatchLogger.info(this.getClass().getName(), "inserisceAccertamento",  stopwatch.getTotalTimeMillis());
+		stopWatchLogger.info("inserisceAccertamento",  stopwatch.getTotalTimeMillis());
 		
 		/*
 		 *  FINE - STOPWATCH
@@ -233,12 +240,12 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 	}
 	
 	protected InserisceImpegniResponse inserisceImpegoCustom(Impegno impegno, GestisciMovGestModel model){
-		InserisceImpegniResponse resp = movimentoGestionService.inserisceImpegni(convertiModelCustomPerModificaSpesaInRequest(impegno, model));
+		InserisceImpegniResponse resp = movimentoGestioneFinService.inserisceImpegni(convertiModelCustomPerModificaSpesaInRequest(impegno, model));
 		return resp;
 	}
 	
 	protected InserisceAccertamentiResponse inserisceAccertamentoCustom(Accertamento acc , GestisciMovGestModel datiAccertamento){
-		InserisceAccertamentiResponse resp = movimentoGestionService.inserisceAccertamenti(convertiModelCustomPerModificaEntrataInRequest(acc, datiAccertamento));
+		InserisceAccertamentiResponse resp = movimentoGestioneFinService.inserisceAccertamenti(convertiModelCustomPerModificaEntrataInRequest(acc, datiAccertamento));
 		return resp;
 	}
 	
@@ -266,8 +273,9 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			
 			for(Accertamento app : listaPluriennali){
 				app.setFlagDaRiaccertamento(true);
+				app.setFlagDaReanno(true);
 				app.setAnnoRiaccertato(datiAccertamento.getAccertamentoInAggiornamento().getAnnoMovimento());
-				app.setNumeroRiaccertato(datiAccertamento.getAccertamentoInAggiornamento().getNumero());
+				app.setNumeroRiaccertato(datiAccertamento.getAccertamentoInAggiornamento().getNumeroBigDecimal());
 				if(app.getCapitoloEntrataGestione()==null){
 					app.setCapitoloEntrataGestione(datiAccertamento.getAccertamentoInAggiornamento().getCapitoloEntrataGestione());
 				}
@@ -299,7 +307,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		support.setBilancio(creaOggettoBilancio());
 		
 		//IMPEGNO:
-			support.setPrimoAccertamentoDaInserire(popolaAccertamento(datiAccertamento, null, support.getBilancio()));
+		support.setPrimoAccertamentoDaInserire(popolaAccertamento(datiAccertamento, null, support.getBilancio()));
 		
 		//PLURIENNALI
 		if (datiAccertamento.getStep3Model().getListaImpegniPluriennali() != null && datiAccertamento.getStep3Model().getListaImpegniPluriennali().size() > 0) {
@@ -456,7 +464,20 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 						
 					}
 					
+					//SIAC-7349
+					datiImpegno.setComponenteBilancioUid(datiImpegno.getStep3Model().getListaImpegniPluriennali().get(i).getComponenteImpPluriennale());
+					//datiImpegno.setAnnoImpegno(datiImpegno.getStep3Model().getListaImpegniPluriennali().get(i).getAnnoImpPluriennale());
 					Impegno primoImpegnoPluriennaleDaInserire = popolaImpegno(datiImpegno, null, support.getBilancio(),true);
+					/*
+					 * SIAC-7816
+					 * FIX -> Per il primo impegno pluriennale settiamo la componente dell impegno
+					 * con la componente del primo impegno pluriennale 
+					 */
+					if(datiImpegno.getStep3Model().getListaImpegniPluriennali().get(i).getComponenteImpPluriennale() != null){
+						ComponenteBilancioImpegno componenteBilancioImpegno = new ComponenteBilancioImpegno();
+						componenteBilancioImpegno.setUid(datiImpegno.getStep3Model().getListaImpegniPluriennali().get(i).getComponenteImpPluriennale());
+						primoImpegnoPluriennaleDaInserire.setComponenteBilancioImpegno(componenteBilancioImpegno);
+					}
 					
 					
 					primoImpegnoPluriennaleDaInserire.setAnnoImpegnoOrigine(datiImpegno.getStep3Model().getAnnoMovimentoInseritoInStep2());
@@ -514,8 +535,9 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			
 			for(Impegno app : listaPluriennali){
 				app.setFlagDaRiaccertamento(true);
+				app.setFlagDaReanno(true);
 				app.setAnnoRiaccertato(datiImpegno.getImpegnoInAggiornamento().getAnnoMovimento());
-				app.setNumeroRiaccertato(datiImpegno.getImpegnoInAggiornamento().getNumero());
+				app.setNumeroRiaccertato(datiImpegno.getImpegnoInAggiornamento().getNumeroBigDecimal());
 				if(app.getCapitoloUscitaGestione()==null){
 					app.setCapitoloUscitaGestione(datiImpegno.getImpegnoInAggiornamento().getCapitoloUscitaGestione());
 				}
@@ -587,14 +609,14 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		impegno.setTipoImpegno( cg);
 		
 		//CONVERTO LO STATO
-		if(null==datiImpegnoStep1.getStato() || StringUtils.isEmpty(datiImpegnoStep1.getStato())){
-			impegno.setStatoOperativoMovimentoGestioneSpesa(Constanti.MOVGEST_STATO_PROVVISORIO);
-		}else if(datiImpegnoStep1.getStato().equalsIgnoreCase(Constanti.STATO_PROVVISORIO)){
-			impegno.setStatoOperativoMovimentoGestioneSpesa(Constanti.MOVGEST_STATO_PROVVISORIO);
+		if(datiImpegnoStep1.getStato() == null || StringUtils.isEmpty(datiImpegnoStep1.getStato())){
+			impegno.setStatoOperativoMovimentoGestioneSpesa(CostantiFin.MOVGEST_STATO_PROVVISORIO);
+		}else if(datiImpegnoStep1.getStato().equalsIgnoreCase(CostantiFin.STATO_PROVVISORIO)){
+			impegno.setStatoOperativoMovimentoGestioneSpesa(CostantiFin.MOVGEST_STATO_PROVVISORIO);
 		}else if(datiImpegnoStep1.getStato().equalsIgnoreCase("DEFINITIVO")){
-				impegno.setStatoOperativoMovimentoGestioneSpesa(Constanti.MOVGEST_STATO_DEFINITIVO);
+				impegno.setStatoOperativoMovimentoGestioneSpesa(CostantiFin.MOVGEST_STATO_DEFINITIVO);
 		}else if(datiImpegnoStep1.getStato().equalsIgnoreCase("DEFINITIVO NON LIQUIDABILE")){
-				impegno.setStatoOperativoMovimentoGestioneSpesa(Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE);
+				impegno.setStatoOperativoMovimentoGestioneSpesa(CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE);
 		}
 		
 		
@@ -614,6 +636,13 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		}
 		
 		impegno.setFlagDaRiaccertamento(datiImpegnoStep1.getRiaccertato().equalsIgnoreCase("si"));
+		//SIAC-6997
+		impegno.setFlagDaReanno(datiImpegnoStep1.getReanno().equalsIgnoreCase("si"));
+		if(datiImpegnoStep1.getStrutturaSelezionataCompetente() != null && !datiImpegnoStep1.getStrutturaSelezionataCompetente().equals("")){
+			impegno.setStrutturaCompetente(datiImpegnoStep1.getStrutturaSelezionataCompetente());
+		}
+		
+		
 		impegno.setFlagSoggettoDurc(datiImpegnoStep1.getSoggettoDurc().equalsIgnoreCase("si"));
 		
 		//COPIAMO DEL CAMPO HIDDEN PER VIA DEL CHECKBOX CHE PERDE IL VALORE:
@@ -664,13 +693,30 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		impegno.setCup(datiImpegnoStep1.getCup());
 
 		//PROGETTO:
-		if(null!=datiImpegnoStep1.getProgetto()){
+		if(datiImpegnoStep1.getProgetto() != null){
 			Progetto progetto = new Progetto();
 			progetto.setCodice(datiImpegnoStep1.getProgetto());
+			progetto.setDescrizione(datiImpegnoStep1.getProgettoImpegno().getDescrizione());
 			// SIAC-6990
 			// Popolo i campi del progetto con i parametri che servono per il getProgetto() di > MGOD
 			progetto.setTipoProgetto(TipoProgetto.GESTIONE);
 			progetto.setBilancio(sessionHandler.getBilancio());
+			
+			//SIAC-7610
+			if(!StringUtils.isBlank(datiImpegnoStep1.getCronoprogramma()) && datiImpegnoStep1.getIdCronoprogramma() != 0) {
+				Cronoprogramma cronoprogramma = new Cronoprogramma();
+				cronoprogramma.setUid(datiImpegnoStep1.getIdCronoprogramma());
+				cronoprogramma.setCodice(datiImpegnoStep1.getCronoprogramma());
+				
+				cronoprogramma.setProgetto(new Progetto());
+				cronoprogramma.getProgetto().setUid(progetto.getUid());
+				cronoprogramma.getProgetto().setCodice(progetto.getCodice());
+				
+				List<Cronoprogramma> listCronop = new ArrayList<Cronoprogramma>();
+				listCronop.add(cronoprogramma);
+				
+				progetto.setCronoprogrammi(listCronop);
+			}
 			
 			impegno.setProgetto(progetto);
 		}
@@ -680,11 +726,86 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		impegno.setImportoAttuale(datiImpegnoStep1.getImportoImpegno());
 		
 		
+		
+		//SIAC-7349
+		if(datiImpegno.getImpegnoInAggiornamento() != null){
+			if(datiImpegno.getImpegnoInAggiornamento().getComponenteBilancioImpegno() != null)
+				impegno.setComponenteBilancioImpegno(datiImpegno.getImpegnoInAggiornamento().getComponenteBilancioImpegno());
+			if(datiImpegno.getImpegnoInAggiornamento().getDisponibilitaImpegnareComponente() != null)
+				impegno.setDisponibilitaImpegnareComponente(datiImpegno.getImpegnoInAggiornamento().getDisponibilitaImpegnareComponente());
+		}
+		
+		
+		
+		/* SIAC-7349 Gestione Pluriennali
+		 * variabile pluriennale valorizzata solo per gli anni pluriennali superiori al
+		 * primo.Uid componente presente in  pluriennale.getComponenteImpPluriennale().intValue()
+		 * anno pluriennale.getAnnoImpPluriennale()
+		 */
+		 if ( pluriennale != null && pluriennale.getAnnoImpPluriennale()>0 && pluriennale.getAnnoImpPluriennale() <= sessionHandler.getBilancio().getAnno() + 2) {
+			BigDecimal disponibilitaEffettiva = BigDecimal.ZERO;
+			if( datiImpegnoStep1.getImportiCapitoloPerComponente()!=null && !datiImpegnoStep1.getImportiCapitoloPerComponente().isEmpty()){
+	    		for(ImportiCapitoloPerComponente icpc :datiImpegnoStep1.getImportiCapitoloPerComponente()){
+	    			if(icpc.getTipoComponenteImportiCapitolo()!= null && 
+	    					icpc.getTipoDettaglioComponenteImportiCapitolo().name().equals(TipoDettaglioComponenteImportiCapitolo.DISPONIBILITAIMPEGNARE.name())
+	    					&& pluriennale.getComponenteImpPluriennale()!= null 
+	    					&& icpc.getTipoComponenteImportiCapitolo().getUid()==pluriennale.getComponenteImpPluriennale().intValue()
+	    					){
+	    				if(pluriennale.getAnnoImpPluriennale() ==  icpc.getDettaglioAnno0().getAnnoCompetenza().intValue()){
+							disponibilitaEffettiva = icpc.getDettaglioAnno0().getImporto();
+						}else if(pluriennale.getAnnoImpPluriennale()  == icpc.getDettaglioAnno1().getAnnoCompetenza().intValue() ){
+							disponibilitaEffettiva = icpc.getDettaglioAnno1().getImporto();
+						}else if(pluriennale.getAnnoImpPluriennale()  == icpc.getDettaglioAnno2().getAnnoCompetenza().intValue() ){
+							disponibilitaEffettiva = icpc.getDettaglioAnno2().getImporto();
+						}
+	    				break;
+	    			}
+	    		}
+	    		impegno.setDisponibilitaImpegnareComponente(disponibilitaEffettiva);
+	    	}
+		}else{
+			/* Se impegno singolo o pluriennale primo anno (pluriennale = null )
+			 * trviamo la componetne in datiImpegno.getComponenteBilancioUid() e
+			 * anno in datiImpegno.getStep1Model().getAnnoImpegno()
+			 */
+			 if (datiImpegno!= null && datiImpegno.getStep1Model()!=null && datiImpegno.getStep1Model().getAnnoImpegno()!= null  &&  datiImpegno.getComponenteBilancioUid()!= null
+					 && datiImpegno.getStep1Model().getAnnoImpegno().compareTo(sessionHandler.getBilancio().getAnno() + 2) <= 0) {
+				 
+				 /*
+				  * Nel caso in cui stiamo tattando un pluriennale al 
+				  * di fuori del triennio non è necessario settare l'importo della componente
+				  */
+				 if (pluriennale == null || ( pluriennale != null && pluriennale.getAnnoImpPluriennale()>0 
+						 && pluriennale.getAnnoImpPluriennale() <= sessionHandler.getBilancio().getAnno() + 2)) {
+					 
+					 BigDecimal disponibilitaEffettiva = BigDecimal.ZERO;
+						if( datiImpegnoStep1.getImportiCapitoloPerComponente()!=null && !datiImpegnoStep1.getImportiCapitoloPerComponente().isEmpty()){
+				    		for(ImportiCapitoloPerComponente icpc :datiImpegnoStep1.getImportiCapitoloPerComponente()){
+				    			if(icpc.getTipoComponenteImportiCapitolo()!= null && 
+				    					icpc.getTipoDettaglioComponenteImportiCapitolo().name().equals(TipoDettaglioComponenteImportiCapitolo.DISPONIBILITAIMPEGNARE.name())
+				    					&& icpc.getTipoComponenteImportiCapitolo().getUid()==datiImpegno.getComponenteBilancioUid()
+				    					){
+				    				if(datiImpegno.getStep1Model().getAnnoImpegno() ==  icpc.getDettaglioAnno0().getAnnoCompetenza().intValue()){
+										disponibilitaEffettiva = icpc.getDettaglioAnno0().getImporto();
+									}else if(datiImpegno.getStep1Model().getAnnoImpegno()  == icpc.getDettaglioAnno1().getAnnoCompetenza().intValue() ){
+										disponibilitaEffettiva = icpc.getDettaglioAnno1().getImporto();
+									}else if(datiImpegno.getStep1Model().getAnnoImpegno()  == icpc.getDettaglioAnno2().getAnnoCompetenza().intValue() ){
+										disponibilitaEffettiva = icpc.getDettaglioAnno2().getImporto();
+									}
+				    				break;
+				    			}
+				    		}
+				    		impegno.setDisponibilitaImpegnareComponente(disponibilitaEffettiva);
+				    	}
+				}
+			}
+		}
+		
 		// valori classificazioni della seconda pagina
 		impegno.setCodMissione(datiImpegno.getMissioneSelezionata());
 		impegno.setCodProgramma(datiImpegno.getProgrammaSelezionato());
 		
-		if(null!=datiImpegnoStep1.getScadenza()){
+		if(datiImpegnoStep1.getScadenza() != null){
 		
 			impegno.setDataScadenza(DateUtility.parse(datiImpegnoStep1.getScadenza()));
 		}
@@ -736,6 +857,15 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			classe.setCodice(datiImpegnoStep1.getSoggetto().getClasse());
 			impegno.setClasseSoggetto(classe);
 		}
+		
+		//SIAC-7349
+		if(datiImpegnoStep1.getCapitolo()!= null && datiImpegnoStep1.getComponenteImpegnoCapitoloUid()!=null){
+			ComponenteBilancioImpegno componenteBilancioImpegno = new ComponenteBilancioImpegno();
+			componenteBilancioImpegno.setUid(datiImpegnoStep1.getComponenteImpegnoCapitoloUid().intValue());
+			impegno.setComponenteBilancioImpegno(componenteBilancioImpegno);
+		}
+		
+		
 		if (pluriennale != null) {
 			if (pluriennale.getAnnoImpPluriennale() <= (bilancio.getAnno() + 2)) {
 				impegno.setAnnoCapitoloOrigine(pluriennale.getAnnoImpPluriennale());
@@ -746,7 +876,17 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			impegno.setImportoIniziale(pluriennale.getImportoImpPluriennale());
 			impegno.setImportoAttuale(pluriennale.getImportoImpPluriennale());
 			impegno.setDataScadenza(pluriennale.getDataScadenzaImpPluriennale());
+			//SIAC-7349
+			if(pluriennale.getComponenteImpPluriennale()!= null && pluriennale.getComponenteImpPluriennale()!=null){
+				ComponenteBilancioImpegno componenteBilancioImpegno = new ComponenteBilancioImpegno();
+				componenteBilancioImpegno.setUid(pluriennale.getComponenteImpPluriennale());
+				impegno.setComponenteBilancioImpegno(componenteBilancioImpegno);
+			}
 		}
+		
+		
+		
+		
 		
 		// eventuale presenza di vincoli
 		if(datiImpegnoStep1.getListaVincoliImpegno()!=null && !datiImpegnoStep1.getListaVincoliImpegno().isEmpty()){
@@ -760,15 +900,19 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		
 		//NUMERO:
 		if(datiImpegnoStep1.getNumeroImpegno()!=null && datiImpegnoStep1.getNumeroImpegno().intValue()>0){
-			impegno.setNumero(new BigDecimal(datiImpegnoStep1.getNumeroImpegno()));
+			impegno.setNumeroBigDecimal(new BigDecimal(datiImpegnoStep1.getNumeroImpegno()));
 		}
 		
 		//---------- SIOPE PLUS ----------
 		impostaDatiSiopePlusPerInserisciAggiorna(datiImpegnoStep1, impegno);
 		//---------- FINE SIOPE PLUS ----------
 		
+		
 		return impegno;
 	}
+	
+	
+	
 	
 	/**
 	 * prende i dati in GestisciMovGestModel e li travasa nell'oggetto impegnoOrSub che
@@ -821,13 +965,13 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		//INSERIRE IL TIPO IMPEGNO CORRETTO : NON PRESENTE IN ACCERTAMENTO
 		//CONVERTO LO STATO
 		if(null==datiAccertamento.getStep1Model().getStato() || StringUtils.isEmpty(datiAccertamento.getStep1Model().getStato())){
-			accertamento.setStatoOperativoMovimentoGestioneEntrata(Constanti.MOVGEST_STATO_PROVVISORIO);
-		}else if(datiAccertamento.getStep1Model().getStato().equalsIgnoreCase(Constanti.STATO_PROVVISORIO)){
-			accertamento.setStatoOperativoMovimentoGestioneEntrata(Constanti.MOVGEST_STATO_PROVVISORIO);
+			accertamento.setStatoOperativoMovimentoGestioneEntrata(CostantiFin.MOVGEST_STATO_PROVVISORIO);
+		}else if(datiAccertamento.getStep1Model().getStato().equalsIgnoreCase(CostantiFin.STATO_PROVVISORIO)){
+			accertamento.setStatoOperativoMovimentoGestioneEntrata(CostantiFin.MOVGEST_STATO_PROVVISORIO);
 		}else if(datiAccertamento.getStep1Model().getStato().equalsIgnoreCase("DEFINITIVO")){
-			accertamento.setStatoOperativoMovimentoGestioneEntrata(Constanti.MOVGEST_STATO_DEFINITIVO);
+			accertamento.setStatoOperativoMovimentoGestioneEntrata(CostantiFin.MOVGEST_STATO_DEFINITIVO);
 		}else if(datiAccertamento.getStep1Model().getStato().equalsIgnoreCase("DEFINITIVO NON LIQUIDABILE")){
-			accertamento.setStatoOperativoMovimentoGestioneEntrata(Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE);
+			accertamento.setStatoOperativoMovimentoGestioneEntrata(CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE);
 		}
 		
 		
@@ -845,6 +989,17 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			accertamento.setFlagDaRiaccertamento(true);
 		} else {
 			accertamento.setFlagDaRiaccertamento(false);
+		}
+		//SIAC-6997
+		if(datiAccertamento.getStep1Model().getReanno().equalsIgnoreCase("si")){
+			accertamento.setFlagDaReanno(true);
+		} else {
+			accertamento.setFlagDaReanno(false);
+		}
+		if(datiAccertamento.getStep1Model().getStrutturaSelezionataCompetente() != null && !datiAccertamento.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+			//StrutturaAmministrativoContabile sac = new StrutturaAmministrativoContabile();
+			//sac.setUid(Integer.valueOf(datiAccertamento.getStep1Model().getStrutturaSelezionataCompetente()));
+			accertamento.setStrutturaCompetente(datiAccertamento.getStep1Model().getStrutturaSelezionataCompetente());
 		}
 		
 		if (datiAccertamento.getStep1Model().getAnnoImpOrigine() != null && datiAccertamento.getStep1Model().getAnnoImpOrigine() != 0) {
@@ -941,8 +1096,11 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		
 		//NUMERO:
 		if(datiAccertamento.getStep1Model().getNumeroImpegno()!=null && datiAccertamento.getStep1Model().getNumeroImpegno().intValue()>0){
-			accertamento.setNumero(new BigDecimal(datiAccertamento.getStep1Model().getNumeroImpegno()));
+			accertamento.setNumeroBigDecimal(new BigDecimal(datiAccertamento.getStep1Model().getNumeroImpegno()));
 		}
+		
+		//SIAC-8178
+		accertamento.setCodiceVerbale(datiAccertamento.getStep1Model().getCodiceVerbale());
 		
 		return accertamento;
 	}
@@ -1009,8 +1167,13 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		}
 		
 		//correzione anomalia flag riaccertamento
-		if(datiImpegno.getStep1Model().getRiaccertato().equalsIgnoreCase("si")){
-			impegno.setFlagDaRiaccertamento(true);
+		if(datiImpegno.getStep1Model().getRiaccertato().equalsIgnoreCase("si") || datiImpegno.getStep1Model().getReanno().equalsIgnoreCase("si")){
+			
+			if(datiImpegno.getStep1Model().getRiaccertato().equalsIgnoreCase("si")) {
+				impegno.setFlagDaRiaccertamento(true);
+			}else if(datiImpegno.getStep1Model().getReanno().equalsIgnoreCase("si")) {
+				impegno.setFlagDaReanno(true);
+			}
 			
 			if (datiImpegno.getStep1Model().getAnnoImpRiacc() != null && datiImpegno.getStep1Model().getAnnoImpRiacc() != 0) {
 				impegno.setAnnoRiaccertato(datiImpegno.getStep1Model().getAnnoImpRiacc());
@@ -1021,6 +1184,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			}
 		} else {
 			impegno.setFlagDaRiaccertamento(false);
+			impegno.setFlagDaReanno(false);
 		}	
 
 		impegno.setFlagSoggettoDurc(datiImpegno.getStep1Model().getSoggettoDurc().equalsIgnoreCase("si"));
@@ -1035,7 +1199,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		////////////////////////////////////////////////////////////////////////////////////////
 		impegno.setAnnoMovimento(datiImpegno.getStep1Model().getAnnoImpegno()); //da verificare
 		impegno.setUid(datiImpegno.getStep1Model().getUid()); //da verificare
-		impegno.setNumero(new BigDecimal(datiImpegno.getStep1Model().getNumeroImpegno())); //da verificare
+		impegno.setNumeroBigDecimal(new BigDecimal(datiImpegno.getStep1Model().getNumeroImpegno())); //da verificare
 		///////////////////////////////////////////////////////////////////////////////////////
 		if(datiImpegno.getStep1Model().getOggettoImpegno()!=null){
 			impegno.setDescrizione(datiImpegno.getStep1Model().getOggettoImpegno().toUpperCase());
@@ -1097,9 +1261,9 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		
 		impegno.setParereFinanziario(datiImpegno.getStep1Model().isParereFinanziario());
 
-		impegno.setCodPdc(datiImpegno.getPianoDeiConti().getCodice()); log.debug("","PdC -*-> " + datiImpegno.getPianoDeiConti().getCodice());
+		impegno.setCodPdc(datiImpegno.getPianoDeiConti().getCodice()); 
 			
-		impegno.setCodSiope(datiImpegno.getSiopeSpesa().getCodice()); log.debug("","Spesa -*-> " + datiImpegno.getSiopeSpesa().getCodice());
+		impegno.setCodSiope(datiImpegno.getSiopeSpesa().getCodice()); 
 			
 		impegno.setCodCofog(datiImpegno.getCofogSelezionato());
 		impegno.setCodTransazioneEuropeaSpesa(datiImpegno.getTransazioneEuropeaSelezionato());
@@ -1116,9 +1280,13 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		//SIOPE PLUS:
 		impostaDatiSiopePlusPerInserisciAggiorna(datiImpegno.getStep1Model(), impegno);
 		//END SIOPE PLUS
+		impegno.setNumeroTotaleModifcheMovimento(datiImpegno.getImpegnoInAggiornamento().getNumeroTotaleModifcheMovimento());
+		
 
 		return impegno;
 	}
+	
+
 	
 	protected Impegno popolaImpegnoAggiornaSubimpegno(GestisciMovGestModel datiImpegno, ImpegniPluriennaliModel pluriennale, Bilancio bilancio) {
 		Impegno impegno = new Impegno();
@@ -1155,8 +1323,18 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		cg.setCodice(datiImpegno.getStep1Model().getTipoImpegno());
 		
 		impegno.setTipoImpegno( cg);
+		//SIAC-7349: devo settare il componente per i controlli lato BE
+		if(datiImpegno.getImpegnoInAggiornamento() != null){
+			if(datiImpegno.getImpegnoInAggiornamento().getComponenteBilancioImpegno() != null)
+				impegno.setComponenteBilancioImpegno(datiImpegno.getImpegnoInAggiornamento().getComponenteBilancioImpegno());
+			if(datiImpegno.getImpegnoInAggiornamento().getDisponibilitaImpegnareComponente() != null)
+				impegno.setDisponibilitaImpegnareComponente(datiImpegno.getImpegnoInAggiornamento().getDisponibilitaImpegnareComponente());
+		}
 		
+		
+		//FINE SIAC-7349
 		impegno.setStatoOperativoMovimentoGestioneSpesa(datiImpegno.getStep1Model().getStato());
+		
 	
 		////////////////////////////////////////////////////////
 		if (datiImpegno.getStep1Model().getAnnoFinanziamento() != null && datiImpegno.getStep1Model().getAnnoFinanziamento() != 0) { log.debug("","anno F -*-> " + datiImpegno.getStep1Model().getAnnoFinanziamento());
@@ -1167,8 +1345,13 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		}
 		
 		//correzione anomalia flag riaccertamento
-		if(datiImpegno.getStep1Model().getRiaccertato().equalsIgnoreCase("si")){
-			impegno.setFlagDaRiaccertamento(true);
+		if(datiImpegno.getStep1Model().getRiaccertato().equalsIgnoreCase("si") || datiImpegno.getStep1Model().getReanno().equalsIgnoreCase("si")){
+			
+			if(datiImpegno.getStep1Model().getRiaccertato().equalsIgnoreCase("si")) {
+				impegno.setFlagDaRiaccertamento(true);
+			}else if(datiImpegno.getStep1Model().getReanno().equalsIgnoreCase("si")) {
+				impegno.setFlagDaReanno(true);
+			}
 			
 			if (datiImpegno.getStep1Model().getAnnoImpRiacc() != null && datiImpegno.getStep1Model().getAnnoImpRiacc() != 0) {
 				impegno.setAnnoRiaccertato(datiImpegno.getStep1Model().getAnnoImpRiacc());
@@ -1179,6 +1362,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			}
 		} else {
 			impegno.setFlagDaRiaccertamento(false);
+			impegno.setFlagDaReanno(false);
 		}
 
 		
@@ -1230,7 +1414,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		////////////////////////////////////////////////////////////////////////////////////////
 		impegno.setAnnoMovimento(datiImpegno.getStep1Model().getAnnoImpegno()); //da verificare
 		impegno.setUid(datiImpegno.getStep1Model().getUid()); //da verificare
-		impegno.setNumero(new BigDecimal(datiImpegno.getStep1Model().getNumeroImpegno())); //da verificare
+		impegno.setNumeroBigDecimal(new BigDecimal(datiImpegno.getStep1Model().getNumeroImpegno())); //da verificare
 		///////////////////////////////////////////////////////////////////////////////////////
 		if(datiImpegno.getStep1Model().getOggettoImpegno()!=null){
 			impegno.setDescrizione(datiImpegno.getStep1Model().getOggettoImpegno().toUpperCase());
@@ -1347,8 +1531,14 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 	
 		////////////////////////////////////////////////////////
 		//correzione anomalia flag riaccertamento
-		if(datiAccertamento.getStep1Model().getRiaccertato().equalsIgnoreCase("si")){
-			accertamento.setFlagDaRiaccertamento(true);
+		//SIAC-6997
+		if(datiAccertamento.getStep1Model().getRiaccertato().equalsIgnoreCase("si") || datiAccertamento.getStep1Model().getReanno().equalsIgnoreCase("si")){
+			
+			if(datiAccertamento.getStep1Model().getRiaccertato().equalsIgnoreCase("si")) {
+				accertamento.setFlagDaRiaccertamento(true);
+			}else if(datiAccertamento.getStep1Model().getReanno().equalsIgnoreCase("si")) {
+				accertamento.setFlagDaReanno(true);
+			}
 			
 			if (datiAccertamento.getStep1Model().getAnnoImpRiacc() != null && datiAccertamento.getStep1Model().getAnnoImpRiacc() != 0) { 
 				accertamento.setAnnoRiaccertato(datiAccertamento.getStep1Model().getAnnoImpRiacc());
@@ -1358,8 +1548,14 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			}
 		} else { 
 			accertamento.setFlagDaRiaccertamento(false);
+			accertamento.setFlagDaReanno(false);
 		}	
-				
+		
+		//SIAC-6997
+		if(datiAccertamento.getStep1Model().getStrutturaSelezionataCompetente() != null && !datiAccertamento.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+			accertamento.setStrutturaCompetente(datiAccertamento.getStep1Model().getStrutturaSelezionataCompetente());
+		}
+		
 		if (datiAccertamento.getStep1Model().getAnnoImpOrigine() != null && datiAccertamento.getStep1Model().getAnnoImpOrigine() != 0) { 
 			accertamento.setAnnoAccertamentoOrigine(datiAccertamento.getStep1Model().getAnnoImpOrigine());
 		}
@@ -1371,7 +1567,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		accertamento.setAnnoMovimento(datiAccertamento.getStep1Model().getAnnoImpegno()); //da verificare
 		//accertamento.setUid(datiAccertamento.getStep1Model().getUid()); //da verificare
 		accertamento.setUid(datiAccertamento.getAccertamentoInAggiornamento().getUid()); //da verificare
-		accertamento.setNumero(new BigDecimal(datiAccertamento.getStep1Model().getNumeroImpegno())); //da verificare
+		accertamento.setNumeroBigDecimal(new BigDecimal(datiAccertamento.getStep1Model().getNumeroImpegno())); //da verificare
 		accertamento.setTipoMovimento(datiAccertamento.getAccertamentoInAggiornamento().getTipoMovimento());
 		accertamento.setTipoMovimentoDesc(datiAccertamento.getAccertamentoInAggiornamento().getTipoMovimentoDesc());
 		///////////////////////////////////////////////////////////////////////////////////////
@@ -1405,15 +1601,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		// provvedimento dell'impegno! (fix per jira SIAC-2647)
 		accertamento.setAttoAmministrativo(datiAccertamento.getAccertamentoInAggiornamento().getAttoAmministrativo());
 		
-		Soggetto soggetto = new Soggetto();
-		soggetto.setCodiceSoggetto(datiAccertamento.getStep1Model().getSoggetto().getCodCreditore());
-		accertamento.setSoggetto(soggetto);
-
-		if (datiAccertamento.getStep1Model().getSoggetto().getClasse() != null && !"".equalsIgnoreCase(datiAccertamento.getStep1Model().getSoggetto().getClasse())) {
-			ClasseSoggetto classe = new ClasseSoggetto();
-			classe.setCodice(datiAccertamento.getStep1Model().getSoggetto().getClasse());
-			accertamento.setClasseSoggetto(classe);
-		}
+		impostaSoggettoOClassePerRequestAggiornaAccertamento(datiAccertamento, accertamento);
 		
 		if (pluriennale != null) {
 			if (pluriennale.getAnnoImpPluriennale() <= (bilancio.getAnno() + 2)) {
@@ -1459,6 +1647,63 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		return accertamento;
 		
 	}
+	//SIAC-8503
+	private void impostaSoggettoOClassePerRequestAggiornaAccertamento(GestisciMovGestModel datiAccertamento, Accertamento accertamento) {
+		SoggettoImpegnoModel soggettoModel = datiAccertamento.getStep1Model().getSoggetto();
+		String codCreditore = soggettoModel.getCodCreditore(); 
+		
+		String classeCode = soggettoModel.getClasse(); //soggettoModel.setCodCreditore("366032");
+		
+		
+		boolean valorizzatoSoggetto = StringUtils.isNotBlank(codCreditore); 
+		boolean valorizzataClasse = StringUtils.isNotBlank(classeCode);
+		
+		
+		if(!(valorizzatoSoggetto && valorizzataClasse)) {
+			//SOLO UNO TRA I DUE E' VALORIZZATO, PROCEDO CON IL POPOLAMENTO CON I DATI CHE MI SONO ARRIVATI
+			effettuaPopolamentoSoggettoClasse(accertamento, codCreditore, classeCode);
+			return;
+		}
+		//SIA CLASSE SOGGETTO CHE CODICE SONO VALORIZZATI, CONSIDERO I VALORI PRIMA DELLE MODIFICHE UTENTI
+		String originalCodCreditore = sessionHandler.getParametro(FinSessionParameter.SOGGETTO_ACCERTAMENTO_ORIGINAL, String.class);
+		String originalClasseCode = sessionHandler.getParametro(FinSessionParameter.CLASSE_ACCERTAMENTO_ORIGINAL, String.class);
+		
+		boolean accertamentoProvvisorio =  datiAccertamento.getStep1Model().getStatoOperativo() == "P";
+		if(!accertamentoProvvisorio) {
+			//L'ACCERTAMENTO NON E' PROVVISORIO, L'UTENTE NON AVREBBE DOVUTO POTER MODIFICARE QUESTI DATI, 
+			//IMPOSTO QUELLI PRIMA DELLE SUE MODIFICHE
+			effettuaPopolamentoSoggettoClasse(accertamento, originalCodCreditore, originalClasseCode);
+			return;
+
+		}
+		boolean codCreditoreCambiato = codCreditore.equals(originalCodCreditore);
+		boolean classeCambiata = classeCode.equals(originalClasseCode);
+		if(codCreditoreCambiato &&!classeCambiata) {
+			//SE IL CODICE E' CAMBIATO, MA LA CLASSE HA LO STESSO VALORE, DEVO SBIANCARE LA CLASSE PERCHE' E' UN VALORE VECCHIO
+			effettuaPopolamentoSoggettoClasse(accertamento, codCreditore, null);
+			return;
+		}
+		if(classeCambiata) {
+			effettuaPopolamentoSoggettoClasse(accertamento, null, classeCode);
+			return;
+		}
+		//CHE COSA FACCIO QUI? 
+		effettuaPopolamentoSoggettoClasse(accertamento, codCreditore, classeCode);
+			
+	}
+
+	private void effettuaPopolamentoSoggettoClasse(Accertamento accertamento, String originalCodCreditore, String originalClasseCode) {
+		if(StringUtils.isNotBlank(originalCodCreditore)) {
+			Soggetto soggetto = new Soggetto();
+			soggetto.setCodiceSoggetto(originalCodCreditore);
+			accertamento.setSoggetto(soggetto);
+		}
+		if (StringUtils.isNotBlank(originalClasseCode)) {
+			ClasseSoggetto classe = new ClasseSoggetto();
+			classe.setCodice(originalClasseCode);
+			accertamento.setClasseSoggetto(classe);
+		}
+	}
 
 	private void popolaAccertamentoCore(GestisciMovGestModel datiAccertamento,
 			ImpegniPluriennaliModel pluriennale, Bilancio bilancio,
@@ -1479,8 +1724,13 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 	
 		////////////////////////////////////////////////////////
 		//correzione anomalia flag riaccertamento
-		if(datiAccertamento.getStep1Model().getRiaccertato().equalsIgnoreCase("si")){
-			accertamento.setFlagDaRiaccertamento(true);
+		if(datiAccertamento.getStep1Model().getRiaccertato().equalsIgnoreCase("si") || datiAccertamento.getStep1Model().getReanno().equalsIgnoreCase("si")){
+			
+			if(datiAccertamento.getStep1Model().getRiaccertato().equalsIgnoreCase("si")) {
+				accertamento.setFlagDaRiaccertamento(true);
+			}else if(datiAccertamento.getStep1Model().getReanno().equalsIgnoreCase("si")) {
+				accertamento.setFlagDaReanno(true);
+			}
 			
 			if (datiAccertamento.getStep1Model().getAnnoImpRiacc() != null && datiAccertamento.getStep1Model().getAnnoImpRiacc() != 0) { 
 				accertamento.setAnnoRiaccertato(datiAccertamento.getStep1Model().getAnnoImpRiacc());
@@ -1490,6 +1740,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 			}
 		} else { 
 			accertamento.setFlagDaRiaccertamento(false);
+			accertamento.setFlagDaReanno(false);
 		}	
 				
 		if (datiAccertamento.getStep1Model().getAnnoImpOrigine() != null && datiAccertamento.getStep1Model().getAnnoImpOrigine() != 0) { 
@@ -1503,7 +1754,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		accertamento.setAnnoMovimento(datiAccertamento.getStep1Model().getAnnoImpegno()); //da verificare
 		//accertamento.setUid(datiAccertamento.getStep1Model().getUid()); //da verificare
 		accertamento.setUid(datiAccertamento.getAccertamentoInAggiornamento().getUid()); //da verificare
-		accertamento.setNumero(new BigDecimal(datiAccertamento.getStep1Model().getNumeroImpegno())); //da verificare
+		accertamento.setNumeroBigDecimal(new BigDecimal(datiAccertamento.getStep1Model().getNumeroImpegno())); //da verificare
 		accertamento.setTipoMovimento(datiAccertamento.getAccertamentoInAggiornamento().getTipoMovimento());
 		accertamento.setTipoMovimentoDesc(datiAccertamento.getAccertamentoInAggiornamento().getTipoMovimentoDesc());
 		///////////////////////////////////////////////////////////////////////////////////////
@@ -1537,16 +1788,9 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		// provvedimento
 		accertamento.setAttoAmministrativo(popolaProvvedimento(datiAccertamento));
 		
-		
-		Soggetto soggetto = new Soggetto();
-		soggetto.setCodiceSoggetto(datiAccertamento.getStep1Model().getSoggetto().getCodCreditore());
-		accertamento.setSoggetto(soggetto);
-		
-		if (datiAccertamento.getStep1Model().getSoggetto().getClasse() != null && !"".equalsIgnoreCase(datiAccertamento.getStep1Model().getSoggetto().getClasse())) {
-			ClasseSoggetto classe = new ClasseSoggetto();
-			classe.setCodice(datiAccertamento.getStep1Model().getSoggetto().getClasse());
-			accertamento.setClasseSoggetto(classe);
-		}
+		//SIAC-8503: la modifica ha creato una regressione sulla classe e soggetto quando vengono modificati
+		//la risolvo
+		impostaSoggettoOClassePerRequestAggiornaAccertamento(datiAccertamento, accertamento);
 		
 		if (pluriennale != null) {
 			if (pluriennale.getAnnoImpPluriennale() <= (bilancio.getAnno() + 2)) {
@@ -1627,6 +1871,12 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		if(modifica.isReimputazione()){
 	    	mc.setAnnoReimputazione(modifica.getAnnoReimputazione());
 	    	mc.setReimputazione(WebAppConstants.Si);
+	    	//SIAC-6997: Solo se Reimputazione Si Aggiungere Elaborato ROR – Reimp. in corso d’anno.
+			if(modifica.isElaboraRorReanno()){
+				mc.setReanno(WebAppConstants.Si);
+			}else{
+				mc.setReanno(WebAppConstants.No);
+			}
 	    } else {
 	    	mc.setAnnoReimputazione(null);
 	    	mc.setReimputazione(WebAppConstants.No);
@@ -1648,11 +1898,16 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 		boolean disabilita = false;
 		if(teSupport!=null && teSupport.getOggettoAbilitaTE()!=null){
 			if(teSupport.getOggettoAbilitaTE().equals(OggettoDaPopolareEnum.IMPEGNO.toString()) ||
-					teSupport.getOggettoAbilitaTE().equals(OggettoDaPopolareEnum.SUBIMPEGNO.toString())){
-				disabilita =  isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentratoP);
+					teSupport.getOggettoAbilitaTE().equals(OggettoDaPopolareEnum.SUBIMPEGNO.toString())){				
+				// SIAC-7395
+//				disabilita =  isAzioneConsentita(AzioniConsentite.OP_SPE_gestisciImpegnoDecentratoP;
+				disabilita =  isAzioneConsentita(AzioneConsentitaEnum.OP_COM_bloccaCTE_Imp);
+			
 			} else if(teSupport.getOggettoAbilitaTE().equals(OggettoDaPopolareEnum.ACCERTAMENTO.toString()) ||
 					teSupport.getOggettoAbilitaTE().equals(OggettoDaPopolareEnum.SUBACCERTAMENTO.toString())){
-				disabilita =  isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamentoDecentratoP);
+				// SIAC-7395
+//				disabilita =  isAzioneConsentita(AzioniConsentite.OP_ENT_gestisciAccertamentoDecentratoP;
+				disabilita =  isAzioneConsentita(AzioneConsentitaEnum.OP_COM_bloccaCTE_Acc);
 			}
 		}
 		return disabilita;
@@ -1672,5 +1927,7 @@ public abstract class MovGestAction<M extends MovGestModel> extends GenericPopup
 	public boolean abilitatoModificaProvvedimento(){
 		return true;
 	}
+	
+
 	
 }

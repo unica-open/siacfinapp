@@ -40,7 +40,8 @@ SPDX-License-Identifier: EUPL-1.2
 			
 			
 			$.ajax({
-				url: '<s:url method="aggiornaContemporaneo"/>',
+				//task-131 url: '<s:url method="aggiornaContemporaneo"/>',
+				url: '<s:url action="%{#aggiornaContemporaneoAction}"/>',
 				type: 'POST',
 				data: $(".parametroAggiornaImporto").serialize(),
 				success: function(data)  {

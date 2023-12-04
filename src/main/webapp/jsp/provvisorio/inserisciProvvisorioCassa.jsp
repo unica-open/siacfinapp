@@ -29,8 +29,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage">
-    
-			<s:form method="post" action="inserisciProvvisorioCassa.do" id="inserisciProvvisorioCassa">
+    		<%-- SIAC-7952 rimuovo .do dalla action --%>
+			<s:form method="post" action="inserisciProvvisorioCassa" id="inserisciProvvisorioCassa">
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 			
 			
@@ -100,8 +100,10 @@ SPDX-License-Identifier: EUPL-1.2
 				<br/> <br/> 
 				<p>           
 	            <s:include value="/jsp/include/indietro.jsp" /> 
-				<s:submit name="annulla" value="annulla" method="annullaInserisciProvvisorio" cssClass="btn btn-secondary" />
-				<s:submit name="cerca" value="Salva" method="insericiProvvisorioDiCassa" cssClass="btn btn-primary pull-right" /> 
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaInserisciProvvisorio" cssClass="btn btn-secondary" /> -->
+				<!-- task-131 <s:submit name="cerca" value="Salva" method="insericiProvvisorioDiCassa" cssClass="btn btn-primary pull-right" /> -->
+				<s:submit name="annulla" value="annulla" action="inserisciProvvisorioCassa_annullaInserisciProvvisorio" cssClass="btn btn-secondary" />
+				<s:submit name="cerca" value="Salva" action="inserisciProvvisorioCassa_insericiProvvisorioDiCassa" cssClass="btn btn-primary pull-right" />
 				</p>       				
   	    	</s:form>
     	</div>

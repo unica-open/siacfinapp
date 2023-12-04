@@ -100,8 +100,8 @@ SPDX-License-Identifier: EUPL-1.2
 		     			 		data-target="#insInd"  href="#" id="annullaInserimentoIndirizzo">annulla inserimento</a>
                      	</p> 
 <!--                       <a class="btn" href="#"  data-toggle="collapse" data-target="#insInd">salva</a>   -->
-                        <s:submit name="salvaIndirizzo" value="carica" method="salvaIndirizzo" 
-                        		  cssClass="btn" data-target="#insInd" data-toggle="collapse" />   
+                        <!-- task-131 <s:submit name="salvaIndirizzo" value="carica" method="salvaIndirizzo"  cssClass="btn" /> -->
+                        <s:submit name="salvaIndirizzo" value="carica"  action="%{#salvaIndirizzoAction}"  cssClass="btn" />                         
                      </p>
 
                         </div>                      
@@ -112,7 +112,8 @@ $(document).ready(function() {
 	autocompleteSedimi();
 	$("#annullaInserimentoIndirizzo").click(function() {
 		$.ajax({
-			url: '<s:url method="pulisciIndirizzi"/>',
+			//task-131 url: '<s:url method="pulisciIndirizzi"/>',
+			url: '<s:url action="%{#pulisciIndirizziAction}"/>',
 			    success: function(data)  {
 				inserIndirizzo.html(data);
 				copiaNazioneInComune();

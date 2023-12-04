@@ -11,6 +11,7 @@ var ModificaMovGestSpesa = function($){
 	exports.gestisciAbbina = gestisciAbbina;
 	exports.gestisciProvvedimento = gestisciProvvedimento;
 	exports.controlloSDF = controlloSDF;
+	exports.gestisciChangeFlagAggiudicazione = gestisciChangeFlagAggiudicazione;
 	
 	 function annullaPluri(){
 		 $('#listaTipoMotivo').val("ECON");
@@ -32,7 +33,7 @@ var ModificaMovGestSpesa = function($){
 		 
 		impostaPulsanteSingoloPluriennale(tipoMotivo);
 
-		if(tipoMotivo == 'RORM'){
+		if(tipoMotivo === 'RORM'){
 			stringaHiddenInput = '<input id="HIDDEN_campo_importo" type="hidden" name="'+ campoImporto.attr('name') + '"value="0,00"/>';
         	campoImporto.val(0).trigger('blur').attr('disabled', 'disabled');
         	$importoRORM.html(stringaHiddenInput);
@@ -40,6 +41,13 @@ var ModificaMovGestSpesa = function($){
         if(stringaTipoMotivo && /^ROR/.test(stringaTipoMotivo)){
         	descrizioneObbligatoria.show();
         }
+
+		//SIAC-8819 		
+		var flagTipoMotivo = tipoMotivo=='REIMP' || tipoMotivo=='REANNO';
+
+		$("#radioReimputatoSi").prop('checked', flagTipoMotivo);
+		$("#radioReimputatoNo").prop('checked', ! flagTipoMotivo);
+		$("#bloccoReimputato").toggle(flagTipoMotivo);
         
 	}
 	
@@ -54,6 +62,9 @@ var ModificaMovGestSpesa = function($){
 	    	  $('#sub').show();
 	    	  $('#anche').hide();
 	    	  $('#infosImp').hide();
+			  nascondiSelectMotivo($('#modificaMotivoAggiudicazione'));
+			  abilitaSelectMotivo($('#modificaMotivoGenerico'));
+
 		  } 
 			if(radioSec == 'Impegno') {
 
@@ -162,6 +173,54 @@ var ModificaMovGestSpesa = function($){
 		       	}
 		 }
 	 }
+
+	function nascondiSelectMotivo($enclosingDiv){
+		var enclosedSelect = $enclosingDiv.find('select');
+		$enclosingDiv.hide();
+		enclosedSelect.attr('disabled', 'true');
+		enclosedSelect.val("");
+	}
+	
+	function abilitaSelectMotivo($enclosingDiv){
+		var enclosedSelect = $enclosingDiv.find('select');
+		$enclosingDiv.show();
+		enclosedSelect.removeAttr('disabled');
+	}
+
+	function gestisciChangeFlagAggiudicazione(){
+		var isAggiudicazione = $('#flagAggiudicazione').is(':checked');
+		var campiAggiudicazione = $('#campiAggiudicazione');
+		var divMotivoAgg=$('#modificaMotivoAggiudicazione');
+		var divMotivo=$('#modificaMotivoGenerico');
+		var reimputazioneRadios = $('input[name="model.movimentoSpesaModel.reimputazione"]');
+		/*var hiddenInput;
+		var spanHiddenInput=$("#hidden_motivo_agg");*/
+		if(!isAggiudicazione){
+			campiAggiudicazione.find('input[type="text"]').val('');
+			campiAggiudicazione.find('select').val("");
+			campiAggiudicazione.slideUp();
+			reimputazioneRadios.removeAttr('disabled');
+			nascondiSelectMotivo(divMotivoAgg);
+			abilitaSelectMotivo(divMotivo);
+//			spanHiddenInput.html("");
+			return;
+		}
+		/*hiddenInput ='<input type="hidden" name="idTipoMotivo" value="' + codiceMotivoAggiudicazione+'"/>';
+		spanHiddenInput.html(hiddenInput);*/
+		nascondiSelectMotivo(divMotivo);
+		abilitaSelectMotivo(divMotivoAgg);
+		
+		$('#radioReimputatoNo').attr('checked', true).trigger('change');
+		reimputazioneRadios.attr('disabled', true);
+		campiAggiudicazione.slideDown();
+		
+		//SIAC-8096
+		$('#subDiv').slideUp();
+		$('#competenzeImpegno').attr('checked', true).trigger('change');
+		//
+	}
+	
+	
 	
 	
 	return exports;
@@ -174,7 +233,6 @@ $(document).ready(function() {
 	var radioReimputatoSi = $("#radioReimputatoSi");
 	var bloccoReimputato = $("#bloccoReimputato");
 	var radioReimputato = $("#radioReimputato");
-	
 		
 	if (radioReimputatoNo.is(':checked')){
 		bloccoReimputato.hide();
@@ -208,6 +266,7 @@ $(document).ready(function() {
 	    $('#sub').hide();
 	    $('#anche').hide();
 	    $('#infosImp').show();
+		//ModificaMovGestSpesa.nascondiMotivoAggiudicazione();
     }
 //  
 	if(competenza == 'SubImpegno'){
@@ -215,12 +274,13 @@ $(document).ready(function() {
 		$('#subDiv').show();
 		$('#abbinas').show();
 		$('#subInfo').show();
+		/*ModificaMovGestSpesa.nascondiMotivoAggiudicazione();*/
 		if(abbcheckd){
 	   	  $('#infosImp').show();
 	   	  $('#anche').show();
 	   	  $('#sub').hide();
 		}else{
-			  $('#infosImp').hide();
+		  $('#infosImp').hide();
 	   	  $('#anche').hide();
 	   	  $('#sub').show();
 		}
@@ -234,6 +294,18 @@ $(document).ready(function() {
     $("#importoImpegnoModImp").change(ModificaMovGestSpesa.controlloSDF);
     
     $('.flagCompetenze').change(ModificaMovGestSpesa.gestisciCompetenze);
- 
+    
+	//SIAC-8096 permetto l'inserimento delle aggiudicazioni per gli impegni con sub
+	//ma ne inbisco la gestione se si prova a modificare i sub
+    $('#competenzeSubImpegno').on('click', function(){
+    	$('#competenzeSubImpegno').attr('checked', true).trigger('change');
+    	$('#flagAggiudicazione').removeAttr('checked').trigger('change');		
+    });
+    
+    //SIAC-6865
+	if($('#flagAggiudicazione').length > 0){
+		$('#flagAggiudicazione').off('change').on('change', ModificaMovGestSpesa.gestisciChangeFlagAggiudicazione).trigger('change');
+	}    
+	
  
  });

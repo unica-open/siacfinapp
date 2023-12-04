@@ -25,8 +25,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-        <s:form id="salvaSoggetto" action="salvaSoggetto.do" method="post">
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form id="salvaSoggetto" action="salvaSoggetto" method="post">
         
         <h3>Inserisci un nuovo soggetto</h3>
         <!-- 
@@ -60,7 +60,7 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		<s:if test="hasActionMessages()">
 				<%-- Messaggio di WARNING --%>
-				<!-- <div class="alert alert-warning">-->
+				<!-- <div class="alert alert-warning"> -->
 				   <div class="alert alert-success">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<strong>Attenzione!!</strong><br>
@@ -72,11 +72,12 @@ SPDX-License-Identifier: EUPL-1.2
                                           
              <p>
                  
-                 <s:submit name="indietroStep2" value="indietro" method="indietroStep2" cssClass="btn" disabled="true" />   
+                <!-- task-131<s:submit name="indietroStep2" value="indietro" method="indietroStep2" cssClass="btn" disabled="true" />  -->
+                <s:submit name="indietroStep2" value="indietro" action="salvaSoggettoCec_indietroStep2" cssClass="btn" disabled="true" />   
                 <!-- <a class="btn btn-link" href="">annulla</a>
                 -->
                 <s:a cssClass="btn btn-primary pull-right" href="${redirect.cruscotto}">chiudi</s:a>
-               <!--  <a href="#" class="btn btn-primary pull-right">chiudi</a>--> 
+               <!--  <a href="#" class="btn btn-primary pull-right">chiudi</a> --> 
              </p>
              
              </div>

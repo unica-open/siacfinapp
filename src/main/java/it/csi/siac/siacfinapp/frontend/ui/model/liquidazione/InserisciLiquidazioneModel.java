@@ -9,6 +9,7 @@ import java.util.List;
 
 import it.csi.siac.siaccorser.model.TipologiaGestioneLivelli;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.LiquidazioneModel;
+import it.csi.siac.siacfinser.frontend.webservice.msg.AccreditoTipoOilIsPagoPA;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceLiquidazione;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.ordinativo.OrdinativoPagamento;
@@ -232,5 +233,10 @@ public class InserisciLiquidazioneModel extends LiquidazioneModel {
 	}
 	public void setSalvataConValidaOra(boolean salvataConValidaOra) {
 		this.salvataConValidaOra = salvataConValidaOra;
+	}
+	
+	//SIAC-8853
+	public AccreditoTipoOilIsPagoPA creaRequestAccreditoTipoOilIsPagoPA() {
+		return creaRequest(AccreditoTipoOilIsPagoPA.class);
 	}
 }

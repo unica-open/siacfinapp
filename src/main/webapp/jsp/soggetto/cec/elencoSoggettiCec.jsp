@@ -39,7 +39,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="span12 ">
 
 <div class="contentPage">  
-   <s:form id="mainForm" method="post" action="elencoSoggettiCec.do">
+   <%-- SIAC-7952 rimuovo .do dalla action --%>
+   <s:form id="mainForm" method="post" action="elencoSoggettiCec">
    
    <s:if test="hasActionErrors()">
 		<%-- Messaggio di ERROR --%>
@@ -75,8 +76,8 @@ SPDX-License-Identifier: EUPL-1.2
 		</ul>
 	</div>
 </s:if>   
-   
-   <h3>Risultati di ricerca Soggetto</h3>
+   <!-- task-224 -->
+   <h3>Risultati di ricerca Soggetto di Cassa Economale</h3>
    <p>Seleziona un soggetto per visualizzare le sedi e le modalit&agrave; di pagamento collegate</p>  
    <display:table name="sessionScope.RISULTATI_RICERCA_SOGGETTI"  
                  class="table tab_left table-hover" 
@@ -95,15 +96,16 @@ SPDX-License-Identifier: EUPL-1.2
 	        <display:column title="Stato" property="statoOperativo" />
 	        <display:column title="" class="tab_Right">
 		    	<div class="btn-group">
-			    	<s:url id="consultaUrl" action="consultaSoggettoCec.do">
+			    	<%-- task-131<s:url id="consultaUrl" action="consultaSoggettoCec.do"> --%>
+			    	<s:url var="consultaUrl" action="consultaSoggettoCec.do">
 			        	<s:param name="codiceSoggetto" value="%{#attr.ricercaSoggettoID.codiceSoggetto}" />
 	                </s:url>
 	               
 
-	                <s:url id="aggiornaUrl" action="aggiornaSoggettoCec.do">
+	                <s:url var="aggiornaUrl" action="aggiornaSoggettoCec.do">
 			        	<s:param name="soggetto" value="%{#attr.ricercaSoggettoID.codiceSoggetto}" />
 	                </s:url>
-	                <s:url id="collegaUrl" action="collegaSoggettiCec.do">
+	                <s:url var="collegaUrl" action="collegaSoggettiCec.do">
 			        	<s:param name="soggetto" value="%{#attr.ricercaSoggettoID.codiceSoggetto}" />
 	                </s:url>
 	                <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
@@ -129,7 +131,8 @@ SPDX-License-Identifier: EUPL-1.2
 	<s:if test="isVisualizzaDettaglioVisibile()">
 		</div>
 		<p> 
-			<s:submit name="visualizza_dettaglio" value="visualizza dettaglio" method="visualizzaDettaglio" cssClass="btn" />
+			<!--task-131 <s:submit name="visualizza_dettaglio" value="visualizza dettaglio" method="visualizzaDettaglio" cssClass="btn" />-->
+			<s:submit name="visualizza_dettaglio" value="visualizza dettaglio" action="elencoSoggettiCec_visualizzaDettaglio" cssClass="btn" />
 		</p>
 		
 		
@@ -160,7 +163,9 @@ SPDX-License-Identifier: EUPL-1.2
 </div>
 <div class="modal-footer">
 	<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-	<s:submit id="eliminaBtn" name="btnEliminaSoggetto" value="si, prosegui" cssClass="btn btn-primary" method="gestioneEliminaSoggetto"/>
+	<!-- task-131 <s:submit id="eliminaBtn" name="btnEliminaSoggetto" value="si, prosegui" cssClass="btn btn-primary" method="gestioneEliminaSoggetto"/> -->
+	<s:submit id="eliminaBtn" name="btnEliminaSoggetto" value="si, prosegui" cssClass="btn btn-primary" action="elencoSoggettiCec_gestioneEliminaSoggetto"/>
+	
 </div>
 </div>  
 <!--/modale elimina -->
@@ -175,7 +180,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" data-aria-hidden="true">no, indietro</button>
-		<s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="gestisciAggiornamentoStato"/>
+		<!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="gestisciAggiornamentoStato"/> -->
+		<s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="elencoSoggettiCec_gestisciAggiornamentoStato"/>
 	</div>
 </div>  
  <!--/modale annulla -->
@@ -190,7 +196,8 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" data-aria-hidden="true">no, indietro</button>
-		<s:submit id="validaBtn" name="btnValidaStato" value="si, prosegui" cssClass="btn btn-primary" method="gestisciAggiornamentoStato"/>
+		<!--task-131 <s:submit id="validaBtn" name="btnValidaStato" value="si, prosegui" cssClass="btn btn-primary" method="gestisciAggiornamentoStato"/> -->
+		<s:submit id="validaBtn" name="btnValidaStato" value="si, prosegui" cssClass="btn btn-primary" action="elencoSoggettiCec_gestisciAggiornamentoStato"/>
 	</div>
 </div>  
  <!--/modale valida -->

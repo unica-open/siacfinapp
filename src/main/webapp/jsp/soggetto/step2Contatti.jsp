@@ -40,8 +40,13 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-         <s:form id="inserisciContatti"  action="inserisciContatti.do" method="post">
+    	 <%-- SIAC-7952 rimuovo .do dalla action --%>
+         <s:form id="inserisciContatti"  action="inserisciContatti" method="post">
+         
+         <s:set var="salvaRecapitoAction" value="%{'inserisciContatti_salvaRecapito'}" />	          
+	   	 <s:set var="salvaIndirizzoAction" value="%{'inserisciContatti_salvaIndirizzo'}" />	          
+	     <s:set var="pulisciIndirizziAction" value="%{'inserisciContatti_pulisciIndirizzi'}" />	          
+	    	 	
         <h3>Inserisci un nuovo soggetto</h3>
         <!-- <p> Segui i passi indicati per inserire i dati dell'ente. 
         <br/>Non &egrave; necessario compilare tutti i campi, ma solo quelli obbligatori: xxx, xxxx e xxxxx.</p>
@@ -62,7 +67,7 @@ SPDX-License-Identifier: EUPL-1.2
 					
 			<s:if test="hasActionMessages()">
 				<%-- Messaggio di WARNING --%>
-				<!-- <div class="alert alert-warning">-->
+				<!-- <div class="alert alert-warning"> -->
 				   <div class="alert alert-success">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<strong>Attenzione!!</strong><br>
@@ -112,7 +117,6 @@ SPDX-License-Identifier: EUPL-1.2
    
       
               <!--  DISPLAY TAG -->
-              
               <display:table name="sessionScope.INSERISCI_SOGGETTO_STEP2.indirizzi"  
                  class="table tableHover tab_left" summary="riepilogo indirizzo"
 		         requestURI="inserisciContatti.do" 
@@ -134,15 +138,17 @@ SPDX-License-Identifier: EUPL-1.2
 				    	
 <%-- 				       </s:a> --%>
 				     
-				     <s:set name="idIndirizzo" value="%{#attr.tabContattiID.idIndirizzo}" />
-				     	
+							<!-- task-164 -->
+				             <s:param name="idIndirizzo" value="%{#attr.tabContattiID.idIndirizzo}" /> 
+
 				 	
 				 	<div class="btn-group">
 			    	
 	                <button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
 			     	<ul class="dropdown-menu pull-right" id="ul_action">
 		     			 
-		     			 	<li><a data-id_indirizzo="<s:property value="#idIndirizzo" />"
+		     			 	<!-- task-164 -->
+		     			 	<li><a data-id_indirizzo="<s:property value="#attr.tabContattiID.idIndirizzo" />"
 		     			 		data-tipo_indirizzo="<s:property value="#attr.tabContattiID.tipoIndirizzo"/>"	
 		     			 		data-principale="<s:property value="#attr.tabContattiID.principale"/>"	
 		     			 		data-avviso="<s:property value="#attr.tabContattiID.avviso"/>"	
@@ -158,7 +164,7 @@ SPDX-License-Identifier: EUPL-1.2
 		     			 		data-target="#insInd">aggiorna</a></li>
 
                      		<li><a href="<s:url action="inserisciContatti.do">
-				         <s:param name="idIndirizzo" value="#idIndirizzo" />
+				         <s:param name="idIndirizzo" value="%{#attr.tabContattiID.idIndirizzo}" />
 				         <s:param name="pressedButton">eliminaIndirizzo</s:param>
                      </s:url>" data-toggle="modal" class="linkEliminaSoggetto">elimina</a></li>                        	
                          
@@ -187,7 +193,6 @@ SPDX-License-Identifier: EUPL-1.2
 	  </div>
                 
  <h4>Contatti</h4>
-                 
                  <display:table name="sessionScope.INSERISCI_SOGGETTO_STEP2.recapiti"  class="table tableHover" summary="riepilogo recapiti"
 		         requestURI="inserisciContatti.do"
 				 uid="tabRecapitiID"  >
@@ -198,7 +203,8 @@ SPDX-License-Identifier: EUPL-1.2
 					 </display:column>
 					 <display:column title="" >
 					    
-					     <s:url id="updateUrl" action="inserisciContatti.do">
+					     <%-- task-131<s:url id="updateUrl" action="inserisciContatti.do"> --%>
+					     <s:url var="updateUrl" action="inserisciContatti.do">
 					         <s:param name="tipoRecapito" value="%{#attr.tabRecapitiID.descrizioneModo}" />
 	                     </s:url>
 	                     
@@ -208,7 +214,7 @@ SPDX-License-Identifier: EUPL-1.2
 					       </s:a>
 					     
 					     <i class="icon-trash"></i> elimina
-					     </button>ï»¿
+					     </button>
 					 </display:column>	
 
 				</display:table>	 
@@ -220,7 +226,7 @@ SPDX-License-Identifier: EUPL-1.2
                         
                         <!-- INCLUDE DEI CONTATTI -->                     
 <div id="instelefono" class="collapse">
-  
+  	
       <s:include value="/jsp/soggetto/include/insContattiSnippet.jsp" />
            
  </div>
@@ -258,8 +264,12 @@ SPDX-License-Identifier: EUPL-1.2
 
    
 <p> <s:include value="/jsp/include/indietro.jsp" />   
-   <s:submit name="annulla" value="annulla" method="annullaIndirizziERecapiti" cssClass="btn" />
-   <s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary pull-right" />   </p>
+   <!-- task-131 <s:submit name="annulla" value="annulla" method="annullaIndirizziERecapiti" cssClass="btn" /> -->
+   <!-- task-131 <s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary pull-right" /> -->  
+   <s:submit name="annulla" value="annulla" action="inserisciContatti_annullaIndirizziERecapiti" cssClass="btn" />
+   <s:submit name="salva" value="salva" action="inserisciContatti_salva" id="salvaId" cssClass="btn btn-primary pull-right" />  
+   
+ </p>
 </div>
 </div>
 </div>
@@ -314,7 +324,8 @@ function initAnnullaInsContattoClick() {
 	var insContatti = $("#instelefono");
 	$("#annullaInserimentoContatto").click(function() {
 		$.ajax({
-			url: '<s:url method="pulisciContatto"/>',
+			//task-131 url: '<s:url method="pulisciContatto"/>',
+			url: '<s:url action="inserisciContatti_pulisciContatto"/>',
 			    success: function(data)  {
 			    insContatti.html(data);
 			    initAnnullaInsContattoClick();

@@ -29,16 +29,31 @@ SPDX-License-Identifier: EUPL-1.2
 <!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
 <iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
 
-
- 
- 
+<s:set var="gestisciForwardAction" value="%{'ricercaAccertamento_gestisciForward'}" />
+<s:set var="siSalvaAction" value="%{'ricercaAccertamento_siSalva'}" />	 
+<s:set var="siProseguiAction" value="%{'ricercaAccertamento_siProsegui'}" />	
+<s:set var="annullaSubImpegnoAction" value="%{'ricercaAccertamento_annullaSubImpegno'}" />	 
+<s:set var="annullaSubAccertamentoAction" value="%{'ricercaAccertamento_annullaSubAccertamento'}" />	 
+<s:set var="annullaMovGestSpesaAction" value="%{'ricercaAccertamento_annullaMovGestSpesa'}" />	 
+<s:set var="eliminaSubImpegnoAction" value="%{'ricercaAccertamento_eliminaSubImpegno'}" />	 
+<s:set var="eliminaSubAccertamentoAction" value="%{'ricercaAccertamento_eliminaSubAccertamento'}" />
+<s:set var="forzaProseguiAction" value="%{'ricercaAccertamento_forzaProsegui'}" />	          
+<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'ricercaAccertamento_forzaSalvaPluriennaleAccertamento'}" />	          
+<s:set var="salvaConByPassDodicesimiAction" value="%{'ricercaAccertamento_salvaConByPassDodicesimi'}" />	          
+		 
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span12 contentPage">        
-        <s:form method="post" nane="ricercaAccertamento" action="ricercaAccertamento.do" cssClass="form-horizontal">  
+    <div class="span12 contentPage">
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>     
+        <s:form method="post" nane="ricercaAccertamento" action="ricercaAccertamento" cssClass="form-horizontal">  
          <s:include value="/jsp/include/actionMessagesErrors.jsp" />
                
-         <h3>Ricerca Accertamento</h3>
+         <h3>
+         Ricerca Accertamento
+         <s:if test="%{ricercaTipoROR == true}">
+              	ROR
+          </s:if>
+         </h3>
 		   <!--#include virtual="include/alertErrorSuccess.html" -->
          
          <!----------------------------- HIDDEN PER GESTIONE ALBERI ----------------------------------->
@@ -63,7 +78,8 @@ SPDX-License-Identifier: EUPL-1.2
           <div class="step-content">
            <div class="step-pane active" id="step1"> <br>
            <p>
-          	<s:submit name="cerca" value="cerca" method="ricercaAccertamento" cssClass="btn btn-primary pull-right" />
+          <!-- task-131 <s:submit name="cerca" value="cerca" method="ricercaAccertamento" cssClass="btn btn-primary pull-right" /> -->         	
+          <s:submit name="cerca" value="cerca" action="ricercaAccertamento_ricercaAccertamento" cssClass="btn btn-primary pull-right" />
           </p><br>
           <h4>Accertamento</h4>
           <fieldset class="form-horizontal">  
@@ -101,24 +117,86 @@ SPDX-License-Identifier: EUPL-1.2
 				</div>
 			</div>  
 			
-			<div class="control-group">
-    			<span class="control-label">Accertamento da riaccertamento</span>
-    			<div class="controls">    
-  				<!--CHIEDERE COME GESTIRE QUESTI RADIO  -->
-      				<s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)"></s:radio> 
-
-      				<!-- CAMPI VISIBILI SE RADIOBUTTON SI=CHECKED -->       
-      				<span class="riaccVisible">
-      					&nbsp; <s:textfield onkeyup="return checkItNumbersOnly(event)" id="annoImpRiacc" name="model.ricercaModel.annoImpRiacc" cssClass="span1 " title="Anno" />&nbsp;
-      					<s:textfield onkeyup="return checkItNumbersOnly(event)" id="numImpRiacc" cssClass="lbTextSmall span2 " title="Numero" name="model.ricercaModel.numeroImpRiacc"/>
-     			 	</span>
-     		 	<!-- FINE CAMPI VISIBILI -->      
-   			 </div>
-  			</div>
+			<!-- SIAC-7501 -->
+           	<div class="control-group">
+		  		<table class="span10 ">
+		  			<tr>
+		  				<td class="span4 ">
+		  					<span class="control-label">Accertamento da riaccertamento</span>
+		  					<div class="controls">    
+					      		<s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)"></s:radio>
+					    	</div>
+		  				</td>
+		  				<td rowspan="3" valign="middle" width="80%" class="span8 ">
+		  					<span class="riaccVisible" id="bloccoRiaccertato">
+	      						&nbsp; 
+	      						<s:textfield onkeyup="return checkItNumbersOnly(event)" id="annoImpRiacc" name="model.ricercaModel.annoImpRiacc" cssClass="span2 " title="Anno" />&nbsp;
+	      						<s:textfield onkeyup="return checkItNumbersOnly(event)" id="numImpRiacc" cssClass="lbTextSmall span4 " title="Numero" name="model.ricercaModel.numeroImpRiacc"/>
+	     			 		</span>
+		  				</td>			
+		  			</tr>
+		  			<tr><td>&nbsp;</td></tr>
+		  			<!-- SIAC-6997 -->
+		  			<tr>
+		  				<td>
+		  					<span class="control-label">Da reimputazione in corso d&rsquo;anno</span>
+		  					<div class="controls">
+					      		<s:radio id="reanno" name="step1Model.reanno" cssClass="flagResidenza" list="step1Model.daReanno" onclick="check(this.value)"></s:radio>
+					    	</div>
+		  				</td>
+		  			</tr>
+		  		</table>
+		  	</div>
+		  	
+			<!-- div class="control-group">
+   				<span class="control-label">Accertamento da riaccertamento</span>
+   				<div class="controls">    
+ 						<s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)"></s:radio> 
+      				<span class="riaccVisible" id="bloccoRiaccertato">
+     						&nbsp; 
+     						<s:textfield onkeyup="return checkItNumbersOnly(event)" id="annoImpRiacc" name="model.ricercaModel.annoImpRiacc" cssClass="span1 " title="Anno" />&nbsp;
+     						<s:textfield onkeyup="return checkItNumbersOnly(event)" id="numImpRiacc" cssClass="lbTextSmall span2 " title="Numero" name="model.ricercaModel.numeroImpRiacc"/>
+    			 		</span>
+    		 		</div>
+ 				</div>
+	  		<div class="control-group">
+	    		<span class="control-label">Da reimputazione in corso d&rsquo;anno</span>
+	    		<div class="controls">    
+	      	  		<s:radio id="reanno" name="step1Model.reanno" cssClass="flagResidenza" list="step1Model.daReanno" onclick="check(this.value)"></s:radio>
+	    		</div>
+	  		</div--> 
+            
+            <!-- SIAC-6997 -->
+            <div class="control-group">      
+				          <label class="control-label">Struttura Compentente</label>
+				          <div class="controls">   
+				            <s:hidden name="step1Model.strutturaSelezionataCompetente" id="strutturaSelezionataCompetente" />
+				                           
+				            <div class="accordion span9" class="struttAmmCompetente">
+				              <div class="accordion-group">
+				                <div class="accordion-heading">    
+				                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#struttAmmCompetente" href="#4n">
+				                 Seleziona la Struttura competente
+				                  <i class="icon-spin icon-refresh spinner" id="spinnerStrutturaAmministrativaCompetente"></i></a>
+				                </div>
+				                <div id="4n" class="accordion-body collapse">
+				                  <div class="accordion-inner" id="strutturaAmministrativaCompetenteDiv">
+				                    <ul id="strutturaAmministrativaCompetente" class="ztree treeStruttAmm"></ul>
+				                  </div>
+				                  <div class="accordion-inner" id="strutturaAmministrativaCompetenteWait">
+				                    Attendere prego..
+				                  </div>
+				                  
+				                </div>
+				              </div>
+				            </div>
+				          </div>
+				        </div>
+            
             <div class="control-group">
             	<label class="control-label" >Accertamento di origine</label>
               	<div class="controls">	
-              	<s:textfield id="annoImpOrigine" onkeyup="return checkItNumbersOnly(event)" name="model.ricercaModel.annoImpOrigine" maxLength="4" cssClass="span1" title="Anno"/>	
+              	<s:textfield id="annoImpOrigine" onkeyup="return checkItNumbersOnly(event)" name="model.ricercaModel.annoImpOrigine" maxlength="4" cssClass="span1" title="Anno"/>	
               	<s:textfield id="numeroImpOrigine" onkeyup="return checkItNumbersOnly(event)" name="model.ricercaModel.numeroImpOrigine" cssClass="lbTextSmall span2" title="Numero"/>	
               				        
               	</div>
@@ -132,6 +210,10 @@ SPDX-License-Identifier: EUPL-1.2
             	<s:include value="/jsp/movgest/include/headerCapitolo.jsp"/>
             </div>
             <s:include value="/jsp/movgest/include/capitolo.jsp" />
+            
+            <s:set var="consultaModificheProvvedimentoAction" value="%{'ricercaAccertamento_consultaModificheProvvedimento'}" />
+			<s:set var="consultaModificheProvvedimentoSubAction" value="%{'ricercaAccertamento_consultaModificheProvvedimentoSub'}" />
+                  
             <s:include value="/jsp/movgest/include/provvedimento.jsp" />   
             <div id="refreshHeaderSoggetto">
             	<s:include value="/jsp/movgest/include/headerSoggetto.jsp"/>
@@ -139,9 +221,33 @@ SPDX-License-Identifier: EUPL-1.2
             <s:include value="/jsp/movgest/include/soggetto.jsp" />  
 			
 			
-			<!-- Modal -->
-			
-             <s:include value="/jsp/movgest/include/modal.jsp" /> 
+			<!--per modale provvedimento e elimina (incluse in modal.jsp) -->
+		    <s:set var="selezionaProvvedimentoAction" value="%{'ricercaAccertamento_selezionaProvvedimento'}" />
+			<s:set var="clearRicercaProvvedimentoAction" value="%{'ricercaAccertamento_clearRicercaProvvedimento'}" />	          
+       		<s:set var="ricercaProvvedimentoAction" value="%{'ricercaAccertamento_ricercaProvvedimento'}" />	          
+       		<s:set var="eliminaAction" value="%{'ricercaAccertamento_elimina'}" />	  
+            
+            <!--modale progetto -->
+            <s:set var="selezionaProgettoCronopAction" value="%{'ricercaAccertamento_selezionaProgettoCronop'}" />	          
+            <s:set var="selezionaProgettoAction" value="%{'ricercaAccertamento_selezionaProgetto'}" />		
+            <s:set var="pulisciRicercaProgettoAction" value="%{'ricercaAccertamento_pulisciRicercaProgetto'}" />	          
+            <s:set var="ricercaProgettoAction" value="%{'ricercaAccertamento_ricercaProgetto'}" />	          
+            <s:set var="codiceProgettoChangedAction" value="%{'ricercaAccertamento_codiceProgettoChanged'}" /> 
+	                
+	        <s:set var="ricercaCapitoloAction" value="%{'ricercaAccertamento_ricercaCapitolo'}" />
+	        <s:set var="pulisciRicercaCapitoloAction" value="%{'ricercaAccertamento_pulisciRicercaCapitolo'}" />
+	        <s:set var="selezionaCapitoloAction" value="%{'ricercaAccertamento_selezionaCapitolo'}" />
+	        <s:set var="visualizzaDettaglioCapitoloAction" value="%{'ricercaAccertamento_visualizzaDettaglioCapitolo'}" />
+	        
+	        
+	        <!--  per soggetto -->
+			<s:set var="selezionaSoggettoAction" value="%{'ricercaAccertamento_selezionaSoggetto'}" />
+			<s:set var="pulisciRicercaSoggettoAction" value="%{'ricercaAccertamento_pulisciRicercaSoggetto'}" />	          
+			<s:set var="ricercaSoggettoAction" value="%{'ricercaAccertamento_ricercaSoggetto'}" />	    
+			<s:set var="listaClasseSoggettoChangedAction" value="%{'ricercaAccertamento_listaClasseSoggettoChanged'}" />
+	       
+	      
+            <s:include value="/jsp/movgest/include/modal.jsp" /> 
           
             
             <!--modale progetto -->
@@ -157,7 +263,9 @@ SPDX-License-Identifier: EUPL-1.2
 		  <p class="margin-medium">
           	<s:include value="/jsp/include/indietro.jsp" />    
           	<a class="btn btn-secondary" href="">annulla</a>
-          	<s:submit id="cerca" name="cerca" value="cerca" method="ricercaAccertamento" cssClass="btn btn-primary pull-right" />
+          	<!-- task-131 <s:submit id="cerca" name="cerca" value="cerca" method="ricercaAccertamento" cssClass="btn btn-primary pull-right" /> -->         	
+          	<s:submit id="cerca" name="cerca" value="cerca" action="ricercaAccertamento_ricercaAccertamento" cssClass="btn btn-primary pull-right" />
+         
           </p>
             
           </fieldset>  
@@ -192,7 +300,8 @@ SPDX-License-Identifier: EUPL-1.2
 			annoImpRiacc.show();
 			numImpRiacc.show();
 		}
-		
+
+
 		
 		$("#linkCompilazioneGuidataProgetto").click(function(){
 		    	initRicercaGuidataProgetto($("#progetto").val());
@@ -202,7 +311,8 @@ SPDX-License-Identifier: EUPL-1.2
 			var cod = $("#progetto").val();
 			//Carico i dati in tabella "Modalita' di pagamento"		
 			$.ajax({
-				url: '<s:url method="codiceProgettoChanged"></s:url>',
+				//task-131 url: '<s:url method="codiceProgettoChanged"></s:url>',
+				url: '<s:url action="%{#codiceProgettoChangedAction}"/>',
 				type: "GET",
 				data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 			    success: function(data)  {
@@ -262,7 +372,8 @@ SPDX-License-Identifier: EUPL-1.2
 		$("#listaClasseSoggetto").change(function(){
 			$("#codCreditore").val("");
 			$.ajax({
-				url: '<s:url method="listaClasseSoggettoChanged"/>',
+				//task-131 url: '<s:url method="listaClasseSoggettoChanged"/>',
+				url: '<s:url action="%{#listaClasseSoggettoAction}"/>',			    
 				success: function(data)  {
 				    $("#refreshHeaderSoggetto").html(data);
 				}
@@ -275,17 +386,86 @@ SPDX-License-Identifier: EUPL-1.2
 			$("#ueb").attr("disabled", true);
 		});
 
+
+		//SIAC-6997- commentata
+// 		riaccertatoNo.change(function(){
+// 			riaccVisible.hide();
+// 			annoImpRiacc.hide();
+// 			numImpRiacc.hide();
+// 		});
+		
+// 		riaccertatoSi.change(function(){
+// 			riaccVisible.show();
+// 			annoImpRiacc.show();
+// 			numImpRiacc.show();
+// 		});
+
+
+		//SIAC-6997
 		riaccertatoNo.change(function(){
-			riaccVisible.hide();
 			annoImpRiacc.hide();
 			numImpRiacc.hide();
 		});
 		
 		riaccertatoSi.change(function(){
-			riaccVisible.show();
 			annoImpRiacc.show();
 			numImpRiacc.show();
 		});
+
+
+		//inizio SIAC-6997
+		if ($("#riaccertatoNo").is(':checked') || $("#reannoNo").is(':checked')) {
+			$("#bloccoRiaccertato").hide();
+			
+		}
+		if ($("#riaccertatoSi").is(':checked') || $("#reannoSi").is(':checked')) {	
+			$("#bloccoRiaccertato").show();
+			
+		}
+		
+		
+		function gestioneRiaccertatoFlagSi(){
+			$("#bloccoRiaccertato").show();
+			riaccVisible.show();
+			annoImpRiacc.show();
+			numImpRiacc.show();
+		}
+		
+		function gestioneRiaccertatoFlagNo(){
+			$("#annoImpRiacc").val("");
+			$("#numImpRiacc").val("");
+			$("#bloccoRiaccertato").hide();
+		}
+		
+		$("#reannoNo").change(function(){
+			if($("#riaccertatoNo").is(':checked')){
+				gestioneRiaccertatoFlagNo();
+			}
+		});
+		
+		$("#riaccertatoNo").change(function(){
+			if($("#reannoNo").is(':checked')){
+				gestioneRiaccertatoFlagNo();
+			}
+		});
+		
+		$("#riaccertatoSi").change(function(){
+			gestioneRiaccertatoFlagSi();
+			if($("#reannoSi").is(':checked')){
+				$("#reannoNo").prop('checked', true);
+				$("#reannoSi").prop('checked', false);
+			}
+		});
+		
+		$("#reannoSi").change(function(){		  
+			gestioneRiaccertatoFlagSi();
+			if($("#riaccertatoSi").is(':checked')){
+				$("#riaccertatoNo").prop('checked', true);
+				$("#riaccertatoSi").prop('checked', false);
+			}
+		});
+		
+		//fine SIAC-6997
 		
 	});
 	
@@ -313,6 +493,18 @@ SPDX-License-Identifier: EUPL-1.2
 	    var valore = cbObj.checked;
 	    $("#hiddenPerEscludiAnnullati").val(valore);
 	}
+
+
+
+
+
+	
+
+
+
+
+
+
 	
 </script>  
 

@@ -7,7 +7,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action.ordinativo;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -16,9 +16,9 @@ import it.csi.siac.siacbilser.model.ClassificatoreStipendi;
 import it.csi.siac.siaccorser.model.Bilancio;
 import it.csi.siac.siaccorser.model.ClassificatoreGenerico;
 import it.csi.siac.siaccorser.model.paginazione.ParametriPaginazione;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.ConsultaOrdinativoIncassoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiClassificatoriGenericiByTipoOrdinativoGest;
 import it.csi.siac.siacfinser.frontend.webservice.msg.LeggiClassificatoriGenericiByTipoOrdinativoGestResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaOrdinativoIncassoPerChiave;
@@ -108,7 +108,7 @@ public class ConsultaOrdinativoIncassoAction extends WizardConsultaOrdinativoAct
 		
 		//compongo la request per il servizio di ricerca dei classificatori:
 		LeggiClassificatoriGenericiByTipoOrdinativoGest ll = new LeggiClassificatoriGenericiByTipoOrdinativoGest();
-		ll.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		ll.setAnno(sessionHandler.getAnnoBilancio());
 		ll.setCodiceTipoOrdinativoGestione(TIPO_ORDINATIVO_INCASSO_I);
 		ll.setDataOra(new Date());
 		ll.setIdEnteProprietario(sessionHandler.getEnte().getUid());
@@ -274,7 +274,7 @@ public class ConsultaOrdinativoIncassoAction extends WizardConsultaOrdinativoAct
 		//per ora l'unica condizione riguarda l'abilitazione all'azione OP-ENT-insOrdInc
 		//implementare qui altre eventuali condizioni che dovessero essere richeste sul tasto
 		//ripeti dentro la maschera di consulta ordinativo di incasso
-		if (isAzioneAbilitata(CodiciOperazioni.OP_ENT_insOrdInc)) {
+		if (isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_insOrdInc)) {
 			abilitato = true;
 		}
 		return abilitato;

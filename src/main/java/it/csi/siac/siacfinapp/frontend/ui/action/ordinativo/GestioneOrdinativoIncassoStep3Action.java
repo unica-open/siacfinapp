@@ -6,7 +6,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action.ordinativo;
 
 import java.math.BigDecimal;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -66,8 +66,8 @@ public class GestioneOrdinativoIncassoStep3Action extends ActionKeyGestioneOrdin
 		setClearStatus(true);
 		
 		//4. precarico i valori di default della ricerca:
-		model.getRicercaProvvisorioModel().setAnnoProvvisorioDa(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
-		model.getRicercaProvvisorioModel().setAnnoProvvisorioA(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		model.getRicercaProvvisorioModel().setAnnoProvvisorioDa(sessionHandler.getAnnoBilancio());
+		model.getRicercaProvvisorioModel().setAnnoProvvisorioA(sessionHandler.getAnnoBilancio());
 		
 		//OK
 		return SUCCESS;

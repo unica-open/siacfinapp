@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
+import it.csi.siac.siacfin2ser.model.ContoTesoreria;
 import it.csi.siac.siacfin2ser.model.SubdocumentoSpesa;
 import it.csi.siac.siacfinapp.frontend.ui.action.GenericPopupAction;
 import it.csi.siac.siacfinapp.frontend.ui.model.carta.GestioneCartaModel;
@@ -32,8 +34,7 @@ import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.CartaContabileService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaCartaContabile;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaCartaContabileResponse;
@@ -43,7 +44,7 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOtt
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSoggettoPerChiave;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSoggettoPerChiaveResponse;
-import it.csi.siac.siacfinser.model.ContoTesoreria;
+import it.csi.siac.siacfin2ser.model.ContoTesoreria;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
@@ -51,7 +52,6 @@ import it.csi.siac.siacfinser.model.carta.CartaEstera;
 import it.csi.siac.siacfinser.model.carta.PreDocumentoCarta;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaSoggettoK;
 import it.csi.siac.siacfinser.model.ric.RicercaImpegnoK;
 import it.csi.siac.siacfinser.model.soggetto.ClassificazioneSoggetto;
@@ -152,7 +152,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 				}
 			} catch (ParseException e) {
 				//valore non valido
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data esecuzione pagamento",""));				
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data esecuzione pagamento",""));				
 			}
 		}else{
 			//data assente
@@ -192,7 +192,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 				}*/
 			} catch (ParseException e) {
 				//valore non valido
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza",""));				
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza",""));				
 			}
 		}else{
 			//data assente
@@ -241,7 +241,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			
 			//IN AGGIORNAMENTO DEVO ESSERE ABILITATO A OP_SPE_AGGCARTA
 			
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA)){
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 				return INPUT;
 			}
@@ -249,14 +249,14 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			
 			//IN INSERIMENTO DEVO ESSERE ABILITATO A OP_SPE_INSCARTA
 			
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_INSCARTA)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_INSCARTA)){
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 				return INPUT;
 			}
 		}
 		
 		//controllo stato bilancio:
-		if(controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()),"Gestione","Carta Contabile")){
+		if(controlloStatoBilancio(sessionHandler.getAnnoBilancio(),"Gestione","Carta Contabile")){
 			//esito negativo, l'errore e' gia' stato settato dentro al metodo controlloStatoBilancio
 			return INPUT;
 		}
@@ -427,9 +427,9 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			cartaEsteraDaInserire.setIstruzioni(model.getIstrPartPagamentoEstero());
 			// Esecutore diverso da Titolare
 			if (model.isCheckEsecutoreTitolare()) {
-				cartaEsteraDaInserire.setDiversoTitolare(Constanti.TRUE);
+				cartaEsteraDaInserire.setDiversoTitolare(CostantiFin.TRUE);
 			} else {
-				cartaEsteraDaInserire.setDiversoTitolare(Constanti.FALSE);
+				cartaEsteraDaInserire.setDiversoTitolare(CostantiFin.FALSE);
 			}
 			
 			cartaContabileDaInserire.setCartaEstera(cartaEsteraDaInserire);
@@ -508,9 +508,9 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			cartaEsteraDaInserire.setIstruzioni(model.getIstrPartPagamentoEstero());
 			// Esecutore diverso da Titolare
 			if (model.isCheckEsecutoreTitolare()) {
-				cartaEsteraDaInserire.setDiversoTitolare(Constanti.TRUE);
+				cartaEsteraDaInserire.setDiversoTitolare(CostantiFin.TRUE);
 			} else {
-				cartaEsteraDaInserire.setDiversoTitolare(Constanti.FALSE);
+				cartaEsteraDaInserire.setDiversoTitolare(CostantiFin.FALSE);
 			}
 			
 			cartaContabileDaAggiornare.setCartaEstera(cartaEsteraDaInserire);
@@ -545,7 +545,6 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 		model.setRadioSediSecondarieSoggettoSelezionato(0);
 		model.setSoggettoSelezionato(false);
 		model.setAvvisoFrase(null);
-		model.setNumeroMutuoImpegnoString(null);
 		model.setDataEsecuzioneRiga(null);
 		model.setImportoRiga(null);
 		model.setImportoEsteroRiga(null);
@@ -785,14 +784,14 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 		
 		//controllo annoImpegno <= anno esercizio				
 		if(model.getAnnoImpegno()!=null && model.getAnnoImpegno()!=0){
-			if(model.getAnnoImpegno() > Integer.valueOf(sessionHandler.getAnnoEsercizio())){
+			if(model.getAnnoImpegno() > sessionHandler.getAnnoBilancio()){
 				listaErrori.add(ErroreFin.ANNO_MOVIMENTO_NON_VALIDO.getErrore());	
 			}		
 		}
 		
 		//Controllo DataEsecuzioneRiga
 		/* SIAC-6076 tolgo data esecuzione pagamento 
-		int annoEsercizio= Integer.valueOf(sessionHandler.getAnnoEsercizio());
+		int annoEsercizio= sessionHandler.getAnnoBilancio();
 		if (!FinStringUtils.isEmpty(model.getDataEsecuzioneRiga())) {
 			DateFormat df=null;
 			Date parsedDate=null;
@@ -823,7 +822,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 				}
 
 			} catch (ParseException e) {
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data esecuzione pagamento",""));				
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data esecuzione pagamento",""));				
 			}
 		}else{
 			
@@ -839,7 +838,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			rip.setEnte(sessionHandler.getEnte());
 			rip.setRichiedente(sessionHandler.getRichiedente());
 			RicercaImpegnoK k = new RicercaImpegnoK();
-			k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			k.setAnnoImpegno(this.model.getAnnoImpegno());
 			k.setNumeroImpegno(new BigDecimal(this.model.getNumeroImpegno()));
 			
@@ -860,7 +859,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			//
 			rip.setpRicercaImpegnoK(k);
 			
-			RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+			RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 			boolean corrispondenzaImpegnoSubImpegno = false;
 			
 			if (respRk != null && respRk.getImpegno() != null) {
@@ -870,33 +869,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 				boolean  validato = impegno.isValidato();
 				if (impegno != null) {
 					
-					//Gestione (eventuale) mutuo:
-					List<VoceMutuo> listaVociMutuo = new ArrayList<VoceMutuo>();
-					if(impegno!=null && impegno.getListaVociMutuo()!=null && impegno.getListaVociMutuo().size()>0){
-						listaVociMutuo = impegno.getListaVociMutuo();
-						model.setHasMutui(true);
-					}
-					model.setListaVociMutuo(listaVociMutuo);
-					VoceMutuo voceMutuoScelto = null;
-					
-					//Gestione mancata corrispondenza mutuo
-					if(model.getNumeroMutuoPopup()!=null && model.getListaVociMutuo()!=null && model.getListaVociMutuo().size()>0){
-						voceMutuoScelto =cercaVoceMutuoByNumeroMutuo(model.getNumeroMutuoPopup(), model.getListaVociMutuo());
-						if(voceMutuoScelto==null){
-							listaErrori.add(ErroreFin.NESSUNA_CORRISPONDENZA_MUTUO.getErrore());
-						} else {
-							model.setDescrizioneMutuoPopup(voceMutuoScelto.getDescrizioneMutuo());
-						}
-					}
-					
-					//7 a1
-					if("MUT".equalsIgnoreCase(impegno.getTipoImpegno().getCodice())){
-						//se l'impegno e' finanziato con mutuo (codice: MUT) allora DEVE
-						//essere selezionato un mutuo:
-						if(voceMutuoScelto==null){
-							listaErrori.add(ErroreFin.IMPEGNO_FINANZIATO_DA_MUTUO.getErrore());
-						}
-					}
+
 					
 					//se impegno ha sumbimpegno riga deve essere collegata a un sub
 					
@@ -920,7 +893,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 						} else {
 							//se impegno ha sumbimpegno riga deve essere collegata a un sub
 							for (int i = 0; i < elencoSubImpegni.size(); i++) {
-								BigDecimal numeroSubImpegno = elencoSubImpegni.get(i).getNumero();
+								BigDecimal numeroSubImpegno = elencoSubImpegni.get(i).getNumeroBigDecimal();
 								if (numeroSubImpegno.intValueExact() == model.getNumeroSub().intValue()) {
 									
 									corrispondenzaImpegnoSubImpegno = true;								
@@ -937,19 +910,6 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 										 listaErrori.add(ErroreFin.NUMERO_IMPEGNO_NON_VALIDO.getErrore("impegno NON VALIDATO"));
 									 }
 	
-									 if (model.getImportoRiga()!=null) {
-										if(voceMutuoScelto==null){
-											//NO MUTUO SELEZIONATO
-											if (elencoSubImpegni.get(i).getDisponibilitaLiquidare().compareTo(model.getImportoRiga())==-1) {
-												listaErrori.add(ErroreFin.DISPONIBILITA_INSUFFICIENTE_ORIG.getErrore("Inserimento Riga Carta"));
-											}
-										} else {
-											//MUTUO SELEZIONATO
-											if (voceMutuoScelto.getImportoDisponibileLiquidareVoceMutuo().compareTo(model.getImportoRiga())==-1) {
-												listaErrori.add(ErroreFin.DISPONIBILITA_INSUFFICIENTE_ORIG.getErrore("Inserimento Riga Carta"));
-											}
-										}
-									 }
 									 
 									 //controllo coerenza soggetto Maschera con soggetto SubImpegno
 									 if( model.getSoggetto() != null && 
@@ -1026,22 +986,8 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 							listaErrori.add(ErroreFin.NUMERO_IMPEGNO_NON_VALIDO.getErrore("impegno NON VALIDATO"));
 						}											
 
-						if (model.getImportoRiga()!=null) {
-							if(voceMutuoScelto==null){
-								//NO MUTUO SELEZIONATO
-								if (impegno.getDisponibilitaLiquidare().compareTo(model.getImportoRiga())==-1) {
-									listaErrori.add(ErroreFin.DISPONIBILITA_INSUFFICIENTE_ORIG.getErrore("Inserimento Riga Carta"));
-								}
-							} else {
-								//MUTUO SELEZIONATO
-								if (voceMutuoScelto.getImportoDisponibileLiquidareVoceMutuo().compareTo(model.getImportoRiga())==-1) {
-									listaErrori.add(ErroreFin.DISPONIBILITA_INSUFFICIENTE_ORIG.getErrore("Inserimento Riga Carta"));
-								}
-							}
-						}
-						 
 						//stato impegno definitivo e COD CREDITORE presente
-						if (stato != null && codiceStato.equals(Constanti.MOVGEST_STATO_DEFINITIVO) && 
+						if (stato != null && codiceStato.equals(CostantiFin.MOVGEST_STATO_DEFINITIVO) && 
 							 model.getSoggetto() != null && 
 							 model.getSoggetto().getCodCreditore()!=null) {
 
@@ -1111,7 +1057,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 		}
 		
 		//controllo che la mdp non sia di tipo cessione
-		if(mps!=null && mps.getModalitaAccreditoSoggetto()!=null && mps.getModalitaAccreditoSoggetto().getCodice()!=null && mps.getModalitaAccreditoSoggetto().getCodice().equals(Constanti.D_ACCREDITO_TIPO_CODE_Cessione_del_credito)){
+		if(mps!=null && mps.getModalitaAccreditoSoggetto()!=null && mps.getModalitaAccreditoSoggetto().getCodice()!=null && mps.getModalitaAccreditoSoggetto().getCodice().equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Cessione_del_credito)){
 			listaErrori.add(ErroreFin.MOD_PAGAMENTO_STATO.getErrore());
 		}		
 		if(mps!=null && mps.getDescrizioneStatoModalitaPagamento()!=null && (mps.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("BLOCCATO") || mps.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("ANNULLATO")|| mps.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("PROVVISORIO"))){
@@ -1174,29 +1120,29 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 				}
 				
 				//confronto numero impegno
-				if(model.getNumeroImpegno()!=null && rigaIterata.getImpegno()!=null && rigaIterata.getImpegno().getNumero() != null && model.getNumeroImpegno()!=null && model.getNumeroImpegno()!=0
-						&& model.getNumeroImpegno() != rigaIterata.getImpegno().getNumero().intValue()){
+				if(model.getNumeroImpegno()!=null && rigaIterata.getImpegno()!=null && rigaIterata.getImpegno().getNumeroBigDecimal() != null && model.getNumeroImpegno()!=null && model.getNumeroImpegno()!=0
+						&& model.getNumeroImpegno() != rigaIterata.getImpegno().getNumeroBigDecimal().intValue()){
 					flagDuplicato=false;
 				}
-				if((rigaIterata.getImpegno()==null || rigaIterata.getImpegno().getNumero()==null || rigaIterata.getImpegno().getNumero().intValue()==0)
+				if((rigaIterata.getImpegno()==null || rigaIterata.getImpegno().getNumeroBigDecimal()==null || rigaIterata.getImpegno().getNumeroBigDecimal().intValue()==0)
 						&& (model.getNumeroImpegno()!=null && model.getNumeroImpegno()!=0)){
 					flagDuplicato=false;
 				}
-				if((rigaIterata.getImpegno()!=null && rigaIterata.getImpegno().getNumero()!=null && rigaIterata.getImpegno().getNumero().intValue()!=0)
+				if((rigaIterata.getImpegno()!=null && rigaIterata.getImpegno().getNumeroBigDecimal()!=null && rigaIterata.getImpegno().getNumeroBigDecimal().intValue()!=0)
 						&& (model.getNumeroImpegno()==null || model.getNumeroImpegno()==0)){
 					flagDuplicato=false;
 				}
 				
 				//confronto sub impegno
 				if(model.getNumeroSub()!=null && rigaIterata.getImpegno()!=null && rigaIterata.getImpegno().getElencoSubImpegni() != null && rigaIterata.getImpegno().getElencoSubImpegni().size()>0 
-						&& model.getNumeroSub() != rigaIterata.getImpegno().getElencoSubImpegni().get(0).getNumero().intValue()){
+						&& model.getNumeroSub() != rigaIterata.getImpegno().getElencoSubImpegni().get(0).getNumeroBigDecimal().intValue()){
 					flagDuplicato=false;
 				}
-				if((rigaIterata.getImpegno()==null || rigaIterata.getImpegno().getElencoSubImpegni() == null || rigaIterata.getImpegno().getElencoSubImpegni().size()==0 || rigaIterata.getImpegno().getElencoSubImpegni().get(0).getNumero().intValue()==0)
+				if((rigaIterata.getImpegno()==null || rigaIterata.getImpegno().getElencoSubImpegni() == null || rigaIterata.getImpegno().getElencoSubImpegni().size()==0 || rigaIterata.getImpegno().getElencoSubImpegni().get(0).getNumeroBigDecimal().intValue()==0)
 						&& (model.getNumeroSub()!=null && model.getNumeroSub()!=0)){
 					flagDuplicato=false;
 				}
-				if((rigaIterata.getImpegno()!=null && rigaIterata.getImpegno().getElencoSubImpegni() != null && rigaIterata.getImpegno().getElencoSubImpegni().size()>0 && rigaIterata.getImpegno().getElencoSubImpegni().get(0).getNumero().intValue()!=0)
+				if((rigaIterata.getImpegno()!=null && rigaIterata.getImpegno().getElencoSubImpegni() != null && rigaIterata.getImpegno().getElencoSubImpegni().size()>0 && rigaIterata.getImpegno().getElencoSubImpegni().get(0).getNumeroBigDecimal().intValue()!=0)
 						&& (model.getNumeroSub()==null || model.getNumeroSub()==0)){
 					flagDuplicato=false;
 				}
@@ -1244,17 +1190,6 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 		return compilato;
 	}
 	
-	private VoceMutuo cercaVoceMutuoByNumeroMutuo(Integer numeroMutuo, List<VoceMutuo> listaInCuiCercare){
-		VoceMutuo trovato = null;
-		if(numeroMutuo!=null && listaInCuiCercare!=null && listaInCuiCercare.size()>0){
-			for(int j=0; j<listaInCuiCercare.size();j++){
-				if(listaInCuiCercare.get(j).getNumeroMutuo().equals(numeroMutuo.toString())){
-					trovato = listaInCuiCercare.get(j);
-				}
-			}
-		}
-		return trovato;
-	}
 	
 	private PreDocumentoCarta popolaRigaDaModel(){
 		
@@ -1287,13 +1222,13 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 				&& model.getNumeroImpegno()!=null && model.getNumeroImpegno()!=0){
 			
 			riga.setImpegno(new Impegno());
-			riga.getImpegno().setNumero(new BigDecimal(model.getNumeroImpegno()));
+			riga.getImpegno().setNumeroBigDecimal(new BigDecimal(model.getNumeroImpegno()));
 			riga.getImpegno().setAnnoMovimento(model.getAnnoImpegno());
 			
 			if(model.getNumeroSub()!=null && model.getNumeroSub()!=0){
 				SubImpegno subImpegno = new SubImpegno();
 				List<SubImpegno> listSubImpegni = new ArrayList<SubImpegno>();
-				subImpegno.setNumero(new BigDecimal(model.getNumeroSub()));
+				subImpegno.setNumeroBigDecimal(new BigDecimal(model.getNumeroSub()));
 				listSubImpegni.add(subImpegno);
 				riga.getImpegno().setElencoSubImpegni(listSubImpegni);
 			}			
@@ -1327,14 +1262,6 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 		}
 		
 		
-		//MUTUO:
-		VoceMutuo voceMutuoSelezionato =cercaVoceMutuoByNumeroMutuo(model.getNumeroMutuoPopup(), model.getListaVociMutuo());
-		if(voceMutuoSelezionato!=null){
-			//e' stato indicato un mutuo
-			List<VoceMutuo> voceMutuoScelto = new ArrayList<VoceMutuo>();
-			voceMutuoScelto.add(voceMutuoSelezionato);
-			riga.getImpegno().setListaVociMutuo(voceMutuoScelto);
-		}
 		
 		return riga;
 	}
@@ -1370,13 +1297,13 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 				&& model.getNumeroImpegno()!=null && model.getNumeroImpegno()!=0){
 			
 			riga.setImpegno(new Impegno());
-			riga.getImpegno().setNumero(new BigDecimal(model.getNumeroImpegno()));
+			riga.getImpegno().setNumeroBigDecimal(new BigDecimal(model.getNumeroImpegno()));
 			riga.getImpegno().setAnnoMovimento(model.getAnnoImpegno());
 			
 			if(model.getNumeroSub()!=null && model.getNumeroSub()!=0){
 				SubImpegno subImpegno = new SubImpegno();
 				List<SubImpegno> listSubImpegni = new ArrayList<SubImpegno>();
-				subImpegno.setNumero(new BigDecimal(model.getNumeroSub()));
+				subImpegno.setNumeroBigDecimal(new BigDecimal(model.getNumeroSub()));
 				riga.getImpegno().setElencoSubImpegni(listSubImpegni);
 			}			
 		}
@@ -1482,9 +1409,9 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 		//campi impegno
 		if(rigaSelezionata.getImpegno()!=null 
 				&& rigaSelezionata.getImpegno().getAnnoMovimento()!=0
-				&& rigaSelezionata.getImpegno().getNumero()!=null){
+				&& rigaSelezionata.getImpegno().getNumeroBigDecimal()!=null){
 			model.setAnnoImpegno(rigaSelezionata.getImpegno().getAnnoMovimento());
-			model.setNumeroImpegno(rigaSelezionata.getImpegno().getNumero().intValue());
+			model.setNumeroImpegno(rigaSelezionata.getImpegno().getNumeroBigDecimal().intValue());
 			model.setHasImpegnoSelezionatoXPopup(true);
 			
 			if(rigaSelezionata.getImpegno().getDescrizione()!=null && !FinStringUtils.isEmpty(rigaSelezionata.getImpegno().getDescrizione())){
@@ -1493,7 +1420,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			
 			if(rigaSelezionata.getImpegno().getElencoSubImpegni()!=null
 					&& rigaSelezionata.getImpegno().getElencoSubImpegni().size()>0){
-				model.setNumeroSub(rigaSelezionata.getImpegno().getElencoSubImpegni().get(0).getNumero().intValue());
+				model.setNumeroSub(rigaSelezionata.getImpegno().getElencoSubImpegni().get(0).getNumeroBigDecimal().intValue());
 			}
 		}
 		
@@ -1549,9 +1476,9 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 					&& !mdp.isTipoCessione()){
 				
 				if(mdp.getDescrizioneStatoModalitaPagamento()!=null 
-						&& !mdp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_BLOCCATO) 
-						&& !mdp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_ANNULLATO)
-						&& !mdp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_PROVVISORIO)){
+						&& !mdp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_BLOCCATO) 
+						&& !mdp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_ANNULLATO)
+						&& !mdp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_PROVVISORIO)){
 					
 					
 					if(mdp.getDataFineValidita()!=null){
@@ -1607,7 +1534,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			ArrayList<SedeSecondariaSoggetto> listSedi= new ArrayList<SedeSecondariaSoggetto>();
 			if(response.getListaSecondariaSoggetto()!= null){
 				for(SedeSecondariaSoggetto sedeSec:response.getListaSecondariaSoggetto()){
-					if(sedeSec.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_VALIDO) ){
+					if(sedeSec.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_VALIDO) ){
 							listSedi.add(sedeSec);
 					}
 				}
@@ -1694,7 +1621,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			if(response.getListaSecondariaSoggetto()!=null && response.getListaSecondariaSoggetto().size()>0){
 				ArrayList<SedeSecondariaSoggetto> listaSede = new ArrayList<SedeSecondariaSoggetto>();
 				for(SedeSecondariaSoggetto sede : response.getListaSecondariaSoggetto()){
-					if(sede.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_VALIDO) ){
+					if(sede.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_VALIDO) ){
 						listaSede.add(sede);
 					}
 				}
@@ -1789,7 +1716,7 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 		
 			for(int i = 0; i<listaSediSecondarie.size(); i++){
 				if(modpagamentoSelezionato.getAssociatoA().equals(listaSediSecondarie.get(i).getDenominazione())){
-					if(listaSediSecondarie.get(i).getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_VALIDO) ){
+					if(listaSediSecondarie.get(i).getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_VALIDO) ){
 						model.setRadioSediSecondarieSoggettoSelezionato(listaSediSecondarie.get(i).getUid());
 						//PROVA
 						model.setSedeSelezionata(listaSediSecondarie.get(i));
@@ -1819,19 +1746,11 @@ public class WizardGestioneCartaAction extends GenericPopupAction<GestioneCartaM
 			model.setNumeroImpegno(model.getnImpegno());
 			model.setAnnoImpegno(model.getnAnno());
 			model.setNumeroSub(model.getnSubImpegno());
-			model.setNumeroMutuoPopup(null);
+
 			model.setnAnno(null);
 			model.setnImpegno(null);
-			int voceMutuoScelta = model.getRadioVoceMutuoSelezionata();
-			List<VoceMutuo> listaVocMutuo = model.getListaVociMutuo();		
-			if(listaVocMutuo!=null && listaVocMutuo.size()>0){
-				for(int j=0; j<listaVocMutuo.size();j++){
-					if(listaVocMutuo.get(j).getUid()==voceMutuoScelta){
-						model.setNumeroMutuoPopup(Integer.valueOf(listaVocMutuo.get(j).getNumeroMutuo()));
-						model.setDisponibilita(listaVocMutuo.get(j).getImportoDisponibileLiquidareVoceMutuo());
-					}
-				}
-			}
+
+
 			
 			//se c'e' un soggetto:
 			

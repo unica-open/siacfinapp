@@ -11,7 +11,11 @@ SPDX-License-Identifier: EUPL-1.2
 	<s:if test="step1Model.oggettoImpegno!=''"> 
 		<s:property value="step1Model.oggettoImpegno"/> -
 	</s:if>	 
-</s:if> 
+</s:if>
+<!--SIAC-7349 Nome componente e tipo-->
+<!--Da capire se va aggiornato in tutti i casi o solo per la pagina modifiche-->
+<s:property value="%{model.nomeComponente}"/> - <s:property value="%{model.tipologiaComponente}"/>
+<!--END SIAC-7349-->
 <s:property value="getText('struts.money.format', {step1Model.importoImpegno})"/> (${model.step1Model.descrizioneStatoOperativoMovimento} dal 
 <s:property value="%{step1Model.dataStatoOperativoMovimento}" />)
 <s:if test="isImpegnoSdf()">   

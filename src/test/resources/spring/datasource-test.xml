@@ -13,9 +13,9 @@ SPDX-License-Identifier: EUPL-1.2
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="org.postgresql.Driver" />
-		<property name="url" value="jdbc:postgresql://tst-domdb46.csi.it:5432/PGDEV02" />
+		<property name="url" value="jdbc:postgresql://tst-bilancio-vdb07.bilancio.csi.it:5432/CONSIP-RP" />
 		<property name="username" value="siac" />
-		<property name="password" value="xefai2xa" />
+		<property name="password" value="mypass" />
 		<property name="poolPreparedStatements"><value>true</value></property>
 		<property name="maxActive"><value>1</value></property>
 		<property name="maxIdle"><value>1</value></property>

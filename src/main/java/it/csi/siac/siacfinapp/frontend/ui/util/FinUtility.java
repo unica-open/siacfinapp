@@ -15,6 +15,8 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,19 +24,20 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 
 import it.csi.siac.siacattser.model.AttoAmministrativo;
+import it.csi.siac.siacbilser.model.ImportiCapitolo;
 import it.csi.siac.siaccommon.util.log.LogUtil;
-import it.csi.siac.siaccorser.model.AzioneConsentita;
 import it.csi.siac.siaccorser.model.Entita;
 import it.csi.siac.siacfin2ser.model.CausaleEntrata;
 import it.csi.siac.siacfin2ser.model.DocumentoSpesa;
 import it.csi.siac.siacfin2ser.model.SubdocumentoSpesa;
 import it.csi.siac.siacfin2ser.model.TipoCausale;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.DettaglioDocumentoModel;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.model.Accertamento;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.MovimentoGestione;
@@ -42,7 +45,6 @@ import it.csi.siac.siacfinser.model.SubAccertamento;
 import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.carta.PreDocumentoCarta;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ordinativo.Ordinativo;
 import it.csi.siac.siacfinser.model.ordinativo.OrdinativoIncasso;
 import it.csi.siac.siacfinser.model.ordinativo.OrdinativoPagamento;
@@ -71,7 +73,7 @@ public final class FinUtility {
 	 */
 	public final static boolean isEmpty(MovimentoGestione mg){
 		boolean vuoto = true;
-		if(mg!=null && mg.getAnnoMovimento()>0 && maggioreDiZero(mg.getNumero())){
+		if(mg!=null && mg.getAnnoMovimento()>0 && maggioreDiZero(mg.getNumeroBigDecimal())){
 			vuoto = false;
 		}
 		return vuoto;
@@ -86,7 +88,7 @@ public final class FinUtility {
 		if(elencoSubAccertamenti!=null && elencoSubAccertamenti.size()>0){
 			for(int i = 0; i < elencoSubAccertamenti.size(); i++){
 				SubAccertamento subImp = clone(elencoSubAccertamenti.get(i));
-				if(!subImp.getStatoOperativoMovimentoGestioneEntrata().equals(Constanti.MOVGEST_STATO_ANNULLATO)){
+				if(!subImp.getStatoOperativoMovimentoGestioneEntrata().equals(CostantiFin.MOVGEST_STATO_ANNULLATO)){
 					senzaAnnullati.add(subImp);
 				}
 			}
@@ -94,11 +96,12 @@ public final class FinUtility {
 		return senzaAnnullati;
 	}
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public final static List<Ordinativo> rimuoviOrdinativiAnnullati(List<Ordinativo> lista){
 		List<Ordinativo> senzaAnnullati = new ArrayList<Ordinativo>();
 		if(!FinUtility.isEmpty(lista)){
 			for(Ordinativo it: lista){
-				if(it!=null && !Constanti.D_ORDINATIVO_STATO_ANNULLATO.equals(it.getStatoOperativoOrdinativo())){
+				if(it!=null && !CostantiFin.D_ORDINATIVO_STATO_ANNULLATO.equals(it.getStatoOperativoOrdinativo())){
 					senzaAnnullati.add(clone(it));
 				}
 			}
@@ -211,7 +214,7 @@ public final class FinUtility {
 		if(elencoSubImpegni!=null && elencoSubImpegni.size()>0){
 			for(int i = 0; i < elencoSubImpegni.size(); i++){
 				SubImpegno subImp = clone(elencoSubImpegni.get(i));
-				if(!subImp.getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_ANNULLATO)){
+				if(!subImp.getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_ANNULLATO)){
 					senzaAnnullati.add(subImp);
 				}
 			}
@@ -261,52 +264,52 @@ public final class FinUtility {
 	}
 	
 	
-	/**
-	 * 
-	 * tra la lista delle azioni consentite ritorna true/false a
-	 * seconda che sia presente una particolare azione passata
-	 * come parametro
-	 * 
-	 * @param azioniConsentite
-	 * @param azioneCercata
-	 * @return boolean
-	 */
-	public static boolean azioneConsentitaIsPresent(List<AzioneConsentita> azioniConsentite, 
-													String azioneCercata){
-		final String methodName = "azioneConsentitaIsPresent";
-		boolean ris = false;
-		log.debug(methodName, "Entro in azioneConsentitaIsPresent !!!!!");
-
-		for (AzioneConsentita azioneConsentita : azioniConsentite) {
-
-			if(azioneCercata.equalsIgnoreCase(azioneConsentita.getAzione().getNome())){
-				
-				ris = true;
-			}
-		}
-		
-		return ris;
-		
-	}
+//	/**
+//	 * 
+//	 * tra la lista delle azioni consentite ritorna true/false a
+//	 * seconda che sia presente una particolare azione passata
+//	 * come parametro
+//	 * @param azioneCercata
+//	 * @param azioniConsentite
+//	 * 
+//	 * @return boolean
+//	 */
+//	public static boolean azioneConsentitaIsPresent(String azioneCercata, 
+//													List<AzioneConsentita> azioniConsentite){
+//		final String methodName = "azioneConsentitaIsPresent";
+//		boolean ris = false;
+//		log.debug(methodName, "Entro in azioneConsentitaIsPresent !!!!!");
+//
+//		for (AzioneConsentita azioneConsentita : azioniConsentite) {
+//
+//			if(azioneCercata.equalsIgnoreCase(azioneConsentita.getAzione().getNome())){
+//				
+//				ris = true;
+//			}
+//		}
+//		
+//		return ris;
+//		
+//	}
 	
-	/**
-	 * 
-	 * tra la lista delle azioni consentite ritorna l'oggetto relativo all'azione consentita
-	 * 
-	 * @param azioniConsentite
-	 * @param azioneCercata
-	 * @return AzioneConsentita
-	 */
-	public static AzioneConsentita azionedConsentitaIsPresentObj(List<AzioneConsentita> azioniConsentite, String azioneCercata) {
-		AzioneConsentita azioneConsentita = null;
-		for (AzioneConsentita azioneConsentitaCurrent : azioniConsentite) {
-			if(azioneCercata.equalsIgnoreCase(azioneConsentitaCurrent.getAzione().getNome())){
-				azioneConsentita = azioneConsentitaCurrent;
-				break;
-			}
-		}
-		return azioneConsentita;
-	}
+//	/**
+//	 * 
+//	 * tra la lista delle azioni consentite ritorna l'oggetto relativo all'azione consentita
+//	 * 
+//	 * @param azioniConsentite
+//	 * @param azioneCercata
+//	 * @return AzioneConsentita
+//	 */
+//	public static AzioneConsentita azionedConsentitaIsPresentObj(List<AzioneConsentita> azioniConsentite, String azioneCercata) {
+//		AzioneConsentita azioneConsentita = null;
+//		for (AzioneConsentita azioneConsentitaCurrent : azioniConsentite) {
+//			if(azioneCercata.equalsIgnoreCase(azioneConsentitaCurrent.getAzione().getNome())){
+//				azioneConsentita = azioneConsentitaCurrent;
+//				break;
+//			}
+//		}
+//		return azioneConsentita;
+//	}
 
 	@SuppressWarnings("unchecked")
 	public static <T extends Object> T clone(T source) {
@@ -533,7 +536,7 @@ public final class FinUtility {
 		//step 2: ulteriore filtro in base allo stato:
 		if(listaDataValida!= null && listaDataValida.size()>0){
 			for(ModalitaPagamentoSoggetto modPag:listaDataValida){
-				if(modPag!=null && Constanti.STATO_VALIDO.equalsIgnoreCase(modPag.getDescrizioneStatoModalitaPagamento())){
+				if(modPag!=null && CostantiFin.STATO_VALIDO.equalsIgnoreCase(modPag.getDescrizioneStatoModalitaPagamento())){
 					modPag.setDescrizioneStatoModalitaPagamento(modPag.getDescrizioneStatoModalitaPagamento().toUpperCase());
 					listMod.add(modPag);
 				}
@@ -894,7 +897,7 @@ public final class FinUtility {
 			//se gli oggetti sono valorizzati
 			for(SubImpegno it : lista){
 				//controllo che sia uguale:
-				if(it!=null && it.getNumero()!=null && numero.intValue() == it.getNumero().intValue()){
+				if(it!=null && it.getNumeroBigDecimal()!=null && numero.intValue() == it.getNumeroBigDecimal().intValue()){
 					//trovato
 					trovato = it;
 					break;
@@ -904,30 +907,7 @@ public final class FinUtility {
 		return trovato;
 	}
 	
-	/**
-	 * Metodo di comodo per trovare una voce mutuo con il numero indicato da una lista.
-	 * 
-	 * Ritorna null se non presente.
-	 * 
-	 * @param lista
-	 * @param numero
-	 * @return
-	 */
-	public final static VoceMutuo findVoceMutuoByNumero(List<VoceMutuo> lista, Integer numero){
-		VoceMutuo trovato = null;
-		if(!isEmpty(lista) && numero!=null){
-			//se gli oggetti sono valorizzati
-			for(VoceMutuo it : lista){
-				//controllo che sia uguale:
-				if(it!=null && it.getNumeroMutuo()!=null && it.getNumeroMutuo().equals(numero.toString())){
-					//trovato
-					trovato = it;
-					break;
-				}
-			}
-		}
-		return trovato;	
-	}
+
 	
 	public final static  BigDecimal minTraBD(BigDecimal primo, BigDecimal secondo){
 		BigDecimal ris = BigDecimal.ZERO;
@@ -1120,7 +1100,7 @@ public final class FinUtility {
 	}
 	
 	public final static boolean isValorizzato(MovimentoGestione mg){
-		return mg!=null && mg.getNumero()!=null && mg.getNumero().longValue()>0;
+		return mg!=null && mg.getNumeroBigDecimal()!=null && mg.getNumeroBigDecimal().longValue()>0;
 	}
 	
 	
@@ -1137,6 +1117,52 @@ public final class FinUtility {
 		return result;
 	}
 	
-	
+	/** SIAC-7349
+	 * Restituisce l'ImportoCapitolo avente anno pari a quanto passato in input.
+	 * @param <T> la tipizzazione degli importi del capitolo
+	 * 
+	 * @param listaImportiCapitolo la lista da cui ottenere l'importo
+	 * @param anno                 l'anno dell'importo da ottenere
+	 * 
+	 * @return l'importo corrispondente all'anno, se presente; <code>null</code> altrimenti
+	 */
+	public static <T extends ImportiCapitolo> T searchByAnno(List<T> listaImportiCapitolo, Integer anno) {
+		// Fallback per la nullità della lista
+		if (listaImportiCapitolo == null || anno == null) {
+			return null;
+		}
 
+		// Inizializzo a null il risultato
+		T result = null;
+
+		for (T t : listaImportiCapitolo) {
+			// Controllo l'anno di competenza
+			if (t != null && anno.equals(t.getAnnoCompetenza())) {
+				// Importo trovato: lo imposto nel risultato
+				result = t;
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	
+	
+	
+	public final static String importoFormatter(BigDecimal importo){
+		 DecimalFormat dFormat = new DecimalFormat("#,###,##0.00");
+		 dFormat = (DecimalFormat)NumberFormat.getNumberInstance(Locale.ITALY);
+			dFormat.setParseBigDecimal(true);
+			dFormat.setMinimumFractionDigits(2);
+			dFormat.setMaximumFractionDigits(2);
+			String str = dFormat.format(importo);
+			
+			return str;
+			
+	}
+	
+	
+	
+	
 }

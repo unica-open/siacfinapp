@@ -14,10 +14,14 @@ SPDX-License-Identifier: EUPL-1.2
     
              	
    	<span class="pull-right buttonPluriennale">
-     	<s:submit method="salvaProsegui" value="Salva e Prosegui" cssClass="btn btn-primary confermaPluri freezePagina"  /> &nbsp;
-     	<s:submit method="salvaPopup" value="Salva per riaccertamento" cssClass="btn btn-primary confermaPluri freezePagina"  />
-      </span> 
-      <span class="pull-right singleButton">
+     	<!--task-131 <s:submit method="inseriscisalvaProsegui" value="Salva e Prosegui" cssClass="btn btn-primary confermaPluri freezePagina"  /> &nbsp; -->
+     	<!--task-131 <s:submit method="salvaPopup" value="Salva per riaccertamento" cssClass="btn btn-primary confermaPluri freezePagina"  />-->
+    	<s:submit action="inserisciMovSpesaImporto_inseriscisalvaProsegui" value="Salva e Prosegui" cssClass="btn btn-primary confermaPluri freezePagina"  /> &nbsp;
+     	<s:submit action="inserisciMovSpesaImporto_salvaPopup" value="Salva per riaccertamento" cssClass="btn btn-primary confermaPluri freezePagina"  />
+    	
+    
+    </span> 
+    <span class="pull-right singleButton">
     		
 			<s:if test="salvaDaSDFANormale()">
 				<div class="btn btn-primary pull-right">
@@ -26,7 +30,9 @@ SPDX-License-Identifier: EUPL-1.2
 				</div>
 			</s:if>
 			<s:else>
-				<s:submit method="salva" value="Salva" cssClass="btn btn-primary freezePagina" ></s:submit>
+				<!-- task-131 <s:submit method="salva" value="Salva" cssClass="btn btn-primary freezePagina" ></s:submit> -->
+				<s:submit action="inserisciMovSpesaImporto_salva" value="Salva" cssClass="btn btn-primary freezePagina" ></s:submit>
+				
 			</s:else>
     		
       </span>

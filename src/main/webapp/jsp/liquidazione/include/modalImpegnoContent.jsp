@@ -23,7 +23,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<label	class="radio inline" for="numeroimpegno">Numero *</label>
 				</span> 
 				 <s:textfield id="numeroimpegno" cssClass="lbTextSmall span2" name="nImpegno" onkeyup="return checkItNumbersOnly(event)"></s:textfield> <span class="al"> 
-					<a id="ricercaGuidataImpegno" class="btn btn-primary pull-right"><i class="icon-search icon"></i>cerca&nbsp;</a>
+					<a id="ricercaGuidataImpegno2" class="btn btn-primary pull-right"><i class="icon-search icon"></i>cerca&nbsp;</a>
 				</span>
 			</div>
 		</div>
@@ -35,17 +35,16 @@ SPDX-License-Identifier: EUPL-1.2
 	<s:include value="/jsp/liquidazione/include/risultatoRicercaImpegni.jsp" />		
 	<div class="Border_line"></div>	
 	
-	<s:if test="hasMutui">
-		<s:include value="/jsp/liquidazione/include/risultatoRicercaMutiPerImpegno.jsp" />	
-	</s:if>
 	
 </div>
 <div class="modal-footer">
 	<s:if test="hasImpegnoSelezionatoPopup">		
-		<s:submit name="conferma" value="conferma" method="confermaCompGuidata" data-dismiss="modal" cssClass="btn btn-primary" />
+		<!--task-131 <s:submit name="conferma" value="conferma" method="confermaCompGuidata" cssClass="btn btn-primary" />-->
+		<s:submit name="conferma" value="conferma" action="%{#selezionaImpegnoCompilazioneGuidataAction}" cssClass="btn btn-primary"/>
 	</s:if>
 	<s:else>
-		<s:submit name="conferma" value="conferma" method="confermaCompGuidata" data-dismiss="modal" disabled="true" cssClass="btn btn-primary" />
+		<!--task-131 <s:submit name="conferma" value="conferma" method="confermaCompGuidata" disabled="true" cssClass="btn btn-primary" />-->
+		<s:submit name="conferma" value="conferma" disabled="true" action="%{#selezionaImpegnoCompilazioneGuidataAction}"/>
 	</s:else>
 </div>
 
@@ -56,15 +55,16 @@ SPDX-License-Identifier: EUPL-1.2
 	if($("#numeroImpegno").val()){
 		$("#numeroimpegno").val($("#numeroImpegno").val());
 	}
-	$("#ricercaGuidataImpegno").click(function() {
+	$("#ricercaGuidataImpegno2").click(function() {
 		var annoimpegno = $("#annoimpegno").val();
 		var numeroimpegno = $("#numeroimpegno").val();
 		//if(annoimpegno && numeroimpegno){
 		if(true){
+			url = '<s:url action="%{#ricercaGuidataImpegnoAction}"/>';
 			$.ajax({
-				//url: '<s:url method="ricercaGuidataImpegno"/>',
-				url: '<s:url method="ricercaImpegnoCompilazioneGuidata"/>',
-				type: 'GET',
+				url: url,
+				//url: '<s:url action="inserisciLiquidazioneStep1_ricercaGuidataImpegno"></s:url>',
+				type: 'POST',
 				data: { anno: annoimpegno, numero: numeroimpegno},
 			    success: function(data)  {
 			    	$("#refreshPopupModal").html(data);
@@ -74,6 +74,5 @@ SPDX-License-Identifier: EUPL-1.2
 		$("#annoImpegno").val($("#annoimpegno").val());
 		$("#numeroImpegno").val($("#numeroimpegno").val());
 		$("#numeroSub").val(null);
-		$("#numeroMutuo").val(null);
 	});		
 </script>

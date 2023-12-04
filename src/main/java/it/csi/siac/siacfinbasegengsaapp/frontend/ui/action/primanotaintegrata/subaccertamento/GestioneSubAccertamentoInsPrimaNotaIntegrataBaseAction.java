@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import it.csi.siac.siacbilser.model.ElementoPianoDeiConti;
 import it.csi.siac.siaccommonapp.util.exception.WebServiceInvocationFailureException;
@@ -42,7 +43,8 @@ public abstract class GestioneSubAccertamentoInsPrimaNotaIntegrataBaseAction<M e
 
 	private static final long serialVersionUID = 5436796062428480819L;
 
-	@Autowired private transient MovimentoGestioneService movimentoGestioneService;
+	@Autowired @Qualifier("movimentoGestioneFinService")
+	private transient MovimentoGestioneService movimentoGestioneFinService;
 	
 	/** Nome del model del completamento e validazione dell'accertamento. Modulo GEN */
 	public static final String MODEL_SESSION_NAME_COMPLETA_VALIDA_INS_SUBACCERTAMENTO_FIN = "CompletaValidaSubAccertamentoInsPrimaNotaIntegrataFINModel";
@@ -107,7 +109,7 @@ public abstract class GestioneSubAccertamentoInsPrimaNotaIntegrataBaseAction<M e
 			RicercaAccertamentoPerChiaveOttimizzato request = model.creaRequestRicercaAccertamentoPerChiaveOttimizzato(subAccertamento);
 			logServiceRequest(request);
 			
-			RicercaAccertamentoPerChiaveOttimizzatoResponse response = movimentoGestioneService.ricercaAccertamentoPerChiaveOttimizzato(request);
+			RicercaAccertamentoPerChiaveOttimizzatoResponse response = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(request);
 			
 			logServiceResponse(response);
 			
@@ -278,7 +280,7 @@ public abstract class GestioneSubAccertamentoInsPrimaNotaIntegrataBaseAction<M e
 		.append("/")
 		.append(subAccertamento.getNumeroAccertamentoPadre().toPlainString())
 		.append("-")
-		.append(subAccertamento.getNumero().toPlainString());
+		.append(subAccertamento.getNumeroBigDecimal().toPlainString());
 		return sub.toString();
 	}
 }

@@ -75,7 +75,7 @@ public abstract class GestioneSubImpegnoPrimaNotaIntegrataBaseModel extends Base
 	public RicercaImpegnoPerChiaveOttimizzato creaRequestRicercaImpegnoPerChiaveOttimizzato(SubImpegno subimp) {
 		Impegno impegnoPadre = new Impegno();
 		impegnoPadre.setAnnoMovimento(subimp.getAnnoImpegnoPadre());
-		impegnoPadre.setNumero(subimp.getNumeroImpegnoPadre());
+		impegnoPadre.setNumeroBigDecimal(subimp.getNumeroImpegnoPadre());
 		
 		RicercaImpegnoPerChiaveOttimizzato req = new RicercaImpegnoPerChiaveOttimizzato();
 		
@@ -85,7 +85,7 @@ public abstract class GestioneSubImpegnoPrimaNotaIntegrataBaseModel extends Base
 		RicercaImpegnoK ricercaImpegnoK = new RicercaImpegnoK();
 		ricercaImpegnoK.setAnnoEsercizio(getAnnoEsercizioInt());
 		ricercaImpegnoK.setAnnoImpegno(impegnoPadre.getAnnoMovimento());
-		ricercaImpegnoK.setNumeroImpegno(impegnoPadre.getNumero());
+		ricercaImpegnoK.setNumeroImpegno(impegnoPadre.getNumeroBigDecimal());
 		
 		req.setpRicercaImpegnoK(ricercaImpegnoK);
 		req.setEnte(ente);

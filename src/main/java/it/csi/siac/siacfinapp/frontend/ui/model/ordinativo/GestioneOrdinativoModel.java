@@ -15,6 +15,7 @@ import it.csi.siac.siacfin2ser.frontend.webservice.msg.LeggiContiTesoreria;
 import it.csi.siac.siacfin2ser.model.ContoTesoreria;
 import it.csi.siac.siacfinapp.frontend.ui.model.GenericPopupModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.GestoreTransazioneElementareModel;
+import it.csi.siac.siacfinser.frontend.webservice.msg.AccreditoTipoOilIsPagoPA;
 import it.csi.siac.siacfinser.model.ordinativo.OrdinativoIncasso;
 import it.csi.siac.siacfinser.model.ordinativo.OrdinativoPagamento;
 
@@ -106,6 +107,11 @@ public class GestioneOrdinativoModel extends GenericPopupModel {
 	//SIAC-6352
 	private ContoTesoreria contoTesoreria;
 	private List<ContoTesoreria> listaContoTesoreria = new ArrayList<ContoTesoreria>();
+
+	
+	// SIAC-8555
+	private String disponibilitaSottocontoVincolatoStr = null;
+	
 
 	//GETTER E SETTER:
 
@@ -610,6 +616,17 @@ public class GestioneOrdinativoModel extends GenericPopupModel {
 		this.listaContoTesoreria = listaContoTesoreria;
 	}
 
-	
+	public String getDisponibilitaSottocontoVincolatoStr() {
+		return disponibilitaSottocontoVincolatoStr;
+	}
+
+	public void setDisponibilitaSottocontoVincolatoStr(String disponibilitaSottocontoVincolatoStr) {
+		this.disponibilitaSottocontoVincolatoStr = disponibilitaSottocontoVincolatoStr;
+	}
+
+	//SIAC-8853
+		public AccreditoTipoOilIsPagoPA creaRequestAccreditoTipoOilIsPagoPA() {
+			return creaRequest(AccreditoTipoOilIsPagoPA.class);
+		}
 
 }

@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacattser.model.AttoAmministrativo;
+import it.csi.siac.siaccommon.util.number.NumberUtil;
+import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ModificaConsulta;
@@ -27,11 +29,13 @@ import it.csi.siac.siacfinser.model.Accertamento;
 import it.csi.siac.siacfinser.model.MovimentoGestione;
 import it.csi.siac.siacfinser.model.SubAccertamento;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneEntrata;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesa;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesaCollegata;
 import it.csi.siac.siacfinser.model.ric.RicercaAccertamentoK;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
-public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento{
+public class ElencoMovimentoSpesaAccAction extends BaseRorEntrata {
 
 	private static final long serialVersionUID = -2541634052439907448L;
 
@@ -40,7 +44,14 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 	private String uidModDaAnnullare;
 	private String numeroMovDaAnnullare;
 	
+	//SIAC-7349 Inizio  SR180 MC 08/04/2020
+	private String numeroMovCollegatiDaAnnullare;
+	List<ModificaMovimentoGestioneSpesaCollegata> listaModificheSpeseCollegata ;
+	//SIAC-7349 Fine  SR180 MC 08/04/2020
+	
 	protected boolean ricaricaDopoInserimento = false;
+	//SIAC-8553
+	private boolean skipControlloDiponibilitaCapitoloAnnullamentoModifica = false;
 	
 	public ElencoMovimentoSpesaAccAction () {
 	   	//setto la tipologia di oggetto trattato:
@@ -53,9 +64,13 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 		//invoco il prepare della super classe:
 		super.prepare();
 		
+		//SIAC-7349 Inizio  SR180 MC 08/04/2020
+		setListaModificheSpeseCollegata(model.getAccertamentoInAggiornamento().getListaModificheMovimentoGestioneSpesaCollegata());
+		//SIAC-7349 Fine SR180 MC 08/04/2020
+		
 		//setto il titolo:
 		super.model.setTitolo("Movimento Entrata");
-
+		
 	}
 	
 	/**
@@ -71,7 +86,7 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 		BigDecimal numeroImpegno = new BigDecimal(String.valueOf(model.getStep1Model().getNumeroImpegno()));
 		
 		//setto i dati di chiave dell'accertamento:
-		accertamentoDaCercare.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		accertamentoDaCercare.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		accertamentoDaCercare.setNumeroAccertamento(numeroImpegno);
 		accertamentoDaCercare.setAnnoAccertamento(model.getStep1Model().getAnnoImpegno());
 				
@@ -83,13 +98,20 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 		parametroRicercaPerChiave.setpRicercaAccertamentoK(accertamentoDaCercare);
 		
 		//Richiamo il servizio di ricerca:
-		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(parametroRicercaPerChiave);
+		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(parametroRicercaPerChiave);
 		
 		//analizzo la risposta del servizio:
 		if(!respRk.isFallimento() && respRk.getAccertamento()!= null){
 			//ok non ci sono errori
 			accertamentoFresco = respRk.getAccertamento();
 			
+		}
+		
+		//SIAC-8065 loggo gli errori 
+		if(isFallimento(respRk)) {
+			debug("Errore nel servizio di ricerca dell'accertamento");
+			addErrori(respRk);
+			return;
 		}
 		
 		if(null!=accertamentoFresco){
@@ -105,7 +127,7 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 
 		model.getStep1Model().setImportoImpegno(model.getAccertamentoInAggiornamento().getImportoAttuale());
 		model.getStep1Model().setImportoFormattato(convertiBigDecimalToImporto(model.getAccertamentoInAggiornamento().getImportoAttuale()));
-		model.setTotaleSubImpegno(model.getAccertamentoInAggiornamento().getTotaleSubAccertamenti());
+		model.setTotaleSubImpegno(model.getAccertamentoInAggiornamento().getTotaleSubAccertamentiBigDecimal());
 		model.setDisponibilitaSubImpegnare(model.getAccertamentoInAggiornamento().getDisponibilitaSubAccertare());
 
 		
@@ -150,6 +172,10 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 		caricaLabelsAggiorna(1);
 		if(forceReload || ricaricaDopoInserimento){
 			caricaDatiTotali(null);
+			//SIAC-8065 se trovo errori dal caricaDatiAccertamento torno indietro e li mostro
+			if(model.hasErrori()) {
+				return INPUT;
+			}
 		}else{
 			if(model.getMovimentoSpesaModel().getAccertamento()==null && model.getAccertamentoInAggiornamento()!=null){
 				model.getMovimentoSpesaModel().setAccertamento(model.getAccertamentoInAggiornamento());
@@ -178,6 +204,9 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 				model.getMovimentoSpesaModel().setListaModificheEntrata(listaModificheEntrata);
 			}	
 		}	
+		
+		//SIAC-8553
+		model.setProseguiConWarningModificaPositivaAccertamento(false);
 		
 		return SUCCESS;
 	}
@@ -292,7 +321,12 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 	    mc.setDataInserimento(modifica.getDataEmissione());
 	    mc.setDataModifica(modifica.getDataModifica());
 	    mc.setStatoOperativo(modifica.getStatoOperativoModificaMovimentoGestione().name());
-	    mc.setDataStatoOperativo(modifica.getDataModificaMovimentoGestione());
+	    //SIAC-8118
+	    mc.setDataStatoOperativo(modifica.getDataFromStatoOperativo());
+	    //SIAC-7349 Inizio  SR180 MC 08/04/2020
+	    mc.setListaModificheMovimentoGestioneSpesaCollegata(modifica.getListaModificheMovimentoGestioneSpesaCollegata());
+	    //SIAC-7349 Fine  SR180 MC 08/04/2020
+	    
 	    //Reimputazione:
 	    mc = settaDatiReimputazioneInModificaConsulta(modifica, mc);
 	    
@@ -380,7 +414,7 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 		    }
 	    }
 	    
-		String descAccertamento = model.getAccertamentoInAggiornamento().getAnnoMovimento() + "/" + model.getAccertamentoInAggiornamento().getNumero() + 
+		String descAccertamento = model.getAccertamentoInAggiornamento().getAnnoMovimento() + "/" + model.getAccertamentoInAggiornamento().getNumeroBigDecimal() + 
 			" - " + ((model.getAccertamentoInAggiornamento().getDescrizione() != null)? model.getAccertamentoInAggiornamento().getDescrizione() : "") +
 			" - " + convertiBigDecimalToImporto(model.getAccertamentoInAggiornamento().getImportoAttuale()) + 
 			" (" +  model.getAccertamentoInAggiornamento().getDescrizioneStatoOperativoMovimentoGestioneEntrata() + " dal " + convertDateToString(model.getAccertamentoInAggiornamento().getDataStatoOperativoMovimentoGestioneEntrata()) + ")";	
@@ -389,7 +423,7 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 	    if (modifica.getNumeroSubAccertamento() != null) {
 	    	SubAccertamento sAcc = getSubAccertamento(modifica.getNumeroSubAccertamento(), model.getListaSubaccertamenti());
 		    if (sAcc != null) {
-				String descSub = sAcc.getNumero() + " (" +  sAcc.getDescrizioneStatoOperativoMovimentoGestioneEntrata() + " dal " + convertDateToString(sAcc.getDataStatoOperativoMovimentoGestioneEntrata()) + ")";	
+				String descSub = sAcc.getNumeroBigDecimal() + " (" +  sAcc.getDescrizioneStatoOperativoMovimentoGestioneEntrata() + " dal " + convertDateToString(sAcc.getDataStatoOperativoMovimentoGestioneEntrata()) + ")";	
 				mc.setDescSub(descSub);
 		    }
 	    }
@@ -402,7 +436,7 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 	
 	private SubAccertamento getSubAccertamento (Integer numero, List<SubAccertamento> elencoSubAcc) {
 		if (elencoSubAcc != null) for (SubAccertamento subAccertamento : elencoSubAcc) {
-			if (subAccertamento.getNumero().intValue() == numero) return subAccertamento;
+			if (subAccertamento.getNumeroBigDecimal().intValue() == numero) return subAccertamento;
 		}
 		return null;
 	}
@@ -418,11 +452,38 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 		//individuo l'uid da annullare
 		String uidDaAnnullare = getUidModDaAnnullare();
 		
+		//SIAC-8553
+		List<Errore> listaWarning = new ArrayList<Errore>();
+		
+		//issue-11: su accertamento residuo non deve controllare il tetto massimo
+		boolean residuo = model.getAccertamentoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio();
+		
+		//issue-12: non dare il warning se il capitolo ha disponibilità negativa e la modifica che sto annullando è positiva
+		int signumMod = 0;
+		for (ModificaMovimentoGestioneEntrata modifica: model.getAccertamentoInAggiornamento().getListaModificheMovimentoGestioneEntrata()) {
+			if(new Integer(modifica.getUid()).equals(new Integer(uidDaAnnullare))) {
+				signumMod=modifica.getImportoOld().signum();
+			}			
+		}
+		boolean	disponibCapitoloNegativa = model.getAccertamentoInAggiornamento().getAnnoMovimento() == sessionHandler.getAnnoBilancio() &&
+										   model.getAccertamentoInAggiornamento().getCapitoloEntrataGestione().getImportiCapitolo().getDisponibilitaAccertareAnno1().signum() == -1 && 
+										   signumMod != -1?true:false;
+		
+		if (!residuo && !disponibCapitoloNegativa) {
+			controlloSuDiponibilitaPreAnnullamento(uidDaAnnullare, listaWarning);
+		}
+			
+		if(!listaWarning.isEmpty()) {
+			addWarnings(listaWarning, true);
+			return INPUT;
+		}
+		
 		//compongo la request per il servizio:
 		AnnullaMovimentoEntrata reqAnnulla = convertiModelPerChiamataServizioAnnullaSubAcc(uidDaAnnullare);
+		reqAnnulla.setVerificaImportiDopoAnnullamentoModifica(true);
 		
 		// chiamata al servizio di annullamento:
-		AnnullaMovimentoEntrataResponse response = movimentoGestionService.annullaMovimentoEntrata(reqAnnulla);
+		AnnullaMovimentoEntrataResponse response = movimentoGestioneFinService.annullaMovimentoEntrata(reqAnnulla);
 		
 		//controllo errori nella response:
 		if(isFallimento(response)){
@@ -433,12 +494,30 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 		
 		//ricarico i dati:
 		caricaDatiTotali(response.getAccertamento());
+		//SIAC-8065 se trovo errori dal caricaDatiAccertamento torno indietro e li mostro
+		if(model.hasErrori()) {
+			return INPUT;
+		}
 		
 		return SUCCESS;
 		
 	}
 	
-
+	//SIAC-8553
+	private void controlloSuDiponibilitaPreAnnullamento(String uidDaAnnullare, List<Errore> listaWarning) {
+		
+		ModificaMovimentoGestioneEntrata modifica = filtraListaModificheMovgestEntrata(
+				model.getAccertamentoInAggiornamento(), 
+				NumberUtil.safeParseStringToInteger(uidDaAnnullare)
+		);
+		
+		if(modifica != null && modifica.getImportoOld() != null) {
+			
+			if(controlloImportoModificaSuDisponibiltaAccertareCapitolo(modifica.getImportoOld().negate(), listaWarning)) {
+				model.setProseguiConWarningModificaPositivaAccertamento(true);
+			}
+		}
+	}
 	
 	public String indietro(){
 		setMethodName("indietro");
@@ -473,6 +552,53 @@ public class ElencoMovimentoSpesaAccAction extends ActionKeyAggiornaAccertamento
 		this.numeroMovDaAnnullare = numeroMovDaAnnullare;
 	}
 
+
+	//SIAC-7349 Inizio  SR180 MC 08/04/2020
+	
+	
+	/**
+	 * @return the listaModificheSpeseCollegata
+	 */
+	public List<ModificaMovimentoGestioneSpesaCollegata> getListaModificheSpeseCollegata() {
+		return listaModificheSpeseCollegata;
+	}
+
+	/**
+	 * @return the numeroMovCollegatiDaAnnullare
+	 */
+	public String getNumeroMovCollegatiDaAnnullare() {
+		return numeroMovCollegatiDaAnnullare;
+	}
+
+	/**
+	 * @param numeroMovCollegatiDaAnnullare the numeroMovCollegatiDaAnnullare to set
+	 */
+	public void setNumeroMovCollegatiDaAnnullare(String numeroMovCollegatiDaAnnullare) {
+		this.numeroMovCollegatiDaAnnullare = numeroMovCollegatiDaAnnullare;
+	}
+
+	/**
+	 * @param listaModificheSpeseCollegata the listaModificheSpeseCollegata to set
+	 */
+	public void setListaModificheSpeseCollegata(
+			List<ModificaMovimentoGestioneSpesaCollegata> listaModificheSpeseCollegata) {
+		this.listaModificheSpeseCollegata = listaModificheSpeseCollegata;
+	}
+	//SIAC-7349 Fine  SR180 MC 08/04/2020
+
+	/**
+	 * @return the skipControlloDiponibilitaCapitoloAnnullamentoModifica
+	 */
+	public boolean isSkipControlloDiponibilitaCapitoloAnnullamentoModifica() {
+		return skipControlloDiponibilitaCapitoloAnnullamentoModifica;
+	}
+
+	/**
+	 * @param skipControlloDiponibilitaCapitoloAnnullamentoModifica the skipControlloDiponibilitaCapitoloAnnullamentoModifica to set
+	 */
+	public void setSkipControlloDiponibilitaCapitoloAnnullamentoModifica(boolean skipControlloDiponibilitaCapitoloAnnullamentoModifica) {
+		this.skipControlloDiponibilitaCapitoloAnnullamentoModifica = skipControlloDiponibilitaCapitoloAnnullamentoModifica;
+	}
 
 }
 

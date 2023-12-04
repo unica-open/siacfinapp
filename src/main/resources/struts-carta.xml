@@ -10,14 +10,21 @@ SPDX-License-Identifier: EUPL-1.2
 		<interceptors>
 
 			<!-- Interceptor di log prima e a termine dell'invocazione -->
-			<interceptor name="logInterceptor" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+			<interceptor name="logInterceptor" class="it.csi.siac.siaccommonapp.interceptor.LogInterceptor" />
 
 			<!-- Interceptor per la gestione degli errori di conversione <interceptor name="siacConversionErrorInterceptor" class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" /> -->
 
-			<!-- Interceptor per la gestione dei breadcrumb -->
+			<!-- Interceptor per la gestione dei breadcrumb --> 
+			<!-- task-131 -->
+			<!-- 
 			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+  				<param name="defaultRewindMode">AUTO</param>
+  				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+			-->
+			 <interceptor name="breadCrumbs" class="xyz.timedrain.arianna.plugin.BreadCrumbInterceptor">
 				<param name="defaultRewindMode">AUTO</param>
-				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+				<param name="defaultComparator">xyz.timedrain.arianna.plugin.NameComparator</param>
 			</interceptor>
 
 			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
@@ -30,6 +37,8 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="servletConfig" />
 				<interceptor-ref name="i18n" />
 				<interceptor-ref name="actionData" />
+					<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
 				<interceptor-ref name="prepare" />
 				<interceptor-ref name="redirectMessage" />
 				<interceptor-ref name="chain" />
@@ -56,9 +65,6 @@ SPDX-License-Identifier: EUPL-1.2
 				<!-- Interceptor per breadcrumb -->
 				<interceptor-ref name="breadCrumbs" />
 
-
-				<!-- Interceptor di log -->
-				<interceptor-ref name="logInterceptor" />
 
 			</interceptor-stack>
 		</interceptors>
@@ -107,11 +113,181 @@ SPDX-License-Identifier: EUPL-1.2
 			
 		</action>
 		
+		<!-- task-131 -->
+			<action name="ricercaCarta_selezionaProvvedimento" class="ricercaCartaAction" method="selezionaProvvedimento">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaCarta_clearRicercaProvvedimento" class="ricercaCartaAction" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaCarta_ricercaProvvedimento" class="ricercaCartaAction" method="ricercaProvvedimento">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>	
+		
+		<!-- task-131 -->
+		<action name="ricercaCarta_cerca" class="ricercaCartaAction" method="cerca">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">elencoCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="ricercaCarta_annulla" class="ricercaCartaAction" method="annulla">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>			
+		</action>
+		
+		<!--  task-131  -->
+		<action name="ricercaCarta_confermaImpegnoCarta" class="ricercaCartaAction" method="confermaImpegnoCarta">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">elencoCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
+		
+		<!--  task-131  -->
+		<action name="ricercaCarta_pulisciRicercaImpegno" class="ricercaCartaAction" method="pulisciRicercaImpegno">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">elencoCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
+		
+		<!--  task-131  -->
+		<action name="ricercaCarta_ricercaGuidataImpegno" class="ricercaCartaAction" method="ricercaGuidataImpegno">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">elencoCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
+		
+		<!--  task-131  -->
+		<action name="ricercaCarta_ricercaCapitolo" class="ricercaCartaAction" method="ricercaCapitolo">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">elencoCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
+		<!--  task-131  -->
+		<action name="ricercaCarta_selezionaCapitolo" class="ricercaCartaAction" method="selezionaCapitolo">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">elencoCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
+		<!--  task-131  -->
+		<action name="ricercaCarta_visualizzaDettaglioCapitolo" class="ricercaCartaAction" method="visualizzaDettaglioCapitolo">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">elencoCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
+		<!--  task-131  -->
+		<action name="ricercaCarta_pulisciRicercaCapitolo" class="ricercaCartaAction" method="pulisciRicercaCapitolo">
+			<result name="success">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaCarta.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">elencoCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
 		<action name="elencoCarta" class="elencoCartaAction">
 			<result name="success">/jsp/carta/elencoCarta.jsp</result>
 			<result name="input">/jsp/carta/elencoCarta.jsp</result>
 		</action>
 		
+		<!-- task-131 -->
+		<action name="elencoCarta_annullaCarta" class="elencoCartaAction" method="annullaCarta">
+			<result name="success">/jsp/carta/elencoCarta.jsp</result>
+			<result name="input">/jsp/carta/elencoCarta.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="elencoCarta_cambiaStatoCarta" class="elencoCartaAction" method="cambiaStatoCarta">
+			<result name="success">/jsp/carta/elencoCarta.jsp</result>
+			<result name="input">/jsp/carta/elencoCarta.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="elencoCarta_trasmettiCarta" class="elencoCartaAction" method="trasmettiCarta">
+			<result name="success">/jsp/carta/elencoCarta.jsp</result>
+			<result name="input">/jsp/carta/elencoCarta.jsp</result>
+		</action>
 		
 		<action name="stampaCartaContabile" class="stampaCartaContabileAction">
 			<result name="success" type="stream">
@@ -143,7 +319,66 @@ SPDX-License-Identifier: EUPL-1.2
 				<param name="annoCarta">${annoCartaStruts}</param>				
 			</result>
 		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneCartaStep1_selezionaProvvedimento" class="gestioneCartaStep1Action" method="selezionaProvvedimento">
+			<result name="success">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneCartaStep1_clearRicercaProvvedimento" class="gestioneCartaStep1Action" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneCartaStep1_ricercaProvvedimento" class="gestioneCartaStep1Action" method="ricercaProvvedimento">
+			<result name="success">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+			 
+	
+		<!-- task-131 -->
+		<action name="gestioneCartaStep1_annulla" class="gestioneCartaStep1Action" method="annulla">
+			<result name="success">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep1.jsp</result>
+		</action>
 
+		<!-- task-131 -->
+		<action name="gestioneCartaStep1_prosegui" class="gestioneCartaStep1Action" method="prosegui">
+			<result name="success">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="prosegui" type="redirectAction">gestioneCartaStep2</result>
+		</action>
+			
+		<!-- task-131 -->
+		<action name="gestioneCartaStep1_salvaCarta" class="gestioneCartaStep1Action" method="salvaCarta">
+			<result name="success">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+
+			<result name="prosegui" type="redirectAction">gestioneCartaStep2</result>
+			<result name="salva" type="redirectAction">gestioneCartaStep1</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaCartaContabile</param>
+				<param name="numero">${numeroCartaStruts}</param>
+				<param name="fromInserisci">${fromInserisciStruts}</param>
+			</result>
+			<result name="reloadGestioneCartaStep1" type="redirectAction">
+				<param name="actionName">gestioneCartaStep1</param>
+				<param name="numeroCarta">${numeroCartaStruts}</param>
+				<param name="annoCarta">${annoCartaStruts}</param>				
+			</result>
+		</action>
+		
 		<action name="gestioneCartaStep2" class="gestioneCartaStep2Action">
 			<result name="success">/jsp/carta/gestioneCartaStep2.jsp</result>
 			<result name="input">/jsp/carta/gestioneCartaStep2.jsp</result>
@@ -171,7 +406,231 @@ SPDX-License-Identifier: EUPL-1.2
 			</result>
 		</action>
 		
+		<!-- task-131 -->
+		<action name="gestioneCartaStep2_nuovaRigaDaDocumenti" class="gestioneCartaStep2Action" method="nuovaRigaDaDocumenti">
+			<result name="success">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="nuovaRigaDaDocumentiStep1" type="redirectAction">
+				<param name="actionName">nuovaRigaDaDocumentiStep1</param>
+			</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneCartaStep2_aggiornaRigaDaModale" class="gestioneCartaStep2Action" method="aggiornaRigaDaModale">
+			<result name="success">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneCartaStep2_eliminaRiga" class="gestioneCartaStep2Action" method="eliminaRiga">
+			<result name="success">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneCartaStep2_indietro" class="gestioneCartaStep2Action" method="indietro">
+			<result name="success">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<!-- task-155 -->
+			<result name="gotoStep1Aggiorna" type="redirectAction">
+				<param name="actionName">gestioneCartaStep1</param>
+				<param name="forceReload">false</param>
+			</result>
+			<result name="gotoStep1" type="redirectAction">
+			    <param name="actionName">gestioneCartaStep1</param>
+			    <param name="forceReload">false</param>
+			</result>
+		
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestioneCartaStep2_salvaCarta" class="gestioneCartaStep2Action" method="salvaCarta">
+			<result name="success">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="input">/jsp/carta/gestioneCartaStep2.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="gotoConsulta" type="redirectAction">
+				<param name="actionName">consultaCartaContabile</param>
+				<param name="numero">${numeroCartaStruts}</param>
+				<param name="fromInserisci">${fromInserisciStruts}</param>
+			</result>
+			<result name="gotoStep1" type="redirectAction">
+			    <param name="actionName">gestioneCartaStep1</param>
+			    <param name="forceReload">false</param>
+			</result>
+			<result name="reloadGestioneCartaStep1" type="redirectAction">
+				<param name="actionName">gestioneCartaStep1</param>
+				<param name="numeroCarta">${numeroCartaStruts}</param>
+				<param name="annoCarta">${annoCartaStruts}</param>
+			</result>
+			<result name="nuovaRigaDaDocumentiStep1" type="redirectAction">
+				<param name="actionName">nuovaRigaDaDocumentiStep1</param>
+			</result>
+			<result name="gotoStep1Aggiorna" type="redirectAction">
+				<param name="actionName">gestioneCartaStep1</param>
+				<param name="forceReload">false</param>
+			</result>
+		</action>
+		
+		
 		<action name="nuovaRigaDaMovimento" class="nuovaRigaDaMovimentoAction">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_inserisciRiga" class="nuovaRigaDaMovimentoAction" method="inserisciRiga">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_annullaInserisciRiga" class="nuovaRigaDaMovimentoAction" method="annullaInserisciRiga">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+		</action>
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_indietroRiga" class="nuovaRigaDaMovimentoAction" method="indietroRiga">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_modpagamento" class="nuovaRigaDaMovimentoAction" method="modpagamento">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_sedisecondarie" class="nuovaRigaDaMovimentoAction" method="sedisecondarie">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_aggiornaAvviso" class="nuovaRigaDaMovimentoAction" method="aggiornaAvviso">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_confermaImpegnoCarta" class="nuovaRigaDaMovimentoAction" method="confermaImpegnoCarta">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_pulisciRicercaImpegno" class="nuovaRigaDaMovimentoAction" method="pulisciRicercaImpegno">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_ricercaGuidataImpegno" class="nuovaRigaDaMovimentoAction" method="ricercaGuidataImpegno">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		<action name="nuovaRigaDaMovimento_ricercaSoggetto" class="nuovaRigaDaMovimentoAction" method="ricercaSoggetto">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		<action name="nuovaRigaDaMovimento_selezionaSoggetto" class="nuovaRigaDaMovimentoAction" method="selezionaSoggetto">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_resede" class="nuovaRigaDaMovimentoAction" method="resede">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_caricaTitoloModPag" class="nuovaRigaDaMovimentoAction" method="caricaTitoloModPag">
+			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
+			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="vaiInserisciRigaDaMovimento" type="redirectAction">nuovaRigaDaMovimento</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>		
+		</action>
+		<!--  task-131  -->
+		<action name="nuovaRigaDaMovimento_remodpagamento" class="nuovaRigaDaMovimentoAction" method="remodpagamento">
 			<result name="success">/jsp/carta/nuovaRiga.jsp</result>
 			<result name="input">/jsp/carta/nuovaRiga.jsp</result>	
 			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
@@ -197,6 +656,52 @@ SPDX-License-Identifier: EUPL-1.2
 			</result>
 		</action>
 		
+		<!-- task-131 -->
+		<action name="nuovaRigaDaDocumentiStep1_selezionaProvvedimento" class="nuovaRigaDaDocumentiStep1Action" method="selezionaProvvedimento">
+			<result name="success">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="input">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaRigaDaDocumentiStep1_clearRicercaProvvedimento" class="nuovaRigaDaDocumentiStep1Action" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="input">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="nuovaRigaDaDocumentiStep1_ricercaProvvedimento" class="nuovaRigaDaDocumentiStep1Action" method="ricercaProvvedimento">
+			<result name="success">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="input">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+		</action>
+		
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaDocumentiStep1_indietro" class="nuovaRigaDaDocumentiStep1Action"  method="indietro">
+			<result name="success">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="input">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="vaiStep2DiGestioneCarta" type="redirectAction">gestioneCartaStep2</result>			
+		</action>
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaDocumentiStep1_annulla" class="nuovaRigaDaDocumentiStep1Action" method="annulla">
+			<result name="success">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="input">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+		</action>
+		
+		<action name="nuovaRigaDaDocumentiStep1_cerca" class="nuovaRigaDaDocumentiStep1Action"  method="cerca">
+			<result name="success">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="input">/jsp/carta/nuovaRigaDaDocStep1.jsp</result>
+			<result name="cerca" type="redirectAction">
+				<param name="actionName">nuovaRigaDaDocumentiStep2</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+		</action>
 		
 		<action name="nuovaRigaDaDocumentiStep2" class="nuovaRigaDaDocumentiStep2Action">
 			<result name="success">/jsp/carta/nuovaRigaDaDocStep2.jsp</result>
@@ -205,6 +710,20 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="vaiInserisciRigaDaDocumentoStep1" type="redirectAction">nuovaRigaDaDocumentiStep1</result>
 		</action>
 		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaDocumentiStep2_indietro" class="nuovaRigaDaDocumentiStep2Action" method="indietro">
+			<result name="success">/jsp/carta/nuovaRigaDaDocStep2.jsp</result>
+			<result name="input">/jsp/carta/nuovaRigaDaDocStep2.jsp</result>
+			<result name="vaiInserisciRigaDaDocumentoStep1" type="redirectAction">nuovaRigaDaDocumentiStep1</result>
+		</action>
+		
+		<!--  task-131  -->
+		<action name="nuovaRigaDaDocumentiStep2_inserisciInCarta" class="nuovaRigaDaDocumentiStep2Action" method="inserisciInCarta">
+			<result name="success">/jsp/carta/nuovaRigaDaDocStep2.jsp</result>
+			<result name="input">/jsp/carta/nuovaRigaDaDocStep2.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+		</action>
+
 	
 		<action name="aggiornaRigaDaMovimento" class="aggiornaRigaDaMovimentoAction">
 			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
@@ -220,6 +739,220 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
 		</action>
 		
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_confermaImpegnoCarta" class="aggiornaRigaDaMovimentoAction" method="confermaImpegnoCarta">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_modpagamento" class="aggiornaRigaDaMovimentoAction" method="modpagamento">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_sedisecondarie" class="aggiornaRigaDaMovimentoAction" method="sedisecondarie">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_aggiornaAvviso" class="aggiornaRigaDaMovimentoAction" method="aggiornaAvviso">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_pulisciRicercaImpegno" class="aggiornaRigaDaMovimentoAction" method="pulisciRicercaImpegno">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_ricercaGuidataImpegno" class="aggiornaRigaDaMovimentoAction" method="ricercaGuidataImpegno">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+					
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_confermaCompGuidataDocumento" class="aggiornaRigaDaMovimentoAction" method="confermaCompGuidataDocumento">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>	
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_aggiornaRiga" class="aggiornaRigaDaMovimentoAction" method="aggiornaRiga">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_eliminaDocDaTabella" class="aggiornaRigaDaMovimentoAction" method="eliminaDocDaTabella">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>	
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_ricercaGuidataDocumento" class="aggiornaRigaDaMovimentoAction" method="ricercaGuidataDocumento">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>	
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_pulisciRicercaDocumento" class="aggiornaRigaDaMovimentoAction" method="pulisciRicercaDocumento">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>	
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_resede" class="aggiornaRigaDaMovimentoAction" method="resede">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_caricaTitoloModPag" class="aggiornaRigaDaMovimentoAction" method="caricaTitoloModPag">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_remodpagamento" class="aggiornaRigaDaMovimentoAction" method="remodpagamento">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/carta/include/headerSoggettoCarta.jsp</result>
+			<result name="modpagamento">/jsp/carta/include/modalitaPagamentoCarta.jsp</result>
+			<result name="sedisecondarie">/jsp/carta/include/sediSecondarieCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="refreshPopupModalDocumento">/jsp/carta/include/modalContentDocumentoCarta.jsp</result>
+			<result name="refreshListaDaElimina">/jsp/carta/include/elencoDocumentiDaRicerca.jsp</result>
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_indietroRiga" class="aggiornaRigaDaMovimentoAction" method="indietroRiga">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="vaiStep2" type="redirectAction">gestioneCartaStep2</result>							
+		</action>	
+		
+		<!--  task-131  -->
+		<action name="aggiornaRigaDaMovimento_annullaAggiornaRiga" class="aggiornaRigaDaMovimentoAction" method="annullaAggiornaRiga">
+			<result name="success">/jsp/carta/aggiornaRiga.jsp</result>
+			<result name="input">/jsp/carta/aggiornaRiga.jsp</result>	
+			<result name="goToAggiornaRiga" type="redirectAction">aggiornaRigaDaMovimento</result>									
+		</action>	
+				
+					
 		<action name="gestRigheCarta" class="gestRigheCartaAction">
 			<result name="success">/jsp/carta/gestRigheCarta.jsp</result>
 			<result name="input">/jsp/carta/gestRigheCarta.jsp</result>	
@@ -231,7 +964,47 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="indietroRisultati" type="redirectAction">elencoCarta</result> 
 		</action>
 		
+		<action name="gestRigheCarta_indietro" class="gestRigheCartaAction" method="indietro">
+			<result name="success">/jsp/carta/gestRigheCarta.jsp</result>
+			<result name="input">/jsp/carta/gestRigheCarta.jsp</result>	
+			<result name="indietroRisultati" type="redirectAction">elencoCarta</result> 
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestRigheCarta_completaRiga" class="gestRigheCartaAction" method="completaRiga">
+			<result name="success">/jsp/carta/gestRigheCarta.jsp</result>
+			<result name="input">/jsp/carta/gestRigheCarta.jsp</result>	
+			<result name="elencoCarta" type="redirectAction">
+			    <param name="actionName">elencoCarta</param>
+			    <param name="forceReload">false</param>
+			</result>
+			<result name="regolazioneCarta" type="redirectAction">regolazioneCarta</result>
+			<result name="indietroRisultati" type="redirectAction">elencoCarta</result> 
+		</action>
+		
+		<!-- task-131 -->
+		<action name="gestRigheCarta_regolarizzaSelezionati" class="gestRigheCartaAction" method="regolarizzaSelezionati">
+			<result name="success">/jsp/carta/gestRigheCarta.jsp</result>
+			<result name="input">/jsp/carta/gestRigheCarta.jsp</result>	
+			<result name="elencoCarta" type="redirectAction">
+			    <param name="actionName">elencoCarta</param>
+			    <param name="forceReload">false</param>
+			</result>
+			<result name="regolazioneCarta" type="redirectAction">regolazioneCarta</result>
+			<result name="indietroRisultati" type="redirectAction">elencoCarta</result> 
+		</action>
+		
 		<action name="consultaCartaContabile" class="consultaCartaContabileAction">
+			<result name="success">/jsp/carta/consultaCartaContabile.jsp</result>
+			<result name="input">/jsp/carta/consultaCartaContabile.jsp</result>
+			<result name="fromInserisci" type="redirectAction">
+				<param name="actionName">consultaCartaContabile</param>
+				<param name="anno">${anno}</param>
+				<param name="numero">${numero}</param>
+			</result>
+		</action>
+		<!-- task-131 -->
+		<action name="consultaCartaContabile_cambiaTabFolder" class="consultaCartaContabileAction" method="cambiaTabFolder">
 			<result name="success">/jsp/carta/consultaCartaContabile.jsp</result>
 			<result name="input">/jsp/carta/consultaCartaContabile.jsp</result>
 			<result name="fromInserisci" type="redirectAction">
@@ -265,20 +1038,143 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="dettaglioDocInModificaPerAggiorna">/jsp/carta/include/dettaglioDocInModifica.jsp</result>	
 		</action>
 		
-		<action name="ricercaDocumentiPerRegolazioneCarta" class="ricercaDocumentiPerRegolazioneCartaAction">
-			<result name="success">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
-			<result name="input">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
-			<result name="vaiARegolazioneCarta" type="redirectAction">regolazioneCarta</result>
+		<!--  task-131  -->
+		<action name="regolazioneCarta_confermaImpegnoCarta" class="regolazioneCartaAction" method="confermaImpegnoCarta">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>
 			
-			<result name="cercaDocumenti" type="redirectAction">
-				<param name="actionName">elencoDocumentiPerRegolazioneCarta</param>
+			<result name="consolida" type="redirectAction">
+			    <param name="actionName">regolazioneCarta</param>
+			    <param name="ricaricaDaRegolarizza">true</param>
+			</result>
+			
+			<result name="gestRigheCarta" type="redirectAction">
+			    <param name="actionName">gestRigheCarta</param>
+			    <param name="anno">${cartaContabileDaRicerca.bilancio.anno}</param>
+			    <param name="numero">${cartaContabileDaRicerca.numero}</param>
+			    <param name="forceReload">true</param>
+			</result>
+			<result name="collegaDocumento" type="redirectAction">
+				<param name="actionName">ricercaDocumentiPerRegolazioneCarta</param>
 				<param name="pulisciPagine">si</param>
 			</result>
 			
-			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
-			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
-			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
-
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="dettaglioDocInModificaPerAggiorna">/jsp/carta/include/dettaglioDocInModifica.jsp</result>	
+		</action>
+		
+		<!--  task-131  -->
+		<action name="regolazioneCarta_pulisciRicercaImpegno" class="regolazioneCartaAction" method="pulisciRicercaImpegno">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>
+			
+			<result name="consolida" type="redirectAction">
+			    <param name="actionName">regolazioneCarta</param>
+			    <param name="ricaricaDaRegolarizza">true</param>
+			</result>
+			
+			<result name="gestRigheCarta" type="redirectAction">
+			    <param name="actionName">gestRigheCarta</param>
+			    <param name="anno">${cartaContabileDaRicerca.bilancio.anno}</param>
+			    <param name="numero">${cartaContabileDaRicerca.numero}</param>
+			    <param name="forceReload">true</param>
+			</result>
+			<result name="collegaDocumento" type="redirectAction">
+				<param name="actionName">ricercaDocumentiPerRegolazioneCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+			
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="dettaglioDocInModificaPerAggiorna">/jsp/carta/include/dettaglioDocInModifica.jsp</result>	
+		</action>
+		
+		<!--  task-131  -->
+		<action name="regolazioneCarta_ricercaGuidataImpegno" class="regolazioneCartaAction" method="ricercaGuidataImpegno">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>
+			
+			<result name="consolida" type="redirectAction">
+			    <param name="actionName">regolazioneCarta</param>
+			    <param name="ricaricaDaRegolarizza">true</param>
+			</result>
+			
+			<result name="gestRigheCarta" type="redirectAction">
+			    <param name="actionName">gestRigheCarta</param>
+			    <param name="anno">${cartaContabileDaRicerca.bilancio.anno}</param>
+			    <param name="numero">${cartaContabileDaRicerca.numero}</param>
+			    <param name="forceReload">true</param>
+			</result>
+			<result name="collegaDocumento" type="redirectAction">
+				<param name="actionName">ricercaDocumentiPerRegolazioneCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+			
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="dettaglioDocInModificaPerAggiorna">/jsp/carta/include/dettaglioDocInModifica.jsp</result>	
+		</action>
+		
+		<!--  task-131  -->
+		<action name="regolazioneCarta_dettaglioAggiornaImportoRegolarizzazione" class="regolazioneCartaAction" method="dettaglioAggiornaImportoRegolarizzazione">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>
+			
+			<result name="consolida" type="redirectAction">
+			    <param name="actionName">regolazioneCarta</param>
+			    <param name="ricaricaDaRegolarizza">true</param>
+			</result>
+			
+			<result name="gestRigheCarta" type="redirectAction">
+			    <param name="actionName">gestRigheCarta</param>
+			    <param name="anno">${cartaContabileDaRicerca.bilancio.anno}</param>
+			    <param name="numero">${cartaContabileDaRicerca.numero}</param>
+			    <param name="forceReload">true</param>
+			</result>
+			<result name="collegaDocumento" type="redirectAction">
+				<param name="actionName">ricercaDocumentiPerRegolazioneCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+			
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/carta/include/modalImpegnoContentCarta.jsp</result>
+			<result name="dettaglioDocInModificaPerAggiorna">/jsp/carta/include/dettaglioDocInModifica.jsp</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="regolazioneCarta_confermaCollegaImpegno" class="regolazioneCartaAction" method="confermaCollegaImpegno">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>			
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="regolazioneCarta_aggiornaRigaDoc" class="regolazioneCartaAction" method="aggiornaRigaDoc">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>			
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
+		</action>
+		
+		
+		<!-- task-131 -->
+		<action name="regolazioneCarta_collegaDocumento" class="regolazioneCartaAction" method="collegaDocumento">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>			
+			<result name="collegaDocumento" type="redirectAction">
+				<param name="actionName">ricercaDocumentiPerRegolazioneCarta</param>
+				<param name="pulisciPagine">si</param>
+			</result>
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="regolazioneCarta_eliminaDocumentoCollegato" class="regolazioneCartaAction" method="eliminaDocumentoCollegato">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>			
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
+		</action>
+		
+		<!--  task-131  -->
+		<action name="regolazioneCarta_consolidaRegolarizzazione" class="regolazioneCartaAction" method="consolidaRegolarizzazione">
+			<result name="success">/jsp/carta/regolazioneCarta.jsp</result>			
+			<result name="consolida" type="redirectAction">
+			    <param name="actionName">regolazioneCarta</param>
+			    <param name="ricaricaDaRegolarizza">true</param>
+			</result>
+			<result name="input">/jsp/carta/regolazioneCarta.jsp</result>
 		</action>
 		
 		<action name="elencoDocumentiPerRegolazioneCarta" class="elencoDocumentiPerRegolazioneCartaAction">
@@ -291,7 +1187,84 @@ SPDX-License-Identifier: EUPL-1.2
 			</result>
 		</action>
 		
+		<!-- task-131 -->
+		<action name="elencoDocumentiPerRegolazioneCarta_preCheckCollegaDocumento" class="elencoDocumentiPerRegolazioneCartaAction" method="preCheckCollegaDocumento">
+			<result name="success">/jsp/carta/elencoDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/elencoDocPerRegCarta.jsp</result>
+			<result name="vaiARicercaDocumenti" type="redirectAction">ricercaDocumentiPerRegolazioneCarta</result>
+		    <result name="tornaARegolazioneCartaPerDocCollegato" type="redirectAction">
+				<param name="actionName">regolazioneCarta</param>
+				<param name="documentoAppenaCollegato">true</param>
+			</result>
+		</action>
+		<!-- task-131 -->
+		<action name="elencoDocumentiPerRegolazioneCarta_collega" class="elencoDocumentiPerRegolazioneCartaAction" method="collega">
+			<result name="success">/jsp/carta/elencoDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/elencoDocPerRegCarta.jsp</result>
+			<result name="vaiARicercaDocumenti" type="redirectAction">ricercaDocumentiPerRegolazioneCarta</result>
+		    <result name="tornaARegolazioneCartaPerDocCollegato" type="redirectAction">
+				<param name="actionName">regolazioneCarta</param>
+				<param name="documentoAppenaCollegato">true</param>
+			</result>
+		</action>
+		<!-- task-131 -->
+		<action name="elencoDocumentiPerRegolazioneCarta_preCheckCollegaDocumento" class="elencoDocumentiPerRegolazioneCartaAction" method="preCheckCollegaDocumento">
+			<result name="success">/jsp/carta/elencoDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/elencoDocPerRegCarta.jsp</result>
+			<result name="vaiARicercaDocumenti" type="redirectAction">ricercaDocumentiPerRegolazioneCarta</result>
+		    <result name="tornaARegolazioneCartaPerDocCollegato" type="redirectAction">
+				<param name="actionName">regolazioneCarta</param>
+				<param name="documentoAppenaCollegato">true</param>
+			</result>
+		</action>
 		
+		<action name="ricercaDocumentiPerRegolazioneCarta" class="ricercaDocumentiPerRegolazioneCartaAction">
+			<result name="success">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="cercaDocumenti" type="redirectAction">ricercaDocumentiPerRegolazioneCarta</result>
+			<result name="vaiARegolazioneCarta" type="redirectAction">regolazioneCarta</result>			
+		</action>
+		
+		<!-- task-131 -->
+			<action name="ricercaDocumentiPerRegolazioneCarta_selezionaProvvedimento" class="ricercaDocumentiPerRegolazioneCartaAction" method="selezionaProvvedimento">
+			<result name="success">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaDocumentiPerRegolazioneCarta_clearRicercaProvvedimento" class="ricercaDocumentiPerRegolazioneCartaAction" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaDocumentiPerRegolazioneCarta_ricercaProvvedimento" class="ricercaDocumentiPerRegolazioneCartaAction" method="ricercaProvvedimento">
+			<result name="success">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="ricercaDocumentiPerRegolazioneCarta_cercaDocPerCollega" class="ricercaDocumentiPerRegolazioneCartaAction" method="cercaDocPerCollega">
+			<result name="success">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="cercaDocumenti" type="redirectAction">ricercaDocumentiPerRegolazioneCarta</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="ricercaDocumentiPerRegolazioneCarta_annullaRicercaDoc" class="ricercaDocumentiPerRegolazioneCartaAction" method="annullaRicercaDoc">
+			<result name="success">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="ricercaDocumentiPerRegolazioneCarta_indietro" class="ricercaDocumentiPerRegolazioneCartaAction" method="indietro">
+			<result name="success">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+			<result name="input">/jsp/carta/ricercaDocPerRegCarta.jsp</result>
+		</action>
 		
 	</package>
 

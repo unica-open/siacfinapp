@@ -1,0 +1,28 @@
+/*
+*SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
+*SPDX-License-Identifier: EUPL-1.2
+*/
+/* Overlay base CSS */
+.div-overlay {
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+    background-color: #000;
+    background-color: rgba(0, 0, 0, 0.7);
+    cursor: progress;
+    display: inline-block;
+    z-index: 1075; /* Just above Bootstrap's modal */
+}
+
+.div-overlay .overlay-spinner {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    font-size: 20pt;
+}
+
+.div-overlay .overlay-message {
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    top: 30%;
+}

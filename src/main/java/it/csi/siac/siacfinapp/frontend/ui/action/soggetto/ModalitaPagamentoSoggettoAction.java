@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -24,17 +23,17 @@ import org.springframework.web.context.WebApplicationContext;
 import it.csi.siac.siaccommon.util.iban.IbanUtil;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.AggiornaSoggettoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.ModalitaPagamentoSoggettoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.RicercaSoggettoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
-import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.codicefiscale.ValidaCF;
 import it.csi.siac.siacfinapp.frontend.ui.util.codicefiscale.VerificaPartitaIva;
 import it.csi.siac.siacfinapp.frontend.ui.util.comparator.ComparatorModalitaPagamentoSoggettoByCodice;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggetto;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggettoProvvisorio;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggettoResponse;
@@ -58,6 +57,7 @@ import it.csi.siac.siacfinser.model.soggetto.Soggetto.Sesso;
 import it.csi.siac.siacfinser.model.soggetto.modpag.ModalitaPagamentoSoggetto;
 import it.csi.siac.siacfinser.model.soggetto.modpag.ModalitaPagamentoSoggetto.TipoAccredito;
 import it.csi.siac.siacfinser.model.soggetto.sedesecondaria.SedeSecondariaSoggetto;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
 
 @Component
@@ -121,7 +121,12 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		//invoco il prepare della super classe:
 		super.prepare();
 		//setto il titolo:
-		this.model.setTitolo("Modalit&agrave; di Pagamento");
+		//task-224
+	    if(AzioneConsentitaEnum.OP_CEC_SOG_leggiSogg.getNomeAzione().equals(sessionHandler.getAzione().getNome())) {
+	    	this.model.setTitolo("Modalita' di Pagamento Cassa Economale");
+		}else {
+			this.model.setTitolo("Modalita' di Pagamento");
+		}
 		//non siamo in aggiorna:
 		setAzioneAggiorna(false);
 		//carico le liste modalita pagamento:
@@ -183,7 +188,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 	 * Metodo excecute della action
 	 */
 	@Override
-	@BreadCrumb("Modalita Pagamento")
+	//task-224
+	@BreadCrumb("%{model.titolo}")
 	public String execute() throws Exception {
 		setMethodName("execute");
 
@@ -219,7 +225,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -233,7 +239,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		//setto la codifica dell'ambito:
 		aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 		
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 		
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 			//richiamo il servizio di aggiornamento provvisorio:
@@ -292,9 +298,9 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		associataList.add("Soggetto");
 		if(modelWeb.getSediSecondarie() != null){
 			for(SedeSecondariaSoggetto sedSecSog : modelWeb.getSediSecondarie()){
-				if(sedSecSog.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_VALIDO) || sedSecSog.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_PROVVISORIO)
+				if(sedSecSog.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_VALIDO) || sedSecSog.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_PROVVISORIO)
 					//correzione JIRA 740
-					||	sedSecSog.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA)){
+					||	sedSecSog.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA)){
 					associataList.add(sedSecSog.getDenominazione());
 				}
 			}
@@ -637,8 +643,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 					
 			}
 
-			boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-			boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+			boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+			boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 			
 			//Sistemo tutte le variabili
 			modPagToInsert.setUid(0); //La setto a 0 per capire che sara da inserire lato backend
@@ -702,7 +708,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 							Timestamp now = new Timestamp(cFrom.getTime().getTime());
 							
 							if(dataScadenza.compareTo(now)==-1){
-								listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
+								listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
 								addErrori(listaErrori);
 								handleVisualizationVariable(true, true, false, false, false, false, false);
 								return INPUT;
@@ -765,7 +771,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 			model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 			if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-				if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+				if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 					model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 				} else {
 					model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -779,7 +785,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			//setto la codifica dell'ambito:
 			aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 			
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 				//Compongo la request per il servizio:
 				AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 				//richiamo il servizio di aggiornamento provvisorio:
@@ -871,7 +877,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		//IBAN FORMATO controllo 2
 		if (iban.startsWith("IT")) {
-			if (iban.matches(Constanti.REGEX_IBAN_IT_VALIDO)) {
+			if (iban.matches(CostantiFin.REGEX_IBAN_IT_VALIDO)) {
 				RicercaBancaResponse ricercaBancaResponse = ricercaBanca(iban);
 				if (ricercaBancaResponse.isFallimento()){
 					//ci sono errori
@@ -899,7 +905,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		}
 
 		if (isSepa && org.apache.commons.lang.StringUtils.isNotEmpty(numeroConto)){
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("numero del conto","se il conto e' in area SEPA"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("numero del conto","se il conto e' in area SEPA"));
 		}
 		
 	}
@@ -988,8 +994,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		}
 		
 		//gestisco lo stato utente
-		boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-		boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+		boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+		boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 		
 		modPagToInsert.setUid(0); //La setto a 0 per capire che sara da inserire lato backend
 		
@@ -1027,7 +1033,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 						Timestamp now = new Timestamp(cFrom.getTime().getTime());
 						
 						if(dataScadenza.compareTo(now)==-1){
-							listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
+							listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
 							addErrori(listaErrori);
 							handleVisualizationVariable(true, false, false, false, false, false, false, true);
 							return INPUT;
@@ -1091,7 +1097,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -1104,7 +1110,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 		
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 		
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 			//richiamo il servizio di aggiornamento provvisorio:
@@ -1147,7 +1153,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 	 * @return
 	 */
 	protected String getcodiceAmbito() {
-		return Constanti.AMBITO_FIN;
+		return CostantiFin.AMBITO_FIN;
 	}
 
 	/**
@@ -1234,8 +1240,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			}
 			
 			//gestisco lo stato utente
-			boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-			boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+			boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+			boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 			
 			modPagToInsert.setUid(0); //La setto a 0 per capire che sara da inserire lato backend
 			
@@ -1274,7 +1280,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 							Timestamp now = new Timestamp(cFrom.getTime().getTime());
 							
 							if(dataScadenza.compareTo(now)==-1){
-								listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
+								listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
 								addErrori(listaErrori);
 								handleVisualizationVariable(true, false, true, false, false, false, false);
 								return INPUT;
@@ -1368,7 +1374,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 			model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 			if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-				if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+				if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 					model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 				} else {
 					model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -1381,7 +1387,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 			
 			
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 			
 				AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 				//richiamo il servizio di aggiornamento provvisorio:
@@ -1478,8 +1484,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		}
 		
 		//gestisco lo stato utente
-		boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-		boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+		boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+		boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 		
 		if(modalitaPagamentoSoggettoToInsert.getNote() != null){
 			modPagToInsert.setNote(modalitaPagamentoSoggettoToInsert.getNote());
@@ -1512,7 +1518,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 						Timestamp now = new Timestamp(cFrom.getTime().getTime());
 						
 						if(dataScadenza.compareTo(now)==-1){
-							listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
+							listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
 							addErrori(listaErrori);
 							handleVisualizationVariable(true, false, false, true, true, true, false);
 							return INPUT;
@@ -1598,7 +1604,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -1610,7 +1616,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 		
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 		
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 			//richiamo il servizio di aggiornamento provvisiorio:
@@ -1685,28 +1691,28 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		String codiceGruppoAccredito = resp.getGruppoTipoAccredito().getCodice();
 		
-		if(codiceGruppoAccredito.equals(Constanti.D_ACCREDITO_TIPO_CODE_Circuito_bancario) 
-				|| codiceGruppoAccredito.equals(Constanti.D_ACCREDITO_TIPO_CODE_Circuito_Banca_d_Italia) 
-					|| codiceGruppoAccredito.equals(Constanti.D_ACCREDITO_TIPO_CODE_Circuito_Postale)){
+		if(codiceGruppoAccredito.equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Circuito_bancario) 
+				|| codiceGruppoAccredito.equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Circuito_Banca_d_Italia) 
+					|| codiceGruppoAccredito.equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Circuito_Postale)){
 			soggettoDaAggiornare.setTipoAccredito(TipoAccredito.valueOf(codiceGruppoAccredito));
 			handleAggiornaVisualization(true, false, false, false, false, false);
 			
 			// setto l'ancora della pagina
 			setAncoraMdpVisualizza(true);
 		}
-		if(codiceGruppoAccredito.equals(Constanti.D_ACCREDITO_TIPO_CODE_Contanti)){
+		if(codiceGruppoAccredito.equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Contanti)){
 			handleAggiornaVisualization(false, true, false, false, false, false);
 
 			// setto l'ancora della pagina
 			setAncoraMdpVisualizza(true);
 		}
-		if(codiceGruppoAccredito.equals(Constanti.D_ACCREDITO_TIPO_CODE_Generico)){
+		if(codiceGruppoAccredito.equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Generico)){
 			handleAggiornaVisualization(false, false, false, false, false, false, true);
 
 			// setto l'ancora della pagina
 			setAncoraMdpVisualizza(true);
 		}
-		if(codiceGruppoAccredito.equals(Constanti.D_ACCREDITO_TIPO_CODE_Cessione_del_credito) || codiceGruppoAccredito.equals(Constanti.D_ACCREDITO_TIPO_CODE_Cessione_dell_incasso)){
+		if(codiceGruppoAccredito.equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Cessione_del_credito) || codiceGruppoAccredito.equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Cessione_dell_incasso)){
 			modelWeb.setModalitaPagamentoSoggettoToUpdate(soggettoDaAggiornare);
 			handleAggiornaVisualization(false, false, false, false, true, false);
 			
@@ -1839,8 +1845,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			ModalitaPagamentoSoggetto modPagToUpdate = modelWeb.getModalitaPagamentoSoggettoToUpdate();
 			//gestisco lo stato utente
 			
-			boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-			boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+			boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+			boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 			
 			
 			if(soggettoDaAggiornare.getIban() != null){
@@ -1900,7 +1906,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 							Timestamp now = new Timestamp(cFrom.getTime().getTime());
 							
 							if(dataScadenza.compareTo(now)==-1){
-								listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
+								listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
 								addErrori(listaErrori);
 								handleAggiornaVisualization(true, false, false, false, false, false);
 								return INPUT;
@@ -1927,7 +1933,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 				modPagToUpdate.setDescrizioneStatoModalitaPagamento("valido");
 			}
 			if(gestSoggDec){
-				if(!modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA_no_underscore)){
+				if(!modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA_no_underscore)){
 					if(modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("provvisorio")){
 						if(decentratoSuPropriaOccorrenza(modPagToUpdate.getLoginCreazione()) || decentratoSuPropriaOccorrenza(modPagToUpdate.getLoginModifica())){
 							modPagToUpdate.setModificaPropriaOccorrenza(true);
@@ -1967,7 +1973,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 			model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 			if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-				if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+				if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 					model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 				} else {
 					model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -1979,7 +1985,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			
 			aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 			
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 			
 				AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 				//richiamo il servizio di aggiornamento provvisorio:
@@ -2098,8 +2104,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			ModalitaPagamentoSoggetto modPagToUpdate = modelWeb.getModalitaPagamentoSoggettoToUpdate();
 			
 			//gestisco lo stato utente
-			boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-			boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+			boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+			boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 			
 			if(soggettoDaAggiornare.getNote() != null){
 				modPagToUpdate.setNote(soggettoDaAggiornare.getNote());
@@ -2136,7 +2142,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 							Timestamp now = new Timestamp(cFrom.getTime().getTime());
 							
 							if(dataScadenza.compareTo(now)==-1){
-								listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
+								listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
 								addErrori(listaErrori);
 								handleAggiornaVisualization(false, true, false, false, false, false);
 								return INPUT;
@@ -2187,7 +2193,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 				modPagToUpdate.setDescrizioneStatoModalitaPagamento("valido");
 			}
 			if(gestSoggDec){
-				if(!modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA_no_underscore)){
+				if(!modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA_no_underscore)){
 					if(modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("provvisorio")){
 						if(decentratoSuPropriaOccorrenza(modPagToUpdate.getLoginCreazione()) || decentratoSuPropriaOccorrenza(modPagToUpdate.getLoginModifica())){
 							modPagToUpdate.setModificaPropriaOccorrenza(true);
@@ -2228,7 +2234,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 			model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 			if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-				if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+				if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 					model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 				} else {
 					model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -2240,7 +2246,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			
 			aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 			
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 			
 				AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 				//richiamo il servizio di aggiornamento provvisorio:
@@ -2309,8 +2315,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			ModalitaPagamentoSoggetto modPagToUpdate = modelWeb.getModalitaPagamentoSoggettoToUpdate();
 			
 			//gestisco lo stato utente
-			boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-			boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+			boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+			boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 			
 			if(soggettoDaAggiornare.getNote() != null){
 				modPagToUpdate.setNote(soggettoDaAggiornare.getNote());
@@ -2347,7 +2353,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 							Timestamp now = new Timestamp(cFrom.getTime().getTime());
 							
 							if(dataScadenza.compareTo(now)==-1){
-								listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
+								listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
 								addErrori(listaErrori);
 								handleAggiornaVisualization(false, false, false, false, false, false, true);
 								return INPUT;
@@ -2374,7 +2380,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 				modPagToUpdate.setDescrizioneStatoModalitaPagamento("valido");
 			}
 			if(gestSoggDec){
-				if(!modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA_no_underscore)){
+				if(!modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA_no_underscore)){
 					if(modPagToUpdate.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("provvisorio")){
 						if(decentratoSuPropriaOccorrenza(modPagToUpdate.getLoginCreazione()) || decentratoSuPropriaOccorrenza(modPagToUpdate.getLoginModifica())){
 							modPagToUpdate.setModificaPropriaOccorrenza(true);
@@ -2418,7 +2424,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 			model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 			if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-				if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+				if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 					model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 				} else {
 					model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -2430,7 +2436,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			
 			aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 			
-			if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+			if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 			
 				AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 				//richiamo il servizio di aggiornamento provvisorio:
@@ -2516,7 +2522,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -2528,7 +2534,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 		
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 		
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 			//richiamo il servizio di aggiornamento provvisorio:
@@ -2589,7 +2595,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -2601,7 +2607,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 		
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 		
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 			//richiamo il servizio di aggiornamento provvisorio:
@@ -2753,8 +2759,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		ModalitaPagamentoSoggetto modPagToProv = getSoggettoDaAggiornare();
 		
 		//gestisco lo stato utente
-		boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-		boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+		boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+		boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 		
 		if(modPagToProv.getNote() != null){
 			modPagToUpdateDef.setNote(modPagToProv.getNote());
@@ -2788,7 +2794,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 						Timestamp now = new Timestamp(cFrom.getTime().getTime());
 						
 						if(dataScadenza.compareTo(now)==-1){
-							listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
+							listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Data Scadenza", "(Non deve essere minore della data odierna)"));
 							addErrori(listaErrori);
 							handleAggiornaVisualization(false, false, false, false, true, false);
 							return INPUT;
@@ -2835,7 +2841,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			modPagToUpdateDef.setDescrizioneStatoModalitaPagamento("valido");
 		}
 		if(gestSoggDec){
-			if(!modPagToUpdateDef.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA_no_underscore)){
+			if(!modPagToUpdateDef.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA_no_underscore)){
 				if(modPagToUpdateDef.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("provvisorio")){
 					if(decentratoSuPropriaOccorrenza(modPagToUpdateDef.getLoginCreazione()) || decentratoSuPropriaOccorrenza(modPagToUpdateDef.getLoginModifica())){
 						modPagToUpdateDef.setModificaPropriaOccorrenza(true);
@@ -2870,7 +2876,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -2883,7 +2889,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 		
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 		
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 			//richiamo il servizio di aggiornamento provvisorio:
@@ -2946,7 +2952,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		model.getDettaglioSoggetto().getTipoSoggetto().setCodice(model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode());
 		model.getDettaglioSoggetto().setSediSecondarie(model.getListaSecondariaSoggetto());
 		if (model.getDettaglioSoggetto().getSessoStringa() != null && !"".equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa())) {
-			if (Constanti.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
+			if (CostantiFin.MASCHIO.equalsIgnoreCase(model.getDettaglioSoggetto().getSessoStringa().toUpperCase())) {
 				model.getDettaglioSoggetto().setSesso(Sesso.MASCHIO);
 			} else {
 				model.getDettaglioSoggetto().setSesso(Sesso.FEMMINA);
@@ -2961,7 +2967,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		aggiornaSoggetto.setCodificaAmbito(getcodiceAmbito());
 		
-		if (FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO)) {
+		if (AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite())) {
 		
 			AggiornaSoggettoProvvisorio asp = new AggiornaSoggettoProvvisorio(aggiornaSoggetto);
 			//richiamo il servizio di aggiornamento provvisorio:
@@ -3046,8 +3052,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 
 						for (ModalitaPagamentoSoggetto modPagApp : responseApp.getListaModalitaPagamentoSoggetto()){
 
-							if (!modPagApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_ANNULLATO)
-									&& !modPagApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_BLOCCATO)){
+							if (!modPagApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_ANNULLATO)
+									&& !modPagApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_BLOCCATO)){
 								// controllo che non sia di tipo cessione
 								if (modPagApp.getModalitaAccreditoSoggetto().getCodice() != null){
 									if (!modPagApp.isTipoCessione()){
@@ -3088,8 +3094,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 												for (ModalitaPagamentoSoggetto mdpApp : model.getDettaglioSoggetto().getModalitaPagamentoList()){
 													if (mdpApp.getModalitaPagamentoSoggettoCessione2() != null
 															&& mdpApp.getModalitaPagamentoSoggettoCessione2().getUid() == modPagApp.getUid()
-															&& !mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_ANNULLATO)
-															&& !mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_BLOCCATO)) {
+															&& !mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_ANNULLATO)
+															&& !mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_BLOCCATO)) {
 														alreadyAssociato = true;
 
 													}
@@ -3141,8 +3147,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		for(ModalitaPagamentoSoggetto modPagApp : listApp){
 			int index = 0;
 			ModalitaPagamentoSoggetto mdpDef = modPagApp;
-			if (!modPagApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_ANNULLATO)
-					&& !modPagApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_BLOCCATO)){
+			if (!modPagApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_ANNULLATO)
+					&& !modPagApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_BLOCCATO)){
 				// controllo che non sia di tipo cessione
 				if (! modPagApp.isTipoCessione()){
 					if (modPagApp.getDataFineValidita() != null){
@@ -3172,8 +3178,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 					for (ModalitaPagamentoSoggetto mdpApp : model.getDettaglioSoggetto().getModalitaPagamentoList()){
 						if (mdpApp.getCessioneCodSoggetto() != null && 
 								mdpApp.getModalitaPagamentoSoggettoCessione2().getUid() == mdpDef.getUid() &&
-								!mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_ANNULLATO)
-								&& !mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_BLOCCATO)) {
+								!mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_ANNULLATO)
+								&& !mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_BLOCCATO)) {
 							alreadyAssociato = true;
 						}
 					}
@@ -3244,7 +3250,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 			modelWeb.setModalitaPagamentoSoggettoToUpdate(new ModalitaPagamentoSoggetto());
 		} 
 		
-		TipoAccredito ta = Constanti.codeToTipoAccredito(idTipoAccredito);
+		TipoAccredito ta = CostantiFin.codeToTipoAccredito(idTipoAccredito);
 		modelWeb.getModalitaPagamentoSoggettoToUpdate().setTipoAccredito(ta);
 		
 		sessionHandler.setParametro(FinSessionParameter.MODALITA_PAGAMENTO_MODEL, modelWeb);
@@ -3261,7 +3267,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 		
 		modelWeb.setModalitaPagamentoSoggettoToInsert(new ModalitaPagamentoSoggetto());
 		
-		TipoAccredito ta = Constanti.codeToTipoAccredito(idTipoAccredito);
+		TipoAccredito ta = CostantiFin.codeToTipoAccredito(idTipoAccredito);
 		modelWeb.getModalitaPagamentoSoggettoToInsert().setTipoAccredito(ta);
 		
 		sessionHandler.setParametro(FinSessionParameter.MODALITA_PAGAMENTO_MODEL, modelWeb);
@@ -3309,7 +3315,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 	 */
 	public boolean isDecentrato() {
 		//verifico l'abilitazione all'azione decentrata:
-		return FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+		return AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 	}
 	
 	/**
@@ -3321,8 +3327,8 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 	 */
 	public boolean isAbilitato(Integer decodificaOperazione,Integer mdpId) {
 		boolean abilitato = false;
-		boolean gestSogg = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE);
-		boolean gestSoggDec = FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_GESTIONE_DECENTRATO);
+		boolean gestSogg = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSogg, sessionHandler.getAzioniConsentite());
+		boolean gestSoggDec = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_gestisciSoggDec, sessionHandler.getAzioniConsentite());
 		
 		ModalitaPagamentoSoggetto mdpApp = new ModalitaPagamentoSoggetto();
 		for(ModalitaPagamentoSoggetto app : model.getDettaglioSoggetto().getModalitaPagamentoList()){
@@ -3348,7 +3354,7 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 					if(mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("valido")){
 						abilitato = true;
 					}
-					if(mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("in_modifica") || mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA_no_underscore)){
+					if(mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("in_modifica") || mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA_no_underscore)){
 						abilitato = decentratoSuPropriaOccorrenza(mdpApp.getLoginCreazione()) || decentratoSuPropriaOccorrenza(mdpApp.getLoginModifica());
 					}
 				}
@@ -3381,12 +3387,13 @@ public class ModalitaPagamentoSoggettoAction extends AggiornaSoggettoGenericActi
 					}
 				}
 				break;
-			case VALIDA:				
-				if(gestSogg){
-					if(mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("provvisorio") || mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("in_modifica") || mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(Constanti.STATO_IN_MODIFICA_no_underscore)){
-						abilitato = true;
+			//SIAC-8799
+			case VALIDA:		
+					if(mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("provvisorio") 
+							|| mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase("in_modifica") 
+							|| mdpApp.getDescrizioneStatoModalitaPagamento().equalsIgnoreCase(CostantiFin.STATO_IN_MODIFICA_no_underscore)){
+						abilitato = AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_validaSogg , sessionHandler.getAzioniConsentite());
 					}
-				}
 				break;
 			case COLLEGA:
 				

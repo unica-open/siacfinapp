@@ -213,34 +213,105 @@ SPDX-License-Identifier: EUPL-1.2
 	  </div>
 	  
   </s:if>
-
-  <div class="control-group">
-    <span class="control-label">Da riaccertamento</span>
-    <div class="controls">    
-      <s:if test="%{flagValido}">
-        <s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)" disabled="true"></s:radio>
-      </s:if>
-      <s:else>
-        <s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)"
-        disabled="!isAbilitatoAggiornamentoGenerico()"></s:radio>
-      </s:else>   
-	  <!-- CAMPI VISIBILI SE RADIOBUTTON SI=CHECKED -->       
-      <span class="riaccVisible" id="bloccoRiaccertato">
-      	<s:if test="%{flagValido}">
-      		&nbsp; <s:textfield id="annoImpRiacc" name="step1Model.annoImpRiacc" onkeyup="return checkItNumbersOnly(event)" maxlength="4" cssClass="span1 " title="Anno" disabled="true"/>&nbsp;
-      		<s:textfield id="numImpRiacc" cssClass="lbTextSmall span2 " onkeyup="return checkItNumbersOnly(event)" title="Numero" name="step1Model.numImpRiacc" disabled="true"/>
-      	</s:if>
-      	<s:else>
-      		&nbsp; <s:textfield id="annoImpRiacc" name="step1Model.annoImpRiacc" onkeyup="return checkItNumbersOnly(event)"
-      		 maxlength="4" cssClass="span1 " title="Anno" disabled="!isAbilitatoAggiornamentoGenerico()"/>&nbsp;
-      		<s:textfield id="numImpRiacc" cssClass="lbTextSmall span2 " onkeyup="return checkItNumbersOnly(event)"
-      		 title="Numero" name="step1Model.numImpRiacc" disabled="!isAbilitatoAggiornamentoGenerico()"/>
-      	</s:else>	
-      </span>
-      <!-- FINE CAMPI VISIBILI -->      
-    </div>
-  </div>
+  <%--SIAC-6997 --%>
+  <%-- zTree --%>
+   
   
+  <!-- INIZIO --><!-- SIAC-6997 -->
+	<div class="control-group">      
+         <label class="control-label">Struttura Competente *</label>
+         <div class="controls"> 
+         <s:hidden name="step1Model.strutturaSelezionataCompetenteDesc" id="step1Model.strutturaSelezionataCompetenteDesc" />  
+         <s:hidden id="ricaricaStrutturaAmministrativa" name="ricaricaStrutturaAmministrativa"/>
+         <s:hidden id="struttAmmOriginaleCompetente" name="%{step1Model.strutturaSelezionataCompetente}"/>
+         <s:hidden name="step1Model.strutturaSelezionataCompetente" id="strutturaSelezionataCompetente" />
+          <div class="accordion span9" class="struttAmmCompetente" id="struttAmmCompetente">
+             <div class="accordion-group">
+               <div class="accordion-heading">  
+               		<a id="lineaStruttura" class="accordion-toggle" data-parent="#struttAmmCompetente" data-toggle="collapse"  href="#4n">  
+				        <s:if test="(step1Model.strutturaSelezionataCompetente!='' && step1Model.strutturaSelezionataCompetente != null) && (step1Model.strutturaSelezionataCompetenteDesc!='' && step1Model.strutturaSelezionataCompetenteDesc != null )" >
+							<s:property value="step1Model.strutturaSelezionataCompetenteDesc"/>
+						</s:if>
+				        <s:else>
+				        Seleziona la Struttura Competente
+				        </s:else>
+			        <i class="icon-spin icon-refresh spinner" id="spinnerStrutturaAmministrativaCompetente"></i>
+					</a>
+               </div>
+               <div id="4n" class="accordion-body collapse">
+                 <div class="accordion-inner" id="strutturaAmministrativaCompetenteDiv">
+                   <ul id="strutturaAmministrativaCompetente" class="ztree treeStruttAmm"></ul>
+                 </div>
+                 <div class="accordion-inner" id="strutturaAmministrativaCompetenteWait">
+                   Attendere prego..
+                 </div>
+                 
+               </div>
+             </div>
+           </div>
+         </div>
+         <span class="radio guidata">
+			<a id="linkConsultaModificheStrutturaCompetente" href="#modConsultaModificheStrutturaCompetente" data-toggle="modal" class="btn btn-primary">storico modifiche</a>
+       	</span>
+       </div>
+  <!-- FINE -->
+  <%-- SIAC-8178 --%>
+  <s:if test="!oggettoDaPopolareImpegno()"> 
+  		<div class="control-group">
+			<label class="control-label" for="cup">Codice verbale</label>
+			<div class="controls">
+				<s:textfield cssClass="lbTextSmall span2" id="codiceVerbale" name="step1Model.codiceVerbale"/>
+			</div>
+	  	</div>
+  	</s:if>
+  <div class="control-group">
+  		<table class="span10 ">
+  			<tr>
+  				<td class="span4 ">
+  					<span class="control-label">Da riaccertamento</span>
+  					<div class="controls">    
+			      		<s:if test="%{flagValido}">
+			        		<s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)" disabled="true"></s:radio>
+			      		</s:if>
+			      		<s:else>
+			        		<s:radio id="riaccertato" name="step1Model.riaccertato" cssClass="flagResidenza" list="step1Model.daRiaccertamento" onclick="check(this.value)" disabled="!isAbilitatoAggiornamentoGenerico()"></s:radio>
+			      		</s:else>
+			    	</div>
+  				</td>
+  				<td rowspan="3" valign="middle" width="90%" class="span8 ">
+  					<span class="riaccVisible" id="bloccoRiaccertato">
+		      			<s:if test="%{flagValido}">
+		      				&nbsp; <s:textfield id="annoImpRiacc" name="step1Model.annoImpRiacc" onkeyup="return checkItNumbersOnly(event)" maxlength="4" cssClass="span1 " title="Anno" disabled="true"/>&nbsp;
+		      				<s:textfield id="numImpRiacc" cssClass="lbTextSmall span2 " onkeyup="return checkItNumbersOnly(event)" title="Numero" name="step1Model.numImpRiacc" disabled="true"/>
+		      			</s:if>
+		      			<s:else>
+		      				&nbsp; 
+		      				<s:textfield id="annoImpRiacc" name="step1Model.annoImpRiacc" onkeyup="return checkItNumbersOnly(event)"
+		      		 			maxlength="4" cssClass="span2 " title="Anno" disabled="!isAbilitatoAggiornamentoGenerico()"/>&nbsp;
+		      				<s:textfield id="numImpRiacc" cssClass="lbTextSmall span4 " onkeyup="return checkItNumbersOnly(event)"
+		      		 			title="Numero" name="step1Model.numImpRiacc" disabled="!isAbilitatoAggiornamentoGenerico()"/>
+		      			</s:else>	
+		      		</span>
+  				</td>			
+  			</tr>
+  			<tr><td>&nbsp;</td></tr>
+  			<!-- inizio SIAC-6997 -->
+  			<tr>
+  				<td class="span4 ">
+  					<span class="control-label">Da reimputazione in corso d&rsquo;anno</span>
+			   		<div class="controls">    
+			     		<s:if test="%{flagValido}">
+			       			<s:radio id="reanno" name="step1Model.reanno" cssClass="flagResidenza" list="step1Model.daReanno" onclick="check(this.value)" disabled="true"></s:radio>
+			     		</s:if>
+			     		<s:else>
+			       			<s:radio id="reanno" name="step1Model.reanno" cssClass="flagResidenza" list="step1Model.daReanno" onclick="check(this.value)" disabled="!isAbilitatoAggiornamentoGenerico()"></s:radio>
+			     		</s:else>         
+			   		</div>
+  				</td>
+  			</tr>
+  			<!-- fine SIAC-6997 --> 
+  		</table>
+  	</div> 
   
   <s:if test="oggettoDaPopolareImpegno()">
   
@@ -346,5 +417,7 @@ SPDX-License-Identifier: EUPL-1.2
 <!-- 	    </div> -->
 <!-- 	  </div> -->
 <%--   </s:if> --%>
+
   
 </fieldset>
+

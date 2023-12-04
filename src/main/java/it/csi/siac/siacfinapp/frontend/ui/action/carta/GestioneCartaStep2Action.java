@@ -7,16 +7,16 @@ package it.csi.siac.siacfinapp.frontend.ui.action.carta;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.opensymphony.xwork2.ActionContext;
 
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfin2ser.model.SubdocumentoSpesa;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
 import it.csi.siac.siacfinser.model.carta.PreDocumentoCarta;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
@@ -91,7 +91,7 @@ public class GestioneCartaStep2Action extends ActionKeyGestioneCartaAction {
 			if (model.getStatoOperativoCarta()!=null && 
 					model.getStatoOperativoCarta().equalsIgnoreCase(CartaContabile.StatoOperativoCartaContabile.PROVVISORIO.toString())) {
 				//Caso stato PROVVISORIO
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA) && !isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) && !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
@@ -116,13 +116,13 @@ public class GestioneCartaStep2Action extends ActionKeyGestioneCartaAction {
 			if (model.getStatoOperativoCarta()!=null && 
 					model.getStatoOperativoCarta().equalsIgnoreCase(CartaContabile.StatoOperativoCartaContabile.PROVVISORIO.toString())) {
 				//Caso stato PROVVISORIO
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTA) && !isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTA) && !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
 					model.getStatoOperativoCarta().equalsIgnoreCase(CartaContabile.StatoOperativoCartaContabile.COMPLETATO.toString())) {
 				//Caso stato COMPLETATO
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGCARTARAGIO)) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGCARTARAGIO)) {
 					disabled=true;
 				}
 			} else if (model.getStatoOperativoCarta()!=null && 
@@ -142,7 +142,7 @@ public class GestioneCartaStep2Action extends ActionKeyGestioneCartaAction {
 					}
 					
 				}
-				if (!isAzioneAbilitata(CodiciOperazioni.OP_SPE_regCarta) || listaSubDocumentiSpesaCollegati==null) {
+				if (!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_regCarta) || listaSubDocumentiSpesaCollegati==null) {
 					disabled=true;
 				}
 			}

@@ -37,9 +37,10 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="contentPage">  
 
 
-
-<s:form id="ricercaSoggetto" action="ricercaSoggettoCec.do" method="post" focusElement="cerca" >
-	<h3>Ricerca Soggetto</h3>
+<%-- SIAC-7952 rimuovo .do dalla action --%>
+<s:form id="ricercaSoggetto" action="ricercaSoggettoCec" method="post" focusElement="cerca" >
+	<!-- task-224 -->
+	<h3>Ricerca Soggetto di Cassa Economale</h3>
 	<%-- Messaggio di ERROR --%>
 	<s:if test="hasActionErrors()">
 		<div class="alert alert-error">
@@ -146,8 +147,10 @@ SPDX-License-Identifier: EUPL-1.2
 	   
 	   <s:a cssClass="btn btn-secondary" href="${redirect.cruscotto}">indietro</s:a>
 	  
-	   <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-link" />  
-	   <s:submit name="cerca" id="cerca" value="cerca" method="cerca" cssClass="btn btn-primary pull-right" />  
+	   <!-- task-131 <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-link" /> -->
+	   <s:submit name="annulla" value="annulla" action="ricercaSoggettoCec_annulla" cssClass="btn btn-link" />  
+	   <!-- task-131 <s:submit name="cerca" id="cerca" value="cerca" method="cerca" cssClass="btn btn-primary pull-right" />  -->  
+	   <s:submit name="cerca" id="cerca" value="cerca" action="ricercaSoggettoCec_cerca" cssClass="btn btn-primary pull-right" />
 	</p>
 </s:form>
 </div>	

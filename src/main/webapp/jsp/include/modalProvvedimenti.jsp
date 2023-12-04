@@ -82,7 +82,7 @@ SPDX-License-Identifier: EUPL-1.2
        
     <div class="modal-footer">
       <!-- <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button> -->
-	  <s:submit id="cercaProvvedimentoSubmit" name="cerca" value="conferma" method="selezionaProvvedimento" cssClass="btn btn-primary pull-right" />
+	  <s:submit id="cercaProvvedimentoSubmit" name="cerca" value="conferma" action="%{#selezionaProvvedimentoAction}" cssClass="btn btn-primary pull-right" />
     </div>
   </div>
   
@@ -103,7 +103,7 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		
 		$.ajax({
-			url: '<s:url method="clearRicercaProvvedimento"/>',
+			url: '<s:url action="%{#clearRicercaProvvedimentoAction}"/>',
 		    success: function(data)  {
 			   	$("#gestioneRisultatoRicercaProvvedimenti").html(data);
 			}
@@ -121,7 +121,7 @@ SPDX-License-Identifier: EUPL-1.2
 				});
 			}
 			$.ajax({
-				url: '<s:url method="ricercaProvvedimento"/>',
+				url: '<s:url action="%{#ricercaProvvedimentoAction}"/>',
 				type: 'POST',
 				data: $(".parametroRicercaProvvedimento").serialize() + strutturaAmministrativaParam,
 			    success: function(data)  {
@@ -197,7 +197,7 @@ SPDX-License-Identifier: EUPL-1.2
 	    // se invece c'e' anno e tipo o sac va indicato almeno un altro parametro
         if((anno!='' && numero!='') || (anno!='' && tipo!='') || (anno!='' && struttura!='')){
         	
-			url = '<s:url method="ricercaProvvedimento"/>';
+			url = '<s:url action="%{#ricercaProvvedimentoAction}"/>';
 			
 			$.ajax({
 				url: url,
@@ -209,7 +209,7 @@ SPDX-License-Identifier: EUPL-1.2
 			});
         }else	{
 			
-			url = '<s:url method="clearRicercaProvvedimento"/>';
+			url = '<s:url action="%{#clearRicercaProvvedimentoAction}"/>';
 			$.ajax({
 				url: url,
 				success: function(data)  {
@@ -218,12 +218,6 @@ SPDX-License-Identifier: EUPL-1.2
 			});
 		}
 		
-       /*  $.ajax({
-               url: '<s:url method="clearRicercaProvvedimento"/>',
-            success: function(data)  {
-                      $("#gestioneRisultatoRicercaProvvedimenti").html(data);
-               }
-        }); */
  	}
 	
   </script>

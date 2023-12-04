@@ -21,7 +21,14 @@ SPDX-License-Identifier: EUPL-1.2
 	                                <dfn>Tipo finanziamento</dfn>
 									<dl><s:property value="movimento.capitolo.tipoFinanziamento" />&nbsp;</dl>
 							   	  </li>
-	                              <!--  DISPONIBILITA -->
+							   	  <!-- SIAC-7349 gestione componenti su impegni -->
+									<s:if test="movimento.impegno"> 
+										<li> 
+											<dfn>Componente</dfn>
+											<dl><s:property value="%{movimento.descrizioneComponente}" />&nbsp;</dl>
+										</li>
+									</s:if>
+                             		<!--  DISPONIBILITA -->
 	                             
 	                             <!--  
 	                              

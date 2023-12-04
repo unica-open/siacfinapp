@@ -116,19 +116,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<td class="span1"></td>
 				<td class="span4"></td>
 			</tr>
-			<s:if test="%{movimento.tipoCode == 'MUT'}">
-				<tr>
-					<td class="span4 sBold textRight bottomGreen" data-disponibilita-motivazione-trigger="finanziare">Da collegare a mutui</td>
-					<td class="span3">
-						<s:property value="getText('struts.money.format', {movimento.disponibilitaFinanziare})" />
-						<span class="hide" data-disponibilita-motivazione-data="finanziare">
-							<s:property value="movimento.motivazioneDisponibilitaFinanziare" />
-						</span>
-					</td>
-					<td class="span1"></td>
-					<td class="span4"></td>
-				</tr>
-			</s:if>
+
 		</tbody>
 	</table>
 </div>

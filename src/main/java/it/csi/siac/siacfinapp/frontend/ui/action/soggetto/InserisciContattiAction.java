@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,19 +21,21 @@ import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.Normalizzatore;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.IndirizzoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.RecapitoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
-import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
+import it.csi.siac.siacfinser.frontend.webservice.GenericService;
 import it.csi.siac.siacfinser.frontend.webservice.SoggettoService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceSoggetto;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceSoggettoProvvisorio;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceSoggettoResponse;
+import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNome;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNomeResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComuni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComuniResponse;
@@ -191,6 +193,10 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 	 * 
 	 * @return
 	 */
+
+	@Autowired
+	protected transient GenericService genericService;
+	
 	public String salva() {
 		final String methodName = "salva";
 		
@@ -207,11 +213,15 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 		
 		InserisceSoggettoResponse response = null;
 		if (isInserimentoSoggettoProvvisorio()) {
-			//invoco il servizio:
+			
+			//task-209 task-222
+			inserisceSoggetto.getSoggetto().getComuneNascita().setCodiceIstat(caricaCodiceIstat(inserisceSoggetto));
 			response = soggettoService.inserisceSoggettoProvvisorio(new InserisceSoggettoProvvisorio(inserisceSoggetto));
 		} else {
 			inserisceSoggetto.setCodificaAmbito(getCodificaAmbito());
-			//invoco il servizio:
+
+			//task-209 task-222
+			inserisceSoggetto.getSoggetto().getComuneNascita().setCodiceIstat(caricaCodiceIstat(inserisceSoggetto));
 			response = soggettoService.inserisceSoggetto(inserisceSoggetto);
 		}
 		
@@ -238,12 +248,27 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 		return "salva";
 		
 	}
+	
+	//task-209 task-222
+	private String caricaCodiceIstat(InserisceSoggetto inserisceSoggetto) {
+		ListaComunePerNome comunePerNome = new ListaComunePerNome();
+		comunePerNome.setCodiceNazione(inserisceSoggetto.getSoggetto().getComuneNascita().getNazioneCode());
+		comunePerNome.setNomeComune(inserisceSoggetto.getSoggetto().getComuneNascita().getDescrizione());
+		comunePerNome.setRichiedente(inserisceSoggetto.getRichiedente());
+		//invoco il servizio findComunePerNome:
+		ListaComunePerNomeResponse res = genericService.findComunePerNome(comunePerNome);
+		if (res != null && res.getListaComuni() != null && res.getListaComuni().size() > 0 && res.getListaComuni().get(0).getCodice() != null) {
+			return res.getListaComuni().get(0).getCodice();
+		}else {
+			return "";
+		}
+	}
 
 	/**
 	 * @return
 	 */
 	protected boolean isInserimentoSoggettoProvvisorio() {
-		return FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), ABILITAZIONE_INSERIMENTO_DECENTRATO);
+		return AzioneConsentitaEnum.isConsentito(AzioneConsentitaEnum.OP_SOG_inserisciSoggDec, sessionHandler.getAzioniConsentite());
 	}
 	
 	protected String getCodificaAmbito() {
@@ -299,7 +324,7 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 		if(null==model.getFlagSesso() || StringUtils.isEmpty(model.getFlagSesso())){
 			//NON_DEFINITO
 			soggetto.setSesso(Sesso.NON_DEFINITO);
-		}else if(model.getFlagSesso().equalsIgnoreCase(Constanti.MASCHIO)){
+		}else if(model.getFlagSesso().equalsIgnoreCase(CostantiFin.MASCHIO)){
 			//MASCHIO
 			soggetto.setSesso(Sesso.MASCHIO);
 		}else {
@@ -321,9 +346,9 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 		ComuneNascita comuneNascita = new ComuneNascita();
 		comuneNascita.setDescrizione(model.getComune());
 		comuneNascita.setNazioneCode(model.getIdNazione());
-		if(WebAppConstants.CODICE_ITALIA.equals(model.getIdNazione()) && StringUtils.isNotEmpty(model.getIdComune())){
+		if(WebAppConstants.CODICE_ITALIA.equals(model.getIdNazione()) && StringUtils.isNotEmpty(model.getCodiceIstatComune())){
 			try{   
-				comuneNascita.setComuneIstatCode(model.getIdComune());
+				comuneNascita.setCodiceIstat(model.getCodiceIstatComune());
 			}catch(NumberFormatException nfe){
 				log.error(methodName, "errore conversione id comune");
 			}
@@ -367,6 +392,9 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 		soggetto.setTipoFonteDurc(model.getTipoFonteDurc());
 		soggetto.setFonteDurcClassifId(model.getFonteDurcClassifId());
 		soggetto.setNoteDurc(model.getNoteDurc());
+		
+		//flag Istituto di credito
+		soggetto.setFlagIstitutoDiCredito(model.isFlagIstitutoDiCredito());
 		
 		
 		inserisceSoggetto.setSoggetto(soggetto);
@@ -415,7 +443,8 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 				dest.setIdTipoIndirizzo(src.getTipoIndirizzo());
 				dest.setNumeroCivico(src.getNumeroCivico());
 				dest.setSedime(src.getSedime());
-				dest.setIdComune(src.getIdComune());
+				dest.setCodiceIstatComune(src.getCodiceIstatComune());
+				dest.setComuneUid(src.getComuneUid());
 				dest.setComune(src.getComune());
 				dest.setCodiceNazione(src.getStato()); // nazione code
 				
@@ -497,6 +526,7 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 		indirizzo.setCap(model.getIndirizzo().getCap());
 		
 		indirizzo.setIndirizzoEsteso(costruisceIndirizzoEsteso());
+		indirizzo.setComuneUid(model.getIndirizzo().getComuneUid());
 
 		log.debug(methodName,  "dalvo avviso "+model.getIndirizzo().isCheckAvviso());
 		log.debug(methodName,  "dalvo princi "+model.getIndirizzo().isCheckPrincipale());
@@ -532,7 +562,7 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 		List<Errore> listaErrori = new ArrayList<Errore>();
 		ValidationUtils.validaCampiInserimentoIndirizzi(listaErrori, model);
 	
-		if(null!=model.getIndirizzo() && StringUtils.isEmpty(model.getIndirizzo().getIdComune())){
+		if(null!=model.getIndirizzo() && StringUtils.isEmpty(model.getIndirizzo().getCodiceIstatComune())){
 			
 			debug(methodName, "verifico la nazione ");
 			
@@ -543,7 +573,7 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 					if (comunePerNomeResponse == null || comunePerNomeResponse.isFallimento() || comunePerNomeResponse.getListaComuni() == null || comunePerNomeResponse.getListaComuni().size() == 0 || comunePerNomeResponse.getListaComuni().get(0).getId() == null) {
 						listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Comune"));
 					} else {
-						model.getIndirizzo().setIdComune(comunePerNomeResponse.getListaComuni().get(0).getCodice());
+						model.getIndirizzo().setCodiceIstatComune(comunePerNomeResponse.getListaComuni().get(0).getCodice());
 						model.getIndirizzo().setComune(comunePerNomeResponse.getListaComuni().get(0).getDescrizione());
 					}
 				}
@@ -559,16 +589,16 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 		//LUNGHEZZA 30 CARATTERI MAX su indirizzo:
 		if ((model.getIndirizzo().getSedime() + model.getIndirizzo().getNomeVia() + model.getIndirizzo().getNumeroCivico()).length() > 28){
 			// considera spazi concatenazione
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Indirizzo","(L'indirizzo non deve superare i 30 caratteri)"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Indirizzo","(L'indirizzo non deve superare i 30 caratteri)"));
 		}
 			
 		//LUNGHEZZA 30 CARATTERI MAX su comune:
 		if (model.getIndirizzo().getComune().length() > 30){
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Comune","(Il campo Comune non deve superare i 30 caratteri)"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Comune","(Il campo Comune non deve superare i 30 caratteri)"));
 		}
 		
 		indirizzo.setComune(model.getIndirizzo().getComune());
-		indirizzo.setIdComune(model.getIndirizzo().getIdComune());
+		indirizzo.setCodiceIstatComune(model.getIndirizzo().getCodiceIstatComune());
 		// catturo gli errori
 		if(!listaErrori.isEmpty()) {
 			addErrori(listaErrori);
@@ -668,7 +698,12 @@ public class InserisciContattiAction  extends WizardScriviSoggettoAction {
 			ListaComuniResponse lcr = genericService.cercaComuni(listaComuni);
 
 			if (!(lcr.isFallimento() || lcr.getListaComuni() == null || lcr.getListaComuni().isEmpty())){
-				sb.append(String.format("(%s)", lcr.getListaComuni().get(0).getSiglaProvincia())).append(" ");
+				
+				ComuneNascita c = lcr.getListaComuni().get(0);
+				
+				sb.append(String.format("(%s)", c.getSiglaProvincia())).append(" ");
+				
+				model.getIndirizzo().setComuneUid(c.getUid());				
 			}
 				
 		}

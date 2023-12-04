@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AnnullaLiquidazione;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AnnullaLiquidazioneResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazioneConAllegatoAtto;
@@ -55,7 +56,7 @@ public class AnnullaLiquidazioneAction extends WizardRicercaLiquidazioneAction{
 		//istanzio la request per il servizio ricercaLiquidazioneConAllegatoAtto:
 		RicercaLiquidazioneConAllegatoAtto req = new RicercaLiquidazioneConAllegatoAtto();
 		req.setEnte(sessionHandler.getEnte());
-		req.setAnnoEsercizio(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		req.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		req.setRichiedente(sessionHandler.getRichiedente());
 		
 		Liquidazione liquidazioneDaVerificare = new Liquidazione();
@@ -71,7 +72,8 @@ public class AnnullaLiquidazioneAction extends WizardRicercaLiquidazioneAction{
 		if(res!=null && res.isFallimento()){
 			if(null!=res.getErrori() && null!=res.getErrori().get(0)){
 				// ci sono errori
-				addPersistentActionError(res.getErrori().get(0).getCodice()+" "+res.getErrori().get(0).getDescrizione());
+				//task-263
+				addErrore(res.getErrori().get(0).getCodice()+" "+res.getErrori().get(0).getDescrizione(), res.getErrori().get(0));
 				return "gotoElencoLiquidazioni";
 			}
 		}
@@ -97,7 +99,9 @@ public class AnnullaLiquidazioneAction extends WizardRicercaLiquidazioneAction{
 		if(response.isFallimento()) {
 			if(null!=response.getErrori() && null!=response.getErrori().get(0)){
 				// ci sono errori
-				addPersistentActionError(response.getErrori().get(0).getCodice()+" "+response.getErrori().get(0).getDescrizione());
+				//task-263
+				addErrore(res.getErrori().get(0).getCodice()+" "+res.getErrori().get(0).getDescrizione(), res.getErrori().get(0));
+				
 			}
 			return "gotoElencoLiquidazioni";
 		}	

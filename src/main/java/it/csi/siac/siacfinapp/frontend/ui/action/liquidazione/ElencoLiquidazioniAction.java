@@ -5,12 +5,12 @@
 
 package it.csi.siac.siacfinapp.frontend.ui.action.liquidazione;
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -76,7 +76,7 @@ public class ElencoLiquidazioniAction extends WizardRicercaLiquidazioneAction {
 			returnValue=true;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.STATO_ANNULLATO)) {
+		if (stato.equalsIgnoreCase(CostantiFin.STATO_ANNULLATO)) {
 			//se e' gia annullato non e' abilitato
 			returnValue=false;
 		}
@@ -97,7 +97,7 @@ public class ElencoLiquidazioniAction extends WizardRicercaLiquidazioneAction {
 			returnValue=true;
 		}
 		
-		if (stato.equalsIgnoreCase(Constanti.STATO_ANNULLATO)) {
+		if (stato.equalsIgnoreCase(CostantiFin.STATO_ANNULLATO)) {
 			//se e' annullato non e' aggiornabile:
 			returnValue=false;
 		}

@@ -81,7 +81,7 @@ public abstract class GestioneSubAccertamentoPrimaNotaIntegrataBaseModel extends
 		ricercaAccertamentoK.setAnnoEsercizio(getAnnoEsercizioInt());
 		ricercaAccertamentoK.setAnnoAccertamento(subacc.getAnnoAccertamentoPadre());
 		ricercaAccertamentoK.setNumeroAccertamento(subacc.getNumeroAccertamentoPadre());
-		ricercaAccertamentoK.setNumeroSubDaCercare(subacc.getNumero());
+		ricercaAccertamentoK.setNumeroSubDaCercare(subacc.getNumeroBigDecimal());
 		
 		req.setpRicercaAccertamentoK(ricercaAccertamentoK);
 		req.setEnte(getEnte());

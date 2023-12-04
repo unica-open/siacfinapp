@@ -4,14 +4,17 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.model.ParametroConfigurazioneEnteEnum;
+import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceImpegniResponse;
@@ -88,7 +91,7 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 		caricaLabelsInserisci(2);
 		
 		//disabilito il caricamento degli alberi inutili per questo scnario (in AjaxAction.java):
-		teSupport.setRicaricaAlberoPianoDeiConti(true);
+		teSupport.setRicaricaAlberoPianoDeiConti(true); 
 		
 		// CR-2023  eliminato conto economico
 		
@@ -133,7 +136,12 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 		return salvaInternal(false);
 	}
 	
-	public String salvaInternal(boolean byPassDodicesimi) throws Exception {
+	//SIAC-8732
+	public String proseguiSalva() throws Exception {
+		return salva();
+	}
+	
+	private String salvaInternal(boolean byPassDodicesimi) throws Exception {
 		setMethodName("salva");
 		log.debug(methodName, "provo a salvare");
 		
@@ -168,14 +176,14 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 		
 		// CR-552: Prima di salvare l'impegno verifico se devo rilanciare la modale di warning per il pluriennale
 		// ma solo se l'anno del movimento è > dell'anno di bilancio
-		if((model.getStep1Model().getAnnoImpegno() > Integer.parseInt(sessionHandler.getAnnoEsercizio())) && titoloConfermaAnnoDiCompetenzaInCorso) {
+		if((model.getStep1Model().getAnnoImpegno() > sessionHandler.getAnnoBilancio()) && titoloConfermaAnnoDiCompetenzaInCorso) {
 			
 			if (isFromModaleConfermaAnnoDiCompetenzaInCorso()) {
 				
 				setShowModaleConfermaAnnoDiCompetenzaInCorso(false);
 				
 				if(isPluriennalePrimeNoteEsercizioInCorso())
-					model.getStep1Model().setAnnoScritturaEconomicoPatrimoniale(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+					model.getStep1Model().setAnnoScritturaEconomicoPatrimoniale(sessionHandler.getAnnoBilancio());
 				else 
 					model.getStep1Model().setAnnoScritturaEconomicoPatrimoniale(null);
 				
@@ -215,6 +223,14 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 			addErrori(erroriAbilitazione);
 			return INPUT;
 		}
+		//SIAC-8825
+		if (isObbligatorioPerimetroSanitario()) {
+			List<Errore> erroriCapitoliPerimentroSanitario = validazioneCapitoliPerimetroSanitario(oggettoDaPopolare);
+			if (! erroriCapitoliPerimentroSanitario.isEmpty()) {
+				addErrori(erroriCapitoliPerimentroSanitario);
+				return INPUT;
+			}
+		}
 		
 		copiaTransazioneElementareSupportSuModel(false);
 		
@@ -226,7 +242,7 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 			return INPUT;
 		}
 		
-		InserisceImpegniResponse response =  inserisceImpegno(model, false,isSalvaSdF,byPassDodicesimi,null);
+		InserisceImpegniResponse response = inserisceImpegno(model, false, isSalvaSdF, byPassDodicesimi, null);
 	
 		if(response!=null && response.isFallimento()){
 			//per il modale di conferma per bypassare il controllo dodicesimi:
@@ -239,7 +255,7 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 			debug(methodName, "Errore nella risposta del servizio");
 			addErrori(methodName, response);
 			return INPUT;
-		}else if(response!=null  && !response.isFallimento() && (response.getErrori() != null && response.getErrori().size() > 0)){
+		} else if(response!=null  && !response.isFallimento() && (response.getErrori() != null && response.getErrori().size() > 0)){
 			     // NO FALLIMENTO SI ERRORI ---> WARNING
 				debug(methodName, "Errore nella risposta del servizio");
 				for (Errore warning : response.getErrori()) {
@@ -252,10 +268,10 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 		pulisciTransazioneElementare();
 		
 		// vai sulla pagina di aggiorna
-		setNumeroImpegno(String.valueOf(response.getElencoImpegniInseriti().get(0).getNumero()));
+		setNumeroImpegno(String.valueOf(response.getElencoImpegniInseriti().get(0).getNumeroBigDecimal()));
 		setAnnoImpegno(String.valueOf(response.getElencoImpegniInseriti().get(0).getAnnoMovimento()));
 		
-		setNumeroImpegnoStruts(String.valueOf(response.getElencoImpegniInseriti().get(0).getNumero()));
+		setNumeroImpegnoStruts(String.valueOf(response.getElencoImpegniInseriti().get(0).getNumeroBigDecimal()));
 		setAnnoImpegnoStruts(String.valueOf(response.getElencoImpegniInseriti().get(0).getAnnoMovimento()));
 	
 		
@@ -329,13 +345,13 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 		pulisciTransazioneElementare();
 		
 		// messaggio di ok nella terza pagina
-		addPersistentActionMessage("FIN_INF_0070, Movimento inserito ( movimento=Impegno, anno = " + response.getElencoImpegniInseriti().get(0).getAnnoMovimento() +  ", numero= "+ response.getElencoImpegniInseriti().get(0).getNumero() +" )");
+		addPersistentActionMessage("FIN_INF_0070, Movimento inserito ( movimento=Impegno, anno = " + response.getElencoImpegniInseriti().get(0).getAnnoMovimento() +  ", numero= "+ response.getElencoImpegniInseriti().get(0).getNumeroBigDecimal() +" )");
 		
 		// salvo nel model step3 il numero e l'anno del  movimento di partenza, cosi da poterli e settare in fase di impostazione degli impegni pluriennali
 		model.getStep3Model().setAnnoMovimentoInseritoInStep2(response.getElencoImpegniInseriti().get(0).getAnnoMovimento());
-		model.getStep3Model().setNumeroMovimentoInseritoInStep2(response.getElencoImpegniInseriti().get(0).getNumero().intValue());
+		model.getStep3Model().setNumeroMovimentoInseritoInStep2(response.getElencoImpegniInseriti().get(0).getNumeroBigDecimal().intValue());
 		
-		sessionHandler.setParametro(FinSessionParameter.MOVGEST_INIZIALE, response.getElencoImpegniInseriti().get(0).getAnnoMovimento()+"||"+response.getElencoImpegniInseriti().get(0).getNumero());
+		sessionHandler.setParametro(FinSessionParameter.MOVGEST_INIZIALE, response.getElencoImpegniInseriti().get(0).getAnnoMovimento()+"||"+response.getElencoImpegniInseriti().get(0).getNumeroBigDecimal());
 		
 	    return "prosegui";
 	}  
@@ -363,7 +379,7 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 		//l'utente deve essere abilitato
 		return model.isEnteAbilitatoGestionePrimaNotaDaFinanziaria() 
 				&& (!model.isRichiediConfermaRedirezioneContabilitaGenerale()) 
-				&& model.getStep1Model().getAnnoImpegno() == Integer.parseInt(sessionHandler.getAnnoEsercizio())
+				&& model.getStep1Model().getAnnoImpegno() == sessionHandler.getAnnoBilancio()
 				&& model.isInserimentoSenzaSub() 
 				//non duplico il controllo
 //				&& model.isClassificazioneSpesaCorrettaPerContabilitaGenerale() 
@@ -406,5 +422,14 @@ public class InserisceImpegnoStep2Action extends ActionKeyInserisceImpegno {
 	public void setAnnoImpegnoStruts(String annoImpegnoStruts) {
 		this.annoImpegnoStruts = annoImpegnoStruts;
 	}
-
+	
+	//SIAC-8825
+	private List<Errore> validazioneCapitoliPerimetroSanitario (OggettoDaPopolareEnum oggettoDP){
+		List<Errore> errori = new ArrayList<Errore>();
+		if(null==teSupport.getPerimetroSanitarioSpesaSelezionato() || teSupport.getPerimetroSanitarioSpesaSelezionato().equals("")){
+			errori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Capitoli perimetro sanitario")); 
+		}
+		return errori;
+	}
+		
 }	

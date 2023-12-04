@@ -33,8 +33,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage">
-    
-			<s:form method="post" action="ricercaOrdinativoPagamento.do" id="ricercaOrdinativoPagamento">
+    		<%-- SIAC-7952 rimuovo .do dalla action --%>
+			<s:form method="post" action="ricercaOrdinativoPagamento" id="ricercaOrdinativoPagamento">
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 			
 			
@@ -56,7 +56,8 @@ SPDX-License-Identifier: EUPL-1.2
 				<div class="step-content">	
 					<div class="step-pane active" id="step1"> 
 					<p class="margin-medium">
-						<s:submit id="cerca2" name="cerca2" value="cerca" method="ricercaOrdinativoPagamento" cssClass="btn btn-primary pull-right" /> 
+						<!-- task-131 <s:submit id="cerca2" name="cerca2" value="cerca" method="ricercaOrdinativoPagamento" cssClass="btn btn-primary pull-right" /> -->
+						<s:submit id="cerca2" name="cerca2" value="cerca" action="ricercaOrdinativoPagamento_ricercaOrdinativoPagamento" cssClass="btn btn-primary pull-right" /> 
 					</p>
 					<br>
 
@@ -139,7 +140,7 @@ SPDX-License-Identifier: EUPL-1.2
 						
 						
 						<div class="control-group">
-							<label class="control-label" for="mutuo">Descrizione</label>
+							<label class="control-label" for="mo">Descrizione</label>
 							<div class="controls">
 								<s:textfield id="descrizione" name="model.descrizioneOrdinativo" cssClass="lbTextSmall span2"/>
 							</div>
@@ -201,16 +202,10 @@ SPDX-License-Identifier: EUPL-1.2
 							</div>
 						</fieldset>
 						
-						<h4 class="step-pane">Mutuo</h4>
-						<div class="control-group">
-							<label class="control-label" for="mutuo">Numero mutuo</label>
-							<div class="controls">
-								<!-- <input type="text" name="mutuo" value="" class="lbTextSmall span2" id="mutuo" /> -->
-								<s:textfield id="numeroMutuo" onkeyup="return checkItNumbersOnly(event)" name="model.numeroMutuoString" cssClass="lbTextSmall span2"/>
-							</div>
-						</div>								
+						
+							
 					</fieldset>
-
+				
 					<s:include value="/jsp/ordinativo/include/impegnoOrdinativoRicerca.jsp" />
 					
 					<div id="refreshHeaderCapitolo">
@@ -233,9 +228,30 @@ SPDX-License-Identifier: EUPL-1.2
 		            <s:include value="/jsp/ordinativo/include/soggettoCessioneIncassoOrdinativoRicerca.jsp" /> 
 
 					<!-- Modal -->
+					<s:set var="confermaCompGuidataAction" value="%{'ricercaOrdinativoPagamento_confermaCompGuidata'}" />	  						        	        							
+					<s:set var="ricercaGuidataImpegnoAction" value="%{'ricercaOrdinativoPagamento_ricercaGuidataImpegno'}" />	          
 					<s:include value="/jsp/include/modalImpegno.jsp" />
+					
+					<s:set var="ricercaCapitoloAction" value="%{'ricercaOrdinativoPagamento_ricercaCapitolo'}" />
+	        		<s:set var="pulisciRicercaCapitoloAction" value="%{'ricercaOrdinativoPagamento_pulisciRicercaCapitolo'}" />
+	        		<s:set var="selezionaCapitoloAction" value="%{'ricercaOrdinativoPagamento_selezionaCapitolo'}" />
+	        		<s:set var="visualizzaDettaglioCapitoloAction" value="%{'ricercaOrdinativoPagamento_visualizzaDettaglioCapitolo'}" />
+	        
 					<s:include value="/jsp/include/modalCapitolo.jsp" />
+		            
+		            <s:set var="selezionaProvvedimentoAction" value="%{'ricercaOrdinativoPagamento_selezionaProvvedimento'}" />
+		    		<s:set var="clearRicercaProvvedimentoAction" value="%{'ricercaOrdinativoPagamento_clearRicercaProvvedimento'}" />	          
+		    		<s:set var="ricercaProvvedimentoAction" value="%{'ricercaOrdinativoPagamento_ricercaProvvedimento'}" />	                          	
 		            <s:include value="/jsp/include/modalProvvedimenti.jsp" />
+		            
+		            <!--  per soggetto e soggetto2 -->
+					<s:set var="selezionaSoggettoAction" value="%{'ricercaOrdinativoPagamento_selezionaSoggetto'}" />
+					<s:set var="selezionaSoggettoDueAction" value="%{'ricercaOrdinativoPagamento_selezionaSoggettoDue'}" />
+					<s:set var="pulisciRicercaSoggettoAction" value="%{'ricercaOrdinativoPagamento_pulisciRicercaSoggetto'}" />	          
+					<s:set var="ricercaSoggettoAction" value="%{'ricercaOrdinativoPagamento_ricercaSoggetto'}" />	    
+					<s:set var="ricercaSoggettoDueAction" value="%{'ricercaOrdinativoPagamento_ricercaSoggettoDue'}" />	    
+					<s:set var="listaClasseSoggettoChangedAction" value="%{'ricercaOrdinativoPagamento_listaClasseSoggettoChanged'}" />
+	     
 		            <s:include value="/jsp/include/modalSoggetto.jsp" />
 		            <s:include value="/jsp/include/modalSoggettoDue.jsp" />
 		            <!-- Fine Modal -->
@@ -288,8 +304,11 @@ SPDX-License-Identifier: EUPL-1.2
 					
 	            <p>           
 	            <s:include value="/jsp/include/indietro.jsp" /> 
-				<s:submit name="annulla" value="annulla" method="annullaRicercaOrdinativi" cssClass="btn btn-secondary" />
-				<s:submit id="cerca" name="cerca" value="cerca" method="ricercaOrdinativoPagamento" cssClass="btn btn-primary pull-right" /> 
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaRicercaOrdinativi" cssClass="btn btn-secondary" /> -->
+				<!-- task-131 <s:submit id="cerca" name="cerca" value="cerca" method="ricercaOrdinativoPagamento" cssClass="btn btn-primary pull-right" /> -->
+				<s:submit name="annulla" value="annulla" action="ricercaOrdinativoPagamento_annullaRicercaOrdinativi" cssClass="btn btn-secondary" />
+				<s:submit id="cerca" name="cerca" value="cerca" action="ricercaOrdinativoPagamento_ricercaOrdinativoPagamento" cssClass="btn btn-primary pull-right" />
+			 
 				</p>       
 
       </s:form>

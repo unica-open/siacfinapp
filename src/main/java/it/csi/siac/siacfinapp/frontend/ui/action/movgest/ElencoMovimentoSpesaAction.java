@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacattser.model.AttoAmministrativo;
+import it.csi.siac.siacattser.model.StatoOperativoAtti;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ModificaConsulta;
@@ -28,7 +29,9 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOtt
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.MovimentoGestione;
 import it.csi.siac.siacfinser.model.SubImpegno;
+import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesa;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesaCollegata;
 import it.csi.siac.siacfinser.model.ric.RicercaImpegnoK;
 
 
@@ -53,6 +56,10 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 	private String uidModDaAnnullare;
 	private String numeroMovDaAnnullare;
 	
+	//SIAC-7349 Inizio  SR180 MC 08/04/2020
+	List<ModificaMovimentoGestioneSpesaCollegata> listaModificheSpeseCollegata ;
+	//SIAC-7349 Fine  SR180 MC 08/04/2020
+	
 	/**
 	 * Metodo prepare della action
 	 */
@@ -61,6 +68,9 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 		setMethodName("prepare");
 		//invoco il prepare della super classe:
 		super.prepare();
+		
+		//SIAC-8034
+		resetPageNumberTableId("ricercaSubImpegniID");
 		
 		//setto il titolo:
 		super.model.setTitolo("Movimento Spesa");
@@ -137,17 +147,24 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 				//app list e' uguale a listaModifiche con l'arricchimento dell'atto amministrativo,
 				//travado quindi appList in listaModifiche:
 				listaModifiche = appList;
-	
+				
+				
+				
 				//setto la lista modifiche nel model:
 				model.getMovimentoSpesaModel().setListaModifiche(listaModifiche);
 			}	
 
 		}
-
+		//SIAC-7349 MR CONT-228 05/06/2020: fix disponibilita impegnare componente per annulla modifica
+		uploadDisponibilitaPerSingolaModifica();
+		
 		//ok	
 		return SUCCESS;
 	}
 	
+	
+	
+
 	/**
 	 * Metodo che ricarica i dati
 	 * @param impegnoFresco
@@ -164,7 +181,7 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 		BigDecimal numeroImpegno = new BigDecimal(String.valueOf(model.getStep1Model().getNumeroImpegno()));
 		
 		//setto i dati di chiave dell'impegno:
-		impegnoDaCercare.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		impegnoDaCercare.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		impegnoDaCercare.setNumeroImpegno(numeroImpegno);
 		impegnoDaCercare.setAnnoImpegno(model.getStep1Model().getAnnoImpegno());
 				
@@ -192,7 +209,7 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 		parametroRicercaPerChiave.setDatiOpzionaliElencoSubTuttiConSoloGliIds(datiOpzionaliElencoSubTuttiConSoloGliIds);
 			
 		//richiamo il servizio di ricerca:
-		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(parametroRicercaPerChiave);
+		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(parametroRicercaPerChiave);
 		
 		//analizzo la risposta del servizio:
 		if(!respRk.isFallimento() && respRk.getImpegno()!= null){
@@ -220,7 +237,7 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 		
 		model.getStep1Model().setImportoImpegno(model.getImpegnoInAggiornamento().getImportoAttuale());
 		model.getStep1Model().setImportoFormattato(convertiBigDecimalToImporto(model.getImpegnoInAggiornamento().getImportoAttuale()));
-		model.setTotaleSubImpegno(model.getImpegnoInAggiornamento().getTotaleSubImpegni());
+		model.setTotaleSubImpegno(model.getImpegnoInAggiornamento().getTotaleSubImpegniBigDecimal());
 		model.setDisponibilitaSubImpegnare(model.getImpegnoInAggiornamento().getDisponibilitaSubimpegnare());
 		
 		if (model.getImpegnoInAggiornamento() != null && elencoSubImpegni != null && elencoSubImpegni.size() > 0) {
@@ -274,12 +291,119 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 		
 		//1. Individuaimo l'uid del movimento da annullare:
 		String uidDaAnnullare = getUidModDaAnnullare();
+		model.getErrori().clear();
+		
+		
 		
 		//2. Componiamo la request per il servizio:
 		AnnullaMovimentoSpesa requestAnnulla = convertiModelPerChiamataServizioAnnulla(uidDaAnnullare);
+		requestAnnulla.setVerificaImportiDopoAnnullamentoModifica(true);
+		
+		//SIAC-7349 - MR - Start - 05/06/2020 Fix per annulla modifica con disponibilita impegnare della componente
+		//3. Setto la disponibilita ad impegnare della componente
+		requestAnnulla.getImpegno().setDisponibilitaImpegnareComponente(model.getDisponibilitaComponentePerAnnullaModifiche());
+		
+		//SIAC-8611: verifico se posso effettuare l'annullamento: l'annullamento non deve rendere inconsistenti gli importi					
+		BigDecimal importoModificaDaAnnullare = new BigDecimal(0);
+		int signumMod = 0;
+		
+		// task-10
+		
+			
+		boolean residuo = (model.getImpegnoInAggiornamento().getAnnoMovimento() < sessionHandler.getBilancio().getAnno())?true:false; 
+		String statoProvvedimentoModifica ="";	
+		
+		if(model.getNumeroSubImpegnoMod() == null || model.getNumeroSubImpegnoMod().equals("0")) {
+			// sono sull'impegno recupero la mia modifica
+			for (ModificaMovimentoGestioneSpesa modifica: model.getImpegnoInAggiornamento().getListaModificheMovimentoGestioneSpesa()) {
+				if(new Integer(modifica.getUid()).equals(new Integer(uidDaAnnullare))) {
+					signumMod=modifica.getImportoOld().signum();
+					importoModificaDaAnnullare = modifica.getImportoOld().negate();
+					//task-63
+					statoProvvedimentoModifica = modifica.getAttoAmministrativo().getStatoOperativo();
+				}			
+			}
+			
+			BigDecimal minImportoCalcolatoMod = model.getDisponibilitaImpegnoModifica()!= null? model.getDisponibilitaImpegnoModifica().negate():new BigDecimal(0);
+			BigDecimal maxImportoCalcolatoMod = model.getDisponibilitaComponentePerAnnullaModifiche()!= null? model.getDisponibilitaComponentePerAnnullaModifiche():new BigDecimal(0);
+			
+			//task-63: se statoProvvedimentoModifica è PROVVISORIO NON FACCIO I CONTROLLI SU DISPONBILITA'
+			if(!StatoOperativoAtti.PROVVISORIO.name().equals(statoProvvedimentoModifica)) {
+				if(residuo) {
+					// nel caso del residuo: non deve fare i controlli sul capitolo ma solo quello su importo impegno attualizzato
+					//> minImportoCalcolatoMod --> DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODPOSITIVA
+					if(!(importoModificaDaAnnullare.compareTo(minImportoCalcolatoMod) >= 0)) {
+						addErrore(ErroreFin.DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODPOSITIVA.getErrore(getNumeroMovDaAnnullare()));
+					}
+				} else {
+					//importo modifica (negato) deve essere compresa tra importo minimo (importo impegno attualizzato) e importo massimo (disp. capitolo)
+					if(!(importoModificaDaAnnullare.compareTo(minImportoCalcolatoMod) >= 0 
+							&& importoModificaDaAnnullare.compareTo(maxImportoCalcolatoMod) <= 0)) {
+						if (signumMod < 0) {
+							addErrore(ErroreFin.DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODNEGATIVA.getErrore(getNumeroMovDaAnnullare()));
+						} else {
+							addErrore(ErroreFin.DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODPOSITIVA.getErrore(getNumeroMovDaAnnullare()));
+						}	
+					}
+				} 
+			}	
+		} else {
+			// sono sul sub recupero la mia modifica, minimo e massimo
+			BigDecimal minImportoSubCalcolatoMod = new BigDecimal(0);
+			BigDecimal maxImportoSubCalcolatoMod = new BigDecimal(0);
+			
+			for (SubImpegno sub : model.getListaSubimpegni()) {
+				if ((sub.getNumeroBigDecimal().toString()).equals(model.getNumeroSubImpegnoMod())) {
+					for (ModificaMovimentoGestioneSpesa modifica: sub.getListaModificheMovimentoGestioneSpesa()) {
+						if(new Integer(modifica.getUid()).equals(new Integer(uidDaAnnullare))) {
+							signumMod=modifica.getImportoOld().signum();
+							importoModificaDaAnnullare = modifica.getImportoOld().negate();
+							minImportoSubCalcolatoMod =  sub.getDisponibilitaImpegnoModifica().negate();							
+							//task-63
+							statoProvvedimentoModifica = modifica.getAttoAmministrativo().getStatoOperativo();
+						}			
+					}
+				}
+			}
+			
+			maxImportoSubCalcolatoMod = model.getImpegnoInAggiornamento().getDisponibilitaSubimpegnare();
+			
+			//task-63: se statoProvvedimentoModifica è PROVVISORIO NON FACCIO I CONTROLLI SU DISPONBILITA'
+			if(!StatoOperativoAtti.PROVVISORIO.name().equals(statoProvvedimentoModifica)) {
+				if(residuo) {
+					// nel caso del residuo: non deve fare i controlli sul capitolo ma solo quelli sull'importo impegno attualizzato
+					//> minImportoCalcolatoMod --> DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODPOSITIVA
+					if(!(importoModificaDaAnnullare.compareTo(minImportoSubCalcolatoMod) >= 0)) {
+						addErrore(ErroreFin.DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODPOSITIVA.getErrore(getNumeroMovDaAnnullare()));
+					}
+				} else {
+					//importo modifica (negato) deve essere compresa tra importo minimo e importo massimo (presi dall'oggetto)
+					if(!(importoModificaDaAnnullare.compareTo(minImportoSubCalcolatoMod) >= 0 
+							&& importoModificaDaAnnullare.compareTo(maxImportoSubCalcolatoMod) <= 0)) {
+						if (signumMod < 0) {
+							addErrore(ErroreFin.DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODNEGATIVA.getErrore(getNumeroMovDaAnnullare()));
+						} else {
+							addErrore(ErroreFin.DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODPOSITIVA.getErrore(getNumeroMovDaAnnullare()));
+						}
+					}
+				}
+			} else {
+				//task-63: se lo stato è provvisorio e solo se la modifica (del sub, non vale per impegno) è negativa 
+				//         aggiungo un controllo per non sfondare il capitolo
+				if (signumMod < 0) {
+					if(!(importoModificaDaAnnullare.compareTo(maxImportoSubCalcolatoMod) <= 0)) {
+						addErrore(ErroreFin.DISPONIBILITA_INCONGRUENTE_IMPEGNO_MODNEGATIVA.getErrore(getNumeroMovDaAnnullare()));
+					}
+				}
+			}
+		}
+		
+		if(hasErrori()){
+			return INPUT;
+		}
 		
 		//3. Invochiamo il servizio:
-		AnnullaMovimentoSpesaResponse response = movimentoGestionService.annullaMovimentoSpesa(requestAnnulla);
+		AnnullaMovimentoSpesaResponse response = movimentoGestioneFinService.annullaMovimentoSpesa(requestAnnulla);
 		
 		//controllo errori nella response:
 		if(isFallimento(response)){
@@ -323,7 +447,7 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 		impegno.setListaModificheMovimentoGestioneSpesa(listaMGP);
 		
 		request.setImpegno(impegno);
-							
+
 		return request;
 	}
 	
@@ -357,7 +481,14 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 	    mc.setDataInserimento(modifica.getDataEmissione());
 	    mc.setDataModifica(modifica.getDataModifica());
 	    mc.setStatoOperativo(modifica.getStatoOperativoModificaMovimentoGestione().name());
-	    mc.setDataStatoOperativo(modifica.getDataModificaMovimentoGestione());
+	    //SIAC-8118
+	    mc.setDataStatoOperativo(modifica.getDataFromStatoOperativo());
+	    //SIAC-7349 Inizio  SR180 MC 08/04/2020
+	    mc.setListaModificheMovimentoGestioneSpesaCollegata(modifica.getListaModificheMovimentoGestioneSpesaCollegata());
+	    //SIAC-7349 Fine  SR180 MC 08/04/2020
+	    
+	    //SIAC-8834
+	    mc.setImpegnoAssociato(modifica.getImpegno());
 	    
 	    //Reimputazione:
 	    mc = settaDatiReimputazioneInModificaConsulta(modifica, mc);
@@ -450,7 +581,7 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 		    }
 	    }
 
-		String descImpegno = model.getImpegnoInAggiornamento().getAnnoMovimento() + "/" + model.getImpegnoInAggiornamento().getNumero() + 
+		String descImpegno = model.getImpegnoInAggiornamento().getAnnoMovimento() + "/" + model.getImpegnoInAggiornamento().getNumeroBigDecimal() + 
 			" - " + ((model.getImpegnoInAggiornamento().getDescrizione() != null)? model.getImpegnoInAggiornamento().getDescrizione() : "") +
 			" - " + convertiBigDecimalToImporto(model.getImpegnoInAggiornamento().getImportoAttuale()) + 
 			" (" +  model.getImpegnoInAggiornamento().getDescrizioneStatoOperativoMovimentoGestioneSpesa() + " dal " + convertDateToString(model.getImpegnoInAggiornamento().getDataStatoOperativoMovimentoGestioneSpesa()) + ")";	
@@ -459,7 +590,7 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 	    if (modifica.getNumeroSubImpegno() != null) {
 	    	SubImpegno sImp = getSubImpegno(modifica.getNumeroSubImpegno(), model.getListaSubimpegni());
 		    if (sImp != null) {
-				String descSub = sImp.getNumero() +
+				String descSub = sImp.getNumeroBigDecimal() +
 					" (" +  sImp.getDescrizioneStatoOperativoMovimentoGestioneSpesa() + " dal " + convertDateToString(sImp.getDataStatoOperativoMovimentoGestioneSpesa()) + ")";	
 				mc.setDescSub(descSub);
 		    }
@@ -478,7 +609,7 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 	 */
 	private SubImpegno getSubImpegno (Integer numero, List<SubImpegno> elencoSubImp) {
 		if (elencoSubImp != null) for (SubImpegno subImpegno : elencoSubImp) {
-			if (subImpegno.getNumero().intValue() == numero) return subImpegno;
+			if (subImpegno.getNumeroBigDecimal().intValue() == numero) return subImpegno;
 		}
 		return null;
 	}
@@ -512,12 +643,12 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 		return uidModDaAnnullare;
 	}
 
-
+	
 	public void setUidModDaAnnullare(String uidModDaAnnullare) {
 		this.uidModDaAnnullare = uidModDaAnnullare;
 	}
 
-
+	
 	public String getNumeroMovDaAnnullare() {
 		return numeroMovDaAnnullare;
 	}
@@ -546,6 +677,77 @@ public class ElencoMovimentoSpesaAction extends ActionKeyAggiornaImpegno {
 	public void setRicaricaDopoInserimento(boolean ricaricaDopoInserimento) {
 		this.ricaricaDopoInserimento = ricaricaDopoInserimento;
 	}
+
+	/**
+	 * @return the listaModificheSpeseCollegata
+	 */
+	public List<ModificaMovimentoGestioneSpesaCollegata> getListaModificheSpeseCollegata() {
+		return listaModificheSpeseCollegata;
+	}
+
+	/**
+	 * @param listaModificheSpeseCollegata the listaModificheSpeseCollegata to set
+	 */
+	public void setListaModificheSpeseCollegata(
+			List<ModificaMovimentoGestioneSpesaCollegata> listaModificheSpeseCollegata) {
+		this.listaModificheSpeseCollegata = listaModificheSpeseCollegata;
+	}
+	
+	//SIAC-7349 - MR - Start - 05/06/2020: Metodo per settare la disponibilita componente ad ogni modifica da annullare
+	private void uploadDisponibilitaPerSingolaModifica() {				
+		if(model.getImpegnoInAggiornamento().getAnnoMovimento() < sessionHandler.getAnnoBilancio()){
+			//SIAC-7349
+			model.setDisponibilitaComponentePerAnnullaModifiche(BigDecimal.ZERO);
+		} else if(model.getImpegnoInAggiornamento().isFlagDaRiaccertamento()){		
+			model.setDisponibilitaComponentePerAnnullaModifiche(BigDecimal.ZERO);
+		} else {
+			if(model.getStep1Model().getAnnoImpegno().intValue() == model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() ){							
+				model.setDisponibilitaComponentePerAnnullaModifiche(getDisponibilitaModifica(0));				
+			}else if(model.getStep1Model().getAnnoImpegno().intValue()  == (model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() +1) ){
+				model.setDisponibilitaComponentePerAnnullaModifiche(getDisponibilitaModifica(1));
+			}else if(model.getStep1Model().getAnnoImpegno().intValue()  == (model.getImpegnoInAggiornamento().getCapitoloUscitaGestione().getAnnoCapitolo().intValue() +2) ){
+							//SIAC-7349 fare in modo di ottenere il valore degli importi capitolo della componente
+				model.setDisponibilitaComponentePerAnnullaModifiche(getDisponibilitaModifica(2));
+
+			}
+		}
+			
+	}
+	
+	private BigDecimal getDisponibilitaModifica(int i) {
+
+		if(model.getImportiComponentiCapitolo() == null || model.getImportiComponentiCapitolo().isEmpty()){
+			return BigDecimal.ZERO;	
+		}else{
+			if(i==0){				
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno0().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}				
+			}else if(i==1){
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno1().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}
+			}else if (i==2){
+				if(model.getImportiComponentiCapitolo().get(2) != null 
+						&& model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2() !=null &&
+						model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2().getImporto() != null){
+					return  model.getImportiComponentiCapitolo().get(2).getDettaglioAnno2().getImporto();					
+				}else{
+					return BigDecimal.ZERO;	
+				}
+			}			
+		}			
+		return BigDecimal.ZERO;	
+	}
+		//SIAC-7349 - End
 
 
 	

@@ -20,10 +20,10 @@ SPDX-License-Identifier: EUPL-1.2
 			<div class="row-fluid">
 
 				<div class="span12 contentPage">
+					<%-- SIAC-7952 rimuovo .do dalla action --%>
+					<s:form id="aggiornaSediSecondarie" action="aggiornaSediSecondarie"	method="post">
 
-					<s:form id="aggiornaSediSecondarie" action="aggiornaSediSecondarie.do"	method="post">
-
-<s:include value="/jsp/include/actionMessagesErrors.jsp" />
+						<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 
 						<ul class="nav nav-tabs">
 						
@@ -31,14 +31,16 @@ SPDX-License-Identifier: EUPL-1.2
 							<s:hidden name="soggetto"/> 
 							<s:hidden id="toggleSedeAperto" name="toggleSedeAperto"/> 
 					 	
-					    <s:if test="fromGestisciSede">
-						    <li class="active"><a href="#">Sedi Secondarie</a></li>
-					    </s:if>
-					    <s:else>
-							<li><s:a action="aggiornaSoggetto" method="doExecute">Soggetto</s:a></li>
-							<li class="active"><a href="#">Sedi Secondarie</a></li>
-							<li><s:a action="modalitaPagamentoSoggetto">Modalit&agrave; pagamento</s:a></li>
-						</s:else>
+						    <s:if test="fromGestisciSede">
+							    <li class="active"><a href="#">Sedi Secondarie</a></li>
+						    </s:if>
+						    <s:else>
+						    	<!-- task-151 -->
+								<li><s:a action="aggiornaSoggetto_doExecute">Soggetto</s:a></li>
+								<li class="active"><a href="#">Sedi Secondarie</a></li>
+								<li><s:a action="modalitaPagamentoSoggetto">Modalit&agrave; pagamento</s:a></li>
+							</s:else>
+							
 						</ul>
 
 		<h3>Codice Soggetto: <s:property value="dettaglioSoggetto.codiceSoggetto" /> 
@@ -46,8 +48,9 @@ SPDX-License-Identifier: EUPL-1.2
 		 (<s:property value="dettaglioSoggetto.statoOperativo" /> dal <s:property value="%{dettaglioSoggetto.dataValidita}" />) </h3>     
 
 						<h4>Sedi secondarie</h4>
+						<!-- task-131 aggiornaSediSecondarie.do --> 
 						<display:table name="listaSecondariaSoggetto"  class="table tab_left table-hover" summary="riepilogo sedi secondarie"
-					         requestURI="aggiornaSediSecondarie.do"
+					         requestURI="aggiornaSediSecondarie"
 							 uid="tabSediSecondarieID"  >
 						 	 <display:column title="Denominazione" property="denominazione" />
 							 <display:column title="Indirizzo">
@@ -91,7 +94,8 @@ SPDX-License-Identifier: EUPL-1.2
 		     			     			<li><a id="linkElimina_<s:property value="%{#attr.tabSediSecondarieID_rowNum}"/>" href="#msgElimina" data-toggle="modal" class="linkEliminaSede">elimina</a></li>
 		     			 			</s:if>
 									<s:if test="isAbilitato(7, '#attr.tabSediSecondarieID.statoOperativoSedeSecondaria', '#attr.tabSediSecondarieID.utenteModifica', '#attr.tabSediSecondarieID.utentePropostaModifica')">
-										<s:url id="validaUrl" method="gestioneValidaSede">
+										<%-- task-131 <s:url id="validaUrl" method="gestioneValidaSede"> --%>
+										<s:url var="validaUrl" action="aggiornaSediSecondarie_gestioneValidaSede">
 											<s:param name="idSedeSecondaria" value="%{#attr.tabSediSecondarieID_rowNum}" />
 										</s:url>
 										<li><a href="<s:property value="%{validaUrl}"/>">valida</a></li>                        	
@@ -115,7 +119,7 @@ SPDX-License-Identifier: EUPL-1.2
 						</p>
 						<a id="openAggSede" href="#insInd" data-toggle="collapse" data-target="#insInd"></a>
 						<div id="insInd" class="collapse">
-<s:include value="/jsp/soggetto/include/salvaSedeSnippet.jsp" />
+							<s:include value="/jsp/soggetto/include/salvaSedeSnippet.jsp" />
 						</div>
 
 						<s:hidden id="idSedeSecondariaDaEliminare" name="idSedeSecondariaDaEliminare"/>
@@ -134,7 +138,8 @@ SPDX-License-Identifier: EUPL-1.2
 							</div>
 							<div class="modal-footer">
 								<button class="btn" data-dismiss="modal" aria-hidden="true">no,	indietro</button>
-								<s:submit id="eliminaBtn" name="btnEliminaSede" value="si, prosegui" cssClass="btn btn-primary" method="gestioneEliminaSede"/>
+								<!-- task-131 <s:submit id="eliminaBtn" name="btnEliminaSede" value="si, prosegui" cssClass="btn btn-primary" method="gestioneEliminaSede"/> -->
+								<s:submit id="eliminaBtn" name="btnEliminaSede" value="si, prosegui" cssClass="btn btn-primary" action="aggiornaSediSecondarie_gestioneEliminaSede"/>
 							</div>
 						</div>
 						<!--/modale elimina -->
@@ -151,7 +156,8 @@ SPDX-License-Identifier: EUPL-1.2
 							</div>
 							<div class="modal-footer">
 								<button class="btn" data-dismiss="modal" aria-hidden="true">no,	indietro</button>
-								<s:submit id="annullaBtn" name="btnAnnullaSede" value="si, prosegui" cssClass="btn btn-primary" method="gestioneAnnullaSede"/>
+								<!-- task-131 <s:submit id="annullaBtn" name="btnAnnullaSede" value="si, prosegui" cssClass="btn btn-primary" method="gestioneAnnullaSede"/> -->
+								<s:submit id="annullaBtn" name="btnAnnullaSede" value="si, prosegui" cssClass="btn btn-primary" action="aggiornaSediSecondarie_gestioneAnnullaSede"/>
 							</div>
 						</div>
 						<!--/modale annulla -->
@@ -163,7 +169,7 @@ SPDX-License-Identifier: EUPL-1.2
   	   
   	   Jira-130
   	   
-  	   <s:submit name="salva" value="salva" method="salvaGenerale" cssClass="btn btn-primary pull-right" /> 
+  	   //<s:submit name="salva" value="salva" method="salvaGenerale" cssClass="btn btn-primary pull-right" /> 
   	   -->
   </p>  	                                 
 
@@ -195,7 +201,8 @@ SPDX-License-Identifier: EUPL-1.2
 		$(".consultaSedeSecondaria").click(function() {
 			var id = $(this).attr("id").split("_");
 			$.ajax({
-				url: '<s:url method="consultaSede"/>',
+				// task-131 url: '<s:url method="consultaSede"/>',
+				url: '<s:url action="aggiornaSediSecondarie_consultaSede"/>',
 				data: 'idSedeSecondaria=' + id[1],
 				success: function(data)  {
 					consSede.html(data);
@@ -206,7 +213,8 @@ SPDX-License-Identifier: EUPL-1.2
 		$(".aggiornaSedeSecondaria").click(function() {
 			var id = $(this).attr("id").split("_");
 			$.ajax({
-				url: '<s:url method="modificaSede"/>',
+				// task-131 url: '<s:url method="modificaSede"/>',
+				url: '<s:url action="aggiornaSediSecondarie_modificaSede"/>',
 				data: 'idSedeSecondaria=' + id[1],
 				success: function(data)  {
 					insSede.html(data);
@@ -218,7 +226,8 @@ SPDX-License-Identifier: EUPL-1.2
 		});
 		$("#annullaInserimento").click(function() {
 			$.ajax({
-				url: '<s:url method="pulisciSede"/>',
+				//task-131 url: '<s:url method="pulisciSede"/>',
+				url: '<s:url action="aggiornaSediSecondarie_pulisciSede"/>',
 				success: function(data)  {
 					insSede.html(data);
 				}

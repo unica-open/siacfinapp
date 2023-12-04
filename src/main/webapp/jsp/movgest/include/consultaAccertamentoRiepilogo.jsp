@@ -70,7 +70,8 @@ SPDX-License-Identifier: EUPL-1.2
 			
 			<tr>
 				<td class="span4 sBold textRight bottomGreen">Disponibile a incassare (solo Ord)</td>
-				<td class="span3"><s:property value="getText('struts.money.format', {movimento.disponibileIncassareSoloOrd})" /></td>
+				<%-- SIAC-8491 --%>
+				<td class="span3"><s:property value="getText('struts.money.format', {dettaglioImportiAcc.disponibileIncassareSoloOrd})" /></td>
 				<td class="span1"></td>
 				<td class="span4"></td>
 			</tr>

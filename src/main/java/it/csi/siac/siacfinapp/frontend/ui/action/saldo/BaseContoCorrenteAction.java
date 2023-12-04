@@ -4,7 +4,7 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.saldo;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import it.csi.siac.siacfinapp.frontend.ui.action.GenericFinAction;

@@ -27,10 +27,7 @@ SPDX-License-Identifier: EUPL-1.2
 				<label class="radio inline" for="sub">Sub </label>
 			  </span>
 			  <s:textfield id="numeroSub" cssClass="lbTextSmall span2" name="nuovaLiquidazioneModel.numeroSub" onkeyup="return checkItNumbersOnly(event)"></s:textfield>
-			  <span class="al">
-				<label class="radio inline" for="mutuo">Mutuo </label>
-			  </span>
-			  <s:textfield id="numeroMutuo" cssClass="lbTextSmall span2" name="nuovaLiquidazioneModel.numeroMutuoPopupString" onkeyup="return checkItNumbersOnly(event)"></s:textfield>
+
 			  <span class="radio guidata"><a id="compilazioneGuidataImpegnoStep1" href="#guidaImpegno" data-toggle="modal" class="btn btn-primary">compilazione guidata</a></span>
 			</div>
 		</div>
@@ -47,7 +44,8 @@ SPDX-License-Identifier: EUPL-1.2
 				$("#numeroimpegno").val($("#numeroImpegno").val());
 			}
 			$.ajax({
-				url: '<s:url method="pulisciRicercaImpegno"/>',
+				//task-131 url: '<s:url method="pulisciRicercaImpegno"/>',
+				url: '<s:url action="%{#pulisciRicercaImpegnoAction}"/>',
 			    success: function(data)  {
 			    	$("#refreshPopupModal").html(data);
 				}

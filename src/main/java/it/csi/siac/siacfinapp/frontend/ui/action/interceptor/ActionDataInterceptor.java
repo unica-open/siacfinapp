@@ -11,16 +11,22 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import xyz.timedrain.arianna.plugin.BreadCrumbInterceptor;
+import xyz.timedrain.arianna.plugin.BreadCrumbTrail;
+import xyz.timedrain.arianna.plugin.Crumb;
+
+/*
 import org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor;
 import org.softwareforge.struts2.breadcrumb.BreadCrumbTrail;
 import org.softwareforge.struts2.breadcrumb.Crumb;
+*/
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
-import it.csi.siac.siaccommon.util.log.LogUtil;
+import it.csi.siac.siaccommonapp.util.log.LogWebUtil;
 import it.csi.siac.siacfinapp.frontend.ui.action.GenericFinAction;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.GenericFinModel;
@@ -28,7 +34,7 @@ import it.csi.siac.siacfinapp.frontend.ui.model.GenericFinModel;
 public class ActionDataInterceptor extends AbstractInterceptor {
 	private static final long serialVersionUID = 1L;
 
-	private transient LogUtil log = new LogUtil(this.getClass());
+	private transient LogWebUtil log = new LogWebUtil(this.getClass());
 	
 	private static Map<String, Method> METHOD_CACHE = new HashMap<String, Method>();
 	
@@ -203,6 +209,10 @@ public class ActionDataInterceptor extends AbstractInterceptor {
 		String nameSpaceAK= proxy.getNamespace();
 		GenericFinAction<M2> gfac= null;
 		
+		/* task-155 : con check a true errori su tasto indietro
+		 *  (quando aggiunge Action per il recupero del bean - es. _doExecuteAction)
+		 */
+		/*
 		//itero:
 		for(Crumb c: breadCrumb.getCrumbs()){
 			if(check){
@@ -211,11 +221,12 @@ public class ActionDataInterceptor extends AbstractInterceptor {
 				String actionKeyCrumb= gfac.getActionKey();
 				getActionDataContainer(gfaAction.getSession()).remove(actionKeyCrumb);
 			}
+			
 			if(nameAK.equals(c.getAction()) && nameSpaceAK.equals(c.getNamespace())){
 				//set del check a true:
 				check=true;
-			}
-		}
+			} 
+		} */
 	}
 	
 	//GETTER E SETTER:

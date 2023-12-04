@@ -35,8 +35,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-        <s:form id="aggiornaRecapiti" action="aggiornaRecapiti.do" method="post">
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form id="aggiornaRecapiti" action="aggiornaRecapiti" method="post">
 
 <s:include value="/jsp/include/actionMessagesErrors.jsp" />
         
@@ -46,7 +46,7 @@ SPDX-License-Identifier: EUPL-1.2
 		    <li><s:a action="modalitaPagamentoSoggetto">Modalit&agrave; pagamento</s:a></li>
 	    </ul>
      
-              <div id="MyWizard" class="wizard">
+              <div id="MyWizard" class="wizard">	
 					<ul class="steps">
 						<li data-target="#step1" class="complete"><span class="badge  badge-success">1</span>Anagrafica<span class="chevron"></span></li>
 						<li data-target="#step2" class="active"><span class="badge  badge-success">2</span>Recapiti<span class="chevron"></span></li>
@@ -63,18 +63,25 @@ SPDX-License-Identifier: EUPL-1.2
 
         <!--#include virtual="sogg_contatti.html" -->	
         
+        <s:set var="salvaRecapitoAction" value="%{'aggiornaRecapiti_salvaRecapito'}" />	          
+	    <s:set var="pulisciContattoAction" value="%{'aggiornaRecapiti_pulisciContatto'}" />	          
+	    <s:set var="pulisciIndirizziAction" value="%{'aggiornaRecapiti_pulisciIndirizzi'}" />	          
+	    <s:set var="salvaIndirizzoAction" value="%{'aggiornaRecapiti_salvaIndirizzo'}" />	
+	    <s:set var="aggiornaRecapitiUrl" value="%{'aggiornaRecapiti'}"/>          
+	     
          <s:include value="/jsp/soggetto/include/recapiti.jsp" >
-         	<s:param name="aggiornaRecapitiUrl" value="'aggiornaRecapiti.do'" />
-         </s:include>
-         	
+         	<s:param name="aggiornaRecapitiUrl" value="#aggiornaRecapitiUrl"/>
+       </s:include>  	
                                           
              <p>  
              
                 <s:include value="/jsp/include/indietro.jsp" />  
              
             <!--   <a class="btn btn-link" href="">annulla</a> -->
-              <s:submit name="annulla" value="annulla" method="annullaRecapito" cssClass="btn"  /> 
-              <s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary pull-right"  />   
+              <!-- task-131 <s:submit name="annulla" value="annulla" method="annullaRecapito" cssClass="btn"  /> --> 
+              <!-- task-131 <s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary pull-right"  /> -->   
+              <s:submit name="annulla" value="annulla" action="aggiornaRecapiti_annullaRecapito" cssClass="btn"  /> 
+              <s:submit name="salva" value="salva" action="aggiornaRecapiti_salva" id="salvaId" cssClass="btn btn-primary pull-right"  />   
               
               </p>
              </div>

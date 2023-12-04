@@ -43,8 +43,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage"> 
-		
-				<s:form id="mainForm" method="post" action="elencoDocumentiPerRegolazioneCarta.do">
+				<%-- SIAC-7952 rimuovo .do dalla action --%>
+				<s:form id="mainForm" method="post" action="elencoDocumentiPerRegolazioneCarta">
 				
 				    
 				
@@ -173,8 +173,8 @@ SPDX-License-Identifier: EUPL-1.2
 						<p>
 							<s:include value="/jsp/include/indietro.jsp" />
 <!-- 							<a id="consolidaReg" data-toggle="modal" href="#consolidaRegModal"  class="btn btn-primary pull-right" >collega</a> -->
-					        <s:submit id="eseguiCollega" cssClass="btn btn-primary pull-right freezePagina"
-       						method="preCheckCollegaDocumento" value="collega" name="collega" />
+					        <!--task-131 <s:submit id="eseguiCollega" cssClass="btn btn-primary pull-right freezePagina" method="preCheckCollegaDocumento" value="collega" name="collega" />-->
+					        <s:submit id="eseguiCollega" cssClass="btn btn-primary pull-right freezePagina" action="elencoDocumentiPerRegolazioneCarta_preCheckCollegaDocumento" value="collega" name="collega" />
 						</p>  
 					
 					
@@ -195,8 +195,8 @@ SPDX-License-Identifier: EUPL-1.2
 					      </div>
 					      <div class="modal-footer">
 					        <button class="btn" data-dismiss="modal" aria-hidden="true">no</button>
-					        <s:submit id="eseguiCollega1" cssClass="btn btn-primary pull-right freezePagina"
-			        		 method="preCheckControlliDiMerito" value="si" name="si" data-dismiss="modal" />
+					        <!-- task-131 <s:submit id="eseguiCollega1" cssClass="btn btn-primary pull-right freezePagina" method="preCheckControlliDiMerito" value="si" name="si" /> -->
+					        <s:submit id="eseguiCollega1" cssClass="btn btn-primary pull-right freezePagina" action="elencoDocumentiPerRegolazioneCarta_preCheckControlliDiMerito" value="si" name="si" />				 
 					      </div>
 						</div>   
 		
@@ -213,8 +213,8 @@ SPDX-License-Identifier: EUPL-1.2
 						      </div>
 						      <div class="modal-footer">
 						        <button class="btn" data-dismiss="modal" aria-hidden="true">no</button>
-						        <s:submit id="eseguiCollega2" cssClass="btn btn-primary pull-right freezePagina"
-				        		 method="collega" value="si" name="si" data-dismiss="modal" />
+						        <!-- task-131 <s:submit id="eseguiCollega2" cssClass="btn btn-primary pull-right freezePagina" method="collega" value="si" name="si" /> -->
+						        <s:submit id="eseguiCollega2" cssClass="btn btn-primary pull-right freezePagina" action="elencoDocumentiPerRegolazioneCarta_collega" value="si" name="si" />
 						      </div>
 						</div>  
 					

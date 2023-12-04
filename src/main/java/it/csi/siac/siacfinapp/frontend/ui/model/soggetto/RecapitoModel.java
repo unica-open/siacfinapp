@@ -44,6 +44,8 @@ public class RecapitoModel extends SoggettoModel{
 	private String avviso;
 	
 	
+
+	
 	//GETTER E SETTER:
 	
 	public String getTipo() {

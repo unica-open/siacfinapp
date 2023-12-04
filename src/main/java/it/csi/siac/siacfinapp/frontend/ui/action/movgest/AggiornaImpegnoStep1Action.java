@@ -7,11 +7,12 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -20,20 +21,24 @@ import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaProgetto;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipiAmbito;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipiAmbitoResponse;
 import it.csi.siac.siacbilser.model.VincoloCapitoli;
+import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabile;
+import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabileResponse;
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.model.StrutturaAmministrativoContabile;
 import it.csi.siac.siaccorser.model.TipologiaGestioneLivelli;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siaccorser.model.paginazione.ListaPaginata;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.AccertamentoRicercaModel;
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ErroreMovGestModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProgettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.EsistenzaProgettoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamentoPerChiaveOttimizzato;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamentoPerChiaveOttimizzatoResponse;
@@ -43,6 +48,7 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOtt
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.MovimentoGestione;
+import it.csi.siac.siacfinser.model.StrutturaAmministrativoContabileFlat;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesa;
 import it.csi.siac.siacfinser.model.movgest.VincoloImpegno;
@@ -53,6 +59,7 @@ import it.csi.siac.siacgenser.model.ProgettoModelDetail;
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
 public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
+
 	private String numeroImpegno;
 	private String annoImpegno;
 	private String arrivoDaInserimento;
@@ -66,7 +73,15 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 	
 	private final String DETTAGLIO_IMPORTO_CON_VINCOLO = "dettaglioImportoConVincolo";
 	
+	private boolean ricaricaStrutturaAmministrativa = true;
 	
+	public boolean isRicaricaStrutturaAmministrativa() {
+		return ricaricaStrutturaAmministrativa;
+	}
+
+	public void setRicaricaStrutturaAmministrativa(boolean ricaricaStrutturaAmministrativa) {
+		this.ricaricaStrutturaAmministrativa = ricaricaStrutturaAmministrativa;
+	}
 	public AggiornaImpegnoStep1Action () {
 	   	//setto la tipologia di oggetto trattato:
 		oggettoDaPopolare = OggettoDaPopolareEnum.IMPEGNO;
@@ -97,13 +112,17 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 	@Override
 	public void prepare() throws Exception {
 		setMethodName("prepare");
+
 		//invoco il prepare della super classe:
 		super.prepare();
 		
 		//setto il titolo:
 		this.model.setTitolo("Aggiorna Impegno - Dati Impegno");
 		
+		
 		this.model.setOperazioneAggiorna(true);
+		
+	
 		try{	
 			if(model.getListaTipiProvvedimenti()==null || model.getListaTipiProvvedimenti().size()==0){
 				caricaTipiProvvedimenti();
@@ -121,6 +140,9 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			model.getStep1Model().setDaRiaccertamento(buildListaSiNo());
 			model.getStep1Model().setListflagAttivaGsa(buildListaSiNo());
 			
+			//SIAC-6997
+			model.getStep1Model().setDaReanno(buildListaSiNo());
+			
 			model.getStep1Model().setDaPrenotazione(buildListaSiNo());
 		    model.getStep1Model().setDiCassaEconomale(buildListaSiNo());
 		    
@@ -131,21 +153,160 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		    
 		    //tipo debito siope:
 		    model.getStep1Model().setScelteTipoDebitoSiope(buildListaTipoDebitoSiopePerImpegni());
-		    
 		}catch(Exception e){			
 			log.error("prepare", e.getMessage());
 		}
 		
 		setVisualizzaLinkConsultaModificheProvvedimento(true);
 		
+		
 		setAbilitazioni();
+		
+		//SIAC-8034
+		resetPageNumberTableId("ricercaSubImpegniID");
 
+	}
+	
+	//SIAC-8075-CMTO
+	public boolean isMovimentoResiduo() {
+		return model.getStep1Model().getAnnoImpegno()
+				.compareTo(sessionHandler.getAnnoBilancio()) < 0;
+	}
+	
+	/**
+	 * metodo execute della action
+	 */
+	@Override
+	@BreadCrumb("%{model.titolo}")
+	public String execute() throws Exception {
+		
+		//info per debug:
+		setMethodName("execute");
+		
+		//ripopoliamo i dati provv dal model support:
+		ripopolaProvvedimentoDaSupport();
+		//siac-6997 spostato piu sotto
+//		//Anno capitolo
+//		if (sessionHandler.getAnnoEsercizio() != null && !"".equalsIgnoreCase(sessionHandler.getAnnoEsercizio())) {
+//			model.getStep1Model().getCapitolo().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
+//			model.getCapitoloRicerca().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
+//		}
+
+		//Anno impegno
+		if(getAnnoImpegno()!=null){
+			model.getStep1Model().setAnnoImpegno(Integer.valueOf(getAnnoImpegno()));
+			model.getStep1Model().setNumeroImpegno(Integer.valueOf(getNumeroImpegno()));
+		} else {
+			model.getStep1Model().setAnnoImpegno(model.getAnnoImpegno());
+			model.getStep1Model().setNumeroImpegno(model.getNumeroImpegno());
+		}
+
+		//arrivo da inserimento o da indietro:
+		if(getArrivoDaInserimento()!=null){
+			if(getArrivoDaInserimento().equalsIgnoreCase(SI)){
+				model.setFlagIndietro(true);
+			}	
+		} else if(model.getFlagIndietro()==null){
+			model.setFlagIndietro(false);
+		}
+		
+		// ripulisco vicoli - task-214
+		model.getStep1Model().setListaVincoliImpegno(null);
+		
+		//transazione elementare:
+		if(teSupport==null){
+			pulisciTransazioneElementare();
+		}
+		// utilizzato per la transazione e le condizioni di obbligatorieta
+		teSupport.setOggettoAbilitaTE(OggettoDaPopolareEnum.IMPEGNO.toString());
+		
+		if(forceReload){
+			
+			//CARICAMENTO AVANZOVINCOLI:
+			caricaListaAvanzovincolo();
+			initSceltaAccertamentoAvanzoList();
+			//
+			model.getStep1Model().getSoggetto();
+			sessionHandler.cleanSafelyExcluding(FinSessionParameter.IMPEGNO_CERCATO);
+			caricaDati(false);
+			sessionHandler.setParametro(FinSessionParameter.IMPEGNO_CERCATO, getImpegnoToUpdate());
+			
+			// Jira - 1298 altrimenti carica ad ogni giro tutti i dati da bilancio
+			if (caricaListeBil(WebAppConstants.CAP_UG)) {
+				return INPUT;
+			}
+			
+			if(model.getImpegnoInAggiornamento().getProgetto()!=null && model.getImpegnoInAggiornamento().getProgetto().getCodice()!=null){
+				popolaProgetto(model.getImpegnoInAggiornamento().getProgetto());
+			}
+			
+			if(((MovimentoGestione) sessionHandler.getParametro(FinSessionParameter.IMPEGNO_CERCATO)).isFlagSoggettoDurc()){
+				model.getStep1Model().setSoggettoDurc(SI);
+			} else {
+				model.getStep1Model().setSoggettoDurc(NO);
+			}
+			
+		}
+		
+		if (sessionHandler.getAnnoEsercizio() != null && !"".equalsIgnoreCase(sessionHandler.getAnnoEsercizio())) {
+			model.getStep1Model().getCapitolo().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
+			model.getCapitoloRicerca().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
+		}
+		
+		//SIAC-7406 commentata riga dopo l'aggiunta del campo reanno SIAC-6997
+//		if(((MovimentoGestione) sessionHandler.getParametro(FinSessionParameter.IMPEGNO_CERCATO)).isFlagDaRiaccertamento()){
+//			model.getStep1Model().setRiaccertato(SI);
+//		} else {
+//			model.getStep1Model().setRiaccertato(NO);
+//		}
+		
+		//labels aggiorna:
+		caricaLabelsAggiorna(1);
+		
+		//Metodo di salvataggio del model in model di cache
+		creaMovGestModelCache();
+		
+		//controlliamo lo stato provvedimento:
+		controllaStatoProvvedimento();
+		
+		model.setStep1ModelSubimpegno(new GestisciImpegnoStep1Model());
+		model.setStep1ModelSubimpegnoCache(new GestisciImpegnoStep1Model());
+		
+		//disabilito il caricamento degli alberi inutili per questo scnario (in AjaxAction.java):
+		teSupport.setRicaricaAlberoPianoDeiConti(false);
+		//CR-2023
+		teSupport.setRicaricaStrutturaAmministrativa(false);
+		teSupport.setRicaricaSiopeSpesa(false);
+		//////////////////////////////////////////////////////////////////////////////////////////
+
+		// setto l'anno capitolo per la ricerca guidata del vincolo
+		if(model.getStep1Model().getCapitolo()!=null && model.getStep1Model().getCapitolo().getAnno()!=null){
+			model.getStep1Model().setAccertamentoRicerca(new AccertamentoRicercaModel());
+			model.getStep1Model().getAccertamentoRicerca().setAnnoCapitolo(String.valueOf(model.getStep1Model().getCapitolo().getAnno()));
+		}
+		
+//		//siac-6997 era su
+//		recuperaDescrizioneStrutturaCompetente();
+		
+		calcolaTotaliUtilizzabile();
+		
+		calcolaTestataVincoli();
+		
+		setAbilitazioni();
+		
+		if(salvaDaSDFANormale()){
+			addActionWarningFin(ErroreFin.WARNING_IMPEGNO_SDF_CON_DISPONIBILE);
+		}
+		
+		leggiEventualiErroriEWarningAzionePrecedente(true);
+		
+		return SUCCESS;
 	}
 
 	private void caricaListaAmbiti() {
 		
 		RicercaTipiAmbito request = model.creaRequestRicercaTipiAmbito();
-		request.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		request.setAnno(sessionHandler.getAnnoBilancio());
 		RicercaTipiAmbitoResponse response = progettoService.ricercaTipiAmbito(request);
 
 		model.setListaTipiAmbito(response.getTipiAmbito());
@@ -158,7 +319,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 	
 	public boolean isModificabileFlagFrazionabile(){
 		//aggiornabile solo se provvisiorio
-		if(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_PROVVISORIO)){
+		if(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_PROVVISORIO)){
 			return true;
 		}else {
 			return false;
@@ -207,11 +368,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 	 * @return
 	 */
 	private boolean isImpegnoInAggiornamentoProvvisorio(){
-		if(Constanti.MOVGEST_STATO_PROVVISORIO.equals(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa())){
-			return true;
-		} else {
-			return false;
-		}
+		return CostantiFin.MOVGEST_STATO_PROVVISORIO.equals(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa());
 	}
 	
 	/**
@@ -219,11 +376,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 	 * @return
 	 */
 	private boolean isImpegnoInAggiornamentoDefintivoNonLiquidabile(){
-		if(Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equals(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa())){
-			return true;
-		} else {
-			return false;
-		}
+		return CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equals(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa());
 	}
 	
 	private void setAbilitazioni(){
@@ -236,12 +389,12 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			setFlagValido(false);
 			setFlagSoggettoValido(false);
 			//stato D o ND
-			if(!model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_PROVVISORIO)){
+			if(!model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_PROVVISORIO)){
 				setFlagValido(true);
 				
 				//nel caso in cui fossimo in predisposizione consuntivo, rimettiamo flagvalido a false
 				//in modo che l'importo ritorni modificabile:
-				
+				//SIAC-6865
 				if(bilPrecInPredisposizioneConsuntivo && isResiduo()){
 					setAbilitaModificaImporto(true);
 				} else {
@@ -250,6 +403,8 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 				//
 				
 				setFlagSoggettoValido(true);
+			}else if(StringUtils.isNotEmpty(model.getImpegnoInAggiornamento().getAnnoPrenotazioneOrigine())) {
+				setAbilitaModificaImporto(Boolean.FALSE);
 			}
 			
 			//JIRA  SIAC-3506 in caso di residuo con presenza di modifiche di importo valide, importo non modificabile:
@@ -266,7 +421,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			
 			// jira-1582
 			// se e' in stato N e ci sono dei sub allora posso modificare il soggetto
-			if(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa().equals(Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE)){
+			if(model.getImpegnoInAggiornamento().getStatoOperativoMovimentoGestioneSpesa().equals(CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE)){
 				if(!presenteAlmenoUnMovValido(model.getListaSubimpegni(), OggettoDaPopolareEnum.SUBIMPEGNO.toString())){
 					setFlagSoggettoValido(false);
 				}
@@ -278,127 +433,12 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 	}
 	
 	/**
-	 * metodo execute della action
-	 */
-	@Override
-	@BreadCrumb("%{model.titolo}")
-	public String execute() throws Exception {
-		
-		//info per debug:
-		setMethodName("execute");
-		
-		//ripopoliamo i dati provv dal model support:
-		ripopolaProvvedimentoDaSupport();
-		
-		//Anno capitolo
-		if (sessionHandler.getAnnoEsercizio() != null && !"".equalsIgnoreCase(sessionHandler.getAnnoEsercizio())) {
-			model.getStep1Model().getCapitolo().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
-			model.getCapitoloRicerca().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
-		}
-	
-		//Anno impegno
-		if(getAnnoImpegno()!=null){
-			model.getStep1Model().setAnnoImpegno(Integer.valueOf(getAnnoImpegno()));
-			model.getStep1Model().setNumeroImpegno(Integer.valueOf(getNumeroImpegno()));
-		} else {
-			model.getStep1Model().setAnnoImpegno(model.getAnnoImpegno());
-			model.getStep1Model().setNumeroImpegno(model.getNumeroImpegno());
-		}
-
-		//arrivo da inserimento o da indietro:
-		if(getArrivoDaInserimento()!=null){
-			if(getArrivoDaInserimento().equalsIgnoreCase(SI)){
-				model.setFlagIndietro(true);
-			}	
-		} else if(model.getFlagIndietro()==null){
-			model.setFlagIndietro(false);
-		}
-		
-		//transazione elementare:
-		if(teSupport==null){
-			pulisciTransazioneElementare();
-		}
-		// utilizzato per la transazione e le condizioni di obbligatorieta
-		teSupport.setOggettoAbilitaTE(OggettoDaPopolareEnum.IMPEGNO.toString());
-		
-		if(forceReload){
-			
-			//CARICAMENTO AVANZOVINCOLI:
-			caricaListaAvanzovincolo();
-			initSceltaAccertamentoAvanzoList();
-			//
-			
-			sessionHandler.cleanSafelyExcluding(FinSessionParameter.IMPEGNO_CERCATO);
-			caricaDati(false);
-			sessionHandler.setParametro(FinSessionParameter.IMPEGNO_CERCATO, getImpegnoToUpdate());
-			
-			// Jira - 1298 altrimenti carica ad ogni giro tutti i dati da bilancio
-			if (caricaListeBil(WebAppConstants.CAP_UG)) {
-				return INPUT;
-			}
-			
-			if(model.getImpegnoInAggiornamento().getProgetto()!=null && model.getImpegnoInAggiornamento().getProgetto().getCodice()!=null){
-				popolaProgetto(model.getImpegnoInAggiornamento().getProgetto());
-			}
-			
-			if(((MovimentoGestione) sessionHandler.getParametro(FinSessionParameter.IMPEGNO_CERCATO)).isFlagSoggettoDurc()){
-				model.getStep1Model().setSoggettoDurc(SI);
-			} else {
-				model.getStep1Model().setSoggettoDurc(NO);
-			}
-			
-		}
-		
-		if(((MovimentoGestione) sessionHandler.getParametro(FinSessionParameter.IMPEGNO_CERCATO)).isFlagDaRiaccertamento()){
-			model.getStep1Model().setRiaccertato(SI);
-		} else {
-			model.getStep1Model().setRiaccertato(NO);
-		}
-		
-		//labels aggiorna:
-		caricaLabelsAggiorna(1);
-		
-		//Metodo di salvataggio del model in model di cache
-		creaMovGestModelCache();
-		
-		//controlliamo lo stato provvedimento:
-		controllaStatoProvvedimento();
-		
-		model.setStep1ModelSubimpegno(new GestisciImpegnoStep1Model());
-		model.setStep1ModelSubimpegnoCache(new GestisciImpegnoStep1Model());
-		
-		//disabilito il caricamento degli alberi inutili per questo scnario (in AjaxAction.java):
-		teSupport.setRicaricaAlberoPianoDeiConti(false);
-		//CR-2023
-		teSupport.setRicaricaStrutturaAmministrativa(false);
-		teSupport.setRicaricaSiopeSpesa(false);
-		//////////////////////////////////////////////////////////////////////////////////////////
-		
-		// setto l'anno capitolo per la ricerca guidata del vincolo
-		if(model.getStep1Model().getCapitolo()!=null && model.getStep1Model().getCapitolo().getAnno()!=null){
-			model.getStep1Model().setAccertamentoRicerca(new AccertamentoRicercaModel());
-			model.getStep1Model().getAccertamentoRicerca().setAnnoCapitolo(String.valueOf(model.getStep1Model().getCapitolo().getAnno()));
-		}
-		
-		calcolaTotaliUtilizzabile();
-		
-		
-		setAbilitazioni();
-		
-		if(salvaDaSDFANormale()){
-			addActionWarningFin(ErroreFin.WARNING_IMPEGNO_SDF_CON_DISPONIBILE);
-		}
-		
-		leggiEventualiErroriEWarningAzionePrecedente(true);
-		
-		return SUCCESS;
-	}  
-	
-	/**
 	 * ripete il movimento di gestione e riporta l'utente in inserimento
 	 * @return
 	 */
 	public String ripeti(){
+		//SIAC-8644
+		model.getStep1Model().setListaVincoliImpegno(new ArrayList<VincoloImpegno>());
 		//setto il parametro che serve a pilotare il ripeti:
 		sessionHandler.setParametro(FinSessionParameter.MOVIMENTO_GESTIONE_DA_RIPETERE, model);
 		return "inserisceImpegno";
@@ -413,6 +453,16 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		leggiStoricoProvvedimentoByMovimento(impegno);
 		return "consultaModificheProvvedimento";
 	}
+	
+	// siac-6997
+		public String consultaModificheStrutturaCompetente() throws Exception{
+			//info per debug:
+			setMethodName("consultaModificheStrutturaCompetente");
+			//leggo i dati necessari:
+			Impegno impegno = model.getImpegnoInAggiornamento();
+			leggiStoricoStrutturaCompetenteByMovimento(impegno);
+			return "consultaModificheStrutturaCompetente";
+		}
 
 	/**
 	 * salvataggio bypassando controllo dodicesimi
@@ -429,18 +479,73 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		
 		return salvaInternal(true);
 	}
+	//SIAC-8054:in assenza di indicazioni, commentato questo metodo in quanto non presente in analisi
+	//mantenere il codice commentato per successive elaborazioni dello stesso.
+//	private boolean verificaCongruitaVincoli(Impegno impegno){
+//		if(model.getStep1Model().getListaVincoliImpegno() != null && !model.getStep1Model().getListaVincoliImpegno().isEmpty()){
+//			BigDecimal totaleVincoli = BigDecimal.ZERO;
+//			BigDecimal totaleModifiche = BigDecimal.ZERO;
+//			for (VincoloImpegno vincoloImpegno : model.getStep1Model().getListaVincoliImpegno()) {
+//				totaleVincoli = totaleVincoli.add(vincoloImpegno.getImporto());
+//			}
+//			
+//			if(impegno != null && impegno.getListaModificheMovimentoGestioneSpesa() != null && !impegno.getListaModificheMovimentoGestioneSpesa().isEmpty())
+//				for(int j =  0; j < impegno.getListaModificheMovimentoGestioneSpesa().size(); j++) {
+//					
+//					ModificaMovimentoGestioneSpesa modificaMovimentoGestioneSpesa = impegno.getListaModificheMovimentoGestioneSpesa().get(j);
+//					//modifica reimputazione ma non reanno
+//					if(!modificaMovimentoGestioneSpesa.isElaboraRorReanno() && modificaMovimentoGestioneSpesa.isReimputazione() && 
+//							//modifica valida
+//						!(modificaMovimentoGestioneSpesa.getStatoOperativoModificaMovimentoGestione().equals(StatoOperativoModificaMovimentoGestione.ANNULLATO)) &&
+//						//importo della modifica minore di zero
+//						modificaMovimentoGestioneSpesa.getImportoOld() != null && modificaMovimentoGestioneSpesa.getImportoOld().compareTo(BigDecimal.ZERO) < 0) {
+//						
+//						totaleModifiche = totaleModifiche.add(modificaMovimentoGestioneSpesa.getImportoOld().abs());
+//					}
+//			}
+//			//al totale da collegare aggiungo l'importo dell'impegno
+//			String importoFormattato = model.getStep1Model().getImportoFormattato();
+//			if(StringUtils.isNotEmpty(importoFormattato) && !importoFormattato.equals("0")) {
+//				totaleModifiche = totaleModifiche.add(convertiImportoToBigDecimal(importoFormattato));
+//			}
+//			
+//			return totaleModifiche.compareTo(totaleVincoli) == 0;
+//			
+//		}
+//		return false;
+//	}
 	
+
 	/**
 	 * Wrapper di retrocompatibilita'
 	 * @return
 	 * @throws Exception
 	 */
+	@Deprecated
 	public String salva() throws Exception {
 		return salvaInternal(false);
 	}
 	
-	public String salvaInternal(boolean byPassDodicesimi) throws Exception {
+	private String salvaInternal(boolean byPassDodicesimi) throws Exception {
 		setMethodName("salva");
+		
+		//svuoto gli errori precedenti
+		model.setErrori(new ArrayList<Errore>());
+		
+		//JIRA-CONTABILIA-223: in assenza di componente non deve essere possibile proseguire o salvare
+		if(getTipoComponenteImportiCapitolo() == null){
+			addErrore(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Componente "));
+			return INPUT;
+		}
+		
+		
+		
+		// controlli tabellina 4.6
+		List<Errore> erroriAbilitazione = abilitazioneCampiTE(oggettoDaPopolare);
+		if(null!=erroriAbilitazione && erroriAbilitazione.size()>0){
+			addErrori(erroriAbilitazione);
+			return INPUT;
+		}
 		
 		//controlli provvedimento rispetto all'abilitazione a gestire l'impegno decentrato:
 		String controlloProvv = provvedimentoConsentito();
@@ -448,12 +553,19 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			return controlloProvv;
 		}
 		
-
+		//SIAC-6997  CONTROLLO CHE SIA UNA SAC appartenente al ruolo loggato
+	    if(model.getStep1Model().getStrutturaSelezionataCompetente() == null || model.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+		    addErrore(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Struttura Competente "));
+		    return INPUT;
+	    }
+	    
+	    isSACStrutturaCompetente(null);
+	    //recuperaDescrizioneStrutturaCompetente();
 		
-		  //SIAC-6693
-		  //addPersistentActionWarning(IMP_NON_TUTTO_VINCOLATO);
-		  Map<TipologiaGestioneLivelli, String> gestioneLivelli = model.getEnte().getGestioneLivelli();
-		  String vincoloDec = gestioneLivelli.get(TipologiaGestioneLivelli.BLOCCO_VINCOLO_DEC);	
+	    //SIAC-6693
+	    //addPersistentActionWarning(IMP_NON_TUTTO_VINCOLATO);
+	    Map<TipologiaGestioneLivelli, String> gestioneLivelli = model.getEnte().getGestioneLivelli();
+	    String vincoloDec = gestioneLivelli.get(TipologiaGestioneLivelli.BLOCCO_VINCOLO_DEC);	
 
 		// FIXME: forse questo controllo è di troppo, è gia fatto nel provvedimentoConsentito(), verificare con Silvia
 		// Controllo SAC con STRUTTURA AMMINISTRATIVA
@@ -470,51 +582,37 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		codiceSiopeChangedInternal(teSupport.getSiopeSpesaCod());
 		//
 		
-		
 		EsistenzaProgettoResponse esistenzaResp = new EsistenzaProgettoResponse();
 		// verifica PROGETTO
 		if(StringUtils.isNotEmpty(model.getStep1Model().getProgetto())){
 			// metodo che verifica il progetto
 			esistenzaResp = esistenzaProgetto();
+			//SIAC-7942
+			if(esistenzaResp.getErrori()!=null && !esistenzaResp.getErrori().isEmpty()){
+				addErrori(esistenzaResp.getErrori());
+				return INPUT;
+			}
 	    }
+		
+		//SIAC-8511
+	    controllaLunghezzaMassimaDescrizioneMovimento(model.getStep1Model().getOggettoImpegno());
 		
 		ListaPaginata<VincoloCapitoli> listaVincoliSpesa = getVincoliCapitoloSpesa(model.getStep1Model().getCapitolo());
 		List<VincoloCapitoli> vincoliConFlagTrasferimentiVincolati = getConFlagTrasferimenti(listaVincoliSpesa);
 		//CONTROLLO SU VINCOLI CAPITOLI:
-		 boolean erroreVincoliCapitoli = cercaCapitoliAmmessiPerDecentrato(vincoliConFlagTrasferimentiVincolati);
-		 if(erroreVincoliCapitoli){
-			 return INPUT;
-		 }
+		boolean erroreVincoliCapitoli = cercaCapitoliAmmessiPerDecentrato(vincoliConFlagTrasferimentiVincolati);
+		if(erroreVincoliCapitoli){
+			return INPUT;
+		}
 		
 		// presenza di vincoli
 		if(model.getStep1Model().getListaVincoliImpegno()!=null && !model.getStep1Model().getListaVincoliImpegno().isEmpty()){
-			if((model.getStep1Model().getTotaleImportoDaCollegare().compareTo(BigDecimal.ZERO))>0){
-				if(!model.isVisualizzaWarningImpegnoNonTotVincolato()){
-					
-					//SIAC-6693
-					log.info(getMethodName(), "isSoggettoDecentrato1 "+ isSoggettoDecentrato());
-					log.info(getMethodName(), "isAzioneDecentrato1 "+ isAzioneDecentrato());
-					log.info(getMethodName(), "vincoloDec1 "+ vincoloDec);
-
-					if(isSoggettoDecentrato() && isAzioneDecentrato() && vincoloDec!=null){
-						  //addPersistentActionError(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());		
-						  addErrore(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore(""));
-					  }else{
-						  addPersistentActionWarning(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());
-					  }
-
-					//addPersistentActionWarning(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());
-					
-					
-					model.setVisualizzaWarningImpegnoNonTotVincolato(true);
-					return INPUT;
-				}
-			}else if(model.getStep1Model().getTotaleImportoDaCollegare().compareTo(BigDecimal.ZERO)<0){
-				
-				addErrore(ErroreFin.TOT_COLLEGA_VINCOLO.getErrore(""));
-				return INPUT;
-			}
-			
+			//SIAC-8054:in assenza di indicazioni, commentato questo metodo in quanto non presente in analisi
+			//mantenere il codice commentato per successive elaborazioni dello stesso.
+//			if(!verificaCongruitaVincoli(model.getImpegnoInAggiornamento())){
+//				addErrore(ErroreFin.CONGRUITA_VINCOLI.getErrore());
+//				return INPUT;
+//			}
 		}else{
 		// se lista vincoli vuota ma obbligatorio == true
 			if(!isEmpty(vincoliConFlagTrasferimentiVincolati)){
@@ -523,17 +621,13 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			
 			if(esistenzaResp.isFlagEsistenzaFPV()){
 				//SIAC-6693
-				log.info(getMethodName(), "isSoggettoDecentrato2 "+ isSoggettoDecentrato());
-				log.info(getMethodName(), "isAzioneDecentrato2 "+ isAzioneDecentrato());
-				log.info(getMethodName(), "vincoloDec2 "+ vincoloDec);
-
 				  if(isSoggettoDecentrato() && isAzioneDecentrato() && vincoloDec!=null){
 					  //addPersistentActionError(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());		
 					  addErrore(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore(""));
 			  
 				  }else{
 					  addPersistentActionWarning(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());
-				  }
+					  }
 
 				//addPersistentActionWarning(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());
     		}
@@ -575,7 +669,6 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		
 		//controllo registrazione andata a buon fine:
 		controlloRegistrazioneValidazionePrimaNota();
-		//
 		
 		setFlagValido(false);
 		setFlagSoggettoValido(false);
@@ -589,19 +682,20 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			setFlagSoggettoValido(true);
 		}
 		
-		if(getImpegnoToUpdate().isFlagDaRiaccertamento()){
-			model.getStep1Model().setRiaccertato(SI);
-		} else {
-			model.getStep1Model().setRiaccertato(NO);
-		}
+		//SIAC-7406 commentata riga dopo l'aggiunta del campo reanno SIAC-6997
+//		if(getImpegnoToUpdate().isFlagDaRiaccertamento()){
+//			model.getStep1Model().setRiaccertato(SI);
+//		} else {
+//			model.getStep1Model().setRiaccertato(NO);
+//		}
 
 		if(getImpegnoToUpdate().isFlagSoggettoDurc()){
 			model.getStep1Model().setSoggettoDurc(SI);
 		} else {
 			model.getStep1Model().setSoggettoDurc(NO);
 		}
-		
-		
+		//siac-6997
+		recuperaDescrizioneStrutturaCompetente();
 		
 		//SIAC-6000
 		if(risultato.equalsIgnoreCase("salva") 
@@ -620,12 +714,37 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 	
 	
 	//PROSEGUI
-		public String prosegui() {
+	public String prosegui() {
+		return prosegui(false);
+	}
+	
+	protected String prosegui(boolean proseguiSalva) {
 			setMethodName("prosegui");	
 			List<Errore> listaErrori = new ArrayList<Errore>();	
+			String nomeParametroOmesso = new String();
 			//jira 945
 			setShowPopUpMovColl(false);
 			setProseguiStep1(true);		
+			
+			//svuoto gli errori precedenti
+			//SIAC-8843
+			model.setErrori(new ArrayList<Errore>());
+			
+		    //SIAC-6997 CONTROLLO CHE SIA UNA SAC appartenente al ruolo loggato
+		    /*if(model.getStep1Model().getStrutturaSelezionataCompetente() == null || model.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+			    listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Struttura Competente "));
+		    }*/
+		    
+			//JIRA-CONTABILIA-223: in assenza di componente non deve essere possibile proseguire o salvare
+			if(getTipoComponenteImportiCapitolo() == null){
+				listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Componente "));
+				setProseguiStep1(false);
+				addErrori(listaErrori);
+				return INPUT;
+			}
+			
+		    isSACStrutturaCompetente(listaErrori);		    
+		    //recuperaDescrizioneStrutturaCompetente();
 			
 			// 28/09/2017 : CR richiesta da Vitelli
 			// Bisogna poter aggiornare i vincoli anche se il capitolo non ha disponibilità
@@ -646,7 +765,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 					}
 				//} 
 			}		
-			
+		    
 		  //SIAC-6693
 		  //addPersistentActionWarning(IMP_NON_TUTTO_VINCOLATO);
 		  Map<TipologiaGestioneLivelli, String> gestioneLivelli = model.getEnte().getGestioneLivelli();
@@ -705,12 +824,22 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		    		listaErrori.add(ErroreFin.INCONGRUENZA_TRA_I_PARAMETRI_IMPEGNO.getErrore("Anno finanziamento maggiore dell'anno impegno"));
 		    	}
 		    }
+		    
 				    
-	  		//controllo anno e numero riaccertamento	
-		    if (NO.equalsIgnoreCase(model.getStep1Model().getRiaccertato())) {
+	  		//controllo anno e numero riaccertamento	    
+			//SIAC-6997 getReanno
+		    //if (NO.equalsIgnoreCase(model.getStep1Model().getRiaccertato()) ) {
+			if (NO.equalsIgnoreCase(model.getStep1Model().getRiaccertato()) && NO.equalsIgnoreCase(model.getStep1Model().getReanno())) {
 		    	model.getStep1Model().setAnnoImpRiacc(null);
 		    	model.getStep1Model().setNumImpRiacc(null);
 		    } else {
+		    	
+		    	if(SI.equalsIgnoreCase(model.getStep1Model().getRiaccertato())) {
+		    		nomeParametroOmesso = "da riaccertamento";
+		    	}else if(SI.equalsIgnoreCase(model.getStep1Model().getReanno())){
+		    		nomeParametroOmesso = "da reimputazione in corso d'anno";
+		    	}
+		    	
 		    	if (model.getStep1Model().getAnnoImpRiacc() != null && model.getStep1Model().getNumImpRiacc() != null && model.getStep1Model().getAnnoImpegno()!=null ) {
 			    	if (model.getStep1Model().getAnnoImpRiacc().compareTo(model.getStep1Model().getAnnoImpegno())>=0) {
 			    		listaErrori.add(ErroreFin.INCONGRUENZA_TRA_I_PARAMETRI_RIACCERTAMENTO.getErrore(model.getLabels().get(LABEL_OGGETTO_GENERICO_PADRE),model.getLabels().get(LABEL_OGGETTO_GENERICO_PADRE)));
@@ -729,7 +858,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			    		rip.setCaricaSub(false);
 			    		//
 			    		
-			    		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+			    		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 			    		if(respRk!=null && respRk.getImpegno()!=null){
 			    			if(respRk.getImpegno().getAnnoOriginePlur()!=0 &&
 			    					respRk.getImpegno().getNumeroOriginePlur() !=null){
@@ -752,7 +881,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			    		else{
 			    			if(oggettoDaPopolareImpegno()){
 			    				//jira 945
-			    				if (isFromPopup()) {
+			    				if (isFromPopup() || proseguiSalva) {
 					    			setShowPopUpMovColl(false);
 					    		}else {
 				    				setShowPopUpMovColl(true);
@@ -764,33 +893,35 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 				    			model.getStep1Model().setAnnoImpRiacc(null);
 						    	model.getStep1Model().setNumImpRiacc(null);
 						    	model.getStep1Model().setRiaccertato(WebAppConstants.No);
+						    	//SIAC-6997
+						    	model.getStep1Model().setReanno(WebAppConstants.No);
 			    			}
 			    		}
 			    	}
 			    } else {
 			    	if (model.getStep1Model().getAnnoImpRiacc() != null && model.getStep1Model().getNumImpRiacc() == null) {
 			    		if(oggettoDaPopolareImpegno()){
-			    			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Impegno Riaccertamento "));
+			    			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Impegno " + nomeParametroOmesso));
 			    		}else{
-			    			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Accertamento Riaccertamento "));
+			    			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Accertamento " + nomeParametroOmesso));
 			    		}
 			    		
 			    	}  
 			    	if (model.getStep1Model().getAnnoImpRiacc() == null && model.getStep1Model().getNumImpRiacc() != null) {
 			    		if(oggettoDaPopolareImpegno()){
-			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Impegno Riaccertamento "));
+			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Impegno " + nomeParametroOmesso));
 			    	}else{
-			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Accertamento Riaccertamento "));
+			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Accertamento " + nomeParametroOmesso));
 
 			    	}
 			    	}
 			    	if (model.getStep1Model().getAnnoImpRiacc() == null && model.getStep1Model().getNumImpRiacc() == null) {
 			    		if(oggettoDaPopolareImpegno()){
-			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Impegno Riaccertamento "));
-			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Impegno Riaccertamento "));
+			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Impegno " + nomeParametroOmesso));
+			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Impegno " + nomeParametroOmesso));
 			    	}else{
-			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Accertamento Riaccertamento "));
-			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Accertamento Riaccertamento "));
+			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Accertamento " + nomeParametroOmesso));
+			    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Accertamento " + nomeParametroOmesso));
 			    	}
 			    	}
 			    }
@@ -814,12 +945,12 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		    		rip.setCaricaSub(false);
 		    		//
 		    		
-		    		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+		    		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 		    		
 		    		if(respRk==null || respRk.getImpegno()==null){
 		    			//jira 945
 		    			
-		    			if (isFromPopup()) {
+		    			if (isFromPopup()  || proseguiSalva) {
 			    			setShowPopUpMovColl(false);
 			    		}else {
 		    				setShowPopUpMovColl(true);
@@ -837,7 +968,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		    		k.setNumeroAccertamento(new BigDecimal(model.getStep1Model().getNumImpOrigine()));
 		    		rap.setpRicercaAccertamentoK(k);
 		    		
-		    		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(rap);
+		    		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(rap);
 		    		
 		    		if(respRk==null || respRk.getAccertamento()==null){
 		    			listaErrori.add(ErroreFin.MOVIMENTO_NON_TROVATO.getErrore("accertamento origine"));
@@ -914,9 +1045,11 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		  	  //verifico l'esistenza del progetto
 			  if(StringUtils.isNotEmpty(model.getStep1Model().getProgetto())){
 				  esistenzaResp = esistenzaProgetto();
-			    	
-				  if(esistenzaResp.isFallimento())
-			    		return INPUT;
+				  //SIAC-7942
+				  if(esistenzaResp.getErrori() != null && !esistenzaResp.getErrori().isEmpty()){
+						addErrori(esistenzaResp.getErrori());
+						return INPUT;
+				  }
 			  }
 					
 			  ListaPaginata<VincoloCapitoli> listaVincoliSpesa = getVincoliCapitoloSpesa(model.getStep1Model().getCapitolo());
@@ -934,40 +1067,28 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 
 			  
 				if(model.getStep1Model().getListaVincoliImpegno()!=null && !model.getStep1Model().getListaVincoliImpegno().isEmpty()){
-					if((model.getStep1Model().getTotaleImportoDaCollegare().compareTo(BigDecimal.ZERO))>0){
-						//SIAC-6693
-						log.info(getMethodName(), "isSoggettoDecentrato3 "+ isSoggettoDecentrato());
-						log.info(getMethodName(), "isAzioneDecentrato3 "+ isAzioneDecentrato());
-						log.info(getMethodName(), "vincoloDec3 "+ vincoloDec);
-
-						  if(isSoggettoDecentrato() && isAzioneDecentrato() && vincoloDec!=null){
-							  //addPersistentActionError(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());		
-							  addErrore(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore(""));
-						  
-						  }else{
-							  addPersistentActionWarning(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());
-						  }
-						  
-					}else if(model.getStep1Model().getTotaleImportoDaCollegare().compareTo(BigDecimal.ZERO)<0){
-						
-						addErrore(ErroreFin.TOT_COLLEGA_VINCOLO.getErrore(""));
-						return INPUT;
-					}
-						
+					//SIAC-7349 GM 14/07/2020
+					//SIAC-8054:in assenza di indicazioni, commentato questo metodo in quanto non presente in analisi
+					//mantenere il codice commentato per successive elaborazioni dello stesso.
+//					if(!verificaCongruitaVincoli(model.getImpegnoInAggiornamento())){
+//						addErrore(ErroreFin.CONGRUITA_VINCOLI.getErrore());
+//						return INPUT;
+//					}
 				}else{
 					// se lista vincoli vuota ma obbligatorio == true
 					if(!isEmpty(vincoliConFlagTrasferimentiVincolati)){
 						//addPersistentActionWarning(IMP_NON_TUTTO_VINCOLATO);
 						//SIAC-6693
-						log.info(getMethodName(), "isSoggettoDecentrato4 "+ isSoggettoDecentrato());
-						log.info(getMethodName(), "isAzioneDecentrato4 "+ isAzioneDecentrato());
-						log.info(getMethodName(), "vincoloDec4 "+ vincoloDec);
 
 						  if(isSoggettoDecentrato() && isAzioneDecentrato() && vincoloDec!=null){
-							  //addPersistentActionError(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());		
-							  addErrore(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore(""));
-						  
+							  //addPersistentActionError(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO_ERRORE.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO_ERRORE.getErrore("").getDescrizione());		
+							  //SIAC-8887
+							  listaErrori.add(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO_ERRORE.getErrore(""));
+						 
 						  }else{
+							  //SIAC-8843
+							  //listaErrori.add(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO_ERRORE.getErrore(""));
+							  //SIAC-8887
 							  addPersistentActionWarning(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());
 						  }
 
@@ -975,10 +1096,6 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 					
 					if(esistenzaResp.isFlagEsistenzaFPV()){
 						//SIAC-6693
-						log.info(getMethodName(), "isSoggettoDecentrato5 "+ isSoggettoDecentrato());
-						log.info(getMethodName(), "isAzioneDecentrato5 "+ isAzioneDecentrato());
-						log.info(getMethodName(), "vincoloDec5 "+ vincoloDec);
-
 						  if(isSoggettoDecentrato() && isAzioneDecentrato() && vincoloDec!=null){
 							  //addPersistentActionError(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());		
 							  addErrore(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore(""));
@@ -1209,22 +1326,36 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 								log.info(getMethodName(), "isSoggettoDecentrato6 "+ isSoggettoDecentrato());
 								log.info(getMethodName(), "isAzioneDecentrato6 "+ isAzioneDecentrato());
 								log.info(getMethodName(), "vincoloDec6 "+ vincoloDec);
-
+								/*
+								 * SIAC-7349
+								 * VG: Controllo sul Flag trasferimenti eliminato.
+								 * Bisogna Permettere in ogni cosa inserimento dei vincoli con importo pari a quello dell impegno
+								 */
+								  /*
 								  if(isSoggettoDecentrato() && isAzioneDecentrato() && vincoloDec!=null){
 									  //addPersistentActionError(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());		
 									  addErrore(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore(""));
-							  
 								  }else{
 									  addPersistentActionWarning(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getCodice() +" "+ErroreFin.IMPEGNO_NON_TOT_VINCOLATO.getErrore("").getDescrizione());
 								  }
-
-								//addPersistentActionWarning(msgWarningImpegnoNonTotVincolato);
+								*/
+								//SIAC-7349 (CONTABILIA-225) - 08/06/2020 - GM: 
+								boolean visualizzaMsgErrore = this.visualizzaMsgPerVerificaImpegnoModifichePerControlloVincoli(model.getStep1Model().getTotaleImportoVincoli(), model.getImpegnoInAggiornamento());
+								if(visualizzaMsgErrore){
+									addErrore(ErroreFin.IMPEGNO_NON_TOT_VINCOLATO_ERR.getErrore(""));
+									return INPUT;
+									//addPersistentActionWarning(msgWarningImpegnoNonTotVincolato);
+								}
 							}
-							
 						}else if(model.getStep1Model().getTotaleImportoDaCollegare().compareTo(BigDecimal.ZERO)<0){
-							
-							addErrore(ErroreFin.TOT_COLLEGA_VINCOLO.getErrore(""));
-							return INPUT;
+							//SIAC-7349 (CONTABILIA-225) - 08/06/2020 - GM: 
+							if(model.getStep1Model().getTotaleImportoVincoli() != null){
+								boolean visualizzaMsgErrore = this.visualizzaMsgPerVerificaImpegnoModifichePerControlloVincoli(model.getStep1Model().getTotaleImportoVincoli(), model.getImpegnoInAggiornamento());
+								if(visualizzaMsgErrore){
+									addErrore(ErroreFin.TOT_COLLEGA_VINCOLO.getErrore(""));
+									return INPUT;
+								}
+							}
 						}
 					}
 				}
@@ -1236,18 +1367,15 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			    		List<VincoloImpegno> listaVincoli = model.getStep1Model().getListaVincoliImpegno();	
 			    		for(VincoloImpegno v : listaVincoli){
 			    				if(v.getAccertamento()!= null){
-			    					boolean vincoloNonCorretto = verificaAccertamentoVincolo(v.getAccertamento());
-			    					if(vincoloNonCorretto){
-			    						listaErrori.add(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Presenza di Vincolo Accertamento non consentito"));
+			    					ErroreMovGestModel vincoloNonCorretto = verificaAccertamentoVincolo(v.getAccertamento());
+			    					if(vincoloNonCorretto!= null){
+			    						listaErrori.add(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore(vincoloNonCorretto.getDescrizione()));
 			    						break;
 			    					}
 			    				}
 			    			}
 			    	}
-			    }
-				
-				
-				
+			    }	
 				
 			    
 			    if(listaErrori.isEmpty()) {
@@ -1262,7 +1390,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 					//
 					
 			    	
-			    	return "prosegui";
+			    	return PROSEGUI;
 			    } else {
 			 	   addErrori(listaErrori);
 			 	  
@@ -1281,7 +1409,6 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 				   return INPUT;
 			    }
 		}
-
 		
 		public String annulla()  throws Exception{
 			setMethodName("annulla");
@@ -1382,7 +1509,7 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 			return false;
 		}
 		
-		if(isEnteAbilitatoParereFinanziario() && isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciParere)) {
+		if(isEnteAbilitatoParereFinanziario() && isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciParere)) {
 			abilitazioneModifica = true;
 		}
 		
@@ -1477,6 +1604,47 @@ public class AggiornaImpegnoStep1Action extends ActionKeyAggiornaImpegno {
 		return "ricercaCronop";
 	}
 	
-	
+	// TODO FILIPPO in fase di lavorazione si potrebbero rimuovere i due metodi seguenti
+	/**
+	 * legge le sac
+	 * @return
+	 */
+	private Map<Integer, StrutturaAmministrativoContabileFlat> readElencoStruttureAmministrativoContabili(){
+		
+		//istanzio la request per il servizio:
+		LeggiStrutturaAmminstrativoContabile request = new LeggiStrutturaAmminstrativoContabile();
+
+		request.setAnno(sessionHandler.getAnnoBilancio());
+		request.setIdEnteProprietario(sessionHandler.getEnte().getUid());
+		request.setRichiedente(sessionHandler.getRichiedente());
+
+		//invoco il servizio:
+		LeggiStrutturaAmminstrativoContabileResponse response = classificatoreService.leggiStrutturaAmminstrativoContabile(request);
+
+		return getAllStrutture(response.getListaStrutturaAmmContabile(), null);
+	}
+
+	/**
+	 * si occupa di mettere in una mappa l'elencoStruttureAmministrativoContabili ricevute.
+	 * l'id e' chiave di mappatura.
+	 * @param elencoStruttureAmministrativoContabili
+	 * @param codicePadre
+	 * @return
+	 */
+	private Map<Integer, StrutturaAmministrativoContabileFlat> getAllStrutture(List<StrutturaAmministrativoContabile> elencoStruttureAmministrativoContabili, String codicePadre){
+		
+		//istanzio la mappa:
+		Map<Integer, StrutturaAmministrativoContabileFlat> map = new LinkedHashMap<Integer, StrutturaAmministrativoContabileFlat>();
+
+		//itero l'elenco e popolo la mappa:
+		for (StrutturaAmministrativoContabile sac : elencoStruttureAmministrativoContabili){
+			StrutturaAmministrativoContabileFlat sacFlat = new StrutturaAmministrativoContabileFlat(sac, codicePadre);
+			map.put(sac.getUid(), sacFlat);
+			map.putAll(getAllStrutture(sac.getSubStrutture(), sacFlat.getCodice()));
+		}
+
+		//restituisco la mappa appea creata:
+		return map;
+	}
 	
 }

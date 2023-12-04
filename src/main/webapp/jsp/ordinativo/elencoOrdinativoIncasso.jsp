@@ -34,7 +34,8 @@ SPDX-License-Identifier: EUPL-1.2
 		<div class="span12 ">
 			<div class="contentPage"> 
 			
-				<s:form id="mainForm" method="post" action="elencoOrdinativoIncasso.do">  
+				<%-- SIAC-7952 rimuovo .do dalla action --%>
+				<s:form id="mainForm" method="post" action="elencoOrdinativoIncasso">  
 
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 				<h3>Elenco ordinativi incasso</h3>		
@@ -90,14 +91,16 @@ SPDX-License-Identifier: EUPL-1.2
 		    	<div class="btn-group">
 		    		<button class="btn dropdown-toggle" data-toggle="dropdown">Azioni<span class="caret"></span></button>
 		    		<ul class="dropdown-menu pull-right">
-		    			<s:url id="consultaUrl" action="consultaOrdinativoIncasso.do" escapeAmp="false">
+		    			<%-- task-131<s:url id="consultaUrl" action="consultaOrdinativoIncasso.do" escapeAmp="false"> --%>
+		    			<s:url var="consultaUrl" action="consultaOrdinativoIncasso.do" escapeAmp="false">
 			        		<s:param name="anno" value="%{#attr.ricercaOrdinativoIncassoID.anno}" />
-			        		<s:param name="numero" value="%{#attr.ricercaOrdinativoIncassoID.numero}" />			        				        	
+			        		<s:param name="numero" value="%{#attr.ricercaOrdinativoIncassoID.numero}" />
 	                    </s:url>
 	                    
-	                    <s:url id="aggiornaUrl" action="gestioneOrdinativoIncassoStep1.do" escapeAmp="false">
+	                    <s:url var="aggiornaUrl" action="gestioneOrdinativoIncassoStep1.do" escapeAmp="false">
 				        		<s:param name="annoOrdinativo" value="%{#attr.ricercaOrdinativoIncassoID.anno}" />
 				        		<s:param name="numeroOrdinativo" value="%{#attr.ricercaOrdinativoIncassoID.numero}" />
+				        		<s:param name="forceReloadAgiornamentoOrdinativoIncasso" value="true" />
 		                </s:url>
 
 						<s:if test="isAbilitatoAggiorna(#attr.ricercaOrdinativoIncassoID.codStatoOperativoOrdinativo)">

@@ -19,6 +19,18 @@ SPDX-License-Identifier: EUPL-1.2
   	
   <s:include value="/jsp/include/header.jsp" />
   
+<s:set var="gestisciForwardAction" value="%{'inserisciMovSpesaAccImportoStep2_gestisciForward'}" />	 
+<s:set var="siSalvaAction" value="%{'inserisciMovSpesaAccImportoStep2_siSalva'}" />	 
+<s:set var="siProseguiAction" value="%{'inserisciMovSpesaAccImportoStep2_siProsegui'}" />	
+<s:set var="annullaSubImpegnoAction" value="%{'inserisciMovSpesaAccImportoStep2_annullaSubImpegno'}" />	 
+<s:set var="annullaSubAccertamentoAction" value="%{'inserisciMovSpesaAccImportoStep2_annullaSubAccertamento'}" />	 
+<s:set var="annullaMovGestSpesaAction" value="%{'inserisciMovSpesaAccImportoStep2_annullaMovGestSpesa'}" />	 
+<s:set var="eliminaSubImpegnoAction" value="%{'inserisciMovSpesaAccImportoStep2_eliminaSubImpegno'}" />	 
+<s:set var="eliminaSubAccertamentoAction" value="%{'inserisciMovSpesaAccImportoStep2_eliminaSubAccertamento'}" />
+<s:set var="forzaProseguiAction" value="%{'inserisciMovSpesaAccImportoStep2_forzaProsegui'}" />	          
+<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'inserisciMovSpesaAccImportoStep2_forzaSalvaPluriennaleAccertamento'}" />	          
+<s:set var="salvaConByPassDodicesimiAction" value="%{'inserisciMovSpesaAccImportoStep2_salvaConByPassDodicesimi'}" />	          
+		
 <div class="container-fluid-banner">
 <!-- 
 =======================================================================
@@ -94,10 +106,10 @@ SPDX-License-Identifier: EUPL-1.2
     <!-- <h3>Accertamento ${model.movimentoSpesaModel.accertamento.annoMovimento}/${model.movimentoSpesaModel.accertamento.numero} - ${model.movimentoSpesaModel.accertamento.descrizione} - <s:property value="getText('struts.money.format', {model.movimentoSpesaModel.accertamento.importoAttuale})"/></h3>	--> 
 
 	<h3><s:include value="/jsp/movgest/include/titoloImpegno.jsp" /></h3>
-      
-     <s:form id="mainForm" method="post" action="inserisciMovSpesaAccImportoStep2.do" cssClass="form-horizontal">
+     <%-- SIAC-7952 rimuovo .do dalla action --%> 
+     <s:form id="mainForm" method="post" action="inserisciMovSpesaAccImportoStep2" cssClass="form-horizontal">
      	<s:include value="/jsp/movgest/include/tabModificaSpesa.jsp" />
-		 <s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
+	   <s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
 			
       <%--   <s:if test="hasActionErrors()">
 		Messaggio di ERROR
@@ -119,6 +131,7 @@ SPDX-License-Identifier: EUPL-1.2
 			</div>
 		</s:if>            --%>
 		
+		<%-- SIAC-7630 --%>
 		<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 		
         <div class="step-content"> 
@@ -163,11 +176,21 @@ SPDX-License-Identifier: EUPL-1.2
 				 </display:table>
           </div>
         </div>
-         <s:include value="/jsp/movgest/include/modal.jsp" /> 
+        <s:set var="selezionaProvvedimentoAction" value="%{'inserisciMovSpesaAccImportoStep2_selezionaProvvedimento'}" />
+        <s:set var="clearRicercaProvvedimentoAction" value="%{'inserisciMovSpesaAccImportoStep2_clearRicercaProvvedimento'}" />	          
+        <s:set var="ricercaProvvedimentoAction" value="%{'inserisciMovSpesaAccImportoStep2_ricercaProvvedimento'}" />	          
+        <s:set var="eliminaAction" value="%{'inserisciMovSpesaAccImportoStep2_elimina'}" />	  
+        <s:set var="selezionaProvvedimentoInseritoAction" value="%{'inserisciMovSpesaAccImportoStep2_selezionaProvvedimentoInserito'}" />	
+		<s:set var="inserisciProvvedimentoAction" value="%{'inserisciMovSpesaAccImportoStep2_inserisciProvvedimento'}" />	
+	     
+        <s:include value="/jsp/movgest/include/modal.jsp" /> 
         <p class="margin-large">
-            <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary" />  
+            <!-- task-131 <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary" /> -->  
+        	<s:submit name="indietro" value="indietro" action="inserisciMovSpesaAccImportoStep2_indietro" cssClass="btn btn-secondary" />  
+        	inserisciMovSpesaAccImportoStep2_
         	<a class="btn" href="">annulla</a>    
-        	<s:submit cssClass="btn btn-primary pull-right" value="Salva" method="salvaAccertamentiPluriennali" />
+        	<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" value="Salva" method="salvaAccertamentiPluriennali" /> -->
+        	<s:submit cssClass="btn btn-primary pull-right" value="Salva" action="inserisciMovSpesaAccImportoStep2_salvaAccertamentiPluriennali" />  
         	
 			<a id="linkMsgProseguiPlurAcc" href="#msgControlloProseguiPlurAcc" data-toggle="modal" style="display:none;"></a>
         </p>     

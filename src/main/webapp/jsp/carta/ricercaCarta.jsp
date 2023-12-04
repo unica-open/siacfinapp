@@ -34,8 +34,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage"> 
-		
-		   <s:form method="post" action="ricercaCarta.do" id="ricercaCarta">
+		   <%-- SIAC-7952 rimuovo .do dalla action --%>
+		   <s:form method="post" action="ricercaCarta" id="ricercaCarta">
 			<!--#include virtual="include/alertErrorSuccess.html" -->
 			 <s:include value="/jsp/include/actionMessagesErrors.jsp" />
 			<h3>Ricerca Carta Contabile</h3>
@@ -46,7 +46,8 @@ SPDX-License-Identifier: EUPL-1.2
 				<div class="step-pane active" id="step1">
 					
 					<p class="margin-medium">
-					  <s:submit name="cerca" value="cerca" method="cerca" cssClass="btn btn-primary pull-right" />  
+					  <!-- task-131 <s:submit name="cerca" value="cerca" method="cerca" cssClass="btn btn-primary pull-right" /> -->
+					  <s:submit name="cerca" value="cerca" action="ricercaCarta_cerca" cssClass="btn btn-primary pull-right" />  
 					</p>
 					<br>
 					<h4>Dati carta</h4>
@@ -143,10 +144,25 @@ SPDX-License-Identifier: EUPL-1.2
 			</div>
 			  
 			
+			<s:set var="ricercaCapitoloAction" value="%{'ricercaCarta_ricercaCapitolo'}" />
+	        <s:set var="pulisciRicercaCapitoloAction" value="%{'ricercaCarta_pulisciRicercaCapitolo'}" />
+	        <s:set var="selezionaCapitoloAction" value="%{'ricercaCarta_selezionaCapitolo'}" />
+	        <s:set var="visualizzaDettaglioCapitoloAction" value="%{'ricercaCarta_visualizzaDettaglioCapitolo'}" />
+	          
 			<!-- Modal -->
 			<s:include value="/jsp/include/modalCapitolo.jsp" />
+			
+			<s:set var="selezionaProvvedimentoAction" value="%{'ricercaCarta_selezionaProvvedimento'}" />
+            <s:set var="clearRicercaProvvedimentoAction" value="%{'ricercaCarta_clearRicercaProvvedimento'}" />	          
+        	<s:set var="ricercaProvvedimentoAction" value="%{'ricercaCarta_ricercaProvvedimento'}" />	          
             <s:include value="/jsp/include/modalProvvedimenti.jsp" />
+            
             <s:include value="/jsp/include/modalSoggetto.jsp" />
+            
+            <s:set var="confermaImpegnoCartaAction" value="%{'ricercaCarta_confermaImpegnoCarta'}" />			
+            <s:set var="pulisciRicercaImpegnoAction" value="%{'ricercaCarta_pulisciRicercaImpegno'}" />	          
+            <s:set var="ricercaGuidataImpegnoAction" value="%{'ricercaCarta_ricercaGuidataImpegno'}" />	          
+         
             <s:include value="/jsp/carta/include/modalImpegnoCarta.jsp" />
             <!-- Fine Modal -->  
 			  
@@ -156,9 +172,11 @@ SPDX-License-Identifier: EUPL-1.2
 			
 				<s:include value="/jsp/include/indietro.jsp" />
 			
-				<s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary" />  
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary" /> -->
+				<s:submit name="annulla" value="annulla" action="ricercaCarta_annulla" cssClass="btn btn-secondary" />
 				<span class="pull-right">
-					<s:submit name="cerca" value="cerca" method="cerca" cssClass="btn btn-primary pull-right" />  
+					<!-- task-131 <s:submit name="cerca" value="cerca" method="cerca" cssClass="btn btn-primary pull-right" /> -->
+					<s:submit name="cerca" value="cerca" action="ricercaCarta_cerca" cssClass="btn btn-primary pull-right" />
 				</span>
 			</p>       
 			  

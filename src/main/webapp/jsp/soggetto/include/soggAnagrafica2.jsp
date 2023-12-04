@@ -66,7 +66,7 @@ SPDX-License-Identifier: EUPL-1.2
                 <!-- 
                 	<select id="Stato2" name="Stato2" class="span3"><option>&nbsp;</option><option>italia</option><option>estero</option></select>
 					-->
-					 <s:select list="nazioni" id="idNazione" name="dettaglioSoggetto.comuneNascita.nazioneCode"  
+					 <s:select list="nazioni" id="idNazione" name="dettaglioSoggetto.comuneNascita.nazioneCode" headerKey="" headerValue=""  
  	                	          listKey="codice" listValue="descrizione"/> 
 			    <span class="al">
 				<!-- <label class="radio inline" for="comune"> Comune</label> -->

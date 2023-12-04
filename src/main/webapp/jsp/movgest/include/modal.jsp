@@ -35,6 +35,21 @@ SPDX-License-Identifier: EUPL-1.2
   
 	</div>
    <!--/modale modifiche -->
+   
+   	<!--modale consulta modifiche provvedimento-->
+	<div id="modConsultaModificheStrutturaCompetente" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guidaProvLabel" aria-hidden="true">
+	    <div class="modal-body">
+	      
+	        
+ 		<s:include value="/jsp/movgest/include/consultaModificheStrutturaCompetente.jsp" />
+	         
+	              
+	    
+	    </div>   
+  
+	</div>
+   <!--/modale modifiche -->
+   
 	
 	
 	
@@ -286,121 +301,7 @@ SPDX-License-Identifier: EUPL-1.2
    
    
    
-   <!--modale consulta mutui -->
-  <div id="consultaMut" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="guidaProvLabel" aria-hidden="true">
-    <div class="modal-body">
-      <h4>Consulta mutui</h4>	
-      <p>&Egrave; necessario inserire oltre all'anno almeno il numero atto oppure il tipo atto </p>			             
-      <fieldset class="form-horizontal">        		 
-        <div class="control-group">
-          <label class="control-label" for="numero">Numero mutuo</label>
-          <div class="controls">   
-            <input id="numero" class="lbTextSmall span2" type="text" value="" name="numero" />
-            <span class="al">
-              <label class="radio inline" for="numreg">Numero registrazione</label>
-            </span>
-            <input id="numreg" class="lbTextSmall span2" type="text" value="" name="numreg"/>      
-          </div>
-        </div>   
-      </fieldset>
-      <h4>Provvedimento</h4>
-      <!--p>&Egrave; necessario inserire oltre all'anno almeno il numero atto oppure il tipo atto </p-->
-      <fieldset class="form-horizontal">
-        <div class="control-group">
-          <label class="control-label" for="anno">Anno *</label>
-          <div class="controls">   
-            <input id="anno" class="lbTextSmall span2" type="text" value="" name="anno" />
-            <span class="al">
-              <label class="radio inline" for="numero">Numero *</label>
-            </span>
-            <input id="numero" class="lbTextSmall span2" type="text" value="" name="numero"/>      
-            <span class="al">
-              <label class="radio inline" for="Stato"></label>
-            </span>
-            <span class="radio guidata">Se non possiedi tutti i dati richiesti, passa alla <a href="#guidaProv" data-toggle="modal" class="btn btn-primary">complilazione guidata</a></span>
-          </div>
-        </div>
-        <!-- Modal -->
-      </fieldset>
-      <h4>Istituto mutuante </h4>
-      <fieldset class="form-horizontal">
-        <div class="control-group">
-          <label class="control-label" for="Codice">Codice</label>
-          <div class="controls">
-            <input id="Codice" name="Codice" class="span2" type="text"/>
-            <span class="al">
-              <label class="radio inline" for="classe">Classe</label>
-            </span>
-            <select name="classe" id="classe" class="span5"><option>xxxxx</option></select>
-            <span class="radio guidata">Se non possiedi tutti i dati richiesti, passa alla <a href="#guidaSogMutuo" data-toggle="modal" class="btn btn-primary">complilazione guidata</a></span>
-          </div>
-        </div>
-      </fieldset>
-      <h4>Elenco mutui trovati</h4>   
-      <table class="table table-hover tab_centered">
-        <thead>
-          <tr>
-            <th scope="col">Sel.</th>
-            <th scope="col">Nr. mutuo</th>
-            <th scope="col">Tipo mutuo</th>
-            <th scope="col">Data inizio</th>
-            <th scope="col">Descrizione mutuo</th>
-            <th scope="col">Stato</th>
-            <th scope="col"><p class="pagination-right">Importo iniziale</p></th>
-            <th scope="col"><p class="pagination-right">Importo attuale</p></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td> <input type="radio" name="file_33" id="file_33d" /></td>									  
-            <td>00837</td>
-            <td>Riscossione completa</td>
-            <td>01/01/2013</td>
-            <td>Descrizione mutuo 1...</td>
-            <td>D</td>
-            <td><p class="pagination-right">200.000</p></td>
-            <td><p class="pagination-right">125.000</p></td>
-          </tr>
-          <tr>
-            <td> <input type="radio" name="file_33" id="file_33c" /></td>									  
-            <td>00713</td>
-            <td>Avanz. lavori</td>
-            <td>01/01/2012</td>
-            <td>Descrizione mutuo 2...</td>
-            <td>A</td>
-            <td><p class="pagination-right">150.000</p></td>
-            <td><p class="pagination-right">93.000</p></td>
-          </tr>
-        </tbody>
-        <tfoot>
-        </tfoot>
-      </table> 
-      <div class="row pagination_conth">
-        <div id="risultatiricerca_info2" class="span5">1 - 10 di 28 risultati</div>   
-        <div class="span7">                               
-          <div id="paginazione2" class="pagination pagination-right">
-            <ul>
-              <li><a href="#">&laquo; inizio</a></li>
-              <li><a href="#">&laquo; prec</a></li>
-              <li class="disabled"><a href="#">1</a></li>
-              <li class="active"><a href="#">2</a></li>
-              <li><a href="#">3</a></li>
-              <li><a href="#">4</a></li>
-              <li><a href="#">5</a></li>
-              <li><a href="#">succ &raquo;</a></li>
-              <li><a href="#"> fine &raquo;</a></li>
-            </ul>
-          </div>
-        </div>  
-      </div>             
-    <!--a class="btn" href="#">seleziona</a-->  
-    </div>   
-  <div class="modal-footer">
-  <!-- <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button> -->
-  <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button>
-  </div>
-</div>
-   <!--/modale mutui -->
+  
    
    
    
@@ -419,7 +320,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaImpegno"/>
+                <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaImpegno"/> -->
+                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="%{#annullaImpegnoAction}"/>
               </div>
             </div>  
             <!--/modale annulla -->
@@ -436,7 +338,9 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaAccertamento"/>
+                <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaAccertamento"/> -->
+                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="%{#annullaAccertamentoAction}"/>
+                
               </div>
             </div>  
             <!--/modale annulla -->
@@ -455,7 +359,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaSubImpegno"/>
+                <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaSubImpegno"/>-->
+                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="%{#annullaSubImpegnoAction}"/>
               </div>
             </div>  
             <!--/modale annulla -->
@@ -473,25 +378,48 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaSubAccertamento"/>
+                <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaSubAccertamento"/>-->
+                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="%{#annullaSubAccertamentoAction}"/>
               </div>
             </div>  
             <!--/modale annulla -->
             
             
              <!-- Modal  annulla Movimento Spesa -->
-            <div id="msgAnnullaModMov" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
+            <div id="msgAnnullaModMov" class="modal hide fade movCollegati" tabindex="-1" role="dialog" aria-labelledby="msgAnnullaLabel" aria-hidden="true">
               <div class="modal-body">
-                <div class="alert alert-error">
+                <div class="alert alert-error movCollegati">
                   <button type="button" class="close" data-dismiss="alert">&times;</button>
                   <p><strong>Attenzione!</strong></p>
-                  <p><strong>Elemento selezionato:<s:textfield id="numeroMovDaAnnullare" name="numeroMovDaAnnullare" disabled="true"/> </strong></p>
-                  <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+                  <!--  SIAC-8611  -->
+                  <p><strong>Elemento selezionato:<s:textfield id="numeroMovDaAnnullare2" name="numeroMovDaAnnullare2" disabled="true"/>  </strong></p>
+                  <span>
+					  <!-- SIAC-7349 Inizio SR180 CM 23/04/2020 Cambiata posizione e modificato id per gestire la presenza del messaggio sul numero dei movCollegati -->
+	                  <!-- //CONTABILIA-260 - Bug fix per test 22.1 SIAC-7349 Inizio SR180 CM 09/07/2020 Messaggio di errore adeguato a quello segnalato del TC 22.1 -->
+	                  <p id="numeroMovCollegatiDaAnnullare1P" style="display:none">Attenzione: la modifica presenta num.  <s:textfield id="numeroMovCollegatiDaAnnullare1" name="numeroMovCollegatiDaAnnullare1" disabled="true"/>  associazioni con altre modifiche di spesa.</p>
+	                  <!-- //CONTABILIA-260 - Bug fix per test 22.1 SIAC-7349 Fine SR180 CM 09/07/2020 Messaggio di errore adeguato a quello segnalato del TC 22.1 -->
+	                  <!-- SIAC-7349 Fine  SR180 FL 08/04/2020 -->
+	                  <p>Stai per annullare l'elemento selezionato, questo cambier&agrave; lo stato dell'elemento: sei sicuro di voler proseguire?</p>
+                  </span>
+                  <!-- SIAC-7349 Inizio  SR180 CM 22/04/2020 Modificato messaggio di errore nel caso in cui ci siamo reimputazioni di spesa >0 -->
+                  <span id="span2MovCollegati" style="display:none">
+                  <p>non &egrave; possibile annullare l'elemento selezionato perch&egrave; 
+                     <!-- SIAC-7349 Inizio  SR180 FL 08/04/2020 -->
+                  	 sono presenti num.  <s:textfield id="numeroMovCollegatiDaAnnullare2" name="numeroMovCollegatiDaAnnullare2" disabled="true"/>  Reimputazioni di Spesa collegate.
+                  	 <!-- SIAC-7349 Fine  SR180 FL 08/04/2020 -->
+                  </p>
+                  </span>
+                  <!-- SIAC-7349 Fine SR180 CM 22/04/2020 -->
                 </div>
               </div>
-              <div class="modal-footer">
-                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaMovGestSpesa"/>
+              <div class="modal-footer movCollegati"> 
+             	<!-- SIAC-7349 Inizio  SR180 CM 22/04/2020 Aggiunto id al button per cambiare il valore di questo button nel caso in cui ci siamo reimputazioni di spesa >0 -->
+                <button id="idButtonMovCollegati" class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
+                <!-- SIAC-7349 Fine SR180 CM 22/04/2020 -->	
+                <span>
+                <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="annullaMovGestSpesa"/>-->
+                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="%{#annullaMovGestSpesaAction}"/>
+                </span>
               </div>
             </div>  
             <!--/modale annulla -->
@@ -509,7 +437,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="eliminaSubImpegno"/>
+                <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="eliminaSubImpegno"/>-->
+                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="%{#eliminaSubImpegnoAction}"/>
               </div>
             </div>  
             <!--/modale annulla -->
@@ -527,7 +456,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="eliminaSubAccertamento"/>
+                <!-- task-131 <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" method="eliminaSubAccertamento"/>-->
+                <s:submit id="submitBtn" name="btnAggiornamentoStato" value="si, prosegui" cssClass="btn btn-primary" action="%{#eliminaSubAccertamentoAction}"/>
               </div>
             </div>  
             <!--/modale annulla -->
@@ -547,7 +477,8 @@ SPDX-License-Identifier: EUPL-1.2
 	              </div>
 	              <div class="modal-footer">
 	                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-	                <s:submit id="submitBtn" name="btnSalvaModificaProvvedimento" value="si, salva" cssClass="btn btn-primary" method="siSalva"/>
+	                <!-- task-131 <s:submit id="submitBtn" name="btnSalvaModificaProvvedimento" value="si, salva" cssClass="btn btn-primary" method="siSalva"/>-->
+	                <s:submit id="submitBtn" name="btnSalvaModificaProvvedimento" value="si, salva" cssClass="btn btn-primary" action="%{#siSalvaAction}"/>
 	              </div>
 	            </div>  
 	            
@@ -566,7 +497,8 @@ SPDX-License-Identifier: EUPL-1.2
 	              </div>
 	              <div class="modal-footer">
 	                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-	                <s:submit id="submitBtn" name="btnProseguiModificaProvvedimento" value="si, prosegui" cssClass="btn btn-primary" method="siProsegui"/>
+	                <!-- task-131 <s:submit id="submitBtn" name="btnProseguiModificaProvvedimento" value="si, prosegui" cssClass="btn btn-primary" method="siProsegui"/>-->
+	                <s:submit id="submitBtn" name="btnProseguiModificaProvvedimento" value="si, prosegui" cssClass="btn btn-primary" action="%{#siProseguiAction}"/>
 	              </div>
 	            </div>  
 	            
@@ -585,7 +517,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnSalvaModificaVincoli" value="si, salva" cssClass="btn btn-primary" method="salvaDaModaleConfermaSalvaVincoli"/>
+                <!-- task-131 <s:submit id="submitBtn" name="btnSalvaModificaVincoli" value="si, salva" cssClass="btn btn-primary" method="salvaDaModaleConfermaSalvaVincoli"/> -->
+                <s:submit id="submitBtn" name="btnSalvaModificaVincoli" value="si, salva" cssClass="btn btn-primary" action="%{#salvaDaModaleConfermaSalvaVincoliAction}"/>
               </div>
             </div>  
 	            
@@ -600,7 +533,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtn" name="btnProseguiModificaVincoli" value="si, prosegui" cssClass="btn btn-primary" method="proseguiDaModaleConfermaSalvaVincoli"/>
+                <!-- task-131 <s:submit id="submitBtn" name="btnProseguiModificaVincoli" value="si, prosegui" cssClass="btn btn-primary" method="proseguiDaModaleConfermaSalvaVincoli"/>-->
+                <s:submit id="submitBtn" name="btnProseguiModificaVincoli" value="si, prosegui" cssClass="btn btn-primary" action="%{#proseguiDaModaleConfermaSalvaVincoliAction}"/>
               </div>
             </div>     
             
@@ -619,7 +553,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="gestisciForward"/>
+                <!-- task-131 <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="gestisciForward"/>-->
+                <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" action="%{#gestisciForwardAction}"/>
               </div>
             </div>  
             <!-- /modale dati persi -->    
@@ -637,7 +572,8 @@ SPDX-License-Identifier: EUPL-1.2
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="forzaProsegui"/>
+                <!-- task-131 <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="forzaProsegui"/>-->
+                <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" action="%{#forzaProseguiAction}"/>
               </div>
             </div>  
             <!-- /modale  controllo prosegui -->  
@@ -649,14 +585,15 @@ SPDX-License-Identifier: EUPL-1.2
                   <button type="button" class="close" data-dismiss="alert">&times;</button>
                   <p><strong>Attenzione!</strong></p>
                    <s:iterator value="actionWarnings">
-		     	  		<s:property/><br>
+		     	  		<s:property escapeHtml="false"/><br>
 		   		   </s:iterator>
                   <p></p>
                 </div>
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-                <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="forzaSalvaPluriennaleAccertamento"/>
+                <!-- task-131 <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="forzaSalvaPluriennaleAccertamento"/>-->
+                <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" action="%{#forzaSalvaPluriennaleAccertamentoAction}"/>
               </div>
             </div>  
             <!-- /modale  controllo prosegui -->  
@@ -675,7 +612,8 @@ SPDX-License-Identifier: EUPL-1.2
 	              </div>
 	              <div class="modal-footer">
 	                <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-	                <s:submit id="submitBtn" name="btnSalvaConByPassDodicesimi" value="si, salva" cssClass="btn btn-primary" method="salvaConByPassDodicesimi"/>
+	                <!-- task-131 <s:submit id="submitBtn" name="btnSalvaConByPassDodicesimi" value="si, salva" cssClass="btn btn-primary" method="salvaConByPassDodicesimi"/>-->
+	                <s:submit id="submitBtn" name="btnSalvaConByPassDodicesimi" value="si, salva" cssClass="btn btn-primary" action="%{#salvaConByPassDodicesimiAction}"/>
 	              </div>
 	            </div>  
 	            
@@ -736,6 +674,19 @@ SPDX-License-Identifier: EUPL-1.2
 			<td><s:property value="getText('struts.money.format', {importiCapitoloUG})" /></td>
 		</s:iterator>      --%>   
       </tr>
+      <!-- SIAC-7349 -->
+      <s:if test="model.nomeComponente!= null && model.importiComponentiCapitolo!= null && model.importiComponentiCapitolo.size()>0">
+      <tr>
+      <th><s:property value="%{model.nomeComponente}"/></th>
+        <s:iterator value="model.importiComponentiCapitolo">
+	         <s:if test="tipoDettaglioComponenteImportiCapitolo!= null && 'DISPONIBILITAIMPEGNARE'.equals(tipoDettaglioComponenteImportiCapitolo.name())"> 
+		        <td><s:property value="getText('struts.money.format', {dettaglioAnno0.importo})" /></td>
+		        <td><s:property value="getText('struts.money.format', {dettaglioAnno1.importo})" /></td>
+		        <td><s:property value="getText('struts.money.format', {dettaglioAnno2.importo})" /></td>
+	        </s:if> 
+        </s:iterator>
+      </tr>
+      </s:if>
     </table>
   </div>
   </div>      

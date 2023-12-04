@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -23,7 +23,7 @@ import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.EsistenzaProgetto;
 import it.csi.siac.siacfinser.frontend.webservice.msg.EsistenzaProgettoResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamentoPerChiaveOttimizzato;
@@ -31,7 +31,6 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccertamentoPerChia
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzato;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
 import it.csi.siac.siacfinser.model.Accertamento;
-import it.csi.siac.siacfinser.model.MovimentoGestione;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneEntrata;
 import it.csi.siac.siacfinser.model.ric.RicercaAccertamentoK;
@@ -101,6 +100,8 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			
 			//scelta da riaccertamento:
 			model.getStep1Model().setDaRiaccertamento(buildListaSiNo());
+			//SIAC-6997
+			model.getStep1Model().setDaReanno(buildListaSiNo());
 			
 			//scelta attiva gsa:
 			model.getStep1Model().setListflagAttivaGsa(buildListaSiNo());
@@ -167,7 +168,7 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			
 			// jira-1582
 			// se e' in stato N e ci sono dei sub allora posso modificare il soggetto
-			if(model.getAccertamentoInAggiornamento().getStatoOperativoMovimentoGestioneEntrata().equals(Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE)){
+			if(model.getAccertamentoInAggiornamento().getStatoOperativoMovimentoGestioneEntrata().equals(CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE)){
 				if(!presenteAlmenoUnMovValido(model.getAccertamentoInAggiornamento().getElencoSubAccertamenti(), OggettoDaPopolareEnum.SUBACCERTAMENTO.toString())){
 					setFlagSoggettoValido(false);
 				}
@@ -188,6 +189,9 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 		
 		//info per debug:
 		setMethodName("execute");
+		
+		sessionHandler.setParametro(FinSessionParameter.CLASSE_ACCERTAMENTO_ORIGINAL, null);
+		sessionHandler.setParametro(FinSessionParameter.SOGGETTO_ACCERTAMENTO_ORIGINAL, null);
 		
 		//ripopoliamo i dati provv dal model support:
 		ripopolaProvvedimentoDaSupport();
@@ -224,6 +228,11 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 		if(forceReload){
 			sessionHandler.cleanSafelyExcluding(FinSessionParameter.ACCERTAMENTO_CERCATO);
 			caricaDatiAccertamento(false);
+			//SIAC-8065 se trovo errori dal caricaDatiAccertamento torno indietro e li mostro
+			if(model.hasErrori()) {
+				return INPUT;
+			}
+			
 			sessionHandler.setParametro(FinSessionParameter.ACCERTAMENTO_CERCATO, getAccertamentoToUpdate());
 			
 			// Jira - 1299 altrimenti carica ad ogni giro tutti i dati da bilancio
@@ -236,11 +245,12 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			}
 		} 
 
-		if(((MovimentoGestione) sessionHandler.getParametro(FinSessionParameter.ACCERTAMENTO_CERCATO)).isFlagDaRiaccertamento()){
-			model.getStep1Model().setRiaccertato(SI);
-		} else {
-			model.getStep1Model().setRiaccertato(NO);
-		}
+		//SIAC-7406 commentata riga dopo l'aggiunta del campo reanno SIAC-6997
+//		if(((MovimentoGestione) sessionHandler.getParametro(FinSessionParameter.ACCERTAMENTO_CERCATO)).isFlagDaRiaccertamento()){
+//			model.getStep1Model().setRiaccertato(SI);
+//		} else {
+//			model.getStep1Model().setRiaccertato(NO);
+//		}
 		
 		//labels aggiorna:
 		caricaLabelsAggiorna(1);
@@ -260,6 +270,11 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 		teSupport.setRicaricaSiopeSpesa(false);
 		//////////////////////////////////////////////////////////////////////////////////////////
 		
+
+		// setto l'anno capitolo per la ricerca guidata del vincolo
+		
+		//SIAC-6997
+		recuperaDescrizioneStrutturaCompetente();
 		
 		setAbilitazioni();
 		
@@ -289,6 +304,16 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 		return "consultaModificheProvvedimento";
 	}
 	
+	// SIAC-6997
+	public String consultaModificheStrutturaCompetente() throws Exception{
+		//info per debug:
+		setMethodName("consultaModificheStrutturaCompetente");
+		//leggo i dati necessari:
+		Accertamento accertamento = model.getAccertamentoInAggiornamento();
+		leggiStoricoStrutturaCompetenteByMovimento(accertamento);
+		return "consultaModificheStrutturaCompetente";
+	}
+	
 	public String siSalva() throws Exception{
 		setMethodName("siSalva");
 		setShowPopUpMovColl(Boolean.FALSE);
@@ -301,16 +326,40 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 	public String salva() throws Exception {
 		setMethodName("salva");
 		
+		
+		// controlli tabellina 4.6
+		List<Errore> erroriAbilitazione = abilitazioneCampiTE(oggettoDaPopolare);
+		if(null!=erroriAbilitazione && erroriAbilitazione.size()>0){
+			addErrori(erroriAbilitazione);
+			return INPUT;
+		}
+		
+		
 		//controlli provvedimento rispetto all'abilitazione a gestire l'accertamento decentrato:
 		String controlloProvv = provvedimentoConsentito();
 		if(controlloProvv!=null){
 			return controlloProvv;
 		}
-		//
+		//SIAC-6997 - CONTROLLO CHE SIA UNA SAC appartenente al ruolo loggato
+	    if(model.getStep1Model().getStrutturaSelezionataCompetente() == null || model.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+		    addErrore(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Struttura Competente "));
+		    return INPUT;
+	    }
+
+		isSACStrutturaCompetente(null);
+		//recuperaDescrizioneStrutturaCompetente();
 		
 		//ricontrolliamo il siope:
 		codiceSiopeChangedInternal(teSupport.getSiopeSpesaCod());
 		//
+		
+		//SIAC-8511
+	    controllaLunghezzaMassimaDescrizioneMovimento(model.getStep1Model().getOggettoImpegno());
+		
+		//SIAC-6997
+	    if(hasActionErrors()){
+	    	return INPUT;
+	    }
 		
 		setAccertamentoToUpdate((Accertamento)sessionHandler.getParametro(FinSessionParameter.ACCERTAMENTO_CERCATO));
 		// SALVATAGGIO STEP1
@@ -343,12 +392,12 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			setFlagSoggettoValido(true);
 		}
 		
-		if(getAccertamentoToUpdate().isFlagDaRiaccertamento()){
-			model.getStep1Model().setRiaccertato(SI);
-		} else {
-			model.getStep1Model().setRiaccertato(NO);
-		}
-		
+		//SIAC-7406 commentata riga dopo l'aggiunta del campo reanno SIAC-6997		
+//		if(getAccertamentoToUpdate().isFlagDaRiaccertamento()){
+//			model.getStep1Model().setRiaccertato(SI);
+//		} else {
+//			model.getStep1Model().setRiaccertato(NO);
+//		}
 		
 		// Controllo SAC con STRUTTURA AMMINISTRATIVA
 		// se nel provv c'e' la struttura allora devo verificare che sia una di quelle ammesse
@@ -361,6 +410,9 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			return INPUT;
 		}
 		
+		//SIAC-6997
+		recuperaDescrizioneStrutturaCompetente();
+		
 		//SIAC-6000
 		if(risultato.equalsIgnoreCase("salva") 
 				&& model.isEnteAbilitatoGestionePrimaNotaDaFinanziaria()
@@ -369,17 +421,30 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			return GO_TO_GEN;
 		}
 		//
+		//SIAC-6997
+		forceReload = true;
 
 		return risultato;
 		
 	}
 	
 	//PROSEGUI
-	public String prosegui() {
+	protected String prosegui(boolean proseguiSalva) {
 		setMethodName("prosegui");	
 		List<Errore> listaErrori = new ArrayList<Errore>();	
+		String nomeParametroOmesso = new String();
 		setShowPopUpMovColl(false);
 		setProseguiStep1(true);		
+		
+	    //inizio SIAC-6997 CONTROLLO CHE SIA UNA SAC appartenente al ruolo loggato
+	    /*if(model.getStep1Model().getStrutturaSelezionataCompetente() == null || model.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+	    	listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Struttura Competente "));
+		    return INPUT;
+	    }*/
+
+	    isSACStrutturaCompetente(listaErrori);
+	    //recuperaDescrizioneStrutturaCompetente();
+	    //fine SIAC-6997
 		
 	    if(model.getStep1Model().getCapitolo().getNumCapitolo() == null || model.getStep1Model().getCapitolo().getNumCapitolo() == 0){
 		    listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Capitolo "));
@@ -428,10 +493,17 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			    }
 			    
 		  		//controllo anno e numero riaccertamento	
-			    if (NO.equalsIgnoreCase(model.getStep1Model().getRiaccertato())) {
+			    if (NO.equalsIgnoreCase(model.getStep1Model().getRiaccertato())  && NO.equalsIgnoreCase(model.getStep1Model().getReanno())) {
 			    	model.getStep1Model().setAnnoImpRiacc(null);
 			    	model.getStep1Model().setNumImpRiacc(null);
 			    } else {
+			    	
+			    	if(SI.equalsIgnoreCase(model.getStep1Model().getRiaccertato())) {
+			    		nomeParametroOmesso = "da riaccertamento";
+			    	}else if(SI.equalsIgnoreCase(model.getStep1Model().getReanno())){
+			    		nomeParametroOmesso = "da reimputazione in corso d'anno";
+			    	}
+			    	
 			    	if (model.getStep1Model().getAnnoImpRiacc() != null && model.getStep1Model().getNumImpRiacc() != null && model.getStep1Model().getAnnoImpegno()!=null ) {
 				    	if (model.getStep1Model().getAnnoImpRiacc().compareTo(model.getStep1Model().getAnnoImpegno())>=0) {
 				    		//correzione messaggio
@@ -446,7 +518,7 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 				    		k.setAnnoAccertamento(model.getStep1Model().getAnnoImpRiacc());
 				    		k.setNumeroAccertamento(new BigDecimal(model.getStep1Model().getNumImpRiacc()));
 				    		rap.setpRicercaAccertamentoK(k);
-				    		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(rap);
+				    		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(rap);
 				    		if(respRk!=null && respRk.getAccertamento()!=null){
 				    			if(respRk.getAccertamento().getAnnoOriginePlur()!=0 &&
 				    					respRk.getAccertamento().getNumeroOriginePlur() !=null){
@@ -477,9 +549,11 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 					    			model.getStep1Model().setAnnoImpRiacc(null);
 							    	model.getStep1Model().setNumImpRiacc(null);
 							    	model.getStep1Model().setRiaccertato(WebAppConstants.No);
+							    	//SIAC-6997
+							    	model.getStep1Model().setReanno(WebAppConstants.No);
 				    			
 				    			}else{
-				    				if (isFromPopup()) {
+				    				if (isFromPopup() || proseguiSalva) {
 						    			setShowPopUpMovColl(false);
 						    		}else {
 					    				setShowPopUpMovColl(true);
@@ -491,27 +565,27 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 				    } else {
 				    	if (model.getStep1Model().getAnnoImpRiacc() != null && model.getStep1Model().getNumImpRiacc() == null) {
 				    		if(oggettoDaPopolareImpegno()){
-				    			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Impegno Riaccertamento "));
+				    			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Impegno " + nomeParametroOmesso));
 				    		}else{
-				    			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Accertamento Riaccertamento "));
+				    			listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Accertamento "  + nomeParametroOmesso));
 				    		}
 				    		
 				    	}  
 				    	if (model.getStep1Model().getAnnoImpRiacc() == null && model.getStep1Model().getNumImpRiacc() != null) {
 				    		if(oggettoDaPopolareImpegno()){
-				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Impegno Riaccertamento "));
+				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Impegno " + nomeParametroOmesso));
 				    	}else{
-				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Accertamento Riaccertamento "));
+				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Accertamento " + nomeParametroOmesso));
 
 				    	}
 				    	}
 				    	if (model.getStep1Model().getAnnoImpRiacc() == null && model.getStep1Model().getNumImpRiacc() == null) {
 				    		if(oggettoDaPopolareImpegno()){
-				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Impegno Riaccertamento "));
-				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Impegno Riaccertamento "));
+				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Impegno " + nomeParametroOmesso));
+				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Impegno " + nomeParametroOmesso));
 				    	}else{
-				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Accertamento Riaccertamento "));
-				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Accertamento Riaccertamento "));
+				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Numero Accertamento " + nomeParametroOmesso));
+				    		listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Anno Accertamento " + nomeParametroOmesso));
 				    	}
 				    	}
 				    }
@@ -536,7 +610,7 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			    		rip.setCaricaSub(false);
 			    		//
 			    		
-			    		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+			    		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 			    		
 			    		if(respRk==null || respRk.getImpegno()==null){
 			    			listaErrori.add(ErroreFin.MOVIMENTO_NON_TROVATO.getErrore("impegno origine"));
@@ -551,11 +625,11 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 			    		k.setNumeroAccertamento(new BigDecimal(model.getStep1Model().getNumImpOrigine()));
 			    		rap.setpRicercaAccertamentoK(k);
 			    		
-			    		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(rap);
+			    		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(rap);
 			    		
 			    		if(respRk==null || respRk.getAccertamento()==null){
 			    			
-			    			if (isFromPopup()) {
+			    			if (isFromPopup() || proseguiSalva) {
 				    			setShowPopUpMovColl(false);
 				    		}else {
 			    				setShowPopUpMovColl(true);
@@ -783,9 +857,12 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 					return controlloProvv;
 				}
 
+				// task-51 - aggiunto controllo su esistenza classe, altrimenti non cambiava il soggetto (nel metodo lo ricrea senza id)
 				//in presenza della classe, pulisco totalmente il soggetto
-			    controlloSoggettoSelezionatoEClasse();
-				
+				if(model.getStep1Model().getSoggetto().getClasse() != null && !"".equalsIgnoreCase(model.getStep1Model().getSoggetto().getClasse()) ){
+				    controlloSoggettoSelezionatoEClasse();
+				}
+					
 			    //Inserisco la descrizione all'interno della classe del soggetto  vedi Jira e issue di laura
 				inserisciDescClasseSoggettoAggiorna();
 				
@@ -796,7 +873,7 @@ public class AggiornaAccertamentoStep1Action extends ActionKeyAggiornaAccertamen
 						return INPUT;
 					}
 			    	
-			          return "prosegui";
+			          return PROSEGUI;
 			    } else {
 			 	   addErrori(listaErrori);
 			 	   

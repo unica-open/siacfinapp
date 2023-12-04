@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacfinapp.frontend.ui.action.soggetto.ModalitaPagamentoSoggettoAction;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -24,7 +24,7 @@ public class ModalitaPagamentoSoggettoCecAction extends ModalitaPagamentoSoggett
 	protected String getcodiceAmbito() {
 		//ritorniamo la codifica 
 		//dell'ambito, cec in questo caso
-		return Constanti.AMBITO_CEC;
+		return CostantiFin.AMBITO_CEC;
 	}
 
 }

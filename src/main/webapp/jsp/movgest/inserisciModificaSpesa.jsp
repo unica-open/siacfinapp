@@ -35,7 +35,8 @@ SPDX-License-Identifier: EUPL-1.2
     <div class="span12 contentPage">
        <h3>Impegno 2013/12300 - Acquisto scrivanie per Anagrafe - 100.000,00</h3>  
        	<s:include value="/jsp/movgest/include/tabAggImpegno.jsp" />
-		 	<s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
+       	<s:set var="gestisciForwardAction" value="%{'inserisciMovSpesaImporto_gestisciForward'}" />
+		<s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
 			
       <form class="form-horizontal">     
         <div class="alert alert-error">
@@ -92,6 +93,7 @@ SPDX-License-Identifier: EUPL-1.2
                         <input id="Descrizione" name="Descrizione" class="span9" required="required" type="text"/>
                       </div>
                     </div>
+                    
                     <div class="control-group">
                       <label class="control-label" for="motivo">Motivo </label>
                       <div class="controls">

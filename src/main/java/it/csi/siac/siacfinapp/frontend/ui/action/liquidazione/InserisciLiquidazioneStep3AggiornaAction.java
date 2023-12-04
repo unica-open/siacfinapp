@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -27,6 +27,7 @@ import it.csi.siac.siacbilser.model.SiopeSpesa;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.Esito;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siacfin2ser.model.ContoTesoreria;
 import it.csi.siac.siacfin2ser.model.StatoOperativoAllegatoAtto;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
@@ -34,12 +35,12 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoMode
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaLiquidazione;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaLiquidazioneResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazionePerChiave;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazionePerChiaveResponse;
-import it.csi.siac.siacfinser.model.ContoTesoreria;
+import it.csi.siac.siacfin2ser.model.ContoTesoreria;
 import it.csi.siac.siacfinser.model.Distinta;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubImpegno;
@@ -48,7 +49,6 @@ import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.liquidazione.Liquidazione;
 import it.csi.siac.siacfinser.model.liquidazione.Liquidazione.StatoOperativoLiquidazione;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ordinativo.Ordinativo.StatoOperativoOrdinativo;
 import it.csi.siac.siacfinser.model.ordinativo.OrdinativoPagamento;
 import it.csi.siac.siacfinser.model.ric.RicercaLiquidazioneK;
@@ -238,10 +238,10 @@ public class InserisciLiquidazioneStep3AggiornaAction extends WizardInserisciLiq
 		liq.setNumeroLiquidazione(model.getNumeroLiquidazioneConsulta());
 		
 		prl.setLiquidazione(liq);
-		prl.setTipoRicerca(Constanti.TIPO_RICERCA_DA_LIQUIDAZIONE);
+		prl.setTipoRicerca(CostantiFin.TIPO_RICERCA_DA_LIQUIDAZIONE);
 		
 		//ANNO ESERCIZIO:
-		prl.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		prl.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		
 		//ENTE:
 		req.setEnte(sessionHandler.getAccount().getEnte());
@@ -369,47 +369,13 @@ public class InserisciLiquidazioneStep3AggiornaAction extends WizardInserisciLiq
 		//DATI IMPEGNO DA model.impegno a variabili piatte nel model:
 		if(model.getImpegno()!=null){
 			model.setAnnoImpegno(model.getImpegno().getAnnoMovimento());
-			model.setNumeroImpegno(model.getImpegno().getNumero().intValue());
+			model.setNumeroImpegno(model.getImpegno().getNumeroBigDecimal().intValue());
 			model.setDisponibilita(model.getImpegno().getDisponibilitaLiquidare());
 		}
 		
-		//JIRA 858
-		List<VoceMutuo> listaVociMutuo = new ArrayList<VoceMutuo>();
-		if(model.getImpegno()!=null && model.getImpegno().getListaVociMutuo()!=null && model.getImpegno().getListaVociMutuo().size()>0){
-			listaVociMutuo = model.getImpegno().getListaVociMutuo();
-		}
-		model.setListaVociMutuo(listaVociMutuo);
-		
-		//se c'e' il subimpegno
-		if(model.getImpegno().getElencoSubImpegni()!=null && !model.getImpegno().getElencoSubImpegni().isEmpty()){
-			SubImpegno subImpegno=model.getImpegno().getElencoSubImpegni().get(0);
-			if(subImpegno!=null){
-				if(!subImpegno.getStatoOperativoMovimentoGestioneSpesa().equalsIgnoreCase(Constanti.MOVGEST_STATO_ANNULLATO)){
-					model.setNumeroSub(subImpegno.getNumero().intValue());
-					model.setDisponibilita(subImpegno.getDisponibilitaLiquidare());
 	
-					//JIRA 858
-					if(subImpegno.getListaVociMutuo()!=null && subImpegno.getListaVociMutuo().size()>0){
-						listaVociMutuo = subImpegno.getListaVociMutuo();
-					}
-					model.setListaVociMutuo(listaVociMutuo);
-				}
-			}
-		}
 		
-		//numero mutuo per pop up:
-		model.setNumeroMutuoPopup(liquidazione.getNumeroMutuo());
-		
-		//JIRA 858
-		if(model.getListaVociMutuo()!=null && model.getListaVociMutuo().size()>0){
-			for(int j=0; j<model.getListaVociMutuo().size();j++){
-				if(model.getNumeroMutuoPopup()!=null && model.getListaVociMutuo().get(j).getNumeroMutuo().equals(model.getNumeroMutuoPopup().toString())){
-					model.setDisponibilita(model.getListaVociMutuo().get(j).getImportoDisponibileLiquidareVoceMutuo());
-					model.setDescrizioneMutuoPopup(model.getListaVociMutuo().get(j).getDescrizioneMutuo());
-				}
-			}
-			//: Se corrispondenzaMutuo e' FALSE mando messaggio all'utente?
-		}
+
 
 		//PROVVEDIMENTO:
 		AttoAmministrativo provvedimento = liquidazione.getAttoAmministrativoLiquidazione();
@@ -498,7 +464,7 @@ public class InserisciLiquidazioneStep3AggiornaAction extends WizardInserisciLiq
 		if(liquidazione.getLiqManuale()!=null && !liquidazione.getLiqManuale().isEmpty()){
 			if("A".equals(liquidazione.getLiqManuale())){
 				tipoConvalida = "automatico";
-			}else if(Constanti.SESSO_M.equals(liquidazione.getLiqManuale())){
+			}else if(CostantiFin.SESSO_M.equals(liquidazione.getLiqManuale())){
 				tipoConvalida = "manuale";
 			}	
 		}
@@ -646,7 +612,7 @@ public class InserisciLiquidazioneStep3AggiornaAction extends WizardInserisciLiq
 				}
 			}	
 		}
-		if(mps!=null && mps.getModalitaAccreditoSoggetto()!=null && mps.getModalitaAccreditoSoggetto().getCodice()!=null && mps.getModalitaAccreditoSoggetto().getCodice().equals(Constanti.D_ACCREDITO_TIPO_CODE_Cessione_del_credito)){
+		if(mps!=null && mps.getModalitaAccreditoSoggetto()!=null && mps.getModalitaAccreditoSoggetto().getCodice()!=null && mps.getModalitaAccreditoSoggetto().getCodice().equals(CostantiFin.D_ACCREDITO_TIPO_CODE_Cessione_del_credito)){
 			if(mps.getTipoAccredito().equals(TipoAccredito.CSC)){
 				listaErrori.add(ErroreFin.MOD_PAGAMENTO_STATO_CESSIONE.getErrore(""));
 			}else{
@@ -709,7 +675,7 @@ public class InserisciLiquidazioneStep3AggiornaAction extends WizardInserisciLiq
 				
 				//4. L'importo della liquidazione deve essere minore uguale dell'importo precedente
 				if(importoLiquidazione.compareTo(importoPrecedente)>0){
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("importo", "(importo solo in diminuzione)"));
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("importo", "(importo solo in diminuzione)"));
 				}
 				
 			}
@@ -748,12 +714,12 @@ public class InserisciLiquidazioneStep3AggiornaAction extends WizardInserisciLiq
 		// se la liqudazione ha lo stato provvisiorio e il provvedimento definitivo 
 		// allora la liquidazione diventa definitiva
 		boolean statoProvvisorioLiquidazione = model.getStatoOperativoLiquidazioneDaAggiornare().equals(StatoOperativoLiquidazione.PROVVISORIO);
-		boolean statoProvvisorioProvvedimento = model.getProvvedimento().getStato().equals(Constanti.STATO_PROVVISORIO);
+		boolean statoProvvisorioProvvedimento = model.getProvvedimento().getStato().equals(CostantiFin.STATO_PROVVISORIO);
 		
 		if(statoProvvisorioLiquidazione && !statoProvvisorioProvvedimento){
-			if (Constanti.STATO_ANNULLATO.equals(model.getProvvedimento().getStato())){
+			if (CostantiFin.STATO_ANNULLATO.equals(model.getProvvedimento().getStato())){
 				model.setStatoOperativoLiquidazioneDaAggiornare(StatoOperativoLiquidazione.ANNULLATO);
-			}else if (Constanti.STATO_PROVVISORIO.equals(model.getProvvedimento().getStato())){
+			}else if (CostantiFin.STATO_PROVVISORIO.equals(model.getProvvedimento().getStato())){
 				model.setStatoOperativoLiquidazioneDaAggiornare(StatoOperativoLiquidazione.PROVVISORIO);
 			}else{
 				model.setStatoOperativoLiquidazioneDaAggiornare(StatoOperativoLiquidazione.VALIDO);
@@ -795,9 +761,9 @@ public class InserisciLiquidazioneStep3AggiornaAction extends WizardInserisciLiq
 		
 		Impegno impegno = model.getImpegnoPerServizio();
 		if(model.getImpegnoPerServizio()!=null && model.getImpegno()!=null){
-			BigDecimal codImpegnoServ = model.getImpegnoPerServizio().getNumero();
+			BigDecimal codImpegnoServ = model.getImpegnoPerServizio().getNumeroBigDecimal();
 			
-			BigDecimal codImpegnoModel = model.getImpegno().getNumero();
+			BigDecimal codImpegnoModel = model.getImpegno().getNumeroBigDecimal();
 			
 			if(codImpegnoServ!=null && codImpegnoModel!=null)
 			{
@@ -807,7 +773,7 @@ public class InserisciLiquidazioneStep3AggiornaAction extends WizardInserisciLiq
 					
 					for(int i = 0; i<impegno.getElencoSubImpegni().size();i++)
 					{
-						if(impegno.getElencoSubImpegni().get(i).getNumero().intValue()==codImpegnoModel.intValue())
+						if(impegno.getElencoSubImpegni().get(i).getNumeroBigDecimal().intValue()==codImpegnoModel.intValue())
 						{
 							subImpegno =impegno.getElencoSubImpegni().get(i);
 							break;

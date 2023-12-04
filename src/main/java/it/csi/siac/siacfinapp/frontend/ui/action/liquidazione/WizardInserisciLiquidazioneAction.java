@@ -5,15 +5,13 @@
 package it.csi.siac.siacfinapp.frontend.ui.action.liquidazione;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.liquidazione.InserisciLiquidazioneModel;
-import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.frontend.webservice.msg.DatiOpzionaliElencoSubTuttiConSoloGliIds;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzato;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
@@ -21,7 +19,6 @@ import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.RicercaImpegnoK;
 
 public abstract class WizardInserisciLiquidazioneAction extends LiquidazioneAction<InserisciLiquidazioneModel> {
@@ -41,7 +38,7 @@ public abstract class WizardInserisciLiquidazioneAction extends LiquidazioneActi
 	//Metodi per la profilazione degli impegni
 	public boolean isAbilitatoInsLiq(){
 		//verifichiamo l'abilitazione all'azione OP_SPE_insLiq
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_insLiq);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_insLiq);
 	}
 	
 	protected void caricaListaMotivazioniAssenzaCig() {
@@ -60,7 +57,7 @@ public abstract class WizardInserisciLiquidazioneAction extends LiquidazioneActi
 		rip.setEnte(sessionHandler.getEnte());
 		rip.setRichiedente(sessionHandler.getRichiedente());
 		RicercaImpegnoK k = new RicercaImpegnoK();
-		k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		k.setAnnoImpegno(this.model.getAnnoImpegno());
 		k.setNumeroImpegno(new BigDecimal(this.model.getNumeroImpegno()));
 		
@@ -83,7 +80,7 @@ public abstract class WizardInserisciLiquidazioneAction extends LiquidazioneActi
 		
 		rip.setpRicercaImpegnoK(k);
 		
-		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 		
 		return respRk;
 	}
@@ -136,44 +133,9 @@ public abstract class WizardInserisciLiquidazioneAction extends LiquidazioneActi
 	 * Metodo interno a preparaCampiInserisciLiquidazione.
 	 */
 	protected void impostaDisponibilitaLiquidare(){
-		if(model.getNumeroMutuoPopup()!=null){
-			//numero mutuo inserito
-			if(!isEmpty(model.getListaVociMutuo())){
-				//ci sono voci mutuo
-				VoceMutuo mutuoCorrispondente = FinUtility.findVoceMutuoByNumero(model.getListaVociMutuo(), model.getNumeroMutuoPopup());
-				if(mutuoCorrispondente!=null){
-					//trovato mutuo corrispondente
-					model.setDisponibilita(mutuoCorrispondente.getImportoDisponibileLiquidareVoceMutuo());
-				}
-			}
-		}else{
-			model.setDisponibilita(model.getImpegno().getDisponibilitaLiquidare());
-		}
+		model.setDisponibilita(model.getImpegno().getDisponibilitaLiquidare());
 	}
 	
-	protected boolean settaVociMutuoNelModel(){
-		//SETTIAMO LE VARIABILI NEL MODEL:
-		boolean ciSonoMutui = ciSonoMutui(model.getImpegno());
-		List<VoceMutuo> listaVociMutuo = new ArrayList<VoceMutuo>();
-		if(ciSonoMutui){
-			listaVociMutuo = model.getImpegno().getListaVociMutuo();
-			model.setHasMutui(true);
-		}
-		model.setListaVociMutuo(listaVociMutuo);
-		return ciSonoMutui;
-	}
 	
-	/**
-	 * Per verificare che l'impegno abbia voci di mutuo
-	 * @return
-	 */
-	protected boolean ciSonoMutui(Impegno impegno){
-		boolean ciSonoMutui =  false;
-		if(impegno!=null && !isEmpty(impegno.getListaVociMutuo())){
-			//ok lista voci mutui ha elementi
-			ciSonoMutui = true;
-		}
-		return ciSonoMutui;
-	}
 	
 }

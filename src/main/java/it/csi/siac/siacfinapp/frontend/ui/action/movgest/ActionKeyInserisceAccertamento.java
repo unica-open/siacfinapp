@@ -4,6 +4,8 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
+import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
+
 /**
  * classe utilizzata per la definizione univoca del modello dati in sessione
  * ed anche per la renderizzazione automatica delle label a seconda
@@ -49,6 +51,12 @@ public class ActionKeyInserisceAccertamento extends WizardInserisciMovGestAction
 	 */
 	public boolean sonoInInserimento(){
 		return true;
+	}
+	
+	@Override
+	//SIAC-7667
+	protected boolean isPerimetroSanitarioCongruenteConGsa(CapitoloImpegnoModel capitolo) {
+		return capitolo.getCodicePerimetroSanitarioEntrata() != null && CODICE_PERIMETRO_SANITARIO_ENTRATA_GSA.equals(capitolo.getCodicePerimetroSanitarioEntrata());
 	}
 
 }

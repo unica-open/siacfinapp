@@ -26,8 +26,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage"> 
-		
-		  <s:form id="nuovaRigaDaMovimento" action="nuovaRigaDaMovimento.do" method="post">  
+		  <%-- SIAC-7952 rimuovo .do dalla action --%>
+		  <s:form id="nuovaRigaDaMovimento" action="nuovaRigaDaMovimento" method="post">  
 			<!--#include virtual="include/alertErrorSuccess.html" -->
 			<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 
@@ -104,6 +104,10 @@ SPDX-License-Identifier: EUPL-1.2
 							</div>
 						</div>
 						
+						<s:set var="resedeAction" value="%{'nuovaRigaDaMovimento_resede'}" />	          
+						<s:set var="caricaTitoloModPagAction" value="%{'nuovaRigaDaMovimento_caricaTitoloModPag'}" />	          
+						<s:set var="remodpagamentoAction" value="%{'nuovaRigaDaMovimento_remodpagamento'}" />	         
+						
 						<div class="accordion" id="soggetto2">
 							<div class="accordion-group">
 								<div class="accordion-heading">    
@@ -119,6 +123,9 @@ SPDX-License-Identifier: EUPL-1.2
 										<!--#include virtual="include/soggetto.html" -->
 										<!--#include virtual="include/sediSecondarie.html" -->
 										<!--#include virtual="include/modalitaPagamento.html" -->  
+										
+										<s:set var="ricercaSoggettoAction" value="%{'nuovaRigaDaMovimento_ricercaSoggetto'}"/> 
+										<s:set var="selezionaSoggettoAction" value ="%{'nuovaRigaDaMovimento_selezionaSoggetto'}"/>
 										
 										<div id="refreshHeaderSoggetto">
 								          	<s:include value="/jsp/carta/include/headerSoggettoCarta.jsp"/>		       	
@@ -146,17 +153,25 @@ SPDX-License-Identifier: EUPL-1.2
 				</div>
 			</div>
 			
+			<s:set var="confermaImpegnoCartaAction" value="%{'nuovaRigaDaMovimento_confermaImpegnoCarta'}" />			
+            <s:set var="pulisciRicercaImpegnoAction" value="%{'nuovaRigaDaMovimento_pulisciRicercaImpegno'}" />	          
+            <s:set var="ricercaGuidataImpegnoAction" value="%{'nuovaRigaDaMovimento_ricercaGuidataImpegno'}" />	          
+         
 			<s:include value="/jsp/carta/include/modalImpegnoCarta.jsp" />
 			  	
 			<!--#include virtual="include/modal.html" -->  
 			<p class="margin-medium">
 				<!-- <a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> -->
-				<s:submit name="indietro" value="indietro" method="indietroRiga" cssClass="btn btn-secondary" />
+				<!-- task-131 <s:submit name="indietro" value="indietro" method="indietroRiga" cssClass="btn btn-secondary" /> -->
+				<s:submit name="indietro" value="indietro" action="nuovaRigaDaMovimento_indietroRiga" cssClass="btn btn-secondary" />
+				
 				<!-- <a class="btn btn-secondary" href="#">annulla</a> --> 
-				<s:submit name="annulla" value="annulla" method="annullaInserisciRiga" cssClass="btn btn-secondary" />
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaInserisciRiga" cssClass="btn btn-secondary" /> -->
+				<s:submit name="annulla" value="annulla" action="nuovaRigaDaMovimento_annullaInserisciRiga" cssClass="btn btn-secondary" />
 				<span class="pull-right">
 					<!-- <a class="btn btn-primary" href="FIN-insCartaContabileStep2.shtml">inserisci riga</a> -->
-					<s:submit cssClass="btn btn-primary pull-right" method="inserisciRiga" value="inserisci riga" name="inserisciRiga" />
+					<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" method="inserisciRiga" value="inserisci riga" name="inserisciRiga" /> -->
+					<s:submit cssClass="btn btn-primary pull-right" action="nuovaRigaDaMovimento_inserisciRiga" value="inserisci riga" name="inserisciRiga" />
 				</span>
 			</p>       
 			  
@@ -177,6 +192,16 @@ SPDX-License-Identifier: EUPL-1.2
 				$("#codCreditore").val(),
 				null
 			);
+			$.ajax({
+				//task-131 url: '<s:url method="ricercaSoggetto"></s:url>',
+				url: '<s:url action="nuovaRigaDaMovimento_ricercaSoggetto"></s:url>',
+				type: "GET",
+				data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
+			    success: function(data)  {
+			    	$("#refreshModPagamento").html(data);
+			    }
+			});
+			
 		});
 		
 		$("#linkCompilazioneGuidataImpegno").click(function(){
@@ -190,7 +215,8 @@ SPDX-License-Identifier: EUPL-1.2
 			var cod = $("#codCreditore").val();
 			//Carico i dati in tabella "Modalita' di pagamento"		
 			$.ajax({
-				url: '<s:url method="modpagamento"></s:url>',
+				//task-131 url: '<s:url method="modpagamento"></s:url>',
+				url: '<s:url action="nuovaRigaDaMovimento_modpagamento"></s:url>',
 				type: "GET",
 				data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 			    success: function(data)  {
@@ -198,21 +224,14 @@ SPDX-License-Identifier: EUPL-1.2
 			    	// $("#openSediSEC").click(); 
 			    	 //Carico i dati in tabella "Sedi secondarie"
 					$.ajax({
-						url: '<s:url method="sedisecondarie"></s:url>',
+						//task-131 url: '<s:url method="sedisecondarie"></s:url>',
+						url: '<s:url action="nuovaRigaDaMovimento_sedisecondarie"></s:url>',
 						type: "GET",
 						data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 					    success: function(data)  {
 					    	$("#refreshSediSecondarie").html(data);
 					    	
 					    	
-					    	$.ajax({
-								url: '<s:url method="aggiornaAvviso"></s:url>',
-								type: "GET",
-							    success: function(data)  {
-							    	$("#aggiornaAvviso").html(data);
-							    	
-								}
-							}); 
 						}
 					}); 
 				}

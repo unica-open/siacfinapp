@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -165,15 +165,21 @@ public class AggiornaProvvisorioCassaAction extends WizardAggiornaProvvisorioAct
 					(isUtenteDecentrato() ||  
 					StringUtils.isNotEmpty(model.getDataPresaInCaricoServizio()) || 
 					StringUtils.isNotEmpty(model.getDataRifiutoErrataAttribuzione()))) {
-				listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Accettato"));
+				listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("accettato"));
 			}
 
 			if(Boolean.TRUE.equals(model.getAccettato()) && StringUtils.isEmpty(model.getDataPresaInCaricoServizio())) {
-				listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Data presa in carico dal Servizio"));
+				listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("data presa in carico dal Servizio"));
 			}
 			
-			if(Boolean.FALSE.equals(model.getAccettato()) && StringUtils.isEmpty(model.getDataRifiutoErrataAttribuzione())) {
-				listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Data rifiuto per errata attribuzione"));
+			if(Boolean.FALSE.equals(model.getAccettato())) {
+				if (StringUtils.isEmpty(model.getDataRifiutoErrataAttribuzione())) {
+					listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("data rifiuto per errata attribuzione"));
+				}
+
+				if (isUtenteDecentrato() && StringUtils.isBlank(model.getNote())) {
+					listaErrori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("note"));
+				}
 			}
 		}
 		

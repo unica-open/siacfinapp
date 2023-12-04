@@ -60,7 +60,10 @@ SPDX-License-Identifier: EUPL-1.2
 						</div>
 					</div>
 				</fieldset>
-							
+				
+				<s:set var="confermaCompGuidataAction" value="%{'gestisciStoricoImpegnoAccertamentoStep1_confermaCompGuidata'}" />	  						        	        			
+				<s:set var="ricercaGuidataImpegnoAction" value="%{'gestisciStoricoImpegnoAccertamentoStep1_ricercaGuidataImpegno'}" />	          
+			
 				<s:include value="/jsp/include/modalImpegno.jsp" />      
 	          </div>
 	        </div>          
@@ -68,8 +71,10 @@ SPDX-License-Identifier: EUPL-1.2
 	         
 	        <p>
 				<s:include value="/jsp/include/indietro.jsp" /> 
-		        <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary"/>
-				<s:submit name="prosegui" value="associa accertamento" method="prosegui" cssClass="btn btn-primary pull-right freezePagina" /> 
+		        <!-- task-131 <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary"/>-->
+				<!-- task-131 <s:submit name="prosegui" value="associa accertamento" method="prosegui" cssClass="btn btn-primary pull-right freezePagina" />-->
+				<s:submit name="annulla" value="annulla" action="gestisciStoricoImpegnoAccertamentoStep1_annulla" cssClass="btn btn-secondary"/>
+				<s:submit name="prosegui" value="associa accertamento" action="gestisciStoricoImpegnoAccertamentoStep1_prosegui" cssClass="btn btn-primary pull-right freezePagina" /> 
 			</p>   
 			        
 	      </s:form>

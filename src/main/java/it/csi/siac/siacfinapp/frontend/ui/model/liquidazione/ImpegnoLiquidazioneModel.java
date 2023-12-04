@@ -19,9 +19,6 @@ public class ImpegnoLiquidazioneModel extends GenericFinModel {
 	//numero sub
 	private Integer numeroSub;
 	
-	//numero mutuo
-	private Integer numeroMutuo;
-	
 	//uid
 	private Integer uid;
 	
@@ -49,12 +46,5 @@ public class ImpegnoLiquidazioneModel extends GenericFinModel {
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
-	public Integer getNumeroMutuo() {
-		return numeroMutuo;
-	}
-	public void setNumeroMutuo(Integer numeroMutuo) {
-		this.numeroMutuo = numeroMutuo;
-	}
-	
 	
 }

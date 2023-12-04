@@ -4,12 +4,59 @@
 */
 $(function(){
 	
+	if ($("#riaccertatoNo").is(':checked') || $("#reannoNo").is(':checked')) {
+		$("#bloccoRiaccertato").hide();
+	}
+	if ($("#riaccertatoSi").is(':checked') || $("#reannoSi").is(':checked')) {	
+		$("#bloccoRiaccertato").show();
+	}
+	
+	//inizio SIAC-6997
+	function gestioneRiaccertatoFlagSi(){
+		$("#bloccoRiaccertato").show();
+	}
+	
+	function gestioneRiaccertatoFlagNo(){
+		$("#annoImpRiacc").val("");
+		$("#numImpRiacc").val("");
+		$("#bloccoRiaccertato").hide();
+	}
+	
+	$("#reannoNo").change(function(){
+		if($("#riaccertatoNo").is(':checked')){
+			gestioneRiaccertatoFlagNo();
+		}
+	});
+	
+	$("#riaccertatoNo").change(function(){
+		if($("#reannoNo").is(':checked')){
+			gestioneRiaccertatoFlagNo();
+		}
+	});
+	
+	$("#riaccertatoSi").change(function(){
+		gestioneRiaccertatoFlagSi();
+		if($("#reannoSi").is(':checked')){
+			$("#reannoNo").prop('checked', true);
+			$("#reannoSi").prop('checked', false);
+		}
+	});
+	
+	$("#reannoSi").change(function(){		  
+		gestioneRiaccertatoFlagSi();
+		if($("#riaccertatoSi").is(':checked')){
+			$("#riaccertatoNo").prop('checked', true);
+			$("#riaccertatoSi").prop('checked', false);
+		}
+	});
+	
+	//fine SIAC-6997
 	
 	$("#guidaProgCronop").on('shown', function(){
 		$.ajax({
 			//url: '<s:url method="ricercaCronop"/>',
 			
-			url: '/siacfinapp/aggiornaImpegnoStep1!ricercaCronop.do',
+			url: '/siacfinapp/aggiornaImpegnoStep1_ricercaCronop.do',
 			type: 'POST',
 		    success: function(data)  {
 			    $("#gestioneRisultatoRicercaProgCronop").html(
@@ -58,5 +105,23 @@ $(function(){
 	$('#radioPrevistoCorrispettivoSi').click(function() {
 		$('#radioPrevistaFatturaNo').trigger('click');
 	});
+	
+
+	$("#linkConsultaModificheStrutturaCompetente").click(function() {
+		
+		//$('div').remove('.nome_classe');
+		
+		var url = $('#consultaModificheStrutturaCompetente').val();
+		
+		$.ajax({
+			url: url,
+			type: 'POST',
+			success: function(data)  {
+				$("#modConsultaModificheStrutturaCompetente").html(data);
+			}
+		});
+	});	
+	
+	
 	
 });

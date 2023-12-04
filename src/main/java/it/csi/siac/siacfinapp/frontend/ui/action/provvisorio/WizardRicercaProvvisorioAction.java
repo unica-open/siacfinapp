@@ -4,18 +4,16 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.provvisorio;
 
-import java.util.ArrayList;
-
 import org.apache.commons.lang.StringUtils;
 
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.GenericPopupAction;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.RicercaProvvisorioModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaProvvisoriDiCassa;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaProvvisoriDiCassaResponse;
 import it.csi.siac.siacfinser.model.provvisoriDiCassa.ProvvisorioDiCassa.TipoProvvisorioDiCassa;
@@ -35,7 +33,7 @@ public class WizardRicercaProvvisorioAction extends GenericPopupAction<RicercaPr
 	public boolean isUtenteAmministratore() {
 		if (isAmministratore == null){
 			//valutiamo se abilitato all'azione OP_SPE_AGGPROVVCASSA:
-			isAmministratore = isAzioneAbilitata(CodiciOperazioni.OP_SPE_AGGPROVVCASSA);
+			isAmministratore = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_AGGPROVVCASSA);
 		}
 		return isAmministratore;
 	}
@@ -43,7 +41,7 @@ public class WizardRicercaProvvisorioAction extends GenericPopupAction<RicercaPr
 	public boolean isUtenteDecentrato() {
 		if (isDecentrato == null){
 			//valutiamo se abilitato all'azione OP_OIL_AGG_DEC_PROVV_CASSA:
-			isDecentrato = isAzioneAbilitata(CodiciOperazioni.OP_OIL_AGG_DEC_PROVV_CASSA) && !isUtenteAmministratore();
+			isDecentrato = isAzioneConsentita(AzioneConsentitaEnum.OP_OIL_AGG_DEC_PROVV_CASSA) && !isUtenteAmministratore();
 		}
 		return isDecentrato;
 	}
@@ -51,7 +49,7 @@ public class WizardRicercaProvvisorioAction extends GenericPopupAction<RicercaPr
 	public boolean isUtenteLettore() {
 		if (isLettore == null){
 			//valutiamo se abilitato all'azione OP_SPE_LEGGIPROVVCASSA:
-			isLettore = isAzioneAbilitata(CodiciOperazioni.OP_SPE_LEGGIPROVVCASSA) && !isUtenteDecentrato() && !isUtenteAmministratore();
+			isLettore = isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_LEGGIPROVVCASSA) && !isUtenteDecentrato() && !isUtenteAmministratore();
 		}
 		return isLettore;
 	}
@@ -72,7 +70,7 @@ public class WizardRicercaProvvisorioAction extends GenericPopupAction<RicercaPr
 		ricercaProvvisorio.setEnte(sessionHandler.getAccount().getEnte());
 		
 		//Anno Esercizio/Bilancio
-		prp.setAnno(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		prp.setAnno(sessionHandler.getAnnoBilancio());
 		
 		//NUMERO PROVVISORIO:		
 		if(model.getNumeroProvvisorio() != null){
@@ -146,10 +144,17 @@ public class WizardRicercaProvvisorioAction extends GenericPopupAction<RicercaPr
 			prp.setDataFineInvioServizio(DateUtility.parse(model.getDataFineInvioServizio()));
 		}
 		
+		if(StringUtils.isNotEmpty(model.getDataInizioPresaInCaricoServizio())){	
+			prp.setDataInizioPresaInCaricoServizio(DateUtility.parse(model.getDataInizioPresaInCaricoServizio()));
+		}
+		if(StringUtils.isNotEmpty(model.getDataFinePresaInCaricoServizio())){	
+			prp.setDataFinePresaInCaricoServizio(DateUtility.parse(model.getDataFinePresaInCaricoServizio()));
+		}
+		
 		if(StringUtils.isNotEmpty(model.getDataInizioRifiutoErrataAttribuzione())){	
 			prp.setDataInizioRifiutoErrataAttribuzione(DateUtility.parse(model.getDataInizioRifiutoErrataAttribuzione()));
 		}
-		if(StringUtils.isNotEmpty(model.getDataFineTrasmissione())){	
+		if(StringUtils.isNotEmpty(model.getDataFineRifiutoErrataAttribuzione())){	
 			prp.setDataFineRifiutoErrataAttribuzione(DateUtility.parse(model.getDataFineRifiutoErrataAttribuzione()));
 		}
 		
@@ -166,12 +171,20 @@ public class WizardRicercaProvvisorioAction extends GenericPopupAction<RicercaPr
 		//verifica sul flag annullato
 		if(StringUtils.isNotEmpty(model.getFlagAnnullatoProv())){	
 			if(model.getFlagAnnullatoProv().equalsIgnoreCase("si")){	 
-				prp.setFlagAnnullato(Constanti.TRUE);
+				prp.setFlagAnnullato(CostantiFin.TRUE);
 			}	
 			if(model.getFlagAnnullatoProv().equalsIgnoreCase("no")){	
-				prp.setFlagAnnullato(Constanti.FALSE);
+				prp.setFlagAnnullato(CostantiFin.FALSE);
 			}
 		}
+
+		
+		if (StringUtils.isNotBlank(model.getFlagAccettato())){	
+			prp.setFlagAccettato("si".equalsIgnoreCase(model.getFlagAccettato()));
+		} else {
+			prp.setFlagAccettato(null);
+		}
+
 		
 		//Struttura amministrativa:
 		if(StringUtils.isNotBlank(model.getStrutturaSelezionataSuPagina())){
@@ -191,9 +204,9 @@ public class WizardRicercaProvvisorioAction extends GenericPopupAction<RicercaPr
 		//flag da regolarizzare
 		if(StringUtils.isNotEmpty(model.getFlagDaRegolarizzare())){	
 			if(model.getFlagDaRegolarizzare().equalsIgnoreCase("si")){ 
-				prp.setFlagDaRegolarizzare(Constanti.TRUE);
+				prp.setFlagDaRegolarizzare(CostantiFin.TRUE);
 			}else{
-				prp.setFlagDaRegolarizzare(Constanti.FALSE);
+				prp.setFlagDaRegolarizzare(CostantiFin.FALSE);
 			}
 		} else {
 			prp.setFlagDaRegolarizzare(null);
@@ -240,11 +253,11 @@ public class WizardRicercaProvvisorioAction extends GenericPopupAction<RicercaPr
 		model.setDataInizioRifiutoErrataAttribuzione(null);
 		model.setDataFineRifiutoErrataAttribuzione(null);
 		model.setTipoDocumentoProv(null);
-		model.setTipoDocumentoProvList(new ArrayList<String>());
+		model.setDataInizioPresaInCaricoServizio(null);
+		model.setDataFinePresaInCaricoServizio(null);
 		model.setFlagAnnullatoProv(null);
-		model.setFlagAnnullatoProvList(new ArrayList<String>());
+		model.setFlagAccettato(null);
 		model.setFlagDaRegolarizzare(null);
-		model.setFlagDaRegolarizzareList(new ArrayList<String>());
 		model.setImportoDa(null);
 		model.setImportoA(null);
 		model.setStrutturaSelezionataSuPagina(null);

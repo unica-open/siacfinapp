@@ -9,7 +9,15 @@ SPDX-License-Identifier: EUPL-1.2
 		<button type="button" class="close" data-dismiss="alert">&times;</button>
 		<strong>Attenzione!!</strong><br>
 		<ul>
-			<s:actionerror />
+			<s:if test="hasErrori()">
+				<s:iterator value="errori">
+					<li>  <s:property value="testo" escapeHtml="false" /> 
+					<s:if test="hasDettagliTecnici()"><i class="icon-question-sign" data-placement="right" data-html="true" data-trigger="click" data-toggle="tooltip" 
+						data-original-title="Messaggio da segnalare all'assistenza:<br/><s:property value='dettagliTecnici'/>  "></i></s:if>
+					</li>
+				</s:iterator>
+			</s:if>
+
 		</ul>
 	</div>
 </s:if>
@@ -20,7 +28,7 @@ SPDX-License-Identifier: EUPL-1.2
 		<%-- Rimosso Attenzione!! per JIRA SIAC-5248 --%>
 		<strong></strong><br>
 		<ul>
-			<s:actionmessage />
+			<s:actionmessage escape="false" />
 		</ul>
 	</div>
 </s:if>
@@ -33,7 +41,6 @@ SPDX-License-Identifier: EUPL-1.2
 		   <s:iterator value="actionWarnings">
 		       <s:property escapeHtml="false"/><br>
 		   </s:iterator>
-			
 		</ul>
 	</div>
 </s:if>

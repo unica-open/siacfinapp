@@ -4,7 +4,7 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -36,7 +36,8 @@ public class GestioneSubaccertamentoStep2Action extends ActionKeyAggiornaAccerta
 	public String execute() throws Exception {
 		setMethodName("execute");
 		teSupport.setOggettoAbilitaTE(OggettoDaPopolareEnum.SUBACCERTAMENTO.toString());
-		if (caricaListeBil(WebAppConstants.CAP_EG)) {
+		sessionHandler.setAnnoEsercizio(model.getStep1Model().getCapitolo().getAnno().toString());
+		if(caricaListeBil(WebAppConstants.CAP_EG)) {
 			return INPUT;
 		}
 		caricaLabelsAggiornaSub(2);

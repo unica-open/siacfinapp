@@ -56,6 +56,17 @@ $(document).ready(function() {
 	onClick_input_name_model_accettato($("input[name='model.accettatoStr']:checked").val());
 	
 	$("input[name='model.accettatoStr']").click(function() {
+		if ($('#tipoUtente').data('is-decentrato')) {
+			if (this.id === 'accettatotrue') {
+				return false;
+			}
+			
+			if (this.id === 'accettatofalse') {
+				$('#dataRifiutoErrataAttribuzione').datepicker('remove').prop('readonly', true).val(todayDDMMYYYY());
+				$("#dataPresaInCaricoServizio").val("");
+			}
+		}
+
 		onClick_input_name_model_accettato(this.value);
 	});
 	
@@ -66,5 +77,34 @@ $(document).ready(function() {
 	$("#dataRifiutoErrataAttribuzione").click(function() {
 		$("#dataPresaInCaricoServizio").val("");
 	});
+	
+});
+
+
+$(document).on("ztree:init", function(ztree) {
+	var ztree = $.fn.zTree.getZTreeObj("strutturaAmministrativaAggiornamentoProvvisorio");
+	
+	if (ztree != null && $('#tipoUtente').data('is-amministratore')) {
+		
+		var fnClick = ztree.setting.callback.onClick || function(){};
+		var fnCheck = ztree.setting.callback.onCheck || function(){};
+		   
+	     var setAccettatoAndDataPresaInCaricoServizio = function() {
+	   		$("#accettatotrue").trigger('click');
+			$('#dataInvioServizio').val(todayDDMMYYYY());
+			$('#dataPresaInCaricoServizio').val(todayDDMMYYYY());
+			$("#dataRifiutoErrataAttribuzione").val("");
+	     };
+	
+		   ztree.setting.callback.onClick = function(srcEvent, treeId, node, clickFlag) {
+			   fnClick(srcEvent, treeId, node, clickFlag);
+			   setAccettatoAndDataPresaInCaricoServizio();  
+		   }
+		   
+		   ztree.setting.callback.onCheck = function(srcEvent, treeId, node, clickFlag) {
+			   fnCheck(srcEvent, treeId, node, clickFlag);
+			   setAccettatoAndDataPresaInCaricoServizio();
+		   }
+	}
 	
 });

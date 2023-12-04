@@ -8,10 +8,12 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.Messaggio;
+import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AnnullaOrdinativoPagamento;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AnnullaOrdinativoPagamentoResponse;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
@@ -50,13 +52,11 @@ public class AnnullaOrdinativoPagamentoAction extends WizardRicercaOrdinativoAct
 		AnnullaOrdinativoPagamentoResponse response =  ordinativoService.annullaOrdinativoPagamento(annullaOrdinativoPagamento);
 		
 		//analizzo la response:
-		if(response.isFallimento()) {
-			if(null!=response.getErrori() && null!=response.getErrori().get(0)){
-				// ci sono errori
-				addPersistentActionError(response.getErrori().get(0).getCodice()+" "+response.getErrori().get(0).getDescrizione());
-			}
+		if (response.isFallimento() && !CollectionUtils.isEmpty(response.getErrori())) {
+			//SIAC-7831 - passo a sessione in quanto il prepare della GenericFinAction cancella sempre gli errori
+			sessionHandler.setParametro(FinSessionParameter.ERRORI_AZIONE_PRECEDENTE, response.getErrori());
 			return "gotoElencoOrdinativoPagamento";
-		}else if(response.hasErrori()){
+		} else if(response.hasErrori()) {
 			// ci sono warning
 			List<Errore> erroriWarning=response.getErrori();
 			for (Errore erroreWarning : erroriWarning) {

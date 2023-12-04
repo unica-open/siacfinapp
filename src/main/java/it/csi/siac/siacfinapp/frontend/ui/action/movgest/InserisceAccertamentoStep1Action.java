@@ -6,12 +6,13 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
 import java.math.BigInteger;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacbilser.model.ElementoPianoDeiConti;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
@@ -21,7 +22,6 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoMode
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.model.Accertamento;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 
@@ -62,6 +62,9 @@ public class InserisceAccertamentoStep1Action extends ActionKeyInserisceAccertam
 		    model.getStep1Model().setDaRiaccertamento(buildListaSiNo());
 		    model.getStep1Model().setImplPluriennale(buildListaSiNo());
 		    model.getStep1Model().setListflagAttivaGsa(buildListaSiNo());
+		    //SIAC-6997
+		    model.getStep1Model().setDaReanno(buildListaSiNo());
+			recuperaDescrizioneStrutturaCompetente();
 		    
 		} catch(Exception e) {
 			log.debug("prepare", e.getMessage());
@@ -73,7 +76,7 @@ public class InserisceAccertamentoStep1Action extends ActionKeyInserisceAccertam
 	
 	
 	public boolean isAccertamentoPlurAbilitato(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_ENT_gestisciAccertamentoPluriennale);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoPluriennale);
 	}
 	
 	@Override
@@ -95,13 +98,13 @@ public class InserisceAccertamentoStep1Action extends ActionKeyInserisceAccertam
 		
 		if(isAbilitatoGestisciAccertamentoDec()){
 			// decentrato
-			setAzioniDecToCheck(CodiciOperazioni.OP_ENT_gestisciAccertamentoDecentrato);
+			setAzioniDecToCheck(AzioneConsentitaEnum.OP_ENT_gestisciAccertamentoDecentrato.getNomeAzione());
 			if(!checkAzioniDec()){
 			   addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));	
 			}
 		}else if(isAbilitatoGestisciAccertamento()){
 			    // master
-			setAzioniToCheck(CodiciOperazioni.OP_ENT_gestisciAccertamento);
+			setAzioniToCheck(AzioneConsentitaEnum.OP_ENT_gestisciAccertamento.getNomeAzione());
 			if(!checkAzioni()){
 				   addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));	
 				}
@@ -111,7 +114,7 @@ public class InserisceAccertamentoStep1Action extends ActionKeyInserisceAccertam
 		
 		// verifico lo stato di bilancio
 		// nel caso genero errore non appena si atterra sulla pagina
-		controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()), "INSERIMENTO", "ACCERTAMENTO");
+		controlloStatoBilancio(sessionHandler.getAnnoBilancio(), "INSERIMENTO", "ACCERTAMENTO");
 		
 			
 		if(forceReload){
@@ -120,16 +123,44 @@ public class InserisceAccertamentoStep1Action extends ActionKeyInserisceAccertam
 				model.getStep1Model().getCapitolo().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
 				model.getCapitoloRicerca().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
 				if(model.getStep1Model().getAnnoImpegno() == null || "".equalsIgnoreCase(model.getStep1Model().getAnnoImpegno().toString())){
-					model.getStep1Model().setAnnoImpegno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+					model.getStep1Model().setAnnoImpegno(sessionHandler.getAnnoBilancio());
 				}
 				
 			}
 			
 			model.getStep1Model().setRiaccertato( setNoIfNull(model.getStep1Model().getRiaccertato()));
+			//SIAC-6997
+			model.getStep1Model().setReanno(setNoIfNull(model.getStep1Model().getReanno()));
 			model.getStep1Model().setPluriennale(setNoIfNull(model.getStep1Model().getPluriennale()));
 			model.getStep1Model().setFlagFattura(setNoIfNull(model.getStep1Model().getFlagFattura()));
 			model.getStep1Model().setFlagCorrispettivo(setNoIfNull(model.getStep1Model().getFlagCorrispettivo()));
 			model.getStep1Model().setFlagAttivaGsa(setNoIfNull(model.getStep1Model().getFlagAttivaGsa()));
+			
+			//SIAC-6997
+			recuperaDescrizioneStrutturaCompetente();
+//			if(model.getStep1Model().getStrutturaSelezionataCompetente() != null && !model.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+//				List<StrutturaAmministrativoContabile> lista = sessionHandler.getAccount().getStruttureAmministrativeContabili();
+//				if(lista != null && !lista.isEmpty()){
+//					if(lista.size() > 1){
+//						//devo filtrare l'elenco per codice
+//						for(int j = 0; j < lista.size(); j++){
+//							if(lista.get(j).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())) {
+//								model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getCodice() +"-"+lista.get(j).getDescrizione());
+//								break;
+//							}else{
+//								if(lista.get(j).getSubStrutture() != null && !lista.get(j).getSubStrutture().isEmpty()){
+//									for(int k = 0; k < lista.get(j).getSubStrutture().size(); k++){
+//										if(lista.get(j).getSubStrutture().get(k).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())){
+//											model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getSubStrutture().get(k).getCodice() +"-"+lista.get(j).getSubStrutture().get(k).getDescrizione());
+//											break;
+//										}
+//									}
+//								}
+//							}
+//						}
+//					}
+//				}
+//			}
 			
 			if(model.getStep1Model().getStato() == null){
 				model.getStep1Model().setStato(MOVGEST_PROVVISORIO);
@@ -157,8 +188,47 @@ public class InserisceAccertamentoStep1Action extends ActionKeyInserisceAccertam
 			sessionHandler.setParametro(FinSessionParameter.MOVIMENTO_GESTIONE_DA_RIPETERE, null);
 		}
 		
-	    return SUCCESS;
+		return SUCCESS;
 	} 
+	
+	//SIAC-6997
+	/*protected void recuperaDescrizioneStrutturaCompetente() {
+			
+			
+			//istanzio la request per il servizio:
+			LeggiStrutturaAmminstrativoContabile request = new LeggiStrutturaAmminstrativoContabile();
+
+			request.setAnno(sessionHandler.getAnnoBilancio());
+			request.setIdEnteProprietario(sessionHandler.getEnte().getUid());
+			request.setRichiedente(sessionHandler.getRichiedente());
+
+			//invoco il servizio:
+			LeggiStrutturaAmminstrativoContabileResponse response = classificatoreService.leggiStrutturaAmminstrativoContabile(request);
+
+			
+			List<StrutturaAmministrativoContabile> lista =response.getListaStrutturaAmmContabile();// sessionHandler.getAccount().getStruttureAmministrativeContabili();
+			if(lista != null && !lista.isEmpty() && model.getStep1Model().getStrutturaSelezionataCompetente()!=null){
+
+					
+						 for(int j = 0; j < lista.size(); j++){
+							 if(lista.get(j).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())) {
+								 model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getCodice() +"-"+lista.get(j).getDescrizione());
+								 break;
+							 }else{
+								 if(lista.get(j).getSubStrutture() != null && !lista.get(j).getSubStrutture().isEmpty()){
+									 for(int k = 0; k < lista.get(j).getSubStrutture().size(); k++){
+										 if(lista.get(j).getSubStrutture().get(k).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())){
+											 model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getSubStrutture().get(k).getCodice() +"-"+lista.get(j).getSubStrutture().get(k).getDescrizione());
+											 break;
+										 }
+									 }
+								 }
+							 }
+						 }
+					 
+				 
+			}
+		}  */		
 	
 	private boolean ripetereMovimento(){
 		if(getRipetereMovimento()!=null && getRipetereMovimento().equals("true")){

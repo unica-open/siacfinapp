@@ -7,13 +7,13 @@ package it.csi.siac.siacfinapp.frontend.ui.action.provvisorio;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
-import it.csi.siac.siacfinser.CodiciOperazioni;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 
 @Component
@@ -44,7 +44,7 @@ public class InserisciProvvisorioCassaAction extends WizardInserisciProvvisorioA
 	public String insericiProvvisorioDiCassa(){
 		List<Errore> listaErrori = new ArrayList<Errore>();
 
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_INSPROVVCASSA)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_INSPROVVCASSA)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			return INPUT;
 		}

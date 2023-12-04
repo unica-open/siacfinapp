@@ -18,12 +18,21 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="container-fluid-banner">
 		<a name="A-contenuti" title="A-contenuti"></a>
 	</div>
+	
+	<s:set var="cambiaTabFolderAction" value="%{'consultaOrdinativoIncasso_cambiaTabFolder'}" />
+						
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12 contentPage">
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 				<s:form id="consultaOrdinativoIncasso" method="post" cssClass="form-horizontal">
-
+					<!-- per modalOrdinativo.jsp -->
+					<s:set var="eliminaQuotaOrdinativoAction" value="%{'consultaOrdinativoIncasso_eliminaQuotaOrdinativo'}" />
+					<s:set var="eliminaProvvisorioAction" value="%{'consultaOrdinativoIncasso_eliminaProvvisorio'}" />
+					<s:set var="forzaInserisciQuotaAccertamentoAction" value="%{'consultaOrdinativoIncasso_forzaInserisciQuotaAccertamento'}" />
+					<s:set var="forzaAggiornaQuotaAccertamentoAction" value="%{'consultaOrdinativoIncasso_forzaAggiornaQuotaAccertamento'}" />
+					
+				
 <!-- ************************************************************************************* -->
 					<h3>Consulta ordinativo <s:property value="ordinativoIncasso.numero"/> del <s:property value="%{ordinativoIncasso.dataEmissione}"/> - <s:property value="ordinativoIncasso.descrizione"/></h3>
 					
@@ -88,6 +97,12 @@ SPDX-License-Identifier: EUPL-1.2
 											<dfn>Conto tesoriere</dfn> 
 											<dl><s:property value="ordinativoIncasso.contoTesoreria.codice"/> - <s:property value="ordinativoIncasso.contoTesoreria.descrizione"/></dl>
 										</li>
+										<s:if test="null != ordinativoIncasso.contoTesoreriaSenzaCapienza">
+											<li>
+												<dfn>Conto tesoriere di pertinenza</dfn> 
+												<dl><s:property value="ordinativoIncasso.contoTesoreriaSenzaCapienza.codice"/> - <s:property value="ordinativoIncasso.contoTesoreriaSenzaCapienza.descrizione"/></dl>
+											</li>
+										</s:if>
 										<li>
 											<dfn>Allegato cartaceo</dfn> 
 											<dl>
@@ -252,8 +267,10 @@ SPDX-License-Identifier: EUPL-1.2
 											<dl><s:property value="%{ordinativoIncasso.datiOrdinativoTrasmesso.dataQuietanza}"/></dl>
 										</li>
 										<li>
-											<dfn>Cro</dfn> 
-											<dl><s:property value="ordinativoIncasso.datiOrdinativoTrasmesso.cro"/></dl>
+											<dfn>Numero quietanza</dfn> 
+											<dl><s:property value="ordinativoIncasso.datiOrdinativoTrasmesso.numeroQuietanza"/></dl>
+											<%-- <dfn>Cro</dfn> 
+											<dl><s:property value="ordinativoIncasso.datiOrdinativoTrasmesso.cro"/></dl> --%>
 										</li>
 										<li>
 											<dfn>Data firma</dfn> 
@@ -593,7 +610,8 @@ SPDX-License-Identifier: EUPL-1.2
 						
 						<!-- TASTO RIPETI ORDINATIVO -->
 						<s:if test="abilitatoRipetiOrdinativoIncasso()">
-							<s:submit name="ripeti" id="ripeti" value="ripeti" method="ripeti" cssClass="btn btn-primary pull-right" />
+							<!-- task-131 <s:submit name="ripeti" id="ripeti" value="ripeti" method="ripeti" cssClass="btn btn-primary pull-right" /> -->
+							<s:submit name="ripeti" id="ripeti" value="ripeti" action="consultaOrdinativoIncasso_ripeti" cssClass="btn btn-primary pull-right" />
 						</s:if>
 					</p>
 					
@@ -610,7 +628,8 @@ SPDX-License-Identifier: EUPL-1.2
 	$(".linkQuoteIncInc").click(function() {
 		var supportId = $(this).attr("id").split("_");
 		$.ajax({
-			url: '<s:url method="dettaglioQuoteOrdinativoIncassoInc"/>',
+			// task-131 url: '<s:url method="dettaglioQuoteOrdinativoIncassoInc"/>',
+			url: '<s:url action="consultaOrdinativoIncasso_dettaglioQuoteOrdinativoIncassoInc"/>',
 			type: 'POST',
 			data: 'numeroOrdinativoSelezionato=' + supportId[1],
 		    success: function(data)  {
@@ -622,7 +641,8 @@ SPDX-License-Identifier: EUPL-1.2
 	$(".linkQuoteIncPag").click(function() {
 		var supportId = $(this).attr("id").split("_");
 		$.ajax({
-			url: '<s:url method="dettaglioQuoteOrdinativoIncassoPag"/>',
+			// task-131 url: '<s:url method="dettaglioQuoteOrdinativoIncassoPag"/>',
+			url: '<s:url action="consultaOrdinativoIncasso_dettaglioQuoteOrdinativoIncassoPag"/>',
 			type: 'POST',
 			data: 'numeroOrdinativoSelezionato=' + supportId[1],
 		    success: function(data)  {

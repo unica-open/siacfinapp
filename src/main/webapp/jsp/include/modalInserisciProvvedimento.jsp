@@ -109,7 +109,8 @@ SPDX-License-Identifier: EUPL-1.2
     </div>
        
     <div class="modal-footer">
-	  <s:submit id="inserimentoProvvedimentoSubmit" name="conferma" value="conferma" method="selezionaProvvedimentoInserito" cssClass="btn btn-primary pull-right" />
+	  <!-- task-131 <s:submit id="inserimentoProvvedimentoSubmit" name="conferma" value="conferma" method="selezionaProvvedimentoInserito" cssClass="btn btn-primary pull-right" /> -->
+	  <s:submit id="inserimentoProvvedimentoSubmit" name="conferma" value="conferma" action="%{#selezionaProvvedimentoInseritoAction}" cssClass="btn btn-primary pull-right" /> 
     </div>
     
     
@@ -131,7 +132,8 @@ SPDX-License-Identifier: EUPL-1.2
 				});
 			}
 			$.ajax({
-				url: '<s:url method="inserisciProvvedimento"/>',
+				// task-131 url: '<s:url method="inserisciProvvedimento"/>',
+				url: '<s:url action="%{#inserisciProvvedimentoAction}"/>',				
 				type: 'POST',
 				data: $(".parametroInserimentoProvvedimento").serialize() + strutturaAmministrativaParam,
 			    success: function(data)  {

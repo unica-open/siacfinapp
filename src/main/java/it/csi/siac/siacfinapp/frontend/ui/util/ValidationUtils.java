@@ -160,7 +160,7 @@ public final class ValidationUtils {
 				  } else if(!VerificaPartitaIva.controllaPIVA(model.getPartitaIva()).equalsIgnoreCase("OK")){
 					  
 				       log.debug(methodName, "errore nella partita iva ");
-				       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore("Partita IVA"));
+				       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore());
 				  
 			      }
 				  
@@ -179,7 +179,7 @@ public final class ValidationUtils {
 						}else if(!VerificaPartitaIva.controllaPIVA(model.getPartitaIva()).equalsIgnoreCase("OK")){
 							  
 						       log.debug(methodName, "errore nella partita iva ");
-						       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore("Partita IVA"));
+						       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore());
 						  
 					     }
 				    }
@@ -191,7 +191,7 @@ public final class ValidationUtils {
 								!VerificaPartitaIva.controllaPIVA(model.getPartitaIva()).equalsIgnoreCase("OK")){
 							  
 						       log.debug(methodName, "errore nella partita iva ");
-						       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore("Partita IVA"));
+						       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore());
 						  
 					     }
 				    }
@@ -342,7 +342,7 @@ public final class ValidationUtils {
 				{
 					if ((model.getDenominazione() + model.getIdNaturaGiuridica()).length() > 139) // considera spazio concatenazione
 						listaErrori
-								.add(ErroreCore.VALORE_NON_VALIDO
+								.add(ErroreCore.VALORE_NON_CONSENTITO
 										.getErrore("Ragione Sociale",
 												"(La concatenazione di Ragione sociale e Natura giuridica non deve superare i 140 caratteri)"));
 				}
@@ -364,7 +364,7 @@ public final class ValidationUtils {
 				
 				
 				if ((model.getCognome() + model.getNome()).length() > 139) // considera spazio concatenazione
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Cognome, Nome",
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Cognome, Nome",
 							"(La concatenazione di Cognome e Nome non deve superare i 140 caratteri)"));
 			}
 			
@@ -419,7 +419,7 @@ public final class ValidationUtils {
 				if ((model.getDettaglioSoggetto().getDenominazione() + model.getDettaglioSoggetto()
 						.getNaturaGiuridicaSoggetto().getSoggettoTipoCode()).length() > 139) // considera spazio concatenazione
 					listaErrori
-							.add(ErroreCore.VALORE_NON_VALIDO
+							.add(ErroreCore.VALORE_NON_CONSENTITO
 									.getErrore("Ragione Sociale",
 											"(La concatenazione di Ragione sociale e Natura giuridica non deve superare i 140 caratteri)"));
 				
@@ -433,7 +433,7 @@ public final class ValidationUtils {
 					}else if(!VerificaPartitaIva.controllaPIVA(model.getDettaglioSoggetto().getPartitaIva()).equalsIgnoreCase("OK")){
 						  
 					       log.debug(methodName, "errore nella partita iva ");
-					       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore("Partita IVA"));
+					       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore());
 					  
 				     }
 			    }else if( model.getDettaglioSoggetto().getTipoSoggetto().getSoggettoTipoCode().equals("PG")){
@@ -444,7 +444,7 @@ public final class ValidationUtils {
 					if(StringUtils.isNotEmpty(model.getDettaglioSoggetto().getPartitaIva()) && 
 						 !VerificaPartitaIva.controllaPIVA(model.getDettaglioSoggetto().getPartitaIva()).equalsIgnoreCase("OK")){
 						 log.debug(methodName, "errore nella partita iva ");
-					       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore("Partita IVA"));
+					       listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore());
 							
 					 }      
 					   	
@@ -488,7 +488,7 @@ public final class ValidationUtils {
 				}
 				
 				if ((model.getDettaglioSoggetto().getCognome() + model.getDettaglioSoggetto().getNome()).length() > 139) // considera spazio concatenazione
-					listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("Cognome, Nome",
+					listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("Cognome, Nome",
 							"(La concatenazione di Cognome e Nome non deve superare i 140 caratteri)"));
 			}
 			

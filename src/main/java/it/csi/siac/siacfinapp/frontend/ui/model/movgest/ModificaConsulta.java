@@ -4,20 +4,31 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.model.movgest;
 
+import java.util.List;
+
+import it.csi.siac.siacfinser.model.Impegno;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesaCollegata;
 
 public class ModificaConsulta extends CommonConsulta {
 
 	private static final long serialVersionUID = 1L;
 	
+	//SIAC-8834
+	private Impegno impegnoAssociato;
+
 	//numero, tipo, descrizione, motivo
 	private String numero, tipo, descrizione, motivo;
-	
+
 	//descMain, descSub, numSub
 	private String descMain, descSub, numSub;
 	
 	//provvedimento
 	private final Provvedimento provvedimento = new Provvedimento();
 	
+	//SIAC-7349 Inizio  SR180 FL 09/04/2020
+	private List<ModificaMovimentoGestioneSpesaCollegata> listaModificheMovimentoGestioneSpesaCollegata;
+	//SIAC-7349 Fine SR180 FL 09/04/2020
+
 	//soggetto attuale e precendente
 	private final Soggetto soggettoAttuale = new Soggetto(), soggettoPrec = new Soggetto();
 
@@ -100,4 +111,26 @@ public class ModificaConsulta extends CommonConsulta {
 		return provvedimento;
 	}
 
+	/**
+	 * @return the listaModificheMovimentoGestioneSpesaCollegata
+	 */
+	public List<ModificaMovimentoGestioneSpesaCollegata> getListaModificheMovimentoGestioneSpesaCollegata() {
+		return listaModificheMovimentoGestioneSpesaCollegata;
+	}
+
+	/**
+	 * @param listaModificheMovimentoGestioneSpesaCollegata the listaModificheMovimentoGestioneSpesaCollegata to set
+	 */
+	public void setListaModificheMovimentoGestioneSpesaCollegata(
+			List<ModificaMovimentoGestioneSpesaCollegata> listaModificheMovimentoGestioneSpesaCollegata) {
+		this.listaModificheMovimentoGestioneSpesaCollegata = listaModificheMovimentoGestioneSpesaCollegata;
+	}
+
+	public Impegno getImpegnoAssociato() {
+		return impegnoAssociato;
+	}
+
+	public void setImpegnoAssociato(Impegno impegnoAssociato) {
+		this.impegnoAssociato = impegnoAssociato;
+	}
 }

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import it.csi.siac.siacbilser.model.ElementoPianoDeiConti;
 import it.csi.siac.siaccommonapp.util.exception.WebServiceInvocationFailureException;
@@ -41,7 +42,8 @@ public abstract class GestioneAccertamentoInsPrimaNotaIntegrataBaseAction<M exte
 	private static final long serialVersionUID = -761558327804386647L;
 	
 	/** Servizio per i movimenti di gestione */
-	@Autowired private transient MovimentoGestioneService movimentoGestioneService;
+	@Autowired @Qualifier("movimentoGestioneFinService")
+	private transient MovimentoGestioneService movimentoGestioneFinService;
 	
 	/** Nome del model del completamento e validazione dell'accertamento. Modulo GEN */
 	public static final String MODEL_SESSION_NAME_COMPLETA_VALIDA_INS_ACCERTAMENTO_FIN = "CompletaValidaAccertamentoInsPrimaNotaIntegrataFINModel";
@@ -115,7 +117,7 @@ public abstract class GestioneAccertamentoInsPrimaNotaIntegrataBaseAction<M exte
 		logServiceRequest(req);
 		
 		// Chiamata al servizio
-		RicercaAccertamentoPerChiaveOttimizzatoResponse res = movimentoGestioneService.ricercaAccertamentoPerChiaveOttimizzato(req);
+		RicercaAccertamentoPerChiaveOttimizzatoResponse res = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(req);
 		logServiceResponse(res);
 		
 		// Controllo gli errori
@@ -168,7 +170,7 @@ public abstract class GestioneAccertamentoInsPrimaNotaIntegrataBaseAction<M exte
 		String annoNumeroAccertamento = new StringBuilder()
 				.append(accertamento.getAnnoMovimento())
 				.append("/")
-				.append(accertamento.getNumero().toPlainString())
+				.append(accertamento.getNumeroBigDecimal().toPlainString())
 				.toString();
 		
 		// Anno e numero

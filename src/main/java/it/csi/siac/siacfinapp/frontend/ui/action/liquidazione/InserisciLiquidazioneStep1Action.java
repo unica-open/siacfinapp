@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -21,19 +21,19 @@ import it.csi.siac.siaccorser.model.Entita.StatoEntita;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.TipoClassificatore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.CodiciOperazioni;
+import it.csi.siac.siacfinapp.frontend.ui.util.VerificaBloccoRORHelper;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzatoResponse;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -60,7 +60,6 @@ public class InserisciLiquidazioneStep1Action extends WizardInserisciLiquidazion
 			this.model.setNumeroImpegno(null);
 			this.model.setAnnoImpegno(null);
 			this.model.setNumeroSub(null);
-			this.model.setNumeroMutuoPopup(null);
 			this.model.setDescrizioneImpegnoPopup(null);
 			this.model.setImpegnoPopup(null);
 			this.model.setImpegno(null);
@@ -92,7 +91,7 @@ public class InserisciLiquidazioneStep1Action extends WizardInserisciLiquidazion
 		// precondizioni di ingresso liquidazione		
 		if(isAbilitatoInsLiq()){
 			// master
-			setAzioniToCheck(CodiciOperazioni.OP_SPE_insLiq);
+			setAzioniToCheck(AzioneConsentitaEnum.OP_SPE_insLiq.getNomeAzione());
 			if(!checkAzioni()){			
 			   addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));	
 			   tuttoOk = false;
@@ -182,6 +181,35 @@ public class InserisciLiquidazioneStep1Action extends WizardInserisciLiquidazion
 		}
 
 		if(tuttoOk){
+			
+			//SIAC-6997-bloccoROR
+			Impegno param = null;
+			if(model.getImpegnoPerServizio() != null){
+				param = model.getImpegnoPerServizio();
+			}else{
+				//SIAC-6997-bloccoROR: ricarico l'impegno per effettuare il controllo
+				RicercaImpegnoPerChiaveOttimizzatoResponse respRk = ricercaImpegno(isCompilatoNumeroSubImpegno());
+				if (respRk != null && respRk.getImpegno() != null) {
+					param = respRk.getImpegno();
+				}
+			}
+			boolean test = VerificaBloccoRORHelper.escludiImpegnoPerBloccoROR(sessionHandler.getAzioniConsentite(), param, sessionHandler.getAnnoBilancio());
+			if(test){
+				addErrore(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Impegno/sub impegno residuo non utilizzabile"));
+				return INPUT;
+			}else if(param.getElencoSubImpegni() != null && !param.getElencoSubImpegni().isEmpty()){
+				for(int k = 0; k < param.getElencoSubImpegni().size(); k++){
+					test = VerificaBloccoRORHelper.escludiImpegnoPerBloccoROR(sessionHandler.getAzioniConsentite(), param.getElencoSubImpegni().get(k), sessionHandler.getAnnoBilancio());
+					if(test)
+						break;
+				}
+				if(test){
+					addErrore(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Impegno/sub impegno residuo non utilizzabile"));
+					return INPUT;
+				}
+			}
+			//END SIAC-6997-bloccoROR
+			
 			//OK NESSUN ERRORE, possiamo andare alla pagina successiva
 			
 			//fix per anomalia: SIAC-2257 (veniva perso il teSupport)
@@ -294,11 +322,6 @@ public class InserisciLiquidazioneStep1Action extends WizardInserisciLiquidazion
 				return false;
 			}
 
-			//Controlliamo i mutui:
-			boolean mutuiOk = controlliMutui();
-			if (!mutuiOk) {
-				return false;
-			}
 		} else {
 			//il servizio non ha trovato nulla
 			addErrore(ErroreFin.MOVIMENTO_NON_TROVATO.getErrore("impegno"));
@@ -385,67 +408,11 @@ public class InserisciLiquidazioneStep1Action extends WizardInserisciLiquidazion
 			}
 		}				
 		
-		//ORA CONTROLLIAMO GLI EVENTUALI MUTUI:
-		boolean mutuiOk = controlliMutui();
-		if (!mutuiOk) {
-			return false;
-		}
-		
 		return tuttoOk;
 		
 	}
 	
-	/**
-	 * Effettua i controlli di validita rispetto alla presenza di eventuali mutui per l'impegno selezionato
-	 * @return
-	 */
-	private boolean controlliMutui(){
-		
-		boolean tuttoOk = true;
-		
-		//settiamo i mutui eventuali nel model:
-		boolean ciSonoMutui = settaVociMutuoNelModel();
-		//
-		
-		//CONTROLLI:
-		if (model.getNumeroMutuoPopup() != null && !ciSonoMutui) {
-			addErrore(ErroreFin.IMPEGNO_NON_FINANZIATO_DA_MUTUO.getErrore());
-			return false;
-		}
-		
-		if (model.getNumeroMutuoPopup() == null && ciSonoMutui) {
-			addErrore(ErroreFin.IMPEGNO_FINANZIATO_DA_MUTUO.getErrore());
-			return false;
-		}
-		
-		
-		//FIX PER SIAC-3939, se di tipo finanziato da mutuo, deve avere il mutuo:
-		if(model.getImpegno().getTipoImpegno()!=null && 
-				"MUT".equals(model.getImpegno().getTipoImpegno().getCodice()) && isEmpty(model.getImpegno().getListaVociMutuo())){
-			addErrore(ErroreFin.IMPEGNO_FINANZIATO_DA_MUTUO.getErrore());
-			return false;
-		}
-		//
-	
-		
-		//Gestione mancata corrispondenza mutuo
-		if(!isEmpty(model.getListaVociMutuo())){
-			boolean corrispondenzaMutuo = false;
-			
-			VoceMutuo mutuoCorrispondente = FinUtility.findVoceMutuoByNumero(model.getListaVociMutuo(), model.getNumeroMutuoPopup());
-			if(mutuoCorrispondente!=null){
-				//trovato
-				corrispondenzaMutuo = true;
-				model.setDescrizioneMutuoPopup(mutuoCorrispondente.getDescrizioneMutuo());
-			}
-			if(!corrispondenzaMutuo){
-				addErrore(ErroreFin.NESSUNA_CORRISPONDENZA_MUTUO.getErrore());
-				return false;
-			}
-		}
-		
-		return tuttoOk;
-	}
+
 	
 	/**
 	 * Semplice metodo che controlla che siano stati compilati anno e numero
@@ -480,7 +447,7 @@ public class InserisciLiquidazioneStep1Action extends WizardInserisciLiquidazion
 		if(model.getImpegno()!=null && this.model.getNumeroImpegno()!=null){
 			//impegno diverso da null e numero impegno diverso da null
 			BigDecimal numeroBD = new BigDecimal(this.model.getNumeroImpegno());
-			impegnoValorizzatoENumeroCambiato = !(numeroBD).equals(model.getImpegno().getNumero());
+			impegnoValorizzatoENumeroCambiato = !(numeroBD).equals(model.getImpegno().getNumeroBigDecimal());
 		}
 		return impegnoValorizzatoENumeroCambiato;
 	}
@@ -552,9 +519,7 @@ public class InserisciLiquidazioneStep1Action extends WizardInserisciLiquidazion
 		model.setAnnoImpegno(null);
 		model.setNumeroImpegno(null);
 		model.setNumeroSub(null);
-		model.setNumeroMutuoPopup(null);
 		model.setDescrizioneImpegnoPopup(null);
-		model.setDescrizioneMutuoPopup(null);
 		model.setImpegnoPopup(new Impegno());
 		model.setHasImpegnoSelezionatoPopup(false);
 		model.setDisponibilita(null);

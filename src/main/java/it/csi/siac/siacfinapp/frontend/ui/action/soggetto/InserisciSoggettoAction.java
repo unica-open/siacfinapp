@@ -12,21 +12,21 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import org.apache.struts2.dispatcher.Parameter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
-import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
 import it.csi.siac.siacfinapp.frontend.ui.util.codicefiscale.CFGenerator;
 import it.csi.siac.siacfinapp.frontend.ui.util.codicefiscale.ValidaCF;
 import it.csi.siac.siacfinapp.frontend.ui.util.codicefiscale.VerificaPartitaIva;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNome;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComunePerNomeResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaComuni;
@@ -36,6 +36,7 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSoggettiResponse;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaSoggetto;
 import it.csi.siac.siacfinser.model.soggetto.ComuneNascita;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
 
 /**
@@ -62,9 +63,13 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 		super.prepare();
 		
 		//setto il titolo (parte alta della pagina):
-		this.model.setTitolo("Inserimento soggetto");
+		//task-224
+		if(AzioneConsentitaEnum.OP_CEC_SOG_gestisciSogg.getNomeAzione().equals(sessionHandler.getAzione().getNome())) {
+			this.model.setTitolo("Inserimento soggetto Cassa Economale");
+		}else {
+			this.model.setTitolo("Inserimento soggetto");
+		}
 		
-		FinUtility.azioneConsentitaIsPresent(sessionHandler.getAzioniConsentite(), "");
 		
 		model.setErrori(new ArrayList<Errore>());
 		
@@ -91,8 +96,8 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 			
 			// flag sesso
 		    List<String> listaRadioSesso = new ArrayList<String>();
-		    listaRadioSesso.add(Constanti.MASCHIO.toLowerCase());
-		    listaRadioSesso.add(Constanti.FEMMINA.toLowerCase());
+		    listaRadioSesso.add(CostantiFin.MASCHIO.toLowerCase());
+		    listaRadioSesso.add(CostantiFin.FEMMINA.toLowerCase());
 		    model.setRadioSesso(listaRadioSesso);
 			
 			debug(methodName, "prima del controllo ");
@@ -135,16 +140,15 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 
 		debug(methodName, "radio selezionato "+model.getFlagResidenza());
 
-		List<Errore> listaErrori = controllaCampiPrimaParte();
-		List<Errore> listaMessaggi = new ArrayList<Errore>(listaErrori);
   
-		String valoriCodiceFisc = checkCampiSoggettoBase(listaErrori, listaMessaggi);
+		String valoriCodiceFisc = checkCampiSoggettoBase();
 		 //SIAC-6565-CR1215  
-		checkCampiFEL(listaErrori);
+		checkCampiFEL();
 				
 		// catturo gli errori
-		if(!listaErrori.isEmpty()) {
-			addErrori(listaErrori);
+		if(hasErrori()) {
+			makeErroreUnique(ErroreFin.PARTITA_IVA_ERRATO.getErrore());
+			
 			return INPUT;
 		} 
 		
@@ -207,16 +211,11 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 					} else {
 						supportErrore = " "+model.getPartitaIva();
 					}
-					listaMessaggi.add(ErroreFin.SOGGETTO_ESISTENTE.getErrore(supportErrore));
+					addMessaggio(ErroreFin.SOGGETTO_ESISTENTE.getErrore(supportErrore));
 				}
 			}
 		}
 	
-		if(listaMessaggi!=null){			
-			for(Errore r:listaMessaggi){
-				addMessaggio(r);
-			}
-		}
 		
 		if(response!= null && null!=response.getSoggetti()){
 			// riempio i soggetti
@@ -240,19 +239,19 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 	 * @param listaMessaggi
 	 * @return
 	 */
-	private String checkCampiSoggettoBase(List<Errore> listaErrori, List<Errore> listaMessaggi) {
+	private String checkCampiSoggettoBase() {
 		// ricavo eventualmente i dati del codice fiscale
 		String valoriCodiceFisc = "";
 
-		if (StringUtils.isNotEmpty(model.getCodiceFiscale())){
+		if (StringUtils.isNotEmpty(model.getCodiceFiscale())) {
 
 			if ((model.getIdTipoSoggetto().equals("PG") || model.getIdTipoSoggetto().equals("PGI")) && model.getCodiceFiscale().matches("^[0-9]{11}$")) {
-				if (!VerificaPartitaIva.controllaPIVA(model.getCodiceFiscale()).equalsIgnoreCase("OK")){
-					listaErrori.add(ErroreFin.PARTITA_IVA_ERRATO.getErrore("Partita IVA"));
+				if (! VerificaPartitaIva.controllaPIVA(StringUtils.isEmpty(model.getPartitaIva()) ? model.getCodiceFiscale() : model.getPartitaIva()).equalsIgnoreCase("OK")) {
+					addErrore(ErroreFin.PARTITA_IVA_ERRATO.getErrore());
 				}
 			} else if (model.getIdTipoSoggetto().equals("PF") && model.getIdNaturaGiuridica().equals("BA")) {
 				// SIAC-5856: Permette di inserire tipi soggetto PF con natura
-				listaErrori.add(ErroreFin.SOGGETTO_NON_VALIDO.getErrore());
+				addErrore(ErroreFin.SOGGETTO_NON_VALIDO.getErrore());
 			} else {
 
 				log.debug(methodName, "calcolo il CF");
@@ -268,48 +267,28 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 					debug(validato, "Validatore finale codice fiscale " + validato);
 
 					if (!validato.equalsIgnoreCase("OK"))
-						listaErrori.add(ErroreFin.FORMATO_NON_VALIDO.getErrore("Codice Fiscale", "codice fiscale"));
-
-					// controllo univocita' codice fiscale
-					
-					//istanzio la request per il servizio:
-					RicercaSoggetti rs = new RicercaSoggetti();
-					ParametroRicercaSoggetto prs = new ParametroRicercaSoggetto();
-					prs.setIncludeModif(true);
-					prs.setCodiceFiscale(model.getCodiceFiscale().toUpperCase());
-					rs.setParametroRicercaSoggetto(prs);
-					rs.setRichiedente(sessionHandler.getRichiedente());
-					rs.setEnte(sessionHandler.getRichiedente().getAccount().getEnte());
-
-					rs.setCodiceAmbito(getCodiceAmbito());
-					
-					//invoco il servizio ricercaSoggetti:
-					RicercaSoggettiResponse res = soggettoService.ricercaSoggetti(rs);
-
-					if (res != null && res.getSoggetti() != null){
-						Errore erroreSoggettoEsistente = ErroreFin.SOGGETTO_ESISTENTE.getErrore("Codice fiscale ( " + model.getCodiceFiscale().toUpperCase() + " )");
-						if (isAzioneDecentrata(sessionHandler.getAzione().getNome())){
-							// decentrato
-							listaErrori.add(erroreSoggettoEsistente);
-						} else {
-							// amministratore
-							listaMessaggi.add(erroreSoggettoEsistente);
-						}
-					}
+						addErrore(ErroreFin.FORMATO_NON_VALIDO.getErrore("Codice Fiscale", "codice fiscale"));
 
 					log.debug(methodName, "VALORI CF " + valoriCodiceFisc);
 				} catch (Exception e){
-					listaErrori.add(ErroreFin.FORMATO_NON_VALIDO.getErrore("Codice Fiscale", "codice fiscale"));
+					addErrore(ErroreFin.FORMATO_NON_VALIDO.getErrore("Codice Fiscale", "codice fiscale"));
 				}
 
 			}
 		}
-			
 		
-		// CONTROLLO CHE LA PARTITA IVA SIA UNIVOCA PER UN SOLO SOGGETTO
-		if (model.getPartitaIva() != null && !model.getFlagResidenza().equalsIgnoreCase("si") && StringUtils.isEmpty(model.getCodiceFiscaleEstero())){
+		
+
+		controlloUnivocitaCodiceFiscale();
+		controlloUnivocitaPartitaIva();
+
+		return valoriCodiceFisc;
+	}
+
+	private void controlloUnivocitaPartitaIva() {
+		
+		if (! "si".equalsIgnoreCase(model.getFlagResidenza()) && StringUtils.isEmpty(model.getCodiceFiscaleEstero()) &&  StringUtils.isNotEmpty(model.getPartitaIva())){
 			
-			//istanzio la request per il servizio ricercaSoggetti:
 			RicercaSoggetti rs = new RicercaSoggetti();
 			ParametroRicercaSoggetto prs = new ParametroRicercaSoggetto();
 			prs.setIncludeModif(true);
@@ -318,35 +297,61 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 			rs.setRichiedente(sessionHandler.getRichiedente());
 			rs.setEnte(sessionHandler.getRichiedente().getAccount().getEnte());
 			
-			//invoco il servizio ricercaSoggetti:
 			RicercaSoggettiResponse response2 = soggettoService.ricercaSoggetti(rs);
 
 			if(response2 != null && response2.getSoggetti() != null){
 				Errore erroreSoggettoEsistente = ErroreFin.SOGGETTO_ESISTENTE.getErrore("Partita IVA ( "+ model.getPartitaIva() + " )");
 				if (isAzioneDecentrata(sessionHandler.getAzione().getNome())){
-					// decentrato
-					listaErrori.add(erroreSoggettoEsistente);
+					addErrore(erroreSoggettoEsistente);
 				} else {
-					// amministratore
 					addMessaggio(erroreSoggettoEsistente);
 				}
 			}
 
 		}
-		return valoriCodiceFisc;
 	}
+
+	private void controlloUnivocitaCodiceFiscale() {
+		
+		if (StringUtils.isBlank(model.getCodiceFiscale().toUpperCase())) {
+			return;
+		}
+		
+		RicercaSoggetti rs = new RicercaSoggetti();
+		ParametroRicercaSoggetto prs = new ParametroRicercaSoggetto();
+		prs.setIncludeModif(true);
+		prs.setCodiceFiscale(model.getCodiceFiscale().toUpperCase());
+		rs.setParametroRicercaSoggetto(prs);
+		rs.setRichiedente(sessionHandler.getRichiedente());
+		rs.setEnte(sessionHandler.getRichiedente().getAccount().getEnte());
+
+		rs.setCodiceAmbito(getCodiceAmbito());
+		
+		RicercaSoggettiResponse res = soggettoService.ricercaSoggetti(rs);
+
+		if (res != null && res.getSoggetti() != null){
+			Errore erroreSoggettoEsistente = ErroreFin.SOGGETTO_ESISTENTE.getErrore("Codice fiscale ( " + model.getCodiceFiscale().toUpperCase() + " )");
+
+			if (isAzioneDecentrata(sessionHandler.getAzione().getNome())){
+				addErrore(erroreSoggettoEsistente);
+			} else {
+				addMessaggio(erroreSoggettoEsistente);
+			}
+		}
+	}
+
 
 	/**
 	 * @param listaErrori
 	 */
-	protected void checkCampiFEL(List<Errore> listaErrori) {
+	protected void checkCampiFEL() {
 		if (model.getCanalePA()!=null && !model.getCanalePA().isEmpty()) {
 			if ("PA".equals(model.getCanalePA()))
 			{
 				if (model.getCodDestinatario()==null ||model.getCodDestinatario().length()!=6 )
 					{
 						Errore erroreSoggetto= ErroreFin.CANALEPA_ERROREPA.getErrore("Se il CanalePA e' PA, il cod Destinatario deve esssere lungo 6 caratteri");
-						listaErrori.add(erroreSoggetto);
+						addErrore(erroreSoggetto);
 					}
 
 			}
@@ -361,7 +366,7 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 					else
 					{
 						Errore erroreSoggetto= ErroreFin.CANALEPA_ERROREPR.getErrore("Se il CanalePA e' PR, devi valorizzare corretamente l'emailPec o il codice destinatario deve eseere di 7 zeri");
-						listaErrori.add(erroreSoggetto);
+						addErrore(erroreSoggetto);
 					}
 				}
 				
@@ -370,13 +375,13 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 		else
 		{
 			Errore erroreSoggetto= ErroreFin.CANALEPA_ERRATO.getErrore("Il canalePA deve essere valorizzato");
-			listaErrori.add(erroreSoggetto);
+			addErrore(erroreSoggetto);
 		}
 	}
 	
 
 	protected String getCodiceAmbito() {
-		return Constanti.AMBITO_FIN;
+		return CostantiFin.AMBITO_FIN;
 	}
 
 	private void estrazioneDatiDaCodiceFiscale(String cfDaRimappare){
@@ -428,7 +433,7 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 			log.debug(methodName, "Smazzato ID COMUNE " + lcr.getListaComuni());
 			if (null != lcr.getListaComuni()){
 				ComuneNascita comuneObj = lcr.getListaComuni().get(0);
-				model.setIdComune(String.valueOf(comuneObj.getComuneIstatCode()));
+				model.setCodiceIstatComune(String.valueOf(comuneObj.getCodiceIstat()));
 
 				if (codiceCatastale.startsWith("Z")){
 					model.setIdNazione(comuneObj.getNazioneCode());
@@ -442,10 +447,10 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 		
 		
 		model.setDataNascita(gg+"/"+mese+"/"+anno);
-		if(sesso.equalsIgnoreCase(Constanti.SESSO_M)){
-			model.setFlagSesso(Constanti.MASCHIO.toLowerCase());
-		}else if(sesso.equalsIgnoreCase(Constanti.SESSO_F)){
-			model.setFlagSesso(Constanti.FEMMINA.toLowerCase());
+		if(sesso.equalsIgnoreCase(CostantiFin.SESSO_M)){
+			model.setFlagSesso(CostantiFin.MASCHIO.toLowerCase());
+		}else if(sesso.equalsIgnoreCase(CostantiFin.SESSO_F)){
+			model.setFlagSesso(CostantiFin.FEMMINA.toLowerCase());
 		}
 		
 	}
@@ -509,22 +514,23 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 		debug(methodName, " model --> "+model); 
 		debug(methodName, " model sh --> "+sessionHandler); 
 		
-		List<Errore> listaErrori = controllaCampi();
+		controllaCampi();
 		if(!(model.getIdTipoSoggetto().equals("PG") || model.getIdTipoSoggetto().equals("PGI"))){
 			if(model.getFlagSesso() == null || StringUtils.isEmpty((model.getFlagSesso()))){
-				listaErrori.add(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("Sesso"));
+				addErrore(ErroreCore.PARAMETRO_NON_INIZIALIZZATO.getErrore("Sesso"));
 			}
 		}
-		if(!listaErrori.isEmpty()) {
-			addErrori(listaErrori);
+		if(hasErrori()) {
 			return INPUT;
 		}
 		
-		
-		String[] idComune = (String[])getRequest().get("idComune");
+		//task-131
+		//String[] idComune = (String[])getRequest().get("idComune");
+		Parameter idComune = getRequest().get("idComune");
 		
 		if(!(model.getIdTipoSoggetto().equals("PG") || model.getIdTipoSoggetto().equals("PGI")))
-			if (idComune == null || "".equalsIgnoreCase(idComune[0])) {
+			//if (idComune == null || "".equalsIgnoreCase(idComune[0])) {
+			if (idComune == null || "".equalsIgnoreCase(idComune.getValue())) {
 				//istanzio la request per il servizio findComunePerNome:
 				ListaComunePerNome comunePerNome = new ListaComunePerNome();
 				comunePerNome.setCodiceNazione(model.getIdNazione());
@@ -533,9 +539,9 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 				//invoco il servizio findComunePerNome:
 				ListaComunePerNomeResponse response = genericService.findComunePerNome(comunePerNome);
 				if (response != null && response.getListaComuni() != null && response.getListaComuni().size() > 0 && response.getListaComuni().get(0).getCodice() != null) {
-					model.setIdComune(response.getListaComuni().get(0).getCodice());
+					model.setCodiceIstatComune(response.getListaComuni().get(0).getCodice());
 				} else {
-					model.setIdComune("");
+					model.setCodiceIstatComune("");
 				}
 			}	
 		
@@ -554,11 +560,8 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 			}
 		}
 		 //SIAC-6565-CR1215  
-		checkCampiFEL(listaErrori);
-		if(listaErrori!=null && !listaErrori.isEmpty()){			
-			for(Errore r:listaErrori){
-				addMessaggio(r);
-			}
+		checkCampiFEL();
+		if(hasErrori()){			
 			return INPUT;
 		}
 		
@@ -595,7 +598,7 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 	   model.setTitolo("");
 	   model.setIdNazione(WebAppConstants.CODICE_ITALIA);
 	   model.setSoggetti(null);
-	  
+	   model.setFlagIstitutoDiCredito(false);
 	   model.setEffettuataRicercaAnagrafica(false);
 	   
 	   sessionHandler.setParametro(FinSessionParameter.EFFETTUATA_RICERCA_IN_ANAGRAFICA, null);
@@ -684,10 +687,10 @@ public class InserisciSoggettoAction extends WizardScriviSoggettoAction {
 		String sessoConfronto="";
 		
 		
-		if(sesso.equalsIgnoreCase(Constanti.SESSO_M)){
-			sessoConfronto=Constanti.MASCHIO.toLowerCase();
-		}else if(sesso.equalsIgnoreCase(Constanti.SESSO_F)){
-			sessoConfronto=Constanti.FEMMINA.toLowerCase();
+		if(sesso.equalsIgnoreCase(CostantiFin.SESSO_M)){
+			sessoConfronto=CostantiFin.MASCHIO.toLowerCase();
+		}else if(sesso.equalsIgnoreCase(CostantiFin.SESSO_F)){
+			sessoConfronto=CostantiFin.FEMMINA.toLowerCase();
 		}
 		
 		boolean error = false;

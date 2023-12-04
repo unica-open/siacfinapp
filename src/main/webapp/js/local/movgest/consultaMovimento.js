@@ -86,11 +86,15 @@
     	})();
     	
     }
+
+
     
     function init() {
         var $body = $(document.body);
         $(".consultaSubPopup").click(handleLoad(dettaglioSubPopup, '#divDettaglioSubPopup', 'uidPerDettaglioSub'));
         $(".consultaModPopup").click(handleLoad(dettaglioModPopup, '#divDettaglioModPopup', 'uidPerDettaglioMod'));
+        
+        
         $("#linkConsultaModificheProvvedimento").click(handleLoad(consultaModificheProvvedimento, '#modConsultaModificheProvvedimento'));
         $(".tooltip-test").click(handleLoad(consultaModificheProvvedimentoSub, '#modConsultaModificheProvvedimento', 'uidSubMovimento'));
         

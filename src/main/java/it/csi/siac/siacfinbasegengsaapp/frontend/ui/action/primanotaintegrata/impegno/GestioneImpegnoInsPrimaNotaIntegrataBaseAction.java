@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import it.csi.siac.siacbilser.model.ElementoPianoDeiConti;
 import it.csi.siac.siaccommonapp.util.exception.WebServiceInvocationFailureException;
@@ -42,7 +43,8 @@ public abstract class GestioneImpegnoInsPrimaNotaIntegrataBaseAction<M extends G
 	private static final long serialVersionUID = -5788328200257976328L;
 
 	/** Servizio per i movimenti di gestione */
-	@Autowired private transient MovimentoGestioneService movimentoGestioneService;
+	@Autowired @Qualifier("movimentoGestioneFinService")
+	private transient MovimentoGestioneService movimentoGestioneFinService;
 	
 	/** Nome del model del completamento e validazione dell'accertamento. Modulo GEN */
 	public static final String MODEL_SESSION_NAME_COMPLETA_VALIDA_INS_IMPEGNO_FIN = "CompletaValidaImpegnoInsPrimaNotaIntegrataFINModel";
@@ -116,7 +118,7 @@ public abstract class GestioneImpegnoInsPrimaNotaIntegrataBaseAction<M extends G
 		logServiceRequest(req);
 		
 		// Chiamata al servizio
-		RicercaImpegnoPerChiaveOttimizzatoResponse res = movimentoGestioneService.ricercaImpegnoPerChiaveOttimizzato(req);
+		RicercaImpegnoPerChiaveOttimizzatoResponse res = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(req);
 		logServiceResponse(res);
 		
 		// Controllo gli errori
@@ -166,7 +168,7 @@ public abstract class GestioneImpegnoInsPrimaNotaIntegrataBaseAction<M extends G
 		String annoNumeroImpegno = new StringBuilder()
 				.append(impegno.getAnnoMovimento())
 				.append("/")
-				.append(impegno.getNumero().toPlainString())
+				.append(impegno.getNumeroBigDecimal().toPlainString())
 				.toString();
 		
 		// Anno e numero

@@ -8,26 +8,29 @@ SPDX-License-Identifier: EUPL-1.2
 
 <s:if test="oggettoDaPopolarePagamento()">
 		<p>
-			<s:submit name="annulla inserimento" value="annulla inserimento" method="pulisciProvvisorio" cssClass="btn btn-secondary" />
+			<!-- task-131 <s:submit name="annulla inserimento" value="annulla inserimento" method="pulisciProvvisorio" cssClass="btn btn-secondary" /> -->
+			<s:submit name="annulla inserimento" value="annulla inserimento" action="gestioneOrdinativoIncassoStep3_pulisciProvvisorio" cssClass="btn btn-secondary" />
 						  	
 			<span class="pull-right"> 
-				  <s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" method="inserisciProvvisorio"  cssClass="btn btn-primary pull-right" />
+				  <!-- task-131 <s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" method="inserisciProvvisorio"  cssClass="btn btn-primary pull-right" />-->
+				  <s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" action="gestioneOrdinativoPagamentoStep3_inserisciProvvisorio"  cssClass="btn btn-primary pull-right" />
 			</span> 
 		</p>
 </s:if>
 <s:else>
 
-
 		<p>
-			<s:submit name="annulla inserimento" value="annulla inserimento" method="pulisciProvvisorio" cssClass="btn btn-secondary" />
+			<!-- task-131 <s:submit name="annulla inserimento" value="annulla inserimento" method="pulisciProvvisorio" cssClass="btn btn-secondary" /> -->
+			<s:submit name="annulla inserimento" value="annulla inserimento" action="gestioneOrdinativoIncassoStep3_pulisciProvvisorio" cssClass="btn btn-secondary" />
 						  	
 			<span class="pull-right"> 
 				<s:if test="disabilitaInserisciProvvisorio()">
-       
-       				<s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" method="inserisciProvvisorio" disabled="true" cssClass="btn btn-primary pull-right" />
+           			<!-- task-131 <s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" method="inserisciProvvisorio" disabled="true" cssClass="btn btn-primary pull-right" /> -->
+      			 	<s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" action="gestioneOrdinativoIncassoStep3_inserisciProvvisorio" disabled="true" cssClass="btn btn-primary pull-right" />
       			 </s:if>
       			 <s:else>
-      			 	<s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" method="inserisciProvvisorio"  cssClass="btn btn-primary pull-right" />
+      			 	<!-- task-131 <s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" method="inserisciProvvisorio"  cssClass="btn btn-primary pull-right" /> -->
+      				<s:submit name="Inserisci provvisorio" value="Inserisci provvisorio" action="gestioneOrdinativoIncassoStep3_inserisciProvvisorio" cssClass="btn btn-primary pull-right" />	
       			 </s:else>
 				  
 			</span> 

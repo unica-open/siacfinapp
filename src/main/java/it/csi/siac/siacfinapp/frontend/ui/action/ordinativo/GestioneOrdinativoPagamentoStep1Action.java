@@ -14,24 +14,35 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacattser.model.AttoAmministrativo;
+import it.csi.siac.siacbilser.frontend.webservice.CapitoloService;
+import it.csi.siac.siacbilser.frontend.webservice.msg.ControllaDisponibilitaCassaContoVincolatoCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.ControllaDisponibilitaCassaContoVincolatoCapitoloResponse;
 import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
+import it.csi.siac.siacbilser.model.ImportiCapitoloUG;
+import it.csi.siac.siaccommon.util.collections.CollectionUtil;
+import it.csi.siac.siaccommon.util.collections.Filter;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
+import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ImportiCapitoloModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
+import it.csi.siac.siacfinser.frontend.webservice.OilService;
+import it.csi.siac.siacfinser.frontend.webservice.msg.AccreditoTipoOilIsPagoPA;
+import it.csi.siac.siacfinser.frontend.webservice.msg.AccreditoTipoOilIsPagoPAResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazionePerChiave;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazionePerChiaveResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaOrdinativo;
@@ -51,6 +62,8 @@ import it.csi.siac.siacfinser.model.ric.RicercaLiquidazioneK;
 import it.csi.siac.siacfinser.model.soggetto.Soggetto;
 import it.csi.siac.siacfinser.model.soggetto.modpag.ModalitaPagamentoSoggetto;
 import it.csi.siac.siacfinser.model.soggetto.modpag.ModalitaPagamentoSoggetto.TipoAccredito;
+import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiSottoContiVincolatiCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiSottoContiVincolatiCapitoloResponse;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -67,6 +80,14 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 	
 	public Integer idOrdinativo;
 	public String doveMiTrovo;
+	
+	//SIAC-8853
+	@Autowired 
+	private transient OilService oilService;
+	
+	//SIAC-8850
+	@Autowired
+	private CapitoloService capitoloService;
 	
 	public GestioneOrdinativoPagamentoStep1Action () {
 	   	//setto la tipologia di oggetto trattato:
@@ -123,6 +144,13 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 		// non agisce l'ancora dei vincoli 
 		model.getGestioneOrdinativoStep1Model().setPortaAdAltezzaOrdinativiCollegati(false);
 
+		
+		/* SIAC-7399
+		 * Setting della variabile per invalidare
+		 * il controllo sul blocco ragioneria
+		 */
+		model.setSkipControlloBloccoRagioneria(true);
+		
 	}
 	
 	/**
@@ -147,22 +175,25 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 		
 		//pulisco i flag per i pop up di conferma:
 		model.getGestioneOrdinativoStep1Model().setCheckWarningDaCollegareQuietanziato(false);
+		//task-218
+		model.setAnnoOrdinativoInAggiornamento(getAnnoOrdinativo());
+		model.setNumeroOrdinativoInAggiornamento(getNumeroOrdinativo());
 		//
 		
 		// verifico lo stato di bilancio
 		// nel caso genero errore non appena si atterra sulla pagina
-		controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()), "INSERIMENTO", "ORDINATIVO");
+		controlloStatoBilancio(sessionHandler.getAnnoBilancio(), "INSERIMENTO", "ORDINATIVO");
 		
 		//Controlliamo l'abilitazione:
 		if(sonoInAggiornamento()){
 			//aggiornamento
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_aggMan)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_aggMan)){
 				//non e' abilitato
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			}
 		} else {
 		 	// SIAC-5957 non controllava in inserimento
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_insMan)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_insMan)){
 				//non e' abilitato
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			}
@@ -200,17 +231,9 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 			
 			
 		}else{
+			//task-162
+			impostaDefaultCommissioni();
 			
-			//presetto la commissione a beneficiario BN 
-			if(model.getGestioneOrdinativoStep1Model().getListaCommissioni().size()>1){
-				for(CodificaFin lista : model.getGestioneOrdinativoStep1Model().getListaCommissioni()){
-					if(lista.getCodice().equalsIgnoreCase("BN")){
-						model.getGestioneOrdinativoStep1Model().getOrdinativo().setCommissioneDocumento(new CommissioneDocumento());
-						model.getGestioneOrdinativoStep1Model().getOrdinativo().getCommissioneDocumento().setCodice(BENEFICIARIO);
-						break;
-					}
-				}
-			}
 		}
 		
 		//ORDINATIVO_TIPO_PAGAMENTO
@@ -235,23 +258,58 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 		return SUCCESS;
 	}	
 	
-    //SIAC-7159
-    public boolean modPagSelectedIsPagoPa() {
-    	boolean isPresent = false;
-		if(model.getGestioneOrdinativoStep1Model() !=null && "APA".equals(model.getGestioneOrdinativoStep1Model().getModpagamentoSelezionata().getModalitaAccreditoSoggetto().getCodice())){
-			isPresent = true;
+	//task-161
+	private void impostaDefaultCommissioni() {
+		//task-162
+		//verifico se sono regp, in caso positivo presetto la commissione a esente
+		if(!abilitaCampoDefaultCommissioniInserimentoOrdinativiPagamento()) {
+			//presetto la commissione a beneficiario BN 
+			if(model.getGestioneOrdinativoStep1Model().getListaCommissioni().size()>1){
+				for(CodificaFin lista : model.getGestioneOrdinativoStep1Model().getListaCommissioni()){
+					if(lista.getCodice().equalsIgnoreCase("BN")){
+						model.getGestioneOrdinativoStep1Model().getOrdinativo().setCommissioneDocumento(new CommissioneDocumento());
+						model.getGestioneOrdinativoStep1Model().getOrdinativo().getCommissioneDocumento().setCodice(BENEFICIARIO);
+						break;
+					} 
+				}
+			}
+		}else {
+			//presetto la commissione a esente ES
+			if(model.getGestioneOrdinativoStep1Model().getListaCommissioni().size()>1){
+				for(CodificaFin lista : model.getGestioneOrdinativoStep1Model().getListaCommissioni()){
+					if(lista.getCodice().equalsIgnoreCase("ES")){
+						model.getGestioneOrdinativoStep1Model().getOrdinativo().setCommissioneDocumento(new CommissioneDocumento());
+						model.getGestioneOrdinativoStep1Model().getOrdinativo().getCommissioneDocumento().setCodice(ESENTE);
+						break;
+					}
+				}
+			}
 		}
-		return isPresent;
+	}
+	
+    //SIAC-7159  //SIAC-8853
+    public boolean modPagSelectedIsPagoPa(int uidModPag) {
+    	ModalitaPagamentoSoggetto modalitaPagamentoSoggetto = 
+    			CollectionUtil.findFirst(model.getGestioneOrdinativoStep1Model().getListaModalitaPagamentoVisualizza(), new Filter<ModalitaPagamentoSoggetto>() {
+    				@Override
+    				public boolean isAcceptable(ModalitaPagamentoSoggetto source) {
+    					return source.getUid() == uidModPag;
+    				}
+    			});
+
+    	AccreditoTipoOilIsPagoPA req = model.creaRequestAccreditoTipoOilIsPagoPA();
+    	logServiceRequest(req);
+    	req.setCodiceAccreditoTipo(modalitaPagamentoSoggetto.getModalitaAccreditoSoggetto().getCodice());
+    	AccreditoTipoOilIsPagoPAResponse res = oilService.accreditoTipoOilIsPagoPA(req);
+    	logServiceResponse(res);
+
+    	return res.isAccreditoTipoOilIsPagoPA();
     }
 	
+    
 	public String prosegui(){
 		
-		//SIAC-7159
-		//si invalida la Modalita Pagamento PagoPA
-		if(modPagSelectedIsPagoPa()){
-			addErrore(it.csi.siac.siacfin2ser.model.errore.ErroreFin.MOD_PAGO_PA_NON_AMMESSA.getErrore(""));
-			return INPUT;
-		}
+		
 		
 		//pulisco i flag per i pop up di conferma:
 		model.getGestioneOrdinativoStep1Model().setCheckWarningDaCollegareQuietanziato(false);
@@ -261,13 +319,13 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 		//al fatto di essere in aggiornamento o inserimento:
 		if(sonoInAggiornamento()){
 			//aggiornamento
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_aggMan)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_aggMan)){
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 				return INPUT;
 			}
 		}else{
 			//inserimento
-			if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_insMan)){
+			if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_insMan)){
 				addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 				return INPUT;
 			}
@@ -281,7 +339,7 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 		model.getGestioneOrdinativoStep1Model().getOrdinativo().setFlagDaTrasmettere(valorizzaCheckbox("gestioneOrdinativoStep1Model.ordinativo.flagDaTrasmettere"));
 
 		//controllo stato del bilancio:
-		if(controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()),doveMiTrovo,"Ordinativo")){
+		if(controlloStatoBilancio(sessionHandler.getAnnoBilancio(),doveMiTrovo,"Ordinativo")){
 			return INPUT;
 		}
 		
@@ -344,6 +402,18 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 
 			}
 		}
+		
+		//SIAC-7159
+		//si invalida la Modalita Pagamento PagoPA
+		//SIAC-8853
+		//task-48
+		if(model.getGestioneOrdinativoStep1Model().getRadioModPagSelezionato()!=0) {
+			if(modPagSelectedIsPagoPa(model.getGestioneOrdinativoStep1Model().getModpagamentoSelezionata().getUid())){
+				addErrore(it.csi.siac.siacfin2ser.model.errore.ErroreFin.MOD_PAGO_PA_NON_AMMESSA.getErrore(""));
+				return INPUT;
+			}
+		}
+		
 
 		// SIAC-6102
 		//CONTROLLI SU DESCRIZIONE:
@@ -404,6 +474,28 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 		
 	}
 	
+	//SIAC-8892
+	public void caricaStanziamento(CapitoloUscitaGestione capUG) {
+		CapitoloImpegnoModel capitoloModel = new CapitoloImpegnoModel();
+		capitoloModel.setImportiCapitolo(new ArrayList<ImportiCapitoloModel>());
+		capitoloModel.setImportiCapitoloUG(capUG.getListaImportiCapitolo());
+		capitoloModel.setAnno(capUG.getAnnoCapitolo());
+		ImportiCapitoloModel supportImporti;
+		for (ImportiCapitoloUG currentImporto : capUG.getListaImportiCapitolo()) {
+			supportImporti = new ImportiCapitoloModel();
+			supportImporti.setAnnoCompetenza(currentImporto.getAnnoCompetenza());
+			supportImporti.setCassa(currentImporto.getStanziamentoCassa());
+			supportImporti.setResiduo(currentImporto.getStanziamentoResiduo());
+			supportImporti.setCompetenza(currentImporto.getStanziamento());
+			// RM 08042015, commentato perch non usato, verifica pulizia functione e attibuti entit non piu usate
+			
+			capitoloModel.getImportiCapitolo().add(supportImporti);
+		}
+		
+		model.getDatoPerVisualizza().setImportiCapitolo(capitoloModel.getImportiCapitolo());
+		model.getGestioneOrdinativoStep1Model().getCapitolo().setImportiCapitoloUG(capitoloModel.getImportiCapitoloUG());
+	}
+	
 	//CR 1912
 	public String cercaLiquidazione(){
 		
@@ -440,9 +532,9 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 				liq.setAnnoLiquidazione(model.getGestioneOrdinativoStep1Model().getAnnoLiquidazione());
 				liq.setNumeroLiquidazione(new BigDecimal(model.getGestioneOrdinativoStep1Model().getNumeroLiquidazione()));
 				ricercaLiquidazioneK.setLiquidazione(liq);
-				ricercaLiquidazioneK.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+				ricercaLiquidazioneK.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 				ricercaLiquidazioneK.setBilancio(sessionHandler.getBilancio());
-				ricercaLiquidazioneK.setTipoRicerca(Constanti.TIPO_RICERCA_DA_ORDINATIVO);
+				ricercaLiquidazioneK.setTipoRicerca(CostantiFin.TIPO_RICERCA_DA_ORDINATIVO);
 				req.setEnte(sessionHandler.getAccount().getEnte());
 				req.setRichiedente(sessionHandler.getRichiedente());
 				req.setDataOra(new Date());
@@ -488,9 +580,16 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 							model.getGestioneOrdinativoStep1Model().getCapitolo().setDescrizione(capUG.getDescrizione());
 							model.getGestioneOrdinativoStep1Model().getCapitolo().setCodiceStrutturaAmministrativa(capUG.getStrutturaAmministrativoContabile().getCodice());
 							model.getGestioneOrdinativoStep1Model().getCapitolo().setDescrizioneStrutturaAmministrativa(capUG.getStrutturaAmministrativoContabile().getDescrizione());
-							
+							//SIAC-8892
+							if(capUG.getTipoFinanziamento()!=null) {
+								model.getGestioneOrdinativoStep1Model().getCapitolo().setTipoFinanziamento(capUG.getTipoFinanziamento().getDescrizione());	
+							}
+							model.getGestioneOrdinativoStep1Model().getCapitolo().setDescrizionePdcFinanziario(capUG.getElementoPianoDeiConti().getCodice()+" - "+capUG.getElementoPianoDeiConti().getDescrizione());
+							caricaStanziamento(capUG);
 							
 							model.getGestioneOrdinativoStep1Model().setCapitoloSelezionato(Boolean.TRUE);
+							
+							
 							
 							// 2 - setto il provevdimento
 							model.getGestioneOrdinativoStep1Model().setProvvedimento(new ProvvedimentoImpegnoModel());
@@ -503,6 +602,9 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 							model.getGestioneOrdinativoStep1Model().getProvvedimento().setCodiceTipoProvvedimento(provvedimento.getTipoAtto().getCodice());
 							model.getGestioneOrdinativoStep1Model().getProvvedimento().setOggetto((provvedimento.getOggetto()!=null ?provvedimento.getOggetto(): "" ));
 							model.getGestioneOrdinativoStep1Model().setProvvedimentoSelezionato(Boolean.TRUE);
+							//SIAC-7523
+							sessionHandler.setParametro(FinSessionParameter.PROVVEDIMENTO_SELEZIONATO, Boolean.TRUE);
+							//
 							model.getGestioneOrdinativoStep1Model().getProvvedimento().setStato(provvedimento.getStatoOperativo());
 							
 							if(provvedimento.getStrutturaAmmContabile()!=null){
@@ -520,8 +622,22 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 								model.getGestioneOrdinativoStep1Model().getOrdinativo().getDistinta().setCodice(liquidazione.getDistinta().getCodice());							
 							}
 							
-							if(liquidazione.getContoTesoreria()!=null){
+							/*if(liquidazione.getContoTesoreria()!=null){
 								model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreria().setCodice(liquidazione.getContoTesoreria().getCodice());
+							}else {
+								//SIAC-8850
+								setContoTesoreriaModel(capUG.getUid());
+							}*/
+							
+							//SIAC-8850
+							if("INPUT".equals(setContoTesoreriaModel(capUG.getUid()))){
+								if(liquidazione.getContoTesoreria()!=null) {
+									model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreria().setCodice(liquidazione.getContoTesoreria().getCodice());
+								}
+							}else {
+								if("0000100".equals(model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreria().getCodice())) {
+									model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreria().setCodice(liquidazione.getContoTesoreria().getCodice());
+								}
 							}
 							
 							// carico prima il soggetto, sul soggetto poi ricerco le sedi secondarie e preseleziono 
@@ -596,6 +712,26 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 			}
 		}
 		
+		return SUCCESS;
+	}
+	
+	//SIAC-8850
+	protected String setContoTesoreriaModel(Integer capitoloUid) {
+		impostaDefaultContoTesoriereVar(sonoInAggiornamento());
+		
+		LeggiSottoContiVincolatiCapitolo req = new LeggiSottoContiVincolatiCapitolo();
+		CapitoloUscitaGestione capitoloUscitaTrovato = new CapitoloUscitaGestione();
+		capitoloUscitaTrovato.setUid(capitoloUid);
+		req.setCapitoloUscitaGestione(capitoloUscitaTrovato);
+		req.setRichiedente(model.getRichiedente());
+		LeggiSottoContiVincolatiCapitoloResponse response = capitoloService.leggiSottoContiVincolatiCapitoloService(req);
+		if (response.isFallimento()) {
+			addErrori(response);
+			return INPUT;
+		}
+		if(response.getContoTesoreria()!=null) {
+			model.getGestioneOrdinativoStep1Model().getOrdinativo().setContoTesoreria(response.getContoTesoreria());	
+		}
 		return SUCCESS;
 	}
 	
@@ -732,16 +868,8 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 				model.getGestioneOrdinativoStep1Model().getCapitolo().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
 				model.getCapitoloRicerca().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
 		  }
-		//presetto la commissione a beneficiario BN 
-		  if(model.getGestioneOrdinativoStep1Model().getListaCommissioni().size()>1){
-				for(CodificaFin lista : model.getGestioneOrdinativoStep1Model().getListaCommissioni()){
-					if(lista.getCodice().equalsIgnoreCase("BN")){
-						model.getGestioneOrdinativoStep1Model().getOrdinativo().setCommissioneDocumento(new CommissioneDocumento());
-						model.getGestioneOrdinativoStep1Model().getOrdinativo().getCommissioneDocumento().setCodice(BENEFICIARIO);
-						break;
-					}
-				}
-			}
+		  //task-162
+		  impostaDefaultCommissioni();
 	   }
 	   
 	   // SIAC-5933 - SIAC-6029
@@ -771,13 +899,15 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 	
 	public boolean disabilitaCheckAggiornamento(){
 		if(model.isSonoInAggiornamento()){
-			if(isAzioneAbilitata(CodiciOperazioni.OP_SPE_aggManQuietanza)){
+			if(isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_aggManQuietanza)){
 				model.getGestioneOrdinativoStep1Model().getOrdinativo().setFlagCopertura(false);
 				return false;
-			}else if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.TRASMESSO) && isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan)){
+			}else if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.TRASMESSO) && 
+						isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan)){
 				model.getGestioneOrdinativoStep1Model().getOrdinativo().setFlagCopertura(false);
 				return false;
-			}else if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO) && isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan)){
+			}else if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO) && 
+						isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan)){
 				model.getGestioneOrdinativoStep1Model().getOrdinativo().setFlagCopertura(false);
 				return false;
 			}
@@ -788,7 +918,7 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 	public boolean abilitaProvvisoriCassa(){
 		// se non e' presente l'operazione OP_SPE_insManQuietanza 
 		// puoi fare i provvisori
-		return !isAzioneAbilitata(CodiciOperazioni.OP_SPE_insManQuietanza);
+		return !isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_insManQuietanza);
 	}
 	
 	
@@ -854,11 +984,11 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 			reqOi.setNumRisultatiPerPagina(1);
 			
 			ParametroRicercaOrdinativoIncasso parametri = new ParametroRicercaOrdinativoIncasso();
-			parametri.setAnnoEsercizio(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+			parametri.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			parametri.setNumeroOrdinativoDa( BigInteger.valueOf(numeroOrdinativoDaCollegare));
 			
 			// SIAC-5833 chiedo tutti gli stati e commento inserito:
-			//parametri.setStatoOperativo(Constanti.D_ORDINATIVO_STATO_INSERITO);
+			//parametri.setStatoOperativo(CostantiFin.D_ORDINATIVO_STATO_INSERITO);
 			//SIAC-6138
 //			parametri.setCodiceCreditore(model.getGestioneOrdinativoStep1Model().getOrdinativo().getSoggetto().getCodiceSoggetto());
 						
@@ -882,8 +1012,8 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 			}	
 			
 			String codStato = oi.getCodStatoOperativoOrdinativo();
-			if(Constanti.D_ORDINATIVO_STATO_ANNULLATO.equalsIgnoreCase(codStato)){
-				listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore("ordinativo " + numeroOrdinativoDaCollegare, " perche' in stato ANNULLATO"));
+			if(CostantiFin.D_ORDINATIVO_STATO_ANNULLATO.equalsIgnoreCase(codStato)){
+				listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore("ordinativo " + numeroOrdinativoDaCollegare, " perche' in stato ANNULLATO"));
 				addErrori(listaErrori);
 				return INPUT;
 			}
@@ -891,7 +1021,9 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 			
 			// controllo subito se ha dei collegati, se li ha non e' ammesso
 			if(oi.isCollegatoAPagamento()){
-				addActionError(ERRORE_ORDINATIVI_COLLEGATI_SPESA);
+				//SIAC-8245 si passa l'errore come errore di sistema per permetterne la corretta visualizzazione
+				listaErrori.add(ErroreCore.ERRORE_DI_SISTEMA.getErrore(ERRORE_ORDINATIVI_COLLEGATI_SPESA));
+				addErrori(listaErrori);
 				return INPUT;
 			}
 			
@@ -901,7 +1033,9 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 						
 			if(op.getImportoOrdinativo().compareTo(totaleImportoCollegatiAggiornato) < 0){
 				model.getGestioneOrdinativoStep1Model().setAbilitatoACollegareOrdinativiNuovi(false);
-				addActionError(ERRORE_TOTALE_IMPORTO_COLLEGATI);
+				//SIAC-8245 si passa l'errore come errore di sistema per permetterne la corretta visualizzazione
+				listaErrori.add(ErroreCore.ERRORE_DI_SISTEMA.getErrore(ERRORE_TOTALE_IMPORTO_COLLEGATI));
+				addErrori(listaErrori);
 			}else{
 				
 				//A QUESTO PUNTO E' QUASI OK, SOLO NEL CASO FOSSE QUIETANZIATO CHIEDO CONFERMA CON POP UP:
@@ -916,7 +1050,7 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 					return INPUT;
 				}
 				
-				if(Constanti.D_ORDINATIVO_STATO_QUIETANZATO.equalsIgnoreCase(codStato)){
+				if(CostantiFin.D_ORDINATIVO_STATO_QUIETANZATO.equalsIgnoreCase(codStato)){
 					//setto il flag a true:
 			    	model.getGestioneOrdinativoStep1Model().setCheckWarningDaCollegareQuietanziato(true);
 			    	return INPUT;
@@ -1029,6 +1163,30 @@ public class GestioneOrdinativoPagamentoStep1Action extends ActionKeyGestioneOrd
 		
 		return SUCCESS;
 	}
+	
+	
+	
+
+	@Override
+	protected BigDecimal getDisponibilitaContoVincolato(ControllaDisponibilitaCassaContoVincolatoCapitoloResponse response) {
+		return response.getDisponibilitaContoVincolatoSpesa();
+	}
+
+	
+	@Override
+	protected void setCapitoloControllaDisponibilitaCassaContoVincolato(
+			ControllaDisponibilitaCassaContoVincolatoCapitolo controllaDisponibilitaCassaContoVincolatoCapitolo, 
+			CapitoloImpegnoModel capitoloImpegnoModel) {
+		
+		CapitoloUscitaGestione capitolo = new CapitoloUscitaGestione();
+		
+		capitolo.setNumeroCapitolo(capitoloImpegnoModel.getNumCapitolo());
+		capitolo.setNumeroArticolo(capitoloImpegnoModel.getArticolo());
+		capitolo.setNumeroUEB(capitoloImpegnoModel.getUeb() != null? capitoloImpegnoModel.getUeb().intValue() : 0);
+		
+		controllaDisponibilitaCassaContoVincolatoCapitolo.setCapitoloUscitaGestione(capitolo);
+	}
+	
 	
 	
 	

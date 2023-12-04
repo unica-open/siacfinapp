@@ -71,7 +71,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	function initRicercaGuidataDocumento(){
 		$.ajax({
-			url: '<s:url method="pulisciRicercaDocumento"/>',
+			//task-131 url: '<s:url method="pulisciRicercaDocumento"/>',
+			url: '<s:url action="%{#pulisciRicercaDocumentoAction}"/>',
 			type: "POST",
 			data: $("#aggiornaRigaDaMovimento").serialize(), 
 		    success: function(data)  {
@@ -90,7 +91,8 @@ SPDX-License-Identifier: EUPL-1.2
 		//if(annoimpegno && numeroimpegno){
 		if(true){
 			$.ajax({
-				url: '<s:url method="ricercaGuidataDocumento"/>',
+				//task-131 url: '<s:url method="ricercaGuidataDocumento"/>',
+				url: '<s:url action="%{#ricercaGuidataDocumentoAction}"/>',
 				type: 'POST',
 				data: $("#aggiornaRigaDaMovimento").serialize(), 
 			    success: function(data)  {
@@ -101,7 +103,6 @@ SPDX-License-Identifier: EUPL-1.2
 // 		$("#annoImpegno").val($("#annoimpegno").val());
 // 		$("#numeroImpegno").val($("#numeroimpegno").val());
 // 		$("#numeroSub").val(null);
-// 		$("#numeroMutuo").val(null);
 	});	
 	
 	$(".linkRadioDocumentoSelezionato").click(function() {

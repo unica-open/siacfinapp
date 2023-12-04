@@ -66,7 +66,8 @@ SPDX-License-Identifier: EUPL-1.2
 					Numero
 					<s:textfield id="numeroOrdId" name="reintroitoOrdinativoStep1Model.numeroOrdinativoPagamento" cssClass="span1" onkeyup="return checkItNumbersOnly(event)"/>
 				 	<span id="searchLiq">
-				 		<s:submit id="cercaOrdinativoPagamentoId" cssClass="btn btn-primary freezePagina" method="cercaOrdinativoPagamento" value="cerca" name="cerca" />
+				 		<!-- task-131 <s:submit id="cercaOrdinativoPagamentoId" cssClass="btn btn-primary freezePagina" method="cercaOrdinativoPagamento" value="cerca" name="cerca" /> -->
+				 		<s:submit id="cercaOrdinativoPagamentoId" cssClass="btn btn-primary freezePagina" action="reintroitoOrdinativoPagamentoStep1_cercaOrdinativoPagamento" value="cerca" name="cerca" />
 				 	</span>
 				</div>
 			</div>
@@ -94,7 +95,12 @@ SPDX-License-Identifier: EUPL-1.2
 			
             <!-- Modal -->
             <s:include value="/jsp/include/modalSoggetto.jsp" />	
+            
+            <s:set var="selezionaProvvedimentoAction" value="%{'reintroitoOrdinativoPagamentoStep1_selezionaProvvedimento'}" />
+		    <s:set var="clearRicercaProvvedimentoAction" value="%{'reintroitoOrdinativoPagamentoStep1_clearRicercaProvvedimento'}" />	          
+		    <s:set var="ricercaProvvedimentoAction" value="%{'reintroitoOrdinativoPagamentoStep1_ricercaProvvedimento'}" />	                          	
             <s:include value="/jsp/include/modalProvvedimenti.jsp" />
+            
             <s:include value="/jsp/include/modalCapitolo.jsp" />
             <s:hidden id="strutturaDaInserimento"  name="strutturaDaInserimento"></s:hidden>
             <!-- Fine Modal -->
@@ -104,10 +110,12 @@ SPDX-License-Identifier: EUPL-1.2
         
 		<p class="margin-medium"> 
 		<s:include value="/jsp/include/indietro.jsp" />    
-		<s:submit cssClass="btn btn-secondary" method="annullaStep1" value="annulla" name="annulla" />
+		<!-- task-131 <s:submit cssClass="btn btn-secondary" method="annullaStep1" value="annulla" name="annulla" /> -->
+		<s:submit cssClass="btn btn-secondary" action="reintroitoOrdinativoPagamentoStep1_annullaStep1" value="annulla" name="annulla" />
 		
 		<a id="linkAssociaNuovoAccertamento" href="#msgControlloSoggetti" style="display: none;" data-toggle="modal"></a>
-        <s:submit id="proseguiId" cssClass="btn btn-primary pull-right freezePagina" method="prosegui" value="prosegui" name="prosegui" />
+        <!-- task-131 <s:submit id="proseguiId" cssClass="btn btn-primary pull-right freezePagina" method="prosegui" value="prosegui" name="prosegui" /> -->
+        <s:submit id="proseguiId" cssClass="btn btn-primary pull-right freezePagina" action="reintroitoOrdinativoPagamentoStep1_prosegui" value="prosegui" name="prosegui" />
 				
 		</p>       
 

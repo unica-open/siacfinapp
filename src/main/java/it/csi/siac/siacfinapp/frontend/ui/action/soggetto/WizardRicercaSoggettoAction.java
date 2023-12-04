@@ -6,7 +6,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action.soggetto;
 
 import java.util.ArrayList;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.soggetto.RicercaElencoSoggettoModel;
@@ -86,7 +86,7 @@ public class WizardRicercaSoggettoAction extends SoggettoAction<RicercaElencoSog
 			
 			//stato soggetto
 			if (model.getIdStato() != null && !ValidationUtils.RICERCA_VUOTA.equals(model.getIdStato())) {
-				parametroRicercaSoggetto.setStatoSoggetto(model.getIdStato().toString());
+				parametroRicercaSoggetto.setIdStatoSoggetto(model.getIdStato().toString());
 			}
 			
 			//titolo natura giuridica

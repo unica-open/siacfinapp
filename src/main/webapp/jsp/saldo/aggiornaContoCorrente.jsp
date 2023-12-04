@@ -21,172 +21,131 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12 contentPage">
-			
-       			 <s:form  method="post" cssClass="form-horizontal" id="form">
-       			 
-			<s:include value="/jsp/include/actionMessagesErrors.jsp" />
-					
+				<s:form  method="post" cssClass="form-horizontal" id="form">
+       			 	<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 					
 					<h3>Aggiorna conto corrente</h3>
 
-
-					
-					
 					<div class="step-content">
-			<div class="step-pane active" id="step1">
-			
-			<fieldset class="form-horizontal margin-large">
-
-
-
-				<div class="control-group">
-					<label class="control-label" for="anno">Anno</label>
-
-					<div class="controls">
-						<s:property value="vociContoCorrente.anno"/>
+						<div class="step-pane active" id="step1">
+							<fieldset class="form-horizontal margin-large">
+							<div class="control-group">
+								<label class="control-label" for="anno">Anno</label>
+								<div class="controls">
+									<s:property value="vociContoCorrente.anno"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label for="conto" class="control-label">Conto corrente</label>
+								<div class="controls">
+									<s:hidden name="vociContoCorrente.idClassifConto"/>
+									<s:property value="vociContoCorrente.contoCorrente"/>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="anno">Saldo iniziale *</label>
+								<div class="controls">
+								<s:textfield id="saldoIniziale"  name="vociContoCorrente.saldoIniziale" cssClass="span3 importo"  />
+								</div>
+							</div>
+				          	<p class="margin-medium">
+			  					<!-- task 131 <s:submit cssClass="btn btn-primary pull-right" method="aggiornaSaldo" value="aggiorna" />  -->
+								<s:submit cssClass="btn btn-primary pull-right" action="aggiornaContoCorrente_aggiornaSaldo" value="aggiorna" />  				
+		  					</p>
+			  				<br/>
+							<br/>
+							<s:if test="vociContoCorrente.saldoIniziale != null">
+								<h4>Inserimento addebito</h4>
+								<div class="control-group">
+									<div class="controls">
+										<span class="al">
+											<label for="data" class="radio inline">Data</label>
+											<input type="text" name="addebitoContoCorrente.data" value="" id="data" 
+											class="lbTextSmall span2 datepicker" placeholder="gg/mm/aaaa" tabindex="-1">	
+										</span>
+										<span class="al">
+											<label for="spesa" class="radio inline">Spese</label>
+											<input type="text" name="addebitoContoCorrente.importoSpesa" value="" id="spesa" 
+											class="lbTextSmall span2 importo" tabindex="-1">
+										</span>
+							
+										<span class="al">
+											<label for="prelievo" class="radio inline">Prelievo</label>
+											<input type="text" name="addebitoContoCorrente.importoPrelievo" value="" id="prelievo" 
+											class="lbTextSmall span2 importo"   tabindex="-1">	
+										</span>
+							
+										<s:hidden name="addebitoContoCorrente.idSaldo" value="%{vociContoCorrente.uid}"/>
+									</div>
+								</div>
+	
+	          					<p class="margin-medium">
+				  					<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" method="inserisciAddebito" value="inserisci" />   -->
+				  					<s:submit cssClass="btn btn-primary pull-right" action="aggiornaContoCorrente_inserisciAddebito" value="inserisci" />
+								</p>
+			  					<br/>
+								<br/>
+							</s:if>
+		  					<s:if test="not vociContoCorrente.elencoAddebiti.empty">
+								<h4>Aggiorna addebiti</h4>
+	
+								<table class="table table-hover tab_left"  summary="...." >
+									<thead>
+										<tr>
+											<th>Data</th>
+											<th>Spesa</th>
+											<th>Prelievo</th>
+											<th>&nbsp;</th>
+										</tr>
+									</thead>
+									<tbody>
+										<s:iterator value="vociContoCorrente.elencoAddebiti"  status="st" var="a">			
+										<tr>
+											<td><input type="text" name="vociContoCorrente.elencoAddebiti[<s:property value="#st.index" />].data" 
+											value='<s:property value="vociContoCorrente.elencoAddebiti[#st.index].data" />' id="data_<s:property value="#st.index" />" 
+											class="lbTextSmall span4 datepicker" placeholder="gg/mm/aaaa" tabindex="-1"></td>
+							
+											<td><input type="text" name="vociContoCorrente.elencoAddebiti[<s:property value="#st.index" />].importoSpesa" 
+																 value='<s:property value="vociContoCorrente.elencoAddebiti[#st.index].importoSpesa" />' 
+																class="lbTextSmall span4 importo"   tabindex="-1"></td>
+																
+											<td><input type="text" name="vociContoCorrente.elencoAddebiti[<s:property value="#st.index" />].importoPrelievo" 
+																 value='<s:property value="vociContoCorrente.elencoAddebiti[#st.index].importoPrelievo" />' 
+																class="lbTextSmall span4 importo"  tabindex="-1">
+														
+												<s:hidden name="vociContoCorrente.elencoAddebiti[%{#st.index}].uid"  />
+												<s:hidden name="vociContoCorrente.elencoAddebiti[%{#st.index}].idSaldo" value="%{vociContoCorrente.uid}"/>
+											</td>
+											<td class="elimina tab_Right">	
+												<!-- task-131 href="<s:url action="aggiornaContoCorrente" method="eliminaAddebito"> -->
+												<a  class="btn" onclick="return confirm('Eliminare addebito del <s:property value="vociContoCorrente.elencoAddebiti[#st.index].data" />?')" 
+												href="<s:url action="aggiornaContoCorrente_eliminaAddebito">
+												<s:param name="pos" >
+												<s:property value="#st.index" /></s:param></s:url>">
+												elimina<i class="icon-trash marginLeft1"></i></a> 
+											</td>								
+										</tr>
+										</s:iterator>
+									</tbody>
+									<tfoot>
+									</tfoot>
+								</table>
+								<p class="margin-medium">
+			  						<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" method="aggiornaAddebiti" value="aggiorna" /> -->  
+									<s:submit cssClass="btn btn-primary pull-right" action="aggiornaContoCorrente_aggiornaAddebiti" value="aggiorna" />
+		  						</p>
+		  
+								<br>&nbsp;<br/>
+							</s:if>
+				
+							</fieldset>  
+						</div>
 					</div>
-				</div>
-
-
-				<div class="control-group">
-					<label for="conto" class="control-label">Conto corrente</label>
-					<div class="controls">
-						<s:hidden name="vociContoCorrente.idClassifConto"/>
-						<s:property value="vociContoCorrente.contoCorrente"/>
-					</div>
-				</div>
-
-				
-				<div class="control-group">
-					<label class="control-label" for="anno">Saldo iniziale *</label>
-
-					<div class="controls">
-					<s:textfield id="saldoIniziale"  name="vociContoCorrente.saldoIniziale" cssClass="span3 importo"  />
-					</div>
-				</div>
-	
-	
-	          <p class="margin-medium">
-			  
- 			  <s:submit cssClass="btn btn-primary pull-right" method="aggiornaSaldo" value="aggiorna" />  
-
-		  </p>
-		  
-						<br/>
-				<br/>
-	
-  <s:if test="vociContoCorrente.saldoIniziale != null">
-				
-	
-	<h4>Inserimento addebito</h4>
-	
-					<div class="control-group">
-					<div class="controls">
-						<span class="al">
-							<label for="data" class="radio inline">Data</label>
-					<input type="text" name="addebitoContoCorrente.data" value="" id="data" 
-							class="lbTextSmall span2 datepicker" placeholder="gg/mm/aaaa" tabindex="-1">	</span>
-						
-						<span class="al">
-							<label for="spesa" class="radio inline">Spese</label>
-						<input type="text" name="addebitoContoCorrente.importoSpesa" value="" id="spesa" 
-							class="lbTextSmall span2 importo" tabindex="-1"></span>
-						
-						<span class="al">
-							<label for="prelievo" class="radio inline">Prelievo</label>
-					<input type="text" name="addebitoContoCorrente.importoPrelievo" value="" id="prelievo" 
-							class="lbTextSmall span2 importo"   tabindex="-1">	</span>
-						
-			<s:hidden name="addebitoContoCorrente.idSaldo" value="%{vociContoCorrente.uid}"/>
-						
-					</div>
-				</div>
-	
-	          <p class="margin-medium">
-			  
- 			  <s:submit cssClass="btn btn-primary pull-right" method="inserisciAddebito" value="inserisci" />  
-
-		  </p>
-		  
-		   <br/>
-				<br/>
-	
-	</s:if>
-		  <s:if test="not vociContoCorrente.elencoAddebiti.empty">
-				
-	
-		<h4>Aggiorna addebiti</h4>
-	
-	<table class="table table-hover tab_left"  summary="...." >
-				<thead>
-					<tr>
-						<th>Data</th>
-						<th>Spesa</th>
-						<th>Prelievo</th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				<tbody>
-				
-			<s:iterator value="vociContoCorrente.elencoAddebiti"  status="st" var="a">			
-				
-	<tr>
-		<td><input type="text" name="vociContoCorrente.elencoAddebiti[<s:property value="#st.index" />].data" 
-							value='<s:property value="vociContoCorrente.elencoAddebiti[#st.index].data" />' id="data_<s:property value="#st.index" />" 
-							class="lbTextSmall span4 datepicker" placeholder="gg/mm/aaaa" tabindex="-1"></td>
-							
-		<td><input type="text" name="vociContoCorrente.elencoAddebiti[<s:property value="#st.index" />].importoSpesa" 
-							 value='<s:property value="vociContoCorrente.elencoAddebiti[#st.index].importoSpesa" />' 
-							class="lbTextSmall span4 importo"   tabindex="-1"></td>
-							
-		<td><input type="text" name="vociContoCorrente.elencoAddebiti[<s:property value="#st.index" />].importoPrelievo" 
-							 value='<s:property value="vociContoCorrente.elencoAddebiti[#st.index].importoPrelievo" />' 
-							class="lbTextSmall span4 importo"  tabindex="-1">
-					
-								<s:hidden name="vociContoCorrente.elencoAddebiti[%{#st.index}].uid"  />
-							
-								<s:hidden name="vociContoCorrente.elencoAddebiti[%{#st.index}].idSaldo" value="%{vociContoCorrente.uid}"/>
-							
-							</td>
-							
-		<td class="elimina tab_Right">	<a  class="btn" onclick="return confirm('Eliminare addebito del <s:property value="vociContoCorrente.elencoAddebiti[#st.index].data" />?')" href="<s:url 
-				action="aggiornaContoCorrente" method="eliminaAddebito"><s:param name="pos" >
-					<s:property value="#st.index" /></s:param>
-		</s:url>">elimina<i class="icon-trash marginLeft1"></i></a> </td>							
-		
-	</tr>
-				</s:iterator>
-				
-
-				</tbody>
-				<tfoot>
-				</tfoot>
-
-			</table>
-		
-		          <p class="margin-medium">
-			  
- 			  <s:submit cssClass="btn btn-primary pull-right" method="aggiornaAddebiti" value="aggiorna" />  
-
-		  </p>
-		  
-		<br>&nbsp;<br/>
-			
-	</s:if>
-				
-			</fieldset>  
-
-		</div>
-		</div>
-			
-          <p class="margin-medium">
-			  <a class="btn btn-secondary" href="ricercaContoCorrente.do">indietro</a>   
-			  
-
-		  </p>
-		  
-		  
-				</s:form>
+					<p class="margin-medium">
+			  			<!--  task-131 <a class="btn btn-secondary" href="ricercaContoCorrente.do">indietro</a>  -->
+			  			<a class="btn btn-secondary" href="ricercaContoCorrente">indietro</a>
+					</p>
+		  		</s:form>
 			</div>
 		</div>
 	</div>
@@ -201,11 +160,6 @@ $(document).ready(function() {
 		    return false;
 		  }
 	});
-
-	
-
-
-
 
 
 	var selected = false;

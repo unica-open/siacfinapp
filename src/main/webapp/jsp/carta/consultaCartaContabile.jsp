@@ -415,7 +415,7 @@ SPDX-License-Identifier: EUPL-1.2
 
 <!-- ************************************************************************************* -->
 					<s:if test="%{fromInserisci}"> 										
-						<p><a class="btn" href="gestioneCartaStep1!annulla.do">indietro</a></p>
+						<p><a class="btn" href="gestioneCartaStep1_annulla.do">indietro</a></p>
 					</s:if>	
 					<s:else>
 						<p><s:include value="/jsp/include/indietro.jsp" /></p>
@@ -434,7 +434,8 @@ SPDX-License-Identifier: EUPL-1.2
  
 	$("#linkTabCartaContabile").click(function() {
 		$.ajax({
-			url: '<s:url method="cambiaTabFolder"/>',
+			//task-131 url: '<s:url method="cambiaTabFolder"/>',
+			url: '<s:url action="consultaCartaContabile_cambiaTabFolder"/>',
 			type: 'POST',
 			data: 'tabFolder=tabCartaContabile',
 		    success: function(data)  {
@@ -444,7 +445,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	$("#linkTabRighe").click(function() {
 		$.ajax({
-			url: '<s:url method="cambiaTabFolder"/>',
+			//task-131 url: '<s:url method="cambiaTabFolder"/>',
+			url: '<s:url action="consultaCartaContabile_cambiaTabFolder"/>',
 			type: 'POST',
 			data: 'tabFolder=tabRighe',
 		    success: function(data)  {

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -140,7 +140,7 @@ public class ConsultaOrdinativoPagamentoAction extends WizardConsultaOrdinativoA
 		
 		//compongo la request per il servizio di ricerca dei classificatori:
 		LeggiClassificatoriGenericiByTipoOrdinativoGest ll = new LeggiClassificatoriGenericiByTipoOrdinativoGest();
-		ll.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		ll.setAnno(sessionHandler.getAnnoBilancio());
 		ll.setCodiceTipoOrdinativoGestione(TIPO_ORDINATIVO_PAGAMENTO_P);
 		ll.setDataOra(new Date());
 		ll.setIdEnteProprietario(sessionHandler.getEnte().getUid());

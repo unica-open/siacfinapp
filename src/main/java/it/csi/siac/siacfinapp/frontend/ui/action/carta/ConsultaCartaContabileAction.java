@@ -6,7 +6,6 @@ package it.csi.siac.siacfinapp.frontend.ui.action.carta;
 
 import java.util.Date;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -21,6 +20,7 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaCartaContabilePerCh
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaCartaContabilePerChiaveResponse;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
 import it.csi.siac.siacfinser.model.ric.RicercaCartaContabileK;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -70,8 +70,8 @@ public class ConsultaCartaContabileAction extends GenericFinAction<ConsultaCarta
 		model.setCartaContabile(cartaContabile);
 		
 		//settiamo le firme impostate per l'ente:
-		model.setIntestazioneFirma1(getCodiceLivelloByTipo(TipologiaGestioneLivelli.FIRMA_CARTA_1));
-		model.setIntestazioneFirma2(getCodiceLivelloByTipo(TipologiaGestioneLivelli.FIRMA_CARTA_2));
+		model.setIntestazioneFirma1(getTipologiaGestioneLivelli(TipologiaGestioneLivelli.FIRMA_CARTA_1));
+		model.setIntestazioneFirma2(getTipologiaGestioneLivelli(TipologiaGestioneLivelli.FIRMA_CARTA_2));
 		//
 
 		return Boolean.TRUE.equals(fromInserisci) ? "fromInserisci" : "success";

@@ -10,7 +10,7 @@ var ModificaMovGestEntrata = function($){
 	
 	function gestisciChangeTipoMotivoAggiornamento(){
 		var descrizioneObbligatoria = $('#modificaDescrizioneObbligatoria').hide();
-		var optionSelected =  $('#listaTipoMotivo').children(":selected");
+		var optionSelected =  $('#listaTipoMotivoAgg').children(":selected");
 		var stringaTipoMotivo = optionSelected && optionSelected[0] && optionSelected[0].innerHTML;
 		
         if(stringaTipoMotivo && /^ROR/.test(stringaTipoMotivo)){
@@ -18,6 +18,7 @@ var ModificaMovGestEntrata = function($){
         }
         
 	}
+	
 	
 	 function gestisciCompetenze(){
 		  var radioSec = $('.flagCompetenze:checked').val();
@@ -85,18 +86,16 @@ var ModificaMovGestEntrata = function($){
 $(document).ready(function() {    
     	 
 	var radioReimputatoNo = $("#radioReimputatoNo");
-		var radioReimputatoSi = $("#radioReimputatoSi");
-		var bloccoReimputato = $("#bloccoReimputato");
-		var radioReimputato = $("#radioReimputato");
+	var radioReimputatoSi = $("#radioReimputatoSi");
+	var bloccoReimputato = $("#bloccoReimputato");
+	var radioReimputato = $("#radioReimputato");
 	
-	
-		if (radioReimputatoNo.is(':checked')) {
-			bloccoReimputato.hide();
-		
+	if (radioReimputatoNo.is(':checked')) {
+		bloccoReimputato.hide();	
 	}
+	
 	if (radioReimputatoSi.is(':checked')) {
 		bloccoReimputato.show();
-		
 	}
 	
     radioReimputatoNo.change(function(){
@@ -107,12 +106,21 @@ $(document).ready(function() {
     radioReimputatoSi.change(function(){
 		bloccoReimputato.show();
 	});
+	  
+	  
       
-      
+    $().on('click', function(e){
+		e & e.preventDefault();
+
+		$()
+
+		//eseguo il trigger
+		this.trigger('submit');
+	});
     
-	  $("#linkCompilazioneGuidataProvvedimento").click(ModificaMovGestEntrata.gestisciProvvedimento);
+	$("#linkCompilazioneGuidataProvvedimento").click(ModificaMovGestEntrata.gestisciProvvedimento);
 	    
-	 $('#listaTipoMotivo').off('change').on('change', ModificaMovGestEntrata.gestisciChangeTipoMotivoAggiornamento).trigger('change');
+	$('#listaTipoMotivoAgg').off('change').on('change', ModificaMovGestEntrata.gestisciChangeTipoMotivoAggiornamento).trigger('change');
  
- 
+
  });

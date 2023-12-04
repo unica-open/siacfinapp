@@ -4,10 +4,11 @@
 */
 package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -15,6 +16,8 @@ import org.springframework.web.context.WebApplicationContext;
 import it.csi.siac.siacbilser.model.Progetto;
 import it.csi.siac.siacbilser.model.TipoProgetto;
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.model.ParametroConfigurazioneEnteEnum;
+import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaImpegno;
@@ -94,13 +97,23 @@ public class AggiornaImpegnoStep2Action extends ActionKeyAggiornaImpegno{
 		teSupport.setRicaricaSiopeSpesa(true);
 		//////////////////////////////////////////////////////////////////////////////////////////
 		
+		
+		//siac-6997
+		recuperaDescrizioneStrutturaCompetente();
+		
 	    return SUCCESS;
 	}  
 	
 	public String salvaConByPassDodicesimi() throws Exception {
 		return salvaInternal(true);
 	}
+
 	
+	public String executeSalva() throws Exception {
+		execute();
+		return salva();
+	}
+
 	/**
 	 * Wrapper di retrocompatibilita'
 	 * @return
@@ -110,16 +123,20 @@ public class AggiornaImpegnoStep2Action extends ActionKeyAggiornaImpegno{
 		return salvaInternal(false);
 	}
 	
-	public String salvaInternal(boolean byPassDodicesimi) throws Exception {
+	private String salvaInternal(boolean byPassDodicesimi) throws Exception {
 		setMethodName("salva");
 		log.debug(methodName, "provo a salvare");
+
+		model.resetErrori();
+		model.resetWarning();
+		model.resetMessaggi();
 		
 		//controlli provvedimento rispetto all'abilitazione a gestire l'impegno decentrato:
 		String controlloProvv = provvedimentoConsentito();
 		if(controlloProvv!=null){
 			return controlloProvv;
 		}
-		//
+		//	
 		
 		//ricontrolliamo il siope:
 		codiceSiopeChangedInternal(teSupport.getSiopeSpesaCod());
@@ -137,6 +154,15 @@ public class AggiornaImpegnoStep2Action extends ActionKeyAggiornaImpegno{
 			return INPUT;
 		}
 		//
+		
+		//SIAC-8825
+		if (isObbligatorioPerimetroSanitario()) {
+			List<Errore> erroriCapitoliPerimentroSanitario = validazioneCapitoliPerimetroSanitario(oggettoDaPopolare);
+			if (! erroriCapitoliPerimentroSanitario.isEmpty()) {
+				addErrori(erroriCapitoliPerimentroSanitario);
+				return INPUT;
+			}
+		}
 	
 		//16 febbraio 2017: pongo a false il parametro pulisci transazione elementare
 		//e la pulisco manualmente solo dopo che il servizio ha finito con esito positivo
@@ -168,9 +194,8 @@ public class AggiornaImpegnoStep2Action extends ActionKeyAggiornaImpegno{
 			requestAggiorna.getImpegno().setIdCronoprogramma(model.getStep1Model().getIdCronoprogramma());
 			requestAggiorna.getImpegno().setIdSpesaCronoprogramma(model.getStep1Model().getIdSpesaCronoprogramma());
 		}
-
 		
-		AggiornaImpegnoResponse response = movimentoGestionService.aggiornaImpegno(requestAggiorna); 
+		AggiornaImpegnoResponse response = movimentoGestioneFinService.aggiornaImpegno(requestAggiorna); 
 		
 		if(response.isFallimento() || (response.getErrori() != null && response.getErrori().size() > 0)){
 			
@@ -231,7 +256,14 @@ public class AggiornaImpegnoStep2Action extends ActionKeyAggiornaImpegno{
 		}	
 	}  
 		
-	
+	//SIAC-8825
+	private List<Errore> validazioneCapitoliPerimetroSanitario (OggettoDaPopolareEnum oggettoDP){
+		List<Errore> errori = new ArrayList<Errore>();
+		if(null==teSupport.getPerimetroSanitarioSpesaSelezionato() || teSupport.getPerimetroSanitarioSpesaSelezionato().equals("")){
+			 errori.add(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("Capitoli perimetro sanitario")); 
+		 }
+		return errori;
+	}
 	
 	public String confermaContoEconomico() {
 		return SUCCESS;

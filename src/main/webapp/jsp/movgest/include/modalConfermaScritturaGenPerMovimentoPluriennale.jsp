@@ -17,7 +17,10 @@ SPDX-License-Identifier: EUPL-1.2
    </div>
    <div class="modal-footer">
      <button class="btn" data-dismiss="modal" aria-hidden="true">indietro</button>
-     <s:submit id="submitSalvaPrimeNoteInCorsoStep2Btn" name="btnSalvaConConfermaPrimeNoteStep2" value="Competenza esercizio in corso" cssClass="btn btn-primary freezePagina" method="impostaPluriennalePrimeNoteEsercizioInCorso" data-dismiss="modal"/>
-     <s:submit id="submitSalvaPrimeNoteFuturiStep2Btn" name="btnSalvaConConfermaPrimeNoteStep2" value="Competenza esercizi futuri" cssClass="btn btn-primary freezePagina" method="impostaPluriennalePrimeNoteEsercizioFuturi" data-dismiss="modal"/>
+     <!-- task-131 <s:submit id="submitSalvaPrimeNoteInCorsoStep2Btn" name="btnSalvaConConfermaPrimeNoteStep2" value="Competenza esercizio in corso" cssClass="btn btn-primary freezePagina" method="impostaPluriennalePrimeNoteEsercizioInCorso"/> -->
+     <!-- task-131 <s:submit id="submitSalvaPrimeNoteFuturiStep2Btn" name="btnSalvaConConfermaPrimeNoteStep2" value="Competenza esercizi futuri" cssClass="btn btn-primary freezePagina" method="impostaPluriennalePrimeNoteEsercizioFuturi"/> -->
+     <s:submit id="submitSalvaPrimeNoteInCorsoStep2Btn" name="btnSalvaConConfermaPrimeNoteStep2" value="Competenza esercizio in corso" cssClass="btn btn-primary freezePagina" action="%{#impostaPluriennalePrimeNoteEsercizioInCorsoAction}"/>
+     <s:submit id="submitSalvaPrimeNoteFuturiStep2Btn" name="btnSalvaConConfermaPrimeNoteStep2" value="Competenza esercizi futuri" cssClass="btn btn-primary freezePagina" action="%{#impostaPluriennalePrimeNoteEsercizioFuturiAction}"/>
+     
    </div>
 </div>

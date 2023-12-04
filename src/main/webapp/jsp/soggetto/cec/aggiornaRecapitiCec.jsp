@@ -35,8 +35,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
     <div class="span12 contentPage">
-    
-        <s:form id="aggiornaRecapiti" action="aggiornaRecapitiCec.do" method="post">
+    	<%-- SIAC-7952 rimuovo .do dalla action --%>
+        <s:form id="aggiornaRecapiti" action="aggiornaRecapitiCec" method="post">
 
 <s:include value="/jsp/include/actionMessagesErrors.jsp" />
         
@@ -62,7 +62,11 @@ SPDX-License-Identifier: EUPL-1.2
 		 (<s:property value="dettaglioSoggetto.statoOperativo" /> dal <s:property value="%{dettaglioSoggetto.dataValidita}" />) </h3>     
 
         <!--#include virtual="sogg_contatti.html" -->	
-        
+        <s:set var="salvaRecapitoAction" value="%{'aggiornaRecapitiCec_salvaRecapito'}" />	          
+	    <s:set var="pulisciContattoAction" value="%{'aggiornaRecapitiCec_pulisciContatto'}" />	          
+	    <s:set var="pulisciIndirizziAction" value="%{'aggiornaRecapitiCec_pulisciIndirizzi'}" />	          
+	    <s:set var="salvaIndirizzoAction" value="%{'aggiornaRecapitiCec_salvaIndirizzo'}" />	          
+	            
          <s:include value="/jsp/soggetto/include/recapiti.jsp" >
          	<s:param name="aggiornaRecapitiUrl" value="'aggiornaRecapitiCec.do'" />
          </s:include>
@@ -72,9 +76,11 @@ SPDX-License-Identifier: EUPL-1.2
              
                 <s:include value="/jsp/include/indietro.jsp" />  
              
-            <!--   <a class="btn btn-link" href="">annulla</a> -->
-              <s:submit name="annulla" value="annulla" method="annullaRecapito" cssClass="btn"  /> 
-              <s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary pull-right"  />   
+	            <!--   <a class="btn btn-link" href="">annulla</a> -->
+	            <!-- task-131  <s:submit name="annulla" value="annulla" method="annullaRecapito" cssClass="btn"  />  --> 
+	            <!-- task-131  <s:submit name="salva" value="salva" method="salva" id="salvaId" cssClass="btn btn-primary pull-right"  />  -->   
+              	<s:submit name="annulla" value="annulla" action="aggiornaRecapitiCec_annullaRecapito" cssClass="btn"  />
+              	<s:submit name="salva" value="salva" action="aggiornaRecapitiCec_salva" id="salvaId" cssClass="btn btn-primary pull-right"  />   
               
               </p>
              </div>

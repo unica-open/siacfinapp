@@ -118,43 +118,43 @@ public abstract class GenericContabilitaGeneraleAction<M extends GenericContabil
 		}
 	}
 	
-	/**
-	 * Costrusice una stringa per segnalare l'errore nell'invocazione del servizio.
-	 * @param req il request del servizio che ha fornito l'errore
-	 * @param res la response tramite cui loggare gli errori
-	 * @return la stringa di errore
-	 */
-	protected String createErrorInServiceInvocationString(ServiceRequest req, ServiceResponse res) {
-		if(req == null) {
-			// La request non e' valorizzata
-			return "NULL request";
-		}
-		// Crea l'errore a partire dalla classe
-		return createErrorInServiceInvocationString(req.getClass(), res);
-	}
+//	/**
+//	 * Costrusice una stringa per segnalare l'errore nell'invocazione del servizio.
+//	 * @param req il request del servizio che ha fornito l'errore
+//	 * @param res la response tramite cui loggare gli errori
+//	 * @return la stringa di errore
+//	 */
+//	public String createErrorInServiceInvocationString(ServiceRequest req, ServiceResponse res) {
+//		if(req == null) {
+//			// La request non e' valorizzata
+//			return "NULL request";
+//		}
+//		// Crea l'errore a partire dalla classe
+//		return createErrorInServiceInvocationString(req.getClass(), res);
+//	}
 	
-	/**
-	 * Costrusice una stringa per segnalare l'errore nell'invocazione del servizio.
-	 * @param requestClazz il servizio che ha fornito l'errore
-	 * @param res          la response tramite cui loggare gli errori
-	 * @return la stringa di errore
-	 */
-	protected <REQ extends ServiceRequest, RES extends ServiceResponse> String createErrorInServiceInvocationString(Class<REQ> requestClazz, RES res) {
-		// Creo la stringa di errore
-		StringBuilder sb = new StringBuilder()
-			.append("Errore nell'invocazione del servizio ")
-			.append(requestClazz.getSimpleName());
-		if(res != null && res.getErrori() != null) {
-			// Se ho errori
-			for(Errore errore : res.getErrori()) {
-				// Aggiungo errore per errore
-				sb.append(" - ")
-					.append(errore.getTesto());
-			}
-		}
-		// Restituisco la stringa
-		return sb.toString();
-	}
+//	/**
+//	 * Costrusice una stringa per segnalare l'errore nell'invocazione del servizio.
+//	 * @param requestClazz il servizio che ha fornito l'errore
+//	 * @param res          la response tramite cui loggare gli errori
+//	 * @return la stringa di errore
+//	 */
+//	protected <REQ extends ServiceRequest, RES extends ServiceResponse> String createErrorInServiceInvocationString(Class<REQ> requestClazz, RES res) {
+//		// Creo la stringa di errore
+//		StringBuilder sb = new StringBuilder()
+//			.append("Errore nell'invocazione del servizio ")
+//			.append(requestClazz.getSimpleName());
+//		if(res != null && res.getErrori() != null) {
+//			// Se ho errori
+//			for(Errore errore : res.getErrori()) {
+//				// Aggiungo errore per errore
+//				sb.append(" - ")
+//					.append(errore.getTesto());
+//			}
+//		}
+//		// Restituisco la stringa
+//		return sb.toString();
+//	}
 	
 	/**
 	 * Imposta in sessione un parametro relativo al successo dell'azione attuale per una redirezione ad un'azione futura.

@@ -1,4 +1,4 @@
-<%--
+	<%--
 SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
 SPDX-License-Identifier: EUPL-1.2
 --%>
@@ -30,8 +30,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div id="aggiornaProvvisorioDivPrincipale" class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage">
-    
-			<s:form method="post" action="aggiornaProvvisorioCassa.do"  id="aggiornaProvvisorioCassa"  >
+    		<%-- SIAC-7952 rimuovo .do dalla action --%>
+			<s:form method="post" action="aggiornaProvvisorioCassa"  id="aggiornaProvvisorioCassa"  >
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 		
 			
@@ -187,7 +187,7 @@ SPDX-License-Identifier: EUPL-1.2
 
                        				<s:radio  id="accettato" cssClass="flagDocumento" 
                        				 disabled="%{utenteLettore or (utenteDecentrato and not provvisorioConSacUtente)}"
-                       					name="model.accettatoStr" list="#{ 'true': 'S&igrave;', 'false' : 'No', 'null' : 'Da definire' }"/>
+                       					name="model.accettatoStr" list="#{ 'true': 'Si', 'false' : 'No', 'null' : 'Da definire' }"/>
 								</span>
 								
 								
@@ -196,18 +196,18 @@ SPDX-License-Identifier: EUPL-1.2
 								<span class="al">
 									<label class="radio inline" for="DescSogg">Data presa in carico dal Servizio *</label>
 								</span>
-   							    <s:textfield readonly="%{not (tipoDocumentoProv eq 'Entrata' and (utenteDecentrato and provvisorioConSacUtente or utenteAmministratore))}" 
+   							    <s:textfield readonly="%{not utenteAmministratore}" 
    							    	id="dataPresaInCaricoServizio" title="gg/mm/aaaa" name="model.dataPresaInCaricoServizio" 
-   							    	cssClass="%{tipoDocumentoProv eq 'Entrata' and (utenteDecentrato and provvisorioConSacUtente or utenteAmministratore) ? 'lbTextSmall span2 datepicker' : 'lbTextSmall span2'}"></s:textfield>
+   							    	cssClass="%{utenteAmministratore ? 'lbTextSmall span2 datepicker' : 'lbTextSmall span2'}"></s:textfield>
 							</span>
 								
 					 		<span class="hidex" id="dataRifiutoErrataAttribuzioneGrp">
 								<span class="al">
 									<label class="radio inline" for="DescSogg">Data rifiuto per errata attribuzione *</label>
 								</span>	
-								<s:textfield readonly="%{not (tipoDocumentoProv eq 'Entrata' and (utenteDecentrato and provvisorioConSacUtente or utenteAmministratore))}"  
+								<s:textfield readonly="%{not utenteAmministratore}"  
 									id="dataRifiutoErrataAttribuzione" title="gg/mm/aaaa" name="model.dataRifiutoErrataAttribuzione" 
-									cssClass="%{tipoDocumentoProv eq 'Entrata' and (utenteDecentrato and provvisorioConSacUtente or utenteAmministratore) ? 'lbTextSmall span2 datepicker' : 'lbTextSmall span2'}"></s:textfield>
+									cssClass="%{utenteAmministratore ? 'lbTextSmall span2 datepicker' : 'lbTextSmall span2'}"></s:textfield>
 							</span>
 							</s:if> 			
 							</div>
@@ -215,7 +215,7 @@ SPDX-License-Identifier: EUPL-1.2
 				        
 				        
 				        <div class="control-group">
-							<label class="control-label" for="DescSogg">Note</label>
+							<label class="control-label" for="DescSogg">Note <s:if test="utenteDecentrato">*</s:if></label>
 							<div class="controls">
 								<s:textarea id="note" cssStyle="resize: none;" name="model.note" cssClass="span9" 
 									readonly="%{utenteLettore or (utenteDecentrato and not provvisorioConSacUtente)}"  />
@@ -236,7 +236,8 @@ SPDX-License-Identifier: EUPL-1.2
 				
 		<s:if test="not utenteLettore and (not utenteDecentrato or provvisorioConSacUtente)">
 	            
-				<s:submit name="annulla" value="annulla" method="annullaAggiornaProvvisorio" cssClass="btn btn-secondary" />
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annullaAggiornaProvvisorio" cssClass="btn btn-secondary" /> -->
+				<s:submit name="annulla" value="annulla" action="aggiornaProvvisorioCassa_annullaAggiornaProvvisorio" cssClass="btn btn-secondary" />
 
 				<button type="button"  id="pulsanteAggiornaProvvisorio" name="salva" value="Salva"  class="btn btn-primary pull-right" >Salva</button>
 
@@ -320,7 +321,8 @@ $(document).ready(function() {
 		}
 		
 		$('#aggiornaProvvisorioCassa')
-		.append('<input type="hidden" name="method:aggiornaProvvisorioDiCassa" value="" class="btn" >')
+		//task-131 .append('<input type="hidden" name="method:aggiornaProvvisorioDiCassa" value="" class="btn" >')
+		.append('<input type="hidden" name="action:aggiornaProvvisorioCassa_aggiornaProvvisorioDiCassa" value="" class="btn" >')
 		.submit();
 		
 	});	

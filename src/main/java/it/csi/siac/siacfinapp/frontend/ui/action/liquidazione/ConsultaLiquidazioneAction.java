@@ -7,14 +7,15 @@ package it.csi.siac.siacfinapp.frontend.ui.action.liquidazione;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import org.apache.commons.collections.CollectionUtils;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacfinapp.frontend.ui.model.liquidazione.RicercaLiquidazioneModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazionePerChiave;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaLiquidazionePerChiaveResponse;
 import it.csi.siac.siacfinser.model.liquidazione.Liquidazione;
@@ -52,9 +53,9 @@ public class ConsultaLiquidazioneAction extends WizardRicercaLiquidazioneAction{
 		liq.setAnnoLiquidazione(anno);
 		liq.setNumeroLiquidazione(numero);
 		
-		prl.setTipoRicerca(Constanti.TIPO_RICERCA_DA_CONSULTA_LIQUIDAZIONE);
+		prl.setTipoRicerca(CostantiFin.TIPO_RICERCA_DA_CONSULTA_LIQUIDAZIONE);
 		prl.setLiquidazione(liq);
-		prl.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		prl.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		req.setEnte(sessionHandler.getAccount().getEnte());
 		req.setRichiedente(sessionHandler.getRichiedente());
 		req.setDataOra(new Date());
@@ -71,7 +72,8 @@ public class ConsultaLiquidazioneAction extends WizardRicercaLiquidazioneAction{
 			model.setSoggettoConsulta(null);
 			model.setCapitoloConsulta(null);
 			model.setImpegnoConsulta(null);
-			model.setNumeroMutuoConsulta(null);
+			//SIAC-8242
+			model.setSubImpegnoConsulta(null);
 			
 			Liquidazione liqConsulta = response.getLiquidazione();
 			
@@ -123,14 +125,13 @@ public class ConsultaLiquidazioneAction extends WizardRicercaLiquidazioneAction{
 	        		response.getLiquidazione().getCodSiope()));
 			
 			
-			//Numero mutuo
-			if(response.getLiquidazione().getNumeroMutuo()!=null){
-				model.setNumeroMutuoConsulta(new BigDecimal(response.getLiquidazione().getNumeroMutuo()));
-			}
+
 			//Da Aggiustare TO-DO
-			if(response.getLiquidazione().getImpegno()!=null && response.getLiquidazione().getImpegno().getElencoSubImpegni()!=null){
-				model.setSubImpegnoConsulta(response.getLiquidazione().getImpegno().getElencoSubImpegni().get(0));
-			}		
+			if(response.getLiquidazione().getImpegno() != null && CollectionUtils.isNotEmpty(response.getLiquidazione().getImpegno().getElencoSubImpegni())){
+				//SIAC-8243 prendo il SUB solo quando ne ho solamente uno, in caso ne avessi piu' di piu' starei lavorando con la TESTATA e non devo mostrare i SUB
+				model.setSubImpegnoConsulta(response.getLiquidazione().getImpegno().getElencoSubImpegni().size() == 1 ? 
+						response.getLiquidazione().getImpegno().getElencoSubImpegni().get(0) : null);
+			}
 			//mdp
 			if(response.getLiquidazione().getSoggettoLiquidazione()!=null && response.getLiquidazione().getSoggettoLiquidazione().getModalitaPagamentoList()!=null){
 				model.setMdpConsulta(response.getLiquidazione().getModalitaPagamentoSoggetto());

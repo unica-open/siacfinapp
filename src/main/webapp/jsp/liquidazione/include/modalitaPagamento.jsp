@@ -65,7 +65,9 @@ SPDX-License-Identifier: EUPL-1.2
 		$('input[type=radio][name=radioModPagSelezionato]').change(function() {
 	        var selectiondata = this.value;
 	        $.ajax({
-				url: '<s:url method="resede"></s:url>',
+				//task-131 url: '<s:url method="resede"></s:url>',
+				<!--task-155-->
+				url: '<s:url  action="inserisciLiquidazioneStep2_resede"></s:url>',
 				type: "GET",
 				data: { selection: selectiondata },
 			    success: function(data)  {

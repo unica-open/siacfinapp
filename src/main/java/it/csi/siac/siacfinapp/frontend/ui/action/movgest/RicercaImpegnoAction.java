@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -19,14 +19,18 @@ import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipiAmbito;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipiAmbitoResponse;
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProgettoImpegnoModel;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.EsistenzaProgettoResponse;
 import it.csi.siac.siacgenser.model.ProgettoModelDetail;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
 public class RicercaImpegnoAction extends WizardRicercaMovGestAction {
+	
+	
 	
 	
 	public RicercaImpegnoAction () {
@@ -89,12 +93,20 @@ public class RicercaImpegnoAction extends WizardRicercaMovGestAction {
 			listaDaRiaccertamento.add(NO);
 			model.getStep1Model().setDaRiaccertamento(listaDaRiaccertamento);
 			
+			//SIAC-6997
+			List<String> listaDaReanno = new ArrayList<String>();
+			listaDaReanno.add(SI);
+			listaDaReanno.add(NO);
+			model.getStep1Model().setDaReanno(listaDaReanno);
+			
+			
 			//lista competenze:
 			List<String> competenzeListApp = new ArrayList<String>();
 			competenzeListApp.add("Tutti");
 			competenzeListApp.add("Residui");
 			competenzeListApp.add("Correnti");
 			competenzeListApp.add("Futuri");
+			competenzeListApp.add("Residui ROR");
 			setCompetenzeList(competenzeListApp);
 			
 			//setto l'anno esercizio come defualt di ricerca:
@@ -109,7 +121,7 @@ public class RicercaImpegnoAction extends WizardRicercaMovGestAction {
 	private void caricaListaAmbiti() {
 		
 		RicercaTipiAmbito request = model.creaRequestRicercaTipiAmbito();
-		request.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		request.setAnno(sessionHandler.getAnnoBilancio());
 		RicercaTipiAmbitoResponse response = progettoService.ricercaTipiAmbito(request);
 
 		model.setListaTipiAmbito(response.getTipiAmbito());
@@ -124,6 +136,36 @@ public class RicercaImpegnoAction extends WizardRicercaMovGestAction {
 	public String execute() throws Exception {
 		setMethodName("execute");
 
+		//SIAC-6997
+		model.setRicercaTipoROR(false);
+		//SIAC-7704
+		model.setSkipControlloBloccoRagioneria(true);
+//		if(
+//			(sessionHandler.getAzioneRichiesta()!= null && sessionHandler.getAzioneRichiesta().getAzione()!= null && sessionHandler.getAzioneRichiesta().getAzione().getNome()!= null
+//			&& (sessionHandler.getAzioneRichiesta().getAzione().getNome().equals(AzioniConsentite.LEGGI_IMP_ROR_DECENTRATO.getNomeAzione())||
+//			sessionHandler.getAzioneRichiesta().getAzione().getNome().equals(AzioniConsentite.LEGGI_IMP_ROR.getNomeAzione()))) //ROR DECENTRATO ACTION
+//			){
+//			//AZIONE RICERCA ROR
+//			if(CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO.equals(sessionHandler.getFaseBilancio())){ // PREDISPOSIZIONE CONSUNTIVO)
+//					model.setRicercaTipoROR(true);
+//				}
+//				else{
+//					return "erroreRicercaFase";
+//				}
+//		}
+		
+		
+		setAzioniDecToCheck(AzioneConsentitaEnum.OP_SPE_gestImprROR.getNomeAzione()+ ","+AzioneConsentitaEnum.OP_SPE_gestImpRORdecentrato.getNomeAzione()); //SOLO PER AZIONI ROR
+		if( checkAzioniDec()  
+				&& CostantiFin.BIL_FASE_OPERATIVA_PREDISPOSIZIONE_CONSUNTIVO.equals(sessionHandler.getFaseBilancio())	){ //SOLO PER PREDISPOSIZIONE CONSUNTIVO  
+					model.setRicercaTipoROR(true);
+		
+		}
+		
+		
+		
+		
+		
 		resetPageNumberTableId("ricercaImpegnoID");  
 		
 		//Pulisco i campi
@@ -157,6 +199,14 @@ public class RicercaImpegnoAction extends WizardRicercaMovGestAction {
 		
 		//setto il flag da ricerca a true
 		model.getStep1Model().setDaRicerca(true);
+		
+		//SIAC-6997
+		model.getStep1Model().setReanno(NO);
+		
+		//SIAC-7349
+		model.setComponenteBilancioCapitoloAttivo(true);
+		model.setComponenteBilancioCapitoloAttivoRicerca(true);
+		
 		
 		//carica lista tipo finanziamento:
 		if(caricaListaTipoFinanziamento()){
@@ -309,6 +359,10 @@ public class RicercaImpegnoAction extends WizardRicercaMovGestAction {
 				}
 				if(model.getRicercaModel().getCompetenze().equalsIgnoreCase("Tutti")){
 					model.getRicercaModel().setCompetenzaTutti(true);
+				}
+				//SIAC-6997
+				if(model.getRicercaModel().getCompetenze().equalsIgnoreCase("Residui ROR")){
+					model.getRicercaModel().setCompetenzaResiduiRor(true);
 				}
 			}
 

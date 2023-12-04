@@ -7,6 +7,9 @@ package it.csi.siac.siacfinapp.frontend.ui.model.movgest;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import it.csi.siac.siacattser.model.AttoAmministrativo;
+import it.csi.siac.siacfinser.model.Impegno;
+
 public class MovimentoConsulta extends CommonConsulta {
 
 	private static final long serialVersionUID = 1L;
@@ -14,8 +17,10 @@ public class MovimentoConsulta extends CommonConsulta {
 	//id movimento:
 	private Integer idMovimento;
 	
+	// SIAC-6997 aggiunti campi daReanno e strutturaCompetente
+	
 	//dati principali:
-	private String 		anno, numero, descrizione, progetto, cig, cup, daRiaccertamento, soggettoDurc, classificazione, codificaTransazioneElementare;
+	private String 		anno, numero, descrizione, progetto, cig, cup, daRiaccertamento, daReanno, strutturaCompetente, soggettoDurc, classificazione, codificaTransazioneElementare;
 	private Date 		dataScadenza;
 	private BigDecimal	importoIniziale, disponibilitaSub, totaleSub;
 	private String		descSuper; 
@@ -41,9 +46,9 @@ public class MovimentoConsulta extends CommonConsulta {
 
 	//provvedimento:
 	private Provvedimento provvedimento = new Provvedimento();
-	
+
 	//soggetto:
-	private final Soggetto soggetto = new Soggetto();
+	private  Soggetto soggetto = new Soggetto();
 	
 	private String flagFattura;
 	private String flagCorrispettivo;
@@ -98,7 +103,35 @@ public class MovimentoConsulta extends CommonConsulta {
 	
 	//SIAC-6929
 	private String bloccoRagioneria;
+
+	//SIAC-7349
+	private String descrizioneComponente;
 	
+	//SIAC-6865
+	private boolean aggiudicazioneDaPrenotazione;
+	private Impegno impegnoPrenotazioneOrigine;
+	private AttoAmministrativo provvedimentoAggiudicazione;
+	
+	//SIAC-8178
+	private String codiceVerbale;
+
+	public String getCodiceVerbale() {
+			return codiceVerbale;
+	}
+
+	public void setCodiceVerbale(String codiceVerbale) {
+			this.codiceVerbale = codiceVerbale;
+	}
+
+
+	public String getDescrizioneComponente() {
+		return descrizioneComponente;
+	}
+
+	public void setDescrizioneComponente(String descrizioneComponente) {
+		this.descrizioneComponente = descrizioneComponente;
+	}
+
 	public String getBloccoRagioneria() {
 		return bloccoRagioneria;
 	}
@@ -186,6 +219,37 @@ public class MovimentoConsulta extends CommonConsulta {
 		this.daRiaccertamento = daRiaccertamento;
 	}
 
+	// inizio SIAC-6997
+	/**
+	 * @return the daREANNO
+	 */
+	public String getDaReanno() {
+		return daReanno;
+	}
+
+	/**
+	 * @param daREANNO the daREANNO to set
+	 */
+	public void setDaReanno(String daReanno) {
+		this.daReanno = daReanno;
+	}
+	
+	/**
+	 * @return the strutturaCompetente
+	 */
+	public String getStrutturaCompetente() {
+		return strutturaCompetente;
+	}
+
+	/**
+	 * @param strutturaCompetente the strutturaCompetente to set
+	 */
+	public void setStrutturaCompetente(String strutturaCompetente) {
+		this.strutturaCompetente = strutturaCompetente;
+	}
+	
+	// fine SIAC-6997
+
 	public String getClassificazione() {
 		return classificazione;
 	}
@@ -239,6 +303,10 @@ public class MovimentoConsulta extends CommonConsulta {
 
 	public Soggetto getSoggetto() {
 		return soggetto;
+	}
+	
+	public void setSoggetto(Soggetto soggetto) {
+		this.soggetto = soggetto;
 	}
 
 	public String getDescSuper() {
@@ -605,5 +673,60 @@ public class MovimentoConsulta extends CommonConsulta {
 	public void setFlagCorrispettivo(String flagCorrispettivo) {
 		this.flagCorrispettivo = flagCorrispettivo;
 	}
+
+	/**
+	 * @return the aggiudicazioneDaPrenotazione
+	 */
+	public boolean isAggiudicazioneDaPrenotazione() {
+		return aggiudicazioneDaPrenotazione;
+	}
+
+	/**
+	 * @param aggiudicazioneDaPrenotazione the aggiudicazioneDaPrenotazione to set
+	 */
+	public void setAggiudicazioneDaPrenotazione(boolean aggiudicazioneDaPrenotazione) {
+		this.aggiudicazioneDaPrenotazione = aggiudicazioneDaPrenotazione;
+	}
+
+	
+	/**
+	 * @return the provvedimentoAggiudicazione
+	 */
+	public AttoAmministrativo getProvvedimentoAggiudicazione() {
+		return provvedimentoAggiudicazione;
+	}
+
+	/**
+	 * @param provvedimentoAggiudicazione the provvedimentoAggiudicazione to set
+	 */
+	public void setProvvedimentoAggiudicazione(AttoAmministrativo provvedimentoAggiudicazione) {
+		this.provvedimentoAggiudicazione = provvedimentoAggiudicazione;
+	}
+
+	/**
+	 * @return the impegnoPrenotazioneOrigine
+	 */
+	public Impegno getImpegnoPrenotazioneOrigine() {
+		return impegnoPrenotazioneOrigine;
+	}
+
+	/**
+	 * @param impegnoPrenotazioneOrigine the impegnoPrenotazioneOrigine to set
+	 */
+	public void setImpegnoPrenotazioneOrigine(Impegno impegnoPrenotazioneOrigine) {
+		this.impegnoPrenotazioneOrigine = impegnoPrenotazioneOrigine;
+	}
+	
+	/**
+	 * Gets the numero prenotazione origine.
+	 *
+	 * @return the numero prenotazione origine
+	 */
+	public String getNumeroPrenotazioneOrigine() {
+		return getImpegnoPrenotazioneOrigine() != null && getImpegnoPrenotazioneOrigine().getNumeroBigDecimal() != null? 
+				Integer.valueOf(getImpegnoPrenotazioneOrigine().getNumeroBigDecimal().intValue()).toString() : "";   
+	}
+	
+	
 	
 }

@@ -39,7 +39,8 @@ SPDX-License-Identifier: EUPL-1.2
 			<div class="span12 ">
 
 				<div class="contentPage">
-					<s:form method="post" action="modalitaPagamentoSoggetto.do">
+					<%-- SIAC-7952 rimuovo .do dalla action --%>
+					<s:form method="post" action="modalitaPagamentoSoggetto">
 						<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 
 						<ul class="nav nav-tabs">
@@ -51,8 +52,10 @@ SPDX-License-Identifier: EUPL-1.2
 								<li class="active"><a href="#">Sedi Secondarie</a></li>
 							</s:if>
 							<s:else>
-								<li><s:a action="aggiornaSoggetto" method="doExecute">Soggetto</s:a></li>
-								<li><s:a action="aggiornaSediSecondarie" method="doExecute">Sedi Secondarie</s:a></li>
+								<!-- task-131 <li><s:a action="aggiornaSoggetto" method="doExecute">Soggetto</s:a></li>-->
+								<!-- task-131 <li><s:a action="aggiornaSediSecondarie" method="doExecute">Sedi Secondarie</s:a></li> -->
+								<li><s:a action="aggiornaSoggetto_doExecute">Soggetto</s:a></li>
+								<li><s:a action="aggiornaSediSecondarie_doExecute">Sedi Secondarie</s:a></li>
 								<li class="active"><a href="#">Modalit&agrave;
 										pagamento</a></li>
 							</s:else>
@@ -114,22 +117,22 @@ SPDX-License-Identifier: EUPL-1.2
 										</s:if>
 										<s:if test="isAbilitato(2, #attr.modPag.uid)">
 											<li><a
-												href="modalitaPagamentoSoggetto!aggiornaMDP.do?aggiornaCodiceSoggetto=${modPag.uid}"
+												href="modalitaPagamentoSoggetto_aggiornaMDP.do?aggiornaCodiceSoggetto=${modPag.uid}"
 												data-toggle="modal">aggiorna</a></li>
 										</s:if>
 										<s:if test="isAbilitato(3, #attr.modPag.uid)">
 											<li><a href="#msgAnnulla"
-												onclick="$('.annulla-prosegui').attr('href', 'modalitaPagamentoSoggetto!annullaModalitaDiPagamento.do?aggiornaCodiceSoggetto=' + ${modPag.uid})"
+												onclick="$('.annulla-prosegui').attr('href', 'modalitaPagamentoSoggetto_annullaModalitaDiPagamento.do?aggiornaCodiceSoggetto=' + ${modPag.uid})"
 												data-toggle="modal">annulla</a></li>
 										</s:if>
 										<s:if test="isAbilitato(5, #attr.modPag.uid)">
 											<li><a href="#msgBlocca"
-												onclick="$('.blocca-prosegui').attr('href', 'modalitaPagamentoSoggetto!bloccaModalitaDiPagamento.do?aggiornaCodiceSoggetto=' + ${modPag.uid})"
+												onclick="$('.blocca-prosegui').attr('href', 'modalitaPagamentoSoggetto_bloccaModalitaDiPagamento.do?aggiornaCodiceSoggetto=' + ${modPag.uid})"
 												data-toggle="modal">blocca</a></li>
 										</s:if>
 										<s:if test="isAbilitato(6, #attr.modPag.uid)">
 											<li><a href="#msgElimina"
-												onclick="$('.elimina-prosegui').attr('href', 'modalitaPagamentoSoggetto!eliminaMdp.do?aggiornaCodiceSoggetto=' + ${modPag.uid})"
+												onclick="$('.elimina-prosegui').attr('href', 'modalitaPagamentoSoggetto_eliminaMdp.do?aggiornaCodiceSoggetto=' + ${modPag.uid})"
 												data-toggle="modal">elimina</a></li>
 										</s:if>
 										<s:if test="isAbilitato(7, #attr.modPag.uid)">
@@ -154,11 +157,11 @@ SPDX-License-Identifier: EUPL-1.2
 						</display:table>
 
 						<!-- Start Sezione Inserimento -->
-
+						<!-- task-155 -->
 						<s:if test="%{azioneAggiorna == false}">
 							<p style="margin-bottom: 10px;" class="margin-medium">
 								<a class="btn"
-									href="modalitaPagamentoSoggetto!panelInsertPayment.do"
+									href="modalitaPagamentoSoggetto_panelInsertPayment.do"
 									data-toggle="collapse" data-target="#inseriscipag">inserisci
 									nuove modalit&agrave;</a>
 							</p>
@@ -170,8 +173,7 @@ SPDX-License-Identifier: EUPL-1.2
 								<a id="ancoretta"></a>
 								<div class="accordion_info">
 									<fieldset class="form-horizontal">
-										<s:form name="handlePaymentType"
-											action="modalitaPagamentoSoggetto" method="post">
+										<s:form name="handlePaymentType" action="modalitaPagamentoSoggetto" method="post">
 											<div class="control-group">
 												<label class="control-label" for="tipoind">Associato
 													a *</label>
@@ -203,10 +205,8 @@ SPDX-License-Identifier: EUPL-1.2
 	display: none !important;
 }
 </style>
-											<s:submit id="submitPaymentType" name="handle_payment_type"
-												value="seleziona tipologia" method="handleTypePayment"
-												cssClass="hideButton" />
-
+											<!-- task-131 <s:submit id="submitPaymentType" name="handle_payment_type" value="seleziona tipologia" method="handleTypePayment" cssClass="hideButton" /> -->
+											<s:submit id="submitPaymentType" name="handle_payment_type" value="seleziona tipologia" action="modalitaPagamentoSoggetto_handleTypePayment" cssClass="hideButton" />
 											<script type="text/javascript">
 				function handlePayment(){
 					//todo se la select value e' scegli etc etc non fa nulla
@@ -216,7 +216,7 @@ SPDX-License-Identifier: EUPL-1.2
 					
 				}
 			
-			</script>
+											</script>
 										</s:form>
 									</fieldset>
 								</div>
@@ -240,8 +240,7 @@ SPDX-License-Identifier: EUPL-1.2
         </p>  -->
 
 						<s:if test="%{contoCorrenteVisible}">
-							<s:form name="insertModPagContoCorrente"
-								action="modalitaPagamentoSoggetto" method="post">
+							<s:form name="insertModPagContoCorrente" action="modalitaPagamentoSoggetto" method="post">
 								<s:hidden name="tipoAccreditoPage" id="tipoAccreditoPage"
 									value="tipoAccreditoPage" />
 								<div id="inscontocorr">
@@ -332,11 +331,10 @@ SPDX-License-Identifier: EUPL-1.2
 										</fieldset>
 										<p>
 											<a class="btn"
-												href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
+												href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla
 												inserimento</a>
-											<s:submit name="inserisciModPagCorrente" value="Salva"
-												id="salvaId" cssClass="btn"
-												method="inserisciModPagContoCorrente" />
+											<!--task-131 <s:submit name="inserisciModPagCorrente" value="Salva" id="salvaId" cssClass="btn" method="inserisciModPagContoCorrente" /> -->
+											<s:submit name="inserisciModPagCorrente" value="Salva" id="salvaId" cssClass="btn" action="modalitaPagamentoSoggetto_inserisciModPagContoCorrente" />
 										</p>
 									</div>
 								</div>
@@ -344,27 +342,14 @@ SPDX-License-Identifier: EUPL-1.2
 						</s:if>
 
 
-
-
-
-
-
-
-
-
-
 						<s:if test="%{genericoVisibile}">
-							<s:form name="insertModPagGenerico"
-								action="modalitaPagamentoSoggetto" method="post">
+							<s:form name="insertModPagGenerico" action="modalitaPagamentoSoggetto" method="post">
 								<s:hidden name="tipoAccreditoPage" id="tipoAccreditoPage"
 									value="tipoAccreditoPage" />
 								<div id="ins-generico">
 									<a id="ancorettaMdp"></a>
 									<div class="accordion_info">
 										<fieldset class="form-horizontal">
-
-
-
 											<div class="control-group">
 												<label class="control-label" for="scadenza">Data
 													cessazione</label>
@@ -397,11 +382,9 @@ SPDX-License-Identifier: EUPL-1.2
 
 										</fieldset>
 										<p>
-											<a class="btn"
-												href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
-												inserimento</a>
-											<s:submit name="inserisciModPagGenerico" value="Salva"
-												id="salvaId" cssClass="btn" method="inserisciModPagGenerico" />
+											<a class="btn" href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla inserimento</a>
+											<!-- task-131 <s:submit name="inserisciModPagGenerico" value="Salva" id="salvaId" cssClass="btn" method="inserisciModPagGenerico" /> -->
+											<s:submit name="inserisciModPagGenerico" value="Salva" id="salvaId" cssClass="btn" action="modalitaPagamentoSoggetto_inserisciModPagGenerico" />
 										</p>
 									</div>
 								</div>
@@ -409,27 +392,12 @@ SPDX-License-Identifier: EUPL-1.2
 						</s:if>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 						<s:if test="not hasActionErrors()">
 							<s:hidden id="ancoraMdpVisualizza" name="ancoraMdpVisualizza" />
 						</s:if>
 
 						<s:if test="%{contanteVisible}">
-							<s:form name="inserisciModPagContante"
-								action="modalitaPagamentoSoggetto" method="post">
+							<s:form name="inserisciModPagContante" action="modalitaPagamentoSoggetto" method="post">
 								<s:hidden name="tipoAccreditoPage" id="tipoAccreditoPage"
 									value="tipoAccreditoPage" />
 								<div id="inscontante">
@@ -524,10 +492,10 @@ SPDX-License-Identifier: EUPL-1.2
 										</fieldset>
 										<p>
 											<a class="btn"
-												href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
+												href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla
 												inserimento</a>
-											<s:submit cssClass="btn" value="Salva" id="salvaId"
-												method="inserisciModPagContanti" name="salvaContante" />
+											<!-- task-131 <s:submit cssClass="btn" value="Salva" id="salvaId" method="inserisciModPagContanti" name="salvaContante" /> -->
+											<s:submit cssClass="btn" value="Salva" id="salvaId" action="modalitaPagamentoSoggetto_inserisciModPagContanti" name="salvaContante" />
 										</p>
 									</div>
 								</div>
@@ -542,8 +510,7 @@ SPDX-License-Identifier: EUPL-1.2
 								<a id="ancorettaMdp"></a>
 								<div class="accordion_info">
 									<h5>Cerca Soggetto</h5>
-									<s:form id="ricercaSoggettoModPag"
-										action="modalitaPagamentoSoggetto" method="post">
+									<s:form id="ricercaSoggettoModPag" action="modalitaPagamentoSoggetto" method="post">
 										<fieldset class="form-horizontal">
 											<div class="control-group">
 												<label class="control-label" for="Codice">Codice</label>
@@ -569,15 +536,14 @@ SPDX-License-Identifier: EUPL-1.2
 										</fieldset>
 										<p>
 											<a class="btn btn-link"
-												href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla</a>
-											<s:submit name="cerca" value="cerca"
-												method="ricercaSoggettoModPag" cssClass="btn" />
+												href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla</a>
+											<!-- task-131 <s:submit name="cerca" value="cerca" method="ricercaSoggettoModPag" cssClass="btn" /> -->
+											<s:submit name="cerca" value="cerca" action="modalitaPagamentoSoggetto_ricercaSoggettoModPag" cssClass="btn" />
 										</p>
 									</s:form>
 
 									<s:if test="%{cessioneSearchVisible}">
-										<s:form id="selezioneSoggettoCessioneForm"
-											action="modalitaPagamentoSoggetto" method="post">
+										<s:form id="selezioneSoggettoCessioneForm" action="modalitaPagamentoSoggetto" method="post">
 											<s:hidden name="tipoAccreditoPage" id="tipoAccreditoPage"
 												value="tipoAccreditoPage" />
 											<h5>Risultati della ricerca</h5>
@@ -613,18 +579,15 @@ SPDX-License-Identifier: EUPL-1.2
 											</table>
 
 											<p>
-												<a class="btn btn-link"
-													href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla</a>
-												<s:submit name="seleziona_soggetto"
-													value="seleziona soggetto"
-													method="ricercaSoggettoModPag_step2" cssClass="btn" />
+												<a class="btn btn-link" href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla</a>
+												<!-- task-131 <s:submit name="seleziona_soggetto" value="seleziona soggetto" method="ricercaSoggettoModPag_step2" cssClass="btn" /> -->
+												<s:submit name="seleziona_soggetto" value="seleziona soggetto" action="modalitaPagamentoSoggetto_ricercaSoggettoModPag_step2" cssClass="btn" />
 											</p>
 										</s:form>
 									</s:if>
 
 									<s:if test="%{cessioneSearchStep2}">
-										<s:form name="inserisciModPagCessione"
-											action="modalitaPagamentoSoggetto" method="post">
+										<s:form name="inserisciModPagCessione" action="modalitaPagamentoSoggetto" method="post">
 											<s:hidden name="tipoAccreditoPage" id="tipoAccreditoPage"
 												value="tipoAccreditoPage" />
 											<h5>Soggetto selezionato:
@@ -674,10 +637,10 @@ SPDX-License-Identifier: EUPL-1.2
 
 											<p>
 												<a class="btn"
-													href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
+													href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla
 													inserimento</a>
-												<s:submit cssClass="btn" name="salvaCessione" id="salvaId"
-													value="Salva" method="inserisciModPagCessione" />
+												<!-- task-131 <s:submit cssClass="btn" name="salvaCessione" id="salvaId" value="Salva" method="inserisciModPagCessione" />-->
+												<s:submit cssClass="btn" name="salvaCessione" id="salvaId" value="Salva" action="modalitaPagamentoSoggetto_inserisciModPagCessione" />
 											</p>
 										</s:form>
 									</s:if>
@@ -1321,11 +1284,10 @@ SPDX-License-Identifier: EUPL-1.2
 										</fieldset>
 										<p>
 											<a class="btn"
-												href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
+												href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla
 												inserimento</a>
-											<s:submit name="aggiornaModPagCorrente" value="Salva"
-												id="aggiornaId" cssClass="btn"
-												method="aggiornaModPagContoCorrente" />
+											<!-- task-131 <s:submit name="aggiornaModPagCorrente" value="Salva" id="aggiornaId" cssClass="btn" method="aggiornaModPagContoCorrente" />-->
+											<s:submit name="aggiornaModPagCorrente" value="Salva" id="aggiornaId" cssClass="btn" action="modalitaPagamentoSoggetto_aggiornaModPagContoCorrente" />
 										</p>
 									</div>
 								</div>
@@ -1376,10 +1338,10 @@ SPDX-License-Identifier: EUPL-1.2
 										</fieldset>
 										<p>
 											<a class="btn"
-												href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
+												href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla
 												inserimento</a>
-											<s:submit name="aggiornaGenerico" value="Salva"
-												id="aggiornaId" cssClass="btn" method="aggiornaGenerico" />
+											<!-- task-131 <s:submit name="aggiornaGenerico" value="Salva" id="aggiornaId" cssClass="btn" method="aggiornaGenerico" />-->
+											<s:submit name="aggiornaGenerico" value="Salva" id="aggiornaId" cssClass="btn" action="modalitaPagamentoSoggetto_aggiornaGenerico" />
 										</p>
 									</div>
 								</div>
@@ -1479,10 +1441,10 @@ SPDX-License-Identifier: EUPL-1.2
 										</fieldset>
 										<p>
 											<a class="btn"
-												href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
+												href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla
 												inserimento</a>
-											<s:submit cssClass="btn" value="Salva" id="aggiornaId"
-												method="aggiornaContante" name="aggiornaContante" />
+											<!-- task-131 <s:submit cssClass="btn" value="Salva" id="aggiornaId"	method="aggiornaContante" name="aggiornaContante" />-->
+											<s:submit cssClass="btn" value="Salva" id="aggiornaId"	action="modalitaPagamentoSoggetto_aggiornaContante" name="aggiornaContante" />
 										</p>
 									</div>
 								</div>
@@ -1527,15 +1489,14 @@ SPDX-License-Identifier: EUPL-1.2
 										</fieldset>
 										<p>
 											<a class="btn btn-link"
-												href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla</a>
-											<s:submit name="cerca" value="cerca"
-												method="ricercaSoggettoModPagAggiorna" cssClass="btn" />
+												href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla</a>
+											<!--task-131 <s:submit name="cerca" value="cerca" method="ricercaSoggettoModPagAggiorna" cssClass="btn" />-->
+											<s:submit name="cerca" value="cerca" action="modalitaPagamentoSoggetto_ricercaSoggettoModPagAggiorna" cssClass="btn" />
 										</p>
 									</s:form>
 
 									<s:if test="%{aggiornaCessioneStep2}">
-										<s:form id="selezioneSoggettoCessioneAggiornaForm"
-											action="modalitaPagamentoSoggetto" method="post">
+										<s:form id="selezioneSoggettoCessioneAggiornaForm" action="modalitaPagamentoSoggetto" method="post">
 											<s:hidden name="aggiornaTipoAccredito"
 												id="aggiornaTipoAccredito" value="aggiornaTipoAccredito" />
 											<h5>Risultati della ricerca</h5>
@@ -1550,8 +1511,7 @@ SPDX-License-Identifier: EUPL-1.2
 													</tr>
 												</thead>
 												<tbody>
-													<s:iterator value="modelWeb.soggettiRicercatiAggiorna"
-														var="soggettoRicercatoAggiorna">
+													<s:iterator value="modelWeb.soggettiRicercatiAggiorna" var="soggettoRicercatoAggiorna">
 														<tr>
 															<td scope="row"><label
 																for="${soggettoRicercatoAggiorna.codiceSoggetto}">
@@ -1572,20 +1532,17 @@ SPDX-License-Identifier: EUPL-1.2
 											</table>
 
 											<p>
-												<a class="btn btn-link"
-													href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla</a>
-												<s:submit name="seleziona_soggetto"
-													value="seleziona soggetto"
-													method="ricercaSoggettoModPag_step2Aggiorna" cssClass="btn" />
+												<a class="btn btn-link" href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla</a>
+												<!-- task-131 <s:submit name="seleziona_soggetto" value="seleziona soggetto" method="ricercaSoggettoModPag_step2Aggiorna" cssClass="btn" />-->
+												<s:submit name="seleziona_soggetto" value="seleziona soggetto" action="modalitaPagamentoSoggetto_ricercaSoggettoModPag_step2Aggiorna" cssClass="btn" />
+											
 											</p>
 										</s:form>
 									</s:if>
 
 									<s:if test="%{aggiornaCessioneStep3}">
-										<s:form name="inserisciModPagCessione"
-											action="modalitaPagamentoSoggetto" method="post">
-											<s:hidden name="aggiornaTipoAccredito"
-												id="aggiornaTipoAccredito" value="aggiornaTipoAccredito" />
+										<s:form name="inserisciModPagCessione" action="modalitaPagamentoSoggetto" method="post">
+											<s:hidden name="aggiornaTipoAccredito" id="aggiornaTipoAccredito" value="aggiornaTipoAccredito" />
 											<h5>Soggetto selezionato:
 												${modelWeb.dettaglioSoggettoCessioneAggiorna.denominazione}
 												&nbsp; - &nbsp;
@@ -1607,8 +1564,7 @@ SPDX-License-Identifier: EUPL-1.2
 												<div class="control-group">
 													<label class="control-label" for="notee">Note</label>
 													<div class="controls">
-														<s:textarea id="notee" name="soggettoDaAggiornare.note"
-															cssClass="span3" />
+														<s:textarea id="notee" name="soggettoDaAggiornare.note" cssClass="span3" />
 													</div>
 												</div>
 												<div class="control-group">
@@ -1631,11 +1587,9 @@ SPDX-License-Identifier: EUPL-1.2
 											</fieldset>
 
 											<p>
-												<a class="btn"
-													href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
-													inserimento</a>
-												<s:submit cssClass="btn" name="salvaCessione"
-													id="aggiornaId" value="" method="aggiornaModPagCessione" />
+												<a class="btn" href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla inserimento</a>
+												<!-- task-131 <s:submit cssClass="btn" name="salvaCessione" id="aggiornaId" value="" method="aggiornaModPagCessione" /> -->
+												<s:submit cssClass="btn" name="salvaCessione" id="aggiornaId" value="" action="modalitaPagamentoSoggetto_aggiornaModPagCessione" />
 											</p>
 										</s:form>
 									</s:if>
@@ -1644,10 +1598,8 @@ SPDX-License-Identifier: EUPL-1.2
 						</s:if>
 
 						<s:if test="%{aggiornaCessioneStep3}">
-							<s:form name="inserisciModPagCessione"
-								action="modalitaPagamentoSoggetto" method="post">
-								<s:hidden name="aggiornaTipoAccredito"
-									id="aggiornaTipoAccredito" value="aggiornaTipoAccredito" />
+							<s:form name="inserisciModPagCessione" action="modalitaPagamentoSoggetto" method="post">
+								<s:hidden name="aggiornaTipoAccredito" id="aggiornaTipoAccredito" value="aggiornaTipoAccredito" />
 								<h5>Codice Soggetto Cessione:
 									${soggettoDaAggiornare.cessioneCodSoggetto} - ${soggettoDaAggiornare.soggettoCessione.denominazione}</h5>
 								<s:hidden name="soggettoDaAggiornare.cessioneCodSoggetto" />
@@ -1660,24 +1612,20 @@ SPDX-License-Identifier: EUPL-1.2
 											-
 											${soggettoDaAggiornare.modalitaPagamentoSoggettoCessione2.modalitaAccreditoSoggetto.descrizione}
 										</label>
-										<s:hidden
-											name="soggettoDaAggiornare.modalitaPagamentoSoggettoCessione2.modalitaAccreditoSoggetto.codice" />
-										<s:hidden
-											name="soggettoDaAggiornare.modalitaPagamentoSoggettoCessione2.modalitaAccreditoSoggetto.descrizione" />
+										<s:hidden name="soggettoDaAggiornare.modalitaPagamentoSoggettoCessione2.modalitaAccreditoSoggetto.codice" />
+										<s:hidden name="soggettoDaAggiornare.modalitaPagamentoSoggettoCessione2.modalitaAccreditoSoggetto.descrizione" />
 									</div>
 									<div class="control-group">
 										<label class="control-label" for="notee">Note</label>
 										<div class="controls">
-											<s:textarea id="notee" name="soggettoDaAggiornare.note"
-												cssClass="span3" />
+											<s:textarea id="notee" name="soggettoDaAggiornare.note" cssClass="span3" />
 										</div>
 									</div>
 									<div class="control-group">
 										<label class="control-label" for="scadenza">Data
 											cessazione</label>
 										<div class="controls">
-											<s:textfield id="scadenzaToInsert" name="dataScadenzaStringa"
-												maxlength="10" cssClass="span3 datepicker" />
+											<s:textfield id="scadenzaToInsert" name="dataScadenzaStringa" maxlength="10" cssClass="span3 datepicker" />
 										</div>
 									</div>
 									<!--   <div class="control-group">
@@ -1691,11 +1639,9 @@ SPDX-License-Identifier: EUPL-1.2
 								</fieldset>
 
 								<p>
-									<a class="btn"
-										href="modalitaPagamentoSoggetto!annullaInserimento.do">annulla
-										inserimento</a>
-									<s:submit cssClass="btn" name="salvaCessione" id="aggiornaId"
-										value="Salva" method="aggiornaModPagCessione" />
+									<a class="btn" href="modalitaPagamentoSoggetto_annullaInserimento.do">annulla inserimento</a>
+									<!--task-131 <s:submit cssClass="btn" name="salvaCessione" id="aggiornaId" value="Salva" method="aggiornaModPagCessione" />-->
+									<s:submit cssClass="btn" name="salvaCessione" id="aggiornaId" value="Salva" action="modalitaPagamentoSoggetto_aggiornaModPagCessione" />
 								</p>
 							</s:form>
 						</s:if>
@@ -1720,9 +1666,7 @@ SPDX-License-Identifier: EUPL-1.2
 							<div class="modal-footer">
 								<button class="btn" data-dismiss="modal" aria-hidden="true">no,
 									indietro</button>
-								<a
-									href="modalitaPagamentoSoggetto!eliminaMdp.do?aggiornaCodiceSoggetto="
-									class="btn btn-primary elimina-prosegui">si, prosegui</a>
+								<a href="modalitaPagamentoSoggetto_eliminaMdp.do?aggiornaCodiceSoggetto=" class="btn btn-primary elimina-prosegui">si, prosegui</a>
 							</div>
 						</div>
 						<!--/modale elimina -->
@@ -1745,7 +1689,7 @@ SPDX-License-Identifier: EUPL-1.2
 								<button class="btn" data-dismiss="modal" aria-hidden="true">no,
 									indietro</button>
 								<a
-									href="modalitaPagamentoSoggetto!annullaModalitaDiPagamento.do?aggiornaCodiceSoggetto="
+									href="modalitaPagamentoSoggetto_annullaModalitaDiPagamento.do?aggiornaCodiceSoggetto="
 									class="btn btn-primary annulla-prosegui">si, prosegui</a>
 							</div>
 						</div>
@@ -1768,7 +1712,7 @@ SPDX-License-Identifier: EUPL-1.2
 								<button class="btn" data-dismiss="modal" aria-hidden="true">no,
 									indietro</button>
 								<a
-									href="modalitaPagamentoSoggetto!bloccaModalitaDiPagamento.do?aggiornaCodiceSoggetto="
+									href="modalitaPagamentoSoggetto_bloccaModalitaDiPagamento.do?aggiornaCodiceSoggetto="
 									class="btn btn-primary blocca-prosegui">si, prosegui</a>
 							</div>
 						</div>

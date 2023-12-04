@@ -29,7 +29,8 @@ SPDX-License-Identifier: EUPL-1.2
 		<div class="span12 contentPage">    
 		 
 <!-- 		 <form method="get" action="#">   -->
-		 <s:form id="gestioneCartaNuovaRigaDaDocumenti" action="nuovaRigaDaDocumentiStep1.do" method="post">
+		 <%-- SIAC-7952 rimuovo .do dalla action --%>
+		 <s:form id="gestioneCartaNuovaRigaDaDocumenti" action="nuovaRigaDaDocumentiStep1" method="post">
 		 
 		 
 			<!--#include virtual="include/alertErrorSuccess.html" -->
@@ -127,16 +128,24 @@ SPDX-License-Identifier: EUPL-1.2
 			
 			
 			<!--#include virtual="include/modal.html" -->
+			<s:set var="selezionaProvvedimentoAction" value="%{'nuovaRigaDaDocumentiStep1_selezionaProvvedimento'}" />
+            <s:set var="clearRicercaProvvedimentoAction" value="%{'nuovaRigaDaDocumentiStep1_clearRicercaProvvedimento'}" />	          
+        	<s:set var="ricercaProvvedimentoAction" value="%{'nuovaRigaDaDocumentiStep1_ricercaProvvedimento'}" />	          
+         	
 			<s:include value="/jsp/include/modalProvvedimenti.jsp" />
 			
 			<p class="margin-medium">
-				<s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary"/>
+				<!-- task-131 <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary"/> -->
+				<s:submit name="indietro" value="indietro" action="nuovaRigaDaDocumentiStep1_indietro" cssClass="btn btn-secondary"/>
+				
 				<!--  <a class="btn btn-secondary" href="#">annulla</a> -->
-				<s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary" />
+				<!-- task-131 <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary" /> -->
+				<s:submit name="annulla" value="annulla" action="nuovaRigaDaDocumentiStep1_annulla" cssClass="btn btn-secondary" />
 				 
 				<span class="pull-right">
 					<!-- <a class="btn btn-primary" href="FIN-insRigaDocStep2.shtml">cerca</a> -->
-					<s:submit name="prosegui" value="cerca" method="cerca" cssClass="btn btn-primary" />
+					<!-- task-131 <s:submit name="prosegui" value="cerca" method="cerca" cssClass="btn btn-primary" />-->
+					<s:submit name="prosegui" value="cerca" action="nuovaRigaDaDocumentiStep1_cerca" cssClass="btn btn-primary" />					
 				</span>
 			</p>       
 			  

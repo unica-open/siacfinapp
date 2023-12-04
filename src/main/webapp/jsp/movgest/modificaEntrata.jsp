@@ -25,63 +25,78 @@ SPDX-License-Identifier: EUPL-1.2
 
 <a name="A-contenuti" title="A-contenuti"></a>
 </div>
-<!--corpo pagina-->
-<!--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
-<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> -->
+<%--corpo pagina--%>
+<%--<p><a href="cruscotto.shtml" target="iframe_a">W3Schools.com</a></p>
+<iframe src="siac_iframe.htm" name="iframe_a"width="98%" height="600px" frameborder="0"></iframe> --%>
 
 
+<s:set var="gestisciForwardAction" value="%{'elencoMovimentoSpesaAcc_gestisciForward'}" />			    		 	
+<s:set var="siSalvaAction" value="%{'elencoMovimentoSpesaAcc_siSalva'}" />	 
+<s:set var="siProseguiAction" value="%{'elencoMovimentoSpesaAcc_siProsegui'}" />	
+<s:set var="annullaSubImpegnoAction" value="%{'elencoMovimentoSpesaAcc_annullaSubImpegno'}" />	 
+<s:set var="annullaSubAccertamentoAction" value="%{'elencoMovimentoSpesaAcc_annullaSubAccertamento'}" />	 
+<s:set var="annullaMovGestSpesaAction" value="%{'elencoMovimentoSpesaAcc_annullaMovGestSpesa'}" />	 
+<s:set var="eliminaSubImpegnoAction" value="%{'elencoMovimentoSpesaAcc_eliminaSubImpegno'}" />	 
+<s:set var="eliminaSubAccertamentoAction" value="%{'elencoMovimentoSpesaAcc_eliminaSubAccertamento'}" />
+<s:set var="forzaProseguiAction" value="%{'elencoMovimentoSpesaAcc_forzaProsegui'}" />	          
+<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'elencoMovimentoSpesaAcc_forzaSalvaPluriennaleAccertamento'}" />	          
+<s:set var="salvaConByPassDodicesimiAction" value="%{'elencoMovimentoSpesaAcc_salvaConByPassDodicesimi'}" />	          
+	
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span12 contentPage">    
-      <s:form id="mainForm" method="post" action="elencoMovimentoSpesaAcc.do" cssClass="form-horizontal">
+    <div class="span12 contentPage">  
+      <%-- SIAC-7952 rimuovo .do dalla action --%> 
+      <s:form id="mainForm" method="post" action="elencoMovimentoSpesaAcc" cssClass="form-horizontal">
 					
-					<s:if test="hasActionErrors()">
-						<%-- Messaggio di ERROR --%>
-						<div class="alert alert-error">
-							<button type="button" class="close" data-dismiss="alert">&times;</button>
-							<strong>Attenzione!!</strong><br>
-							<ul>
-								<s:actionerror />
-							</ul>
-						</div>
-					</s:if>
-					<s:if test="hasActionMessages()">
-						<%-- Messaggio di WARNING --%>
-						<div class="alert alert-success">
-							<button type="button" class="close" data-dismiss="alert">&times;</button>
-							<ul>
-								<s:actionmessage />
-							</ul>
-						</div>
-					</s:if>
-					<s:if test="%{successInsert}">
-						<div class="alert alert-success margin-medium">
-							<button type="button" class="close" data-dismiss="alert">&times;</button>
-							L'operazione &egrave; stata completata con successo
-						</div>   
-					</s:if> 
+		<%-- SIAC-7630 --%>
+		<s:include value="/jsp/include/actionMessagesErrors.jsp" />
+<%-- 	<s:if test="hasActionErrors()">
+			Messaggio di ERROR
+			<div class="alert alert-error">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<strong>Attenzione!!</strong><br>
+				<ul>
+					<s:actionerror />
+				</ul>
+			</div>
+		</s:if>
+		<s:if test="hasActionMessages()">
+			Messaggio di WARNING
+			<div class="alert alert-success">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<ul>
+					<s:actionmessage />
+				</ul>
+			</div>
+		</s:if> --%>
+		<s:if test="%{successInsert}">
+			<div class="alert alert-success margin-medium">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				L'operazione &egrave; stata completata con successo
+			</div>   
+		</s:if> 
 
 
 			<div class="step-pane active" id="step1">
 
-<!-- 	 	<h3>Accertamento ${model.movimentoSpesaModel.accertamento.annoMovimento}/${model.movimentoSpesaModel.accertamento.numero} - ${model.movimentoSpesaModel.accertamento.descrizione} -  <s:property value="getText('struts.money.format', {movimentoSpesaModel.accertamento.importoAttuale})"/></h3>  -->
+<%-- 	 	<h3>Accertamento ${model.movimentoSpesaModel.accertamento.annoMovimento}/${model.movimentoSpesaModel.accertamento.numero} - ${model.movimentoSpesaModel.accertamento.descrizione} -  <s:property value="getText('struts.money.format', {movimentoSpesaModel.accertamento.importoAttuale})"/></h3>  --%>
             	
             	<h3><s:include value="/jsp/movgest/include/titoloImpegno.jsp" /></h3>
             	
             	<s:include value="/jsp/movgest/include/tabModificaSpesa.jsp" />
-		 		<s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
+            	<s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
 			
 <display:table name="model.movimentoSpesaModel.listaModificheEntrata" class="table table-striped table-bordered table-hover" summary="riepilogo Moficica spesa" pagesize="10" requestURI="elencoMovimentoSpesaAcc.do" uid="ricercaImpegnoID">
 	<display:column title="Numero" property="numeroModificaMovimentoGestione" />
 	<display:column title="Sub" property="numeroSubAccertamento" />
-	
-	<display:column title="Descrizione" >
+	<%-- SIAC-8506 setto una lunghezza massima per la descrizione per non sfondare la pagina --%>
+	<display:column title="Descrizione" maxLength="80" >
 		<s:if test="%{#attr.ricercaImpegnoID.isRiepilogoAutomatiche()==false}">
-			<s:property value="%{#attr.ricercaImpegnoID.descrizioneModificaMovimentoGestione}"/>
+			<s:property value="%{#attr.ricercaImpegnoID.descrizioneModificaMovimentoGestione}" />
 		</s:if>
 		<s:else>
-			<s:property value="%{#attr.ricercaImpegnoID.descrizioneModificaMovimentoGestione}"/> - 
-			<s:property value="%{#attr.ricercaImpegnoID.numeroModificheAutomatiche}"/>
+			<s:property value="%{#attr.ricercaImpegnoID.descrizioneModificaMovimentoGestione}" /> - 
+			<s:property value="%{#attr.ricercaImpegnoID.numeroModificheAutomatiche}" />
 		</s:else>
 	</display:column>
 	
@@ -104,7 +119,7 @@ SPDX-License-Identifier: EUPL-1.2
 		</s:if>
 		
 	</display:column>
-	<!-- siac 6292-->
+	<%-- siac 6292--%>
 	<display:column title="Blocco Rag.">
 		<s:if test="%{#attr.ricercaImpegnoID.attoAmministrativo.bloccoRagioneria==false}">
 			No
@@ -144,13 +159,13 @@ SPDX-License-Identifier: EUPL-1.2
 	                 
 	             <s:if test="isAnnullaMovimento(#attr.ricercaImpegnoID.uid)">
 					<s:if test="%{#attr.ricercaImpegnoID.attoAmministrativo.bloccoRagioneria!=true}">
-	                	<li>		
-						  <a id="linkAnnulla_<s:property value="%{#attr.ricercaImpegnoID.uid}"/>_<s:property value="%{#attr.ricercaImpegnoID.numeroModificaMovimentoGestione}"/>" href="#msgAnnullaModMov" data-toggle="modal" class="linkAnnullaMod">annulla</a>
+	                	<li>	<!-- SIAC-7349 Inizio  SR180 FL 02/04/2020  -->	
+						  <a id="linkAnnulla_<s:property value="%{#attr.ricercaImpegnoID.uid}"/>_<s:property value="%{#attr.ricercaImpegnoID.numeroModificaMovimentoGestione}"/>_<s:property value="%{#attr.ricercaImpegnoID.listaModificheMovimentoGestioneSpesaCollegata.size}"/>" href="#msgAnnullaModMov" data-toggle="modal" class="linkAnnullaMod">annulla</a>
 						</li>
 					</s:if> 
 				</s:if>     
 	                 
-	<!--             	<li><a href="#msgElimina" data-toggle="modal">elimina</a></li> -->
+	<%--             	<li><a href="#msgElimina" data-toggle="modal">elimina</a></li> --%>
 	            </ul>
 			</div>
 		</s:if>
@@ -158,6 +173,7 @@ SPDX-License-Identifier: EUPL-1.2
 </display:table>
 	
 		<s:if test="%{model.accertamentoInAggiornamento.descrizioneStatoOperativoMovimentoGestioneEntrata != 'PROVVISORIO' && model.accertamentoInAggiornamento.descrizioneStatoOperativoMovimentoGestioneEntrata != 'ANNULLATO'}">
+		   <s:if test="!isAbilitatoAccertamentoRORdecentratoEFaseBilancioPredisposizioneConsuntivo()">
 		    <p style="margin-top:40px">                    
              <!--a class="btn"  href="FIN-insModifiche.shtml">inserisci modifica</a-->
               <s:a action="inserisciModificaMovimentoSpesaAccImporto" cssClass="btn">inserisci modifica importo</s:a>
@@ -168,20 +184,27 @@ SPDX-License-Identifier: EUPL-1.2
               </s:if> 
                
             </p>   
-		
+		  </s:if> 
 		</s:if>
  
 
              <s:hidden id="uidModDaAnnullare"    name="uidModDaAnnullare" />
             
-              <!-- Modal -->
-             <!--#include virtual="include/modal.html" --> 
-                <!-- Fine Modal -->  
+              <%-- Modal --%>
+             <%--#include virtual="include/modal.html" --%> 
+                <%-- Fine Modal --%>  
+                <s:set var="selezionaProvvedimentoAction" value="%{'elencoMovimentoSpesaAcc_selezionaProvvedimento'}" />
+                <s:set var="clearRicercaProvvedimentoAction" value="%{'elencoMovimentoSpesaAcc_clearRicercaProvvedimento'}" />	          
+       			<s:set var="ricercaProvvedimentoAction" value="%{'elencoMovimentoSpesaAcc_ricercaProvvedimento'}" />	          
+       			<s:set var="eliminaAction" value="%{'elencoMovimentoSpesaAcc_elimina'}" />	  
+                <s:set var="selezionaProvvedimentoInseritoAction" value="%{'elencoMovimentoSpesaAcc_selezionaProvvedimentoInserito'}" />	
+				<s:set var="inserisciProvvedimentoAction" value="%{'elencoMovimentoSpesaAcc_inserisciProvvedimento'}" />	
+	
                 <s:include value="/jsp/movgest/include/modal.jsp" />   
-                <!-- Jira - 1584 -->                     
-<!--          <p class="marginLarge">  -->
+                <%-- Jira - 1584 --%>                     
+<%--          <p class="marginLarge">  --%>
 <%--   	   		<s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary" /> --%>
-<!--   		</p>  -->
+<%--   		</p>  --%>
   		</div>        
       </s:form>
     </div>
@@ -197,7 +220,8 @@ SPDX-License-Identifier: EUPL-1.2
 			var supportId = $(this).attr("id").split("_");
 				
 			$.ajax({
-				url: '<s:url method="dettaglioModPopUp"/>',
+				//task-131 url: '<s:url method="dettaglioModPopUp"/>',
+				url: '<s:url action="elencoMovimentoSpesaAcc_dettaglioModPopUp"/>',
 				type: 'POST',
 				data: 'uidPerDettaglioModAccertamento=' + supportId[1],
 			    success: function(data)  {
@@ -215,6 +239,20 @@ SPDX-License-Identifier: EUPL-1.2
 				
 				$("#uidModDaAnnullare").val(supportId[1]);
 				$("#numeroMovDaAnnullare").val(supportId[2]);
+				//SIAC-7349 Inizio  SR180 FL 15/04/2020
+				$("#numeroMovCollegatiDaAnnullare").val(supportId[3]);
+				//$("#tipoMovimento").val("acc");
+				//SIAC-7349 Fine  SR180 FL 15/04/2020
+
+				//CONTABILIA-260 - Bug fix per test 22.1 SIAC-7349 Inizio SR180 CM 09/07/2020 Aggiunto per gestire la presenza del messaggio sul numero dei movCollegati nelle modifiche di accertamento
+				$("#numeroMovCollegatiDaAnnullare1").val(supportId[3]);
+				$("#numeroMovCollegatiDaAnnullare2").val(supportId[3]);
+				$("#numeroMovCollegatiDaAnnullare1").attr("disabled","disabled");
+				$("#numeroMovCollegatiDaAnnullare1P").show();
+				//CONTABILIA-260 - Bug fix per test 22.1 SIAC-7349 Fine SR180 CM 09/07/2020
+				//SIAC-8611
+				$("#numeroMovDaAnnullare2").val(supportId[2]);
+				
 			}
 		});
 		

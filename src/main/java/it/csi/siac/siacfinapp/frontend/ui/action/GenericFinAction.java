@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +28,11 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.HttpParameters;
+import org.apache.struts2.dispatcher.Parameter;
+import org.apache.struts2.json.DefaultJSONWriter;
 import org.apache.struts2.json.JSONException;
 import org.apache.struts2.json.JSONUtil;
 import org.displaytag.tags.TableTagParameters;
@@ -50,42 +53,40 @@ import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
 import it.csi.siac.siaccommonapp.action.GenericAction;
 import it.csi.siac.siaccommonapp.util.exception.UtenteNonLoggatoException;
 import it.csi.siac.siaccorser.frontend.webservice.ClassificatoreService;
-import it.csi.siac.siaccorser.frontend.webservice.CoreService;
 import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabile;
 import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabileResponse;
 import it.csi.siac.siaccorser.model.AzioneConsentita;
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.model.Messaggio;
 import it.csi.siac.siaccorser.model.ServiceResponse;
 import it.csi.siac.siaccorser.model.StrutturaAmministrativoContabile;
 import it.csi.siac.siaccorser.model.TipologiaClassificatore;
 import it.csi.siac.siaccorser.model.TipologiaGestioneLivelli;
 import it.csi.siac.siaccorser.model.paginazione.ParametriPaginazione;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.ajax.ServiceCache;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.GenericFinModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.commons.GestoreDatiAlberoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciMovGestModel;
+import it.csi.siac.siacfinapp.frontend.ui.util.CodiciOperazioni;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinActionUtils;
-import it.csi.siac.siacfinapp.frontend.ui.util.FinLogger;
+import it.csi.siac.siacfinapp.frontend.ui.util.FinCSVLogger;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
 import it.csi.siac.siacfinapp.frontend.ui.util.displaytag.ConverterEuro;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.ClassificatoreFinService;
 import it.csi.siac.siacfinser.frontend.webservice.GenericService;
 import it.csi.siac.siacfinser.frontend.webservice.LiquidazioneService;
-import it.csi.siac.siacfinser.frontend.webservice.MutuoService;
 import it.csi.siac.siacfinser.frontend.webservice.OrdinativoService;
 import it.csi.siac.siacfinser.frontend.webservice.ProvvisorioService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.AggiornaSoggetto;
 import it.csi.siac.siacfinser.frontend.webservice.msg.Liste;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListeResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.PaginazioneRequest;
-import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccountPerChiave;
-import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaAccountPerChiaveResponse;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
@@ -110,9 +111,6 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	protected transient ClassificatoreFinService classificatoreFinService;
 	
 	@Autowired
-	protected MutuoService mutuoService;
-	
-	@Autowired
 	protected LiquidazioneService liquidazioneService;
 	
 	@Autowired
@@ -124,8 +122,6 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	@Autowired
 	protected transient ClassificatoreService classificatoreService;
 	
-	@Autowired
-	protected CoreService coreService;
 	
 	protected ApplicationContext ctx;
 	
@@ -158,12 +154,15 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	
 	protected static final String CLASS_CAPITOLO_TIPOLOGIA_4 ="4040100";
 	protected static final String CLASS_CAPITOLO_MACROAGGREGATO_1 ="4010000";
+	//SIAC-7349
+	protected static final String AZIONE_RICERCA = "RICERCA";
+	protected static final String AZIONE_INSERISCI = "INSERISCI";
 
 	/**
 	 *  stopWatchLogger utilizzato per lo stopWatch in alcuni punti
 	 *  per verificare le prestazioni
 	 */
-	protected static FinLogger stopWatchLogger = FinLogger.getLoggerCSV("FIN");
+	protected FinCSVLogger stopWatchLogger = new FinCSVLogger(getClass());
 	
 	protected static final String RADICE_ALBERO = "0";
 	
@@ -255,7 +254,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		//istanzio la request per il servizio leggiClassificatoriGenericiByTipoElementoBil:
 		LeggiClassificatoriGenericiByTipoElementoBil bFin = new LeggiClassificatoriGenericiByTipoElementoBil();
 		bFin.setTipoElementoBilancio(tipoElementoBilancio); 
-		bFin.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		bFin.setAnno(sessionHandler.getAnnoBilancio());
 		bFin.setRichiedente(sessionHandler.getRichiedente());
 		bFin.setIdEnteProprietario(sessionHandler.getEnte().getUid());
 		//invoco il servizio leggiClassificatoriGenericiByTipoElementoBil:
@@ -268,7 +267,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		//istanzio la request per il servizio ricercaSinteticaClassificatore:
 		RicercaSinteticaClassificatore request = new RicercaSinteticaClassificatore();
 		request.setTipologiaClassificatore(tipologiaClassificatore); 
-		request.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		request.setAnno(sessionHandler.getAnnoBilancio());
 		request.setRichiedente(sessionHandler.getRichiedente());
 		
 		ParametriPaginazione pp = new ParametriPaginazione();
@@ -325,7 +324,9 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		return ActionContext.getContext().getSession();
 	}
 	
-	public Map<String, Object> getRequest() {
+	//task-131
+	//public Map<String, Object> getRequest() {
+	public HttpParameters getRequest() {
 		return ActionContext.getContext().getParameters();
 	}
 	
@@ -358,7 +359,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 			String key = FinSessionParameter.CODIFICHE.name();
 			// Verifico la presenza in application di una cache per l'ente collegato all'utente
 			Map<TipiLista, TTLCache> fullCache = (Map<TipiLista, TTLCache>)totalCache.get(key);
-			if (fullCache == null) {
+			if (fullCache == null) { 
 				// se non e' presente, la creo
 				debug(methodName, "Creo la cache di decodifiche per la chiave ", key);
 				fullCache = new HashMap<TipiLista, TTLCache>(0);
@@ -574,9 +575,15 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	}
 	
 	private int parameterPageToInt(Object pageNum ) {
-		return pageNum instanceof Integer ? (Integer) pageNum
-				: pageNum instanceof String ? Integer.parseInt(String.valueOf(pageNum))
-						: Integer.parseInt(((String[]) pageNum)[0]);
+		int ret;
+		if (pageNum instanceof Parameter) {
+			ret = pageNum != null && ((Parameter) pageNum).getValue() != null ?Integer.parseInt( ((Parameter) pageNum).getValue()):1;
+		} else {
+			ret = pageNum instanceof Integer ? (Integer) pageNum
+			: pageNum instanceof String ? Integer.parseInt(String.valueOf(pageNum))
+					: Integer.parseInt(((String[]) pageNum)[0]);
+		}
+		return ret;
 	}
 	
 	
@@ -675,6 +682,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	 * @param codeAzione
 	 * @return boolean 
 	 */
+	@Deprecated
 	public boolean isAzioneAbilitata(String codeAzione) {
 		boolean abilitato = false;
 		
@@ -762,6 +770,12 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		persistentActionMessages = true;
 	}
 	
+	public void addPersistentActionMessage(List<Messaggio> messaggi) {
+		for (Messaggio messaggio : messaggi) {
+			addPersistentActionMessage(messaggio.getTesto());
+		}
+	}
+	
 	public void addPersistentActionError(String error) {
 		addActionError(error);
 		persistentActionErrors = true;
@@ -846,6 +860,28 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		}
 	}
 	
+	protected void addWarnings(List<Errore> warnings, boolean onlyModel){
+		if(!isEmpty(warnings)) {
+			for(Errore warning : warnings) {
+				if(onlyModel) {
+					model.addWarning(warning);
+				} else {
+					addWarning(warning);
+				}
+			}
+		}
+	}
+
+	protected void addWarnings(List<Errore> warnings){
+		if(!isEmpty(warnings)) {
+			for(Errore warning : warnings) {
+				if(warning != null) {
+					addWarning(warning);
+				}
+			}
+		}
+	}
+
 	protected void addWarning(Errore wrng){
 	  model.addWarning(wrng);
 	  addActionWarning(wrng);
@@ -859,6 +895,11 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		this.actionWarnings.add(warning);
 	}
 	
+	public void addPersistentActionWarningFin(Errore warning) {
+		addActionWarning(warning.getTesto());
+		persistentActionWarnings = true;
+	}
+
 	public void addPersistentActionWarningFin(ErroreFin warning) {
 		addActionWarning(warning.getCodice() + " - " + warning.getMessaggio());
 		persistentActionWarnings = true;
@@ -980,21 +1021,6 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		return result;
 	}
 	
-	/**
-	 * Semplice metodo che si limita a verificare se l'azione indicata e' presente tra quelle dell'utente loggato
-	 * @param azione
-	 * @return
-	 */
-	protected boolean isConsentita(String azione)
-	{
-		if (azione != null)
-			for (AzioneConsentita a : sessionHandler.getAzioniConsentite())
-				if (azione.equalsIgnoreCase(a.getAzione().getNome()))
-					return true;
-			
-		return false;
-	}
-	
 	public Map<String, List<String>> getMapCorrispondenzeDec() {
 		return CodiciOperazioni.MAP_CORRISPONDENZE_DEC;
 	}
@@ -1005,27 +1031,40 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	 * @return
 	 */
 	protected boolean isUtenteLoggato(String utente) {
-		boolean isUtetenLoggato = false;
-		if (!FinStringUtils.isEmpty(utente)) {
-			if (sessionHandler.getAccount() != null) {
-				//istanzio la request per il servizio ricercaAccountPerChiave:
-				RicercaAccountPerChiave request = new RicercaAccountPerChiave();
-				request.setAccountId(sessionHandler.getAccount().getId());
-				request.setEnte(sessionHandler.getEnte());
-				request.setRichiedente(sessionHandler.getRichiedente());
-				//invoco il servizio ricercaAccountPerChiave:
-				RicercaAccountPerChiaveResponse response = genericService.ricercaAccountPerChiave(request);
-				
-				String accountCode = response.getAccountCode();
-				
-				if (!FinStringUtils.isEmpty(accountCode)) {
-					//UGUALI
-					boolean uguali = FinStringUtils.sonoUgualiTrimmed(accountCode, utente);
-					isUtetenLoggato = uguali;
-				}
-			}
-		}
-		return isUtetenLoggato;
+		
+		return FinStringUtils.sonoUgualiTrimmed(sessionHandler.getAccount().getCodice(), utente);
+		
+		
+		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		
+//		boolean isUtetenLoggato = false;
+//		if (!FinStringUtils.isEmpty(utente)) {
+//			if (sessionHandler.getAccount() != null) {
+//				//istanzio la request per il servizio ricercaAccountPerChiave:
+//				RicercaAccountPerChiave request = new RicercaAccountPerChiave();
+//				request.setAccountId(sessionHandler.getAccount().getId());
+//				request.setEnte(sessionHandler.getEnte());
+//				request.setRichiedente(sessionHandler.getRichiedente());
+//				//invoco il servizio ricercaAccountPerChiave:
+//				RicercaAccountPerChiaveResponse response = genericService.ricercaAccountPerChiave(request);
+//				
+//				String accountCode = response.getAccountCode();
+//				
+//				if (!FinStringUtils.isEmpty(accountCode)) {
+//					//UGUALI
+//					boolean uguali = FinStringUtils.sonoUgualiTrimmed(accountCode, utente);
+//					isUtetenLoggato = uguali;
+//				}
+//			}
+//		}
+//		return isUtetenLoggato;
 	}
 	
 	
@@ -1067,6 +1106,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	 * @param requestSiopeKey
 	 * @return
 	 */
+	@SuppressWarnings("rawtypes")
 	protected <O extends Object> Serializable getOggettoInCache(Map<String, ServiceCache> fullCache,String requestSiopeKey){
 		Serializable resp = null;
 		boolean load = false;
@@ -1096,6 +1136,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	}
 	
 	
+	@SuppressWarnings("rawtypes")
 	protected boolean isCacheScaduta(Serializable currentCache){
 		
 		if(ttlCacheCodifiche == 0 || System.currentTimeMillis() - ((ServiceCache)currentCache).getBirth() < ttlCacheCodifiche){
@@ -1107,7 +1148,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	
 	protected LeggiStrutturaAmminstrativoContabile buildStrutturaAmminstrativoContabileRequest(){
 		LeggiStrutturaAmminstrativoContabile lsa = new LeggiStrutturaAmminstrativoContabile();
-		lsa.setAnno(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		lsa.setAnno(sessionHandler.getAnnoBilancio());
 		lsa.setIdEnteProprietario(sessionHandler.getEnte().getUid());
 		lsa.setRichiedente(sessionHandler.getRichiedente());
 		return lsa;
@@ -1125,13 +1166,13 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	protected String buildBaseRequestKey(){
 		String requestKey = "";
 		requestKey = requestKey +  sessionHandler.getRichiedente().getAccount().getUid();
-		requestKey = requestKey + sessionHandler.getAnnoEsercizio();
+		requestKey = requestKey + sessionHandler.getAnnoBilancio();
 		requestKey = requestKey + sessionHandler.getEnte().getUid();
 		return requestKey;
 	}
 	
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected LeggiStrutturaAmminstrativoContabileResponse getStrutturaAmministrativaCached(LeggiStrutturaAmminstrativoContabile request){
 		// se non passo alcun elemento, ritorno una mappa vuota
 		LeggiStrutturaAmminstrativoContabileResponse result = null;
@@ -1165,7 +1206,12 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 			}
 		});
 		
-		return JSONUtil.serialize(alberoStruttureAmministrativeContabili);
+
+
+		//task-150
+		JSONUtil jsonUtil = new JSONUtil();
+		jsonUtil.setWriter(new DefaultJSONWriter());
+		return jsonUtil.serialize(alberoStruttureAmministrativeContabili, JSONUtil.CACHE_BEAN_INFO_DEFAULT);
 	}
 	
 	
@@ -1379,53 +1425,27 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		return stringValue;
 	}
 	
-	/**
-	 * Se non e' presente ritorna null
-	 * @param tipoCode
-	 * @return
-	 */
-	public String getCodiceLivelloByTipo(TipologiaGestioneLivelli tipoCode){
-		String trovato = null;
-		if(tipoCode!=null && sessionHandler!=null && sessionHandler.getEnte()!=null){
-			Map<TipologiaGestioneLivelli, String> livelli = sessionHandler.getEnte().getGestioneLivelli();
-			if(livelli!=null && livelli.size()>0){
-				Iterator<Map.Entry<TipologiaGestioneLivelli, String>> it = livelli.entrySet().iterator();
-			    while (it.hasNext()) {
-			    	Map.Entry<TipologiaGestioneLivelli, String> pair = it.next();
-			        if(tipoCode.equals(pair.getKey())){
-			        	trovato = pair.getValue();
-			        	break;
-			        }
-			    }
-			}
+	protected String getTipologiaGestioneLivelli(TipologiaGestioneLivelli tipologiaGestioneLivelli) {
+		if (tipologiaGestioneLivelli == null || 
+			sessionHandler == null || 
+			sessionHandler.getEnte() == null || 
+			sessionHandler.getEnte().getGestioneLivelli() == null) {
+			
+			return null;
 		}
-		return trovato;
+		
+		return sessionHandler.getEnte().getGestioneLivelli().get(tipologiaGestioneLivelli);
 	}
 	
-	/**
-	 * Se non e' presente ritorna null
-	 * @param tipoCode
-	 * @return
-	 */
-	public String getCodiceTipo(TipologiaGestioneLivelli tipoCode){
-		String trovato = null;
-		if(tipoCode!=null && sessionHandler!=null && sessionHandler.getEnte()!=null){
-			Map<TipologiaGestioneLivelli, String> livelli = sessionHandler.getEnte().getGestioneLivelli();
-			if(livelli!=null && livelli.size()>0){
-				Iterator<Map.Entry<TipologiaGestioneLivelli, String>>  it = livelli.entrySet().iterator();
-			    while (it.hasNext()) {
-			    	Map.Entry<TipologiaGestioneLivelli, String> pair = it.next();
-			        if(tipoCode.equals(pair.getKey())){
-			        	TipologiaGestioneLivelli match = pair.getKey();
-			        	trovato = match.getCodice();
-			        	break;
-			        }
-			    }
-			}
-		}
-		return trovato;
+	protected boolean isAbilitatoTipologiaGestioneLivelli(TipologiaGestioneLivelli tipologiaGestioneLivelli) {
+		return StringUtils.equalsIgnoreCase(getTipologiaGestioneLivelli(tipologiaGestioneLivelli), "TRUE");
 	}
+
 	
+	protected boolean isPresenteTipologiaGestioneLivelli(TipologiaGestioneLivelli tipologiaGestioneLivelli) {
+		return getTipologiaGestioneLivelli(tipologiaGestioneLivelli) != null;
+	}
+
 	
 	public boolean sonoLoStessoCapitolo(CapitoloUscitaGestione capitoloUscitaGestione,CapitoloImpegnoModel capitoloImpegnoModel){
 		boolean stessoCapitolo = true;
@@ -1654,7 +1674,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	
 	public boolean abilitatoAzioneInserimentoProvvedimento() {
 		boolean abilitato = false;
-		if(isAzioneAbilitata(CodiciOperazioni.OP_ATTGESC001_inserisciProvvedimento)){
+		if(isAzioneConsentita(AzioneConsentitaEnum.OP_ATTGESC001_inserisciProvvedimento)){
 			abilitato = true;
 		}
 		return abilitato;
@@ -1662,7 +1682,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	
 	public boolean abilitatoAzioneGestisciImpegnoSDF() {
 		boolean abilitato = false;
-		if(isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoSDF)){
+		if(isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoSDF)){
 			abilitato = true;
 		}
 		return abilitato;
@@ -1670,7 +1690,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 	
 	public boolean abilitatoAzioneGestisciImpegnoDecentratP() {
 		boolean abilitato = false;
-		if(isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentratoP)){
+		if(isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentratoP)){
 			abilitato = true;
 		}
 		return abilitato;
@@ -1745,10 +1765,10 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		if(sceltaTipoDebitoSiope!=null){
 			if(isTipoCommerciale(sceltaTipoDebitoSiope)){
 				siopeTipoDebito.setDescrizione(WebAppConstants.COMMERCIALE);
-				siopeTipoDebito.setCodice(Constanti.SIOPE_CODE_COMMERCIALE);
+				siopeTipoDebito.setCodice(CostantiFin.SIOPE_CODE_COMMERCIALE);
 			}else{
 				siopeTipoDebito.setDescrizione(WebAppConstants.NON_COMMERCIALE);
-				siopeTipoDebito.setCodice(Constanti.SIOPE_CODE_NON_COMMERCIALE);
+				siopeTipoDebito.setCodice(CostantiFin.SIOPE_CODE_NON_COMMERCIALE);
 			}
 		}
 		return siopeTipoDebito;
@@ -1807,7 +1827,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		if(siopeTipoDebito!=null && !isEmpty(siopeTipoDebito.getCodice())){
 			//setto la decodifica della label:
 			String codiceTipoDebito = siopeTipoDebito.getCodice();
-			if(codiceTipoDebito.equals(Constanti.SIOPE_CODE_COMMERCIALE)){
+			if(codiceTipoDebito.equals(CostantiFin.SIOPE_CODE_COMMERCIALE)){
 				
 				if(commercialeConFatture){
 					//CON LA SIAC-5524 : la label Commerciale per gli impegni deve diventare:
@@ -1818,7 +1838,7 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 					valorePerRadio = WebAppConstants.COMMERCIALE;
 				}
 				
-			} else if(codiceTipoDebito.equals(Constanti.SIOPE_CODE_NON_COMMERCIALE)){
+			} else if(codiceTipoDebito.equals(CostantiFin.SIOPE_CODE_NON_COMMERCIALE)){
 				valorePerRadio = WebAppConstants.NON_COMMERCIALE;
 			}
 		} else {
@@ -1894,6 +1914,33 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		}
 	}
 	
+	//SIAC-8269 pulisco gli errori
+	protected void clearWarningAndError(boolean clearSession) {
+		if(model.hasErrori()) {
+			cleanErrori();
+			clearActionErrors();
+			if(clearSession) clearErroriInSessionePerActionSuccessiva();
+		}
+		if(model.hasWarning()) {
+			model.resetWarning();
+			if(clearSession) clearWarningInSessionePerActionSuccessiva();
+		}
+	}
+	
+	/**
+	 * SIAC-8269
+	 */
+	protected void clearErroriInSessionePerActionSuccessiva() {
+		sessionHandler.setParametro(FinSessionParameter.ERRORI_AZIONE_PRECEDENTE, null);
+	}
+
+	/**
+	 * SIAC-8269
+	 */
+	protected void clearWarningInSessionePerActionSuccessiva() {
+		sessionHandler.setParametro(FinSessionParameter.WARNING_AZIONE_PRECEDENTE, null);
+	}
+	
 	/**
 	 * Gestisce assieme warning ed errori dell'azione precedente
 	 * @param persistent
@@ -1965,4 +2012,65 @@ public abstract class GenericFinAction<M extends GenericFinModel> extends Generi
 		return res != null ? res : new ArrayList<StrutturaAmministrativoContabile>();
 	}
 	
+	//SIAC 6997
+	public boolean checkSacUtenteValida(StrutturaAmministrativoContabile sac) {
+		boolean sacUtenteValida = false;
+		if(sac!= null){
+			if(sessionHandler.getAccount()!= null && sessionHandler.getAccount().getStruttureAmministrativeContabili()!= null 
+					&& !sessionHandler.getAccount().getStruttureAmministrativeContabili().isEmpty()){
+					
+				//System.out.println("SAC IMPEGNO COD " + sac.getCodice() + " - uid " + sac.getUid());
+					for(StrutturaAmministrativoContabile sa : sessionHandler.getAccount().getStruttureAmministrativeContabili()){
+						//System.out.println("SAC UTENTE COD " + sa.getCodice() + " - uid " + sa.getUid());
+						if(sa.getUid() == sac.getUid()){
+							sacUtenteValida = true;	
+							break;
+						}
+					}
+				
+			}
+		}
+		return sacUtenteValida;
+	}
+	
+	/**
+	 * Controlla se un errore è già presente nel parametro errori 
+	 */
+	public boolean erroriContainsErrore(List<Errore> errori, Errore errore) {
+	
+		for (Errore e : errori) {
+			if (e.getCodice().equals(errore.getCodice()))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Controlla se un errore è già nell'elenco errori.
+	 */
+	public boolean containsErrore(Errore errore) {
+		
+		return erroriContainsErrore(model.getErrori(), errore);
+	}
+	
+	public int makeErroreUnique(Errore errore) {
+		
+		List<Errore> tmp = new ArrayList<Errore>(model.getErrori().size());
+		int n = 0;
+		
+		for (Errore e : model.getErrori()) {
+			if (e.getCodice().equals(errore.getCodice()) && n++ > 0) {
+				continue;
+			}
+			
+			tmp.add(e);
+		}
+		
+		model.setErrori(tmp);
+		
+		return n;
+	}
+
+
 }

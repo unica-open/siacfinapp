@@ -18,7 +18,7 @@ import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.RigaDiReintroitoOrdin
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ReintroitoOrdinativoPagamento;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.MovimentoGestione;
@@ -150,11 +150,9 @@ public class ActionKeyReintroitoOrdinativoPagamentoAction extends WizardReintroi
 		AsyncServiceRequestWrapper<ReintroitoOrdinativoPagamento> reqAsync = new AsyncServiceRequestWrapper<ReintroitoOrdinativoPagamento>();
 		reqAsync.setDataOra(new Date());
 		reqAsync.setRichiedente(sessionHandler.getRichiedente());
-		reqAsync.setAccount(sessionHandler.getAccount());
 		reqAsync.setAzioneRichiesta(sessionHandler.getAzioneRichiesta());
 		ReintroitoOrdinativoPagamento req = buildReintroitoOrdinativoPagamentoRequest();
 		reqAsync.setRequest(req);
-		reqAsync.setEnte(sessionHandler.getEnte());
 		return reqAsync;
 	}
 	
@@ -316,7 +314,7 @@ public class ActionKeyReintroitoOrdinativoPagamentoAction extends WizardReintroi
 		if(mov!=null){
 			//ok diverso da null
 			movKey.setAnnoEsercizio(sessionHandler.getBilancio().getAnno());
-			movKey.setNumeroMovimento(mov.getNumero());
+			movKey.setNumeroMovimento(mov.getNumeroBigDecimal());
 			movKey.setAnnoMovimento(mov.getAnnoMovimento());
 			if(numeroSub!=null){
 				movKey.setNumeroSubMovimento(new BigDecimal(numeroSub));
@@ -394,7 +392,7 @@ public class ActionKeyReintroitoOrdinativoPagamentoAction extends WizardReintroi
 		List<Ordinativo> senzaAnnullati = new ArrayList<Ordinativo>();
 		if(!FinStringUtils.isEmpty(lista)){
 			for(Ordinativo it: lista){
-				if(it!=null && !Constanti.D_ORDINATIVO_STATO_ANNULLATO.equals(it.getStatoOperativoOrdinativo())){
+				if(it!=null && !CostantiFin.D_ORDINATIVO_STATO_ANNULLATO.equals(it.getStatoOperativoOrdinativo())){
 					senzaAnnullati.add(clone(it));
 				}
 			}

@@ -11,20 +11,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siaccorser.model.Errore;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfin2ser.model.DocumentoSpesa;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.ProvvedimentoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.DettaglioDocumentoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.EntitaUtils;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaOrdinativoPagamentoPerChiave;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaOrdinativoPagamentoPerChiaveResponse;
@@ -98,7 +98,7 @@ public class ReintroitoOrdinativoPagamentoStep1Action extends ActionKeyReintroit
 	public String execute() throws Exception {
 		
 		
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_REINTROITO_ORD_PAG)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_REINTROITO_ORD_PAG)){
 			//non e' abilitato
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 		}
@@ -240,7 +240,7 @@ public class ReintroitoOrdinativoPagamentoStep1Action extends ActionKeyReintroit
 		StatoOperativoOrdinativo stato = ordinativoTrovato.getStatoOperativoOrdinativo();
 		if(!StatoOperativoOrdinativo.QUIETANZATO.equals(stato)){
 			//errore non e' quietanziato
-			listaErrori.add(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("Ordinativo","diverso da quietanziato"));
+			listaErrori.add(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("Ordinativo","diverso da quietanzato"));
 		}
 		
 		//e non deve essere gia' stato reintroitato quindi non deve avere la DATA SPOSTAMENTO

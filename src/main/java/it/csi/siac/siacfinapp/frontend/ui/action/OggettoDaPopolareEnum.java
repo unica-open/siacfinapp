@@ -5,4 +5,4 @@
 package it.csi.siac.siacfinapp.frontend.ui.action;
 
 //principali oggetti fin gestiti nelle action
-public enum OggettoDaPopolareEnum {IMPEGNO, SUBIMPEGNO, ACCERTAMENTO, SUBACCERTAMENTO, LIQUIDAZIONE, ORDINATIVO_PAGAMENTO,MUTUO, ORDINATIVO_INCASSO,CARTA}; 
+public enum OggettoDaPopolareEnum {IMPEGNO, SUBIMPEGNO, ACCERTAMENTO, SUBACCERTAMENTO, LIQUIDAZIONE, ORDINATIVO_PAGAMENTO,ORDINATIVO_INCASSO,CARTA}; 

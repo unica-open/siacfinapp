@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.util.StrutsTypeConverter;
 
-import it.csi.siac.siaccommon.util.log.LogUtil;
+import it.csi.siac.siaccommonapp.util.log.LogWebUtil;
 
 public class IntegerConverter extends StrutsTypeConverter {
 
@@ -20,7 +20,7 @@ public class IntegerConverter extends StrutsTypeConverter {
 			return super.performFallbackConversion(context, values, clazz);
 		}
 		
-		LogUtil log = new LogUtil(getClass());
+		LogWebUtil log = new LogWebUtil(getClass());
 		final String methodName = "convertFromString";
 		
 		String str = values[0];

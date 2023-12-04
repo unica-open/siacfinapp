@@ -7,6 +7,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import it.csi.siac.siacattser.frontend.webservice.ProvvedimentoService;
 import it.csi.siac.siacattser.frontend.webservice.msg.InserisceProvvedimento;
@@ -28,11 +30,16 @@ import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siacattser.model.StatoOperativoAtti;
 import it.csi.siac.siacattser.model.TipoAtto;
 import it.csi.siac.siacattser.model.ric.RicercaAtti;
+import it.csi.siac.siacbilser.business.utility.capitolo.ComponenteImportiCapitoloPerAnnoHelper;
 import it.csi.siac.siacbilser.frontend.webservice.CapitoloEntrataGestioneService;
 import it.csi.siac.siacbilser.frontend.webservice.CapitoloUscitaGestioneService;
 import it.csi.siac.siacbilser.frontend.webservice.ClassificatoreBilService;
+import it.csi.siac.siacbilser.frontend.webservice.ComponenteImportiCapitoloService;
 import it.csi.siac.siacbilser.frontend.webservice.ProgettoService;
+import it.csi.siac.siacbilser.frontend.webservice.TipoComponenteImportiCapitoloService;
 import it.csi.siac.siacbilser.frontend.webservice.VincoloCapitoloService;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaComponenteImportiCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaComponenteImportiCapitoloResponse;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaPuntualeProgetto;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaPuntualeProgettoResponse;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaCapitoloEntrataGestione;
@@ -42,14 +49,20 @@ import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaCapitoloUs
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaClassificatoreResponse;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaProgetto;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaProgettoResponse;
+
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipoComponenteImportiCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipoComponenteImportiCapitoloResponse;
 import it.csi.siac.siacbilser.model.CapitoloEntrataGestione;
 import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
+import it.csi.siac.siacbilser.model.CapitoloUscitaPrevisione;
 import it.csi.siac.siacbilser.model.ClassificazioneCofog;
 import it.csi.siac.siacbilser.model.Cronoprogramma;
 import it.csi.siac.siacbilser.model.ElementoPianoDeiConti;
+import it.csi.siac.siacbilser.model.ImportiCapitolo;
 import it.csi.siac.siacbilser.model.ImportiCapitoloEG;
 import it.csi.siac.siacbilser.model.ImportiCapitoloEnum;
 import it.csi.siac.siacbilser.model.ImportiCapitoloUG;
+import it.csi.siac.siacbilser.model.ImportiCapitoloUP;
 import it.csi.siac.siacbilser.model.PerimetroSanitarioSpesa;
 import it.csi.siac.siacbilser.model.PoliticheRegionaliUnitarie;
 import it.csi.siac.siacbilser.model.Progetto;
@@ -57,11 +70,14 @@ import it.csi.siac.siacbilser.model.RicorrenteSpesa;
 import it.csi.siac.siacbilser.model.SiopeEntrata;
 import it.csi.siac.siacbilser.model.SiopeSpesa;
 import it.csi.siac.siacbilser.model.StatoOperativoProgetto;
+import it.csi.siac.siacbilser.model.TipoComponenteImportiCapitolo;
 import it.csi.siac.siacbilser.model.TipoFinanziamento;
 import it.csi.siac.siacbilser.model.TipoProgetto;
 import it.csi.siac.siacbilser.model.TransazioneUnioneEuropeaSpesa;
 import it.csi.siac.siacbilser.model.ric.RicercaSinteticaCapitoloEGest;
 import it.csi.siac.siacbilser.model.ric.RicercaSinteticaCapitoloUGest;
+import it.csi.siac.siacbilser.model.wrapper.ImportiCapitoloPerComponente;
+import it.csi.siac.siaccommon.util.CoreUtil;
 import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabile;
 import it.csi.siac.siaccorser.frontend.webservice.msg.LeggiStrutturaAmminstrativoContabileResponse;
 import it.csi.siac.siaccorser.model.AzioneConsentita;
@@ -87,7 +103,7 @@ import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.ValidationUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.codicefiscale.CFGenerator;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.MovimentoGestioneService;
 import it.csi.siac.siacfinser.frontend.webservice.SoggettoService;
 import it.csi.siac.siacfinser.frontend.webservice.msg.CaricaDatiVisibilitaSacCapitolo;
@@ -106,7 +122,6 @@ import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestione;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaSoggetto;
 import it.csi.siac.siacfinser.model.ric.RicercaImpegnoK;
 import it.csi.siac.siacfinser.model.soggetto.Soggetto;
@@ -129,8 +144,8 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	@Autowired
 	protected transient ClassificatoreBilService classificatoreBilService;	
 
-	@Autowired
-	protected transient MovimentoGestioneService movimentoGestionService;
+	@Autowired @Qualifier("movimentoGestioneFinService")
+	protected transient MovimentoGestioneService movimentoGestioneFinService;
 	
 	@Autowired
 	protected transient SoggettoService soggettoService;
@@ -140,6 +155,14 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	
 	@Autowired
 	protected transient VincoloCapitoloService vincoloCapitoloService;
+	
+	//SIAC-7349
+	@Autowired protected ComponenteImportiCapitoloService componenteImportiCapitoloService;
+	
+	@Autowired
+	protected transient TipoComponenteImportiCapitoloService tipoComponenteImportiCapitoloService;
+	
+	
 	
 	private static final int MAX_RICERCA_PROGETTI_MODALE = 16;
 	
@@ -172,6 +195,9 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	 * @throws Exception
 	 */
 	public String ricercaCapitolo() throws Exception {
+		//SIAC-7734
+		model.setErrori(new ArrayList<Errore>());
+		
 		List<Errore> listaErrori = new ArrayList<Errore>();
 		
 		//Verifichiamo che i dati obbligatori siano stati compilati:
@@ -193,9 +219,43 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 			//NON SONO STATI COMPILATI I DATI OBBLIGATORI
 			addErrori(listaErrori);
 		}
-		return "ricercaCapitolo";
+		
+		if(model.isComponenteBilancioCapitoloAttivo()){
+			return "ricercaCapitoloComponentiBilancio";
+		}else{
+			return "ricercaCapitolo";
+		}
+		
+		
 	}
 
+	/**
+	 * SIAC-7976
+	 * A seguito della SIAC-7804 si slega il controllo sullo stato del movimento in caso
+	 * di movimento decentrato dal metodo generico.
+	 * 
+	 * @return boolean
+	 */
+	protected boolean mostraCompilazioneGuidataProvvedimento() {
+		return true;
+	}
+	
+	/**
+	 * SIAC-7976
+	 * Metodo di gestione del controllo per la compilazione guidata dei decentrati 
+	 * 
+	 * @return boolean
+	 */
+	protected boolean permettoCompilazioneProvvedimentoActionDEC() {
+		//TODO per i ROR vige la stessa regola?
+		//mi assicuro di bloccare la compilazione per le seguenti action
+		boolean bloccocompilazioneGuidataDEC = 
+				request.containsKey("aggiornaAccertamentoStep1Action") ||
+				request.containsKey("aggiornaImpegnoStep1Action");
+		
+		return !bloccocompilazioneGuidataDEC;
+	}
+	
 	/**
 	 * esegui ricerca capitolo uscita
 	 * @param capitoloDiRiferimento
@@ -237,6 +297,14 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 				//ARTICOLO
 				supportCapitolo.setArticolo(currentCapitolo.getNumeroArticolo());
 				
+				/*SIAC-7349
+				 * Se preente la componente del capitolo sul model
+				 * la risettiamo sul capitolo proveniente dal servizio
+				 * da capire se sarebbe meglio inserire un altra variabile nel model che non viene
+				 * mianipolata
+				 */
+				supportCapitolo.setComponenteBilancioUid(capitoloDiRiferimento.getComponenteBilancioUid());
+				supportCapitolo.setComponenteBilancioUidReturn(capitoloDiRiferimento.getComponenteBilancioUidReturn());
 				//UEB
 				supportCapitolo.setUeb(BigInteger.valueOf(currentCapitolo.getNumeroUEB()));
 				
@@ -362,6 +430,11 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 					supportCapitolo.setFlagImpegnabile(currentCapitolo.getFlagImpegnabile().booleanValue());
 				}else{
 					supportCapitolo.setFlagImpegnabile(false);
+				}
+				
+				//task-55
+				if(null != currentCapitolo.getFlagNonInserireAllegatoA1()){
+					supportCapitolo.setFlagCapitoloDaNonInserire(currentCapitolo.getFlagNonInserireAllegatoA1());
 				}
 				
 				// VINCOLI DEL CAPITOLO:
@@ -655,68 +728,225 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 			if (!isEmpty(model.getListaRicercaCapitolo())) { 
 				// .. E SE CI SONO CAPITOLI IN LISTA RICERCA:
 				//Se non viene selezionato alcun soggetto, mostro l'errore
-				addActionError("Elemento non selezionato");
+				//addActionError("Elemento non selezionato");
+				//SIAC-7739-7743
+				listaErrori.add(ErroreCore.NESSUN_ELEMENTO_SELEZIONATO.getErrore());
 				addErrori(listaErrori);
 				model.setCapitoloTrovato(false);
 				model.setListaRicercaCapitolo(null);
+				
+				
 			}
 			return INPUT;
 		} else {
+			/*SIAC-7349
+			 * Se siamo in presenza della gestione con
+			 * la componente capitolo (inserimento impegno)
+			 * controllare la presenza della componente
+			 */
+//			if(model.isComponenteBilancioCapitoloAttivo() && (model.getComponenteBilancioUid()== null || model.getComponenteBilancioUid().intValue()==0)){
+//				addActionError("Componente Capitolo non selezionata");
+//				addErrori(listaErrori);
+//				return INPUT;
+//			}
+			
+			
 			//IL CAPITOLO E' STATO SELEZIONATO (lista ricerca capitolo ha per forza elementi)
-			for(CapitoloImpegnoModel currentCapitolo: model.getListaRicercaCapitolo()){				
-				if (currentCapitolo.getUid().toString().equalsIgnoreCase(getRadioCodiceCapitolo())) {
-					if (controlloSACUtenteDecentrato(sessionHandler.getAzione().getNome(), currentCapitolo)) {
-						// in caso di ORDINATIVO PAGAMENTO 
-						// devo prepopolare i valori della transazione elementare
-						if(oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_PAGAMENTO) || oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_INCASSO)){
-							//Se lo stato e' diverso da null ritorna errore
-							if(!currentCapitolo.getStatoCapitolo().equals(StatoEntita.VALIDO)){
-								addErrore(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("Capitolo",currentCapitolo.getStatoCapitolo().toString() ));
-								return INPUT;
+			if(model.getListaRicercaCapitolo()!= null ){//SIAC-7739-7743
+				for(CapitoloImpegnoModel currentCapitolo: model.getListaRicercaCapitolo()){				
+					if (currentCapitolo.getUid().toString().equalsIgnoreCase(getRadioCodiceCapitolo())) {
+						if (controlloSACUtenteDecentrato(sessionHandler.getAzione().getNome(), currentCapitolo)) {
+							
+							// in caso di ORDINATIVO PAGAMENTO 
+							// devo prepopolare i valori della transazione elementare
+							if(oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_PAGAMENTO) || oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_INCASSO)){
+								//Se lo stato e' diverso da null ritorna errore
+								if(!currentCapitolo.getStatoCapitolo().equals(StatoEntita.VALIDO)){
+									addErrore(ErroreFin.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("Capitolo",currentCapitolo.getStatoCapitolo().toString() ));
+									return INPUT;
+								}
+		                          // lista missione
+								  caricaMissione(currentCapitolo);
+								  caricaProgramma(currentCapitolo);
+								
+								  // missione
+								  teSupport.setMissioneSelezionata(currentCapitolo.getCodiceMissione()); 
+								  // programma
+								  teSupport.setProgrammaSelezionato(currentCapitolo.getCodiceProgramma());
+								  // piano dei conti
+								  teSupport.setPianoDeiConti(new ElementoPianoDeiConti());
+								  teSupport.getPianoDeiConti().setCodice(currentCapitolo.getCodicePdcFinanziario());
+								  teSupport.getPianoDeiConti().setDescrizione(currentCapitolo.getDescrizionePdcFinanziario());
+								  teSupport.getPianoDeiConti().setUid(currentCapitolo.getIdPianoDeiConti());
+								  
+								  // cofog
+								  teSupport.setCofogSelezionato(currentCapitolo.getCodiceClassificazioneCofog());
+								  
+								  // codice transazione europea
+								  teSupport.setTransazioneEuropeaSelezionato(currentCapitolo.getCodiceTransazioneEuropeaSpesa());
+								  // siope
+								  
+								  // cup
+								  // ricorrente spesa
+								  teSupport.setRicorrenteSpesaSelezionato(currentCapitolo.getCodiceRicorrenteSpesa());
+								  
+								  // capitolo sanitario
+								  teSupport.setPerimetroSanitarioSpesaSelezionato(currentCapitolo.getCodicePerimetroSanitarioSpesa());
+								  
+								  // politiche regionali unitarie
+								  teSupport.setPoliticaRegionaleSelezionato(currentCapitolo.getCodicePoliticheRegionaliUnitarie());
+								
 							}
-	                          // lista missione
-							  caricaMissione(currentCapitolo);
-							  caricaProgramma(currentCapitolo);
 							
-							  // missione
-							  teSupport.setMissioneSelezionata(currentCapitolo.getCodiceMissione()); 
-							  // programma
-							  teSupport.setProgrammaSelezionato(currentCapitolo.getCodiceProgramma());
-							  // piano dei conti
-							  teSupport.setPianoDeiConti(new ElementoPianoDeiConti());
-							  teSupport.getPianoDeiConti().setCodice(currentCapitolo.getCodicePdcFinanziario());
-							  teSupport.getPianoDeiConti().setDescrizione(currentCapitolo.getDescrizionePdcFinanziario());
-							  teSupport.getPianoDeiConti().setUid(currentCapitolo.getIdPianoDeiConti());
-							  
-							  // cofog
-							  teSupport.setCofogSelezionato(currentCapitolo.getCodiceClassificazioneCofog());
-							  
-							  // codice transazione europea
-							  teSupport.setTransazioneEuropeaSelezionato(currentCapitolo.getCodiceTransazioneEuropeaSpesa());
-							  // siope
-							  
-							  // cup
-							  // ricorrente spesa
-							  teSupport.setRicorrenteSpesaSelezionato(currentCapitolo.getCodiceRicorrenteSpesa());
-							  
-							  // capitolo sanitario
-							  teSupport.setPerimetroSanitarioSpesaSelezionato(currentCapitolo.getCodicePerimetroSanitarioSpesa());
-							  
-							  // politiche regionali unitarie
-							  teSupport.setPoliticaRegionaleSelezionato(currentCapitolo.getCodicePoliticheRegionaliUnitarie());
 							
+							/* SIAC-7349
+							 * Calcolo della lista delle componenti del
+							 * capitolo bilancio
+							 * 
+							 */
+						if(model.isComponenteBilancioCapitoloAttivo()){
+							int uidCapitoloSelezionato = Integer.valueOf(getRadioCodiceCapitolo()).intValue();
+							List<ImportiCapitoloPerComponente> resultList = new ArrayList<ImportiCapitoloPerComponente>();
+							
+							RicercaTipoComponenteImportiCapitolo r = new RicercaTipoComponenteImportiCapitolo();
+							r.setDataOra(new Date());
+							r.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+							r.setRichiedente(sessionHandler.getRichiedente());
+							RicercaTipoComponenteImportiCapitoloResponse respo = new RicercaTipoComponenteImportiCapitoloResponse();
+							//SE RICERCA CARICHIAMO TUTTE LE COMPONENTI
+							if(model.isComponenteBilancioCapitoloAttivoRicerca()){
+								respo = tipoComponenteImportiCapitoloService.ricercaTipoComponenteImportiCapitoloTotali(r);
+								
+							}else{
+								//INSERIMENTO
+//								RicercaComponenteImportiCapitolo request = new RicercaComponenteImportiCapitolo();
+//								request.setDataOra(new Date());
+//								request.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+//								request.setRichiedente(sessionHandler.getRichiedente());
+//								request.setCapitolo(new CapitoloUscitaPrevisione());
+//								request.getCapitolo().setUid(uidCapitoloSelezionato);
+//								RicercaComponenteImportiCapitoloResponse resComponenti = componenteImportiCapitoloService.ricercaComponenteImportiCapitolo(request);
+//								if(resComponenti!= null){
+//									List<ImportiCapitoloPerComponente> importiComponentiCapitolo  = ComponenteImportiCapitoloPerAnnoHelper.toComponentiImportiCapitoloPerAnno(resComponenti.getListaImportiCapitolo());
+////									Map<Integer, Integer> mapComponentiStanziamentiValidi = new HashMap<Integer, Integer>();
+//									if(importiComponentiCapitolo!= null && !importiComponentiCapitolo.isEmpty()){
+//										//HashMap<Integer, Integer> uidCompMap = new HashMap<Integer, Integer>();
+//										for(ImportiCapitoloPerComponente icpc :importiComponentiCapitolo){
+//											
+//											if(icpc.getTipoComponenteImportiCapitolo()!= null 
+//													){
+//												
+//												//PRENDIAMOM SOLO QUELLO CON DISPONIBILITA A IMPEGNARE
+//												if(icpc.getTipoDettaglioComponenteImportiCapitolo()!= null 
+//														&& icpc.getTipoDettaglioComponenteImportiCapitolo().name().equals(TipoDettaglioComponenteImportiCapitolo.STANZIAMENTO.name())){
+//													
+//													if( icpc.getDettaglioAnno0()!= null && icpc.getDettaglioAnno0().getImporto()!= null){
+//														BigDecimal importoDisponibilita0 = icpc.getDettaglioAnno0().getImporto();
+//														if(importoDisponibilita0.compareTo(BigDecimal.ZERO)<0){
+//															icpc.getDettaglioAnno0().setDisponibilita(FinUtility.importoFormatter(BigDecimal.ZERO));
+//														}else{
+//															icpc.getDettaglioAnno0().setDisponibilita(FinUtility.importoFormatter(importoDisponibilita0));
+//														}
+//														
+//													}
+//													if( icpc.getDettaglioAnno1()!= null && icpc.getDettaglioAnno1().getImporto()!= null){
+//														BigDecimal importoDisponibilita1 = icpc.getDettaglioAnno1().getImporto();
+//														if(importoDisponibilita1.compareTo(BigDecimal.ZERO)<0){
+//															icpc.getDettaglioAnno1().setDisponibilita(FinUtility.importoFormatter(BigDecimal.ZERO));
+//														}else{
+//															icpc.getDettaglioAnno1().setDisponibilita(FinUtility.importoFormatter(importoDisponibilita1));
+//														}
+//														
+//													}
+//													if(icpc.getDettaglioAnno2()!= null && icpc.getDettaglioAnno2().getImporto()!= null){
+//														BigDecimal importoDisponibilita2 =icpc.getDettaglioAnno2().getImporto();
+//														if(importoDisponibilita2.compareTo(BigDecimal.ZERO)<0){
+//															icpc.getDettaglioAnno2().setDisponibilita(FinUtility.importoFormatter(BigDecimal.ZERO));
+//														}else{
+//															icpc.getDettaglioAnno2().setDisponibilita(FinUtility.importoFormatter(importoDisponibilita2));
+//														}
+//														
+//													}
+//												
+//													//SETTING UID 
+//													icpc.setUidComponente(icpc.getTipoComponenteImportiCapitolo().getUid());
+//													resultList.add(icpc);
+//													//uidCompMap.put(icpc.getUidComponente(), icpc.getUidComponente());
+//												
+//												}
+//												
+//											}
+//										}
+//									}
+//								}
+								
+								
+								
+								respo = tipoComponenteImportiCapitoloService.ricercaTipoComponenteImportiCapitoloImpegnabili(r);
+								
+								
+							}
+							
+							if(respo!= null && respo.getListaTipoComponenteImportiCapitolo()!= null && !respo.getListaTipoComponenteImportiCapitolo().isEmpty()){
+								for(TipoComponenteImportiCapitolo tcic : respo.getListaTipoComponenteImportiCapitolo()){
+									//METTIAMO SOLO ID E DESCRIZIONE
+									ImportiCapitoloPerComponente  icpcWrapper = new ImportiCapitoloPerComponente();
+									icpcWrapper.setUidComponente(tcic.getUid());
+									icpcWrapper.setTipoComponenteImportiCapitolo(tcic);
+									resultList.add(icpcWrapper);
+								}
+							}
+							
+							
+							currentCapitolo.setListaComponentiBilancio(resultList);
+							currentCapitolo.setComponenteBilancioUid(model.getComponenteBilancioUid());
+							
+							//SIAC-8869
+							if(teSupport.getIdMacroAggregato()!= null) {
+								teSupport.setIdMacroAggregato(null);
+							}
+							if(teSupport.getIdPianoDeiContiPadrePerAggiorna()!= null) {
+								teSupport.setIdPianoDeiContiPadrePerAggiorna(null);
+							}
+
+						}	//SOLO PER componente bilancio attivo
+							
+							
+							setCapitoloSelezionato(currentCapitolo);			
+						} else {
+							listaErrori.add(ErroreFin.OPERAZIONE_NON_COMPATIBILE.getErrore("Selezione capitolo", "la struttura amministrativa del capitolo non e' compatibile con le strutture amministrative dell'utente"));
+							addErrori(listaErrori);
 						}
-						setCapitoloSelezionato(currentCapitolo);			
-					} else {
-						listaErrori.add(ErroreFin.OPERAZIONE_NON_COMPATIBILE.getErrore("Selezione capitolo", "la struttura amministrativa del capitolo non e' compatibile con le strutture amministrative dell'utente"));
-						addErrori(listaErrori);
 					}
 				}
 			}
+			
 			return SUCCESS;
 		}
 	}
 
+	/**
+	 * SIAC-7349
+	 */
+	
+	private void checkStanziamentoValido(Map<Integer, Integer> mapComponentiStanziamentiValidi, 
+			ImportiCapitoloPerComponente icpc, int uidComponente){
+		if((icpc.getDettaglioAnno0()!= null && icpc.getDettaglioAnno0().getImporto() != null && icpc.getDettaglioAnno0().getAnnoCompetenza() >= sessionHandler.getBilancio().getAnno() && icpc.getDettaglioAnno0().getImporto().intValue()>0)
+				|| (icpc.getDettaglioAnno1()!= null && icpc.getDettaglioAnno1().getImporto() != null && icpc.getDettaglioAnno1().getAnnoCompetenza() >= sessionHandler.getBilancio().getAnno() && icpc.getDettaglioAnno1().getImporto().intValue()>0)
+				|| (icpc.getDettaglioAnno2()!= null && icpc.getDettaglioAnno2().getImporto() != null && icpc.getDettaglioAnno2().getAnnoCompetenza() >= sessionHandler.getBilancio().getAnno() && icpc.getDettaglioAnno2().getImporto().intValue()>0)
+				){
+			mapComponentiStanziamentiValidi.put(uidComponente, uidComponente);
+		}
+	}
+//	private void checkStanziamentoValido(Map<Integer, Integer> mapComponentiStanziamentiValidi, 
+//			 int annoPartenzaDisponibilita, DettaglioComponenteImportiCapitolo dcic, int uidComponente){
+//		if(annoPartenzaDisponibilita >= sessionHandler.getBilancio().getAnno() && dcic!= null && dcic.getImporto()!= null
+//				&& dcic.getImporto().intValue()>0){
+//			mapComponentiStanziamentiValidi.put(uidComponente, uidComponente);
+//		}
+//	}
+	
+	
 	/**
 	 * pulisci ricerca capitolo
 	 * @return
@@ -740,8 +970,6 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		//viene reimpostata la non visibilita' del blocco che li contiene
 		model.setIsnSubImpegno(false);
 		model.setHasImpegnoSelezionatoPopup(false);
-		model.setListaVociMutuo(new ArrayList<VoceMutuo>());
-		model.setHasMutui(false);
 		model.setRadioDocumentoSelezionato(0);
 		model.setListaRicercaDocumento(new ArrayList<DocumentoSpesa>());
 		return "refreshPopupModalImpegno";
@@ -772,12 +1000,15 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	 * @return
 	 */
 	public String visualizzaDettaglioCapitolo() {
+		String returnStr="visualizzaCapitolo";
+		int uidCapitoloSelezionato=0;
 		if(!isEmpty(getRadioCodiceCapitolo())){
 			//se selezionato lo cerco in lista:
 			if(!isEmpty(model.getListaRicercaCapitolo())){
 				for (CapitoloImpegnoModel currentCapitolo : model.getListaRicercaCapitolo()) {
 					if (currentCapitolo.getUid().intValue() == Integer.valueOf(getRadioCodiceCapitolo()).intValue()) {
 						model.setDatoPerVisualizza(currentCapitolo);
+						uidCapitoloSelezionato = currentCapitolo.getUid().intValue();
 						break;
 					}
 				}
@@ -785,8 +1016,104 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		}else{
 			addErrore(ErroreCore.NESSUN_ELEMENTO_SELEZIONATO.getErrore());
 		}
-		return "visualizzaCapitolo";
+		
+		/*
+		 * SIAC-7349
+		 * visualizzazione delle componenti
+		 * di bilancio capitolo
+		 */
+		if(model.isComponenteBilancioCapitoloAttivo()){
+			RicercaComponenteImportiCapitolo request = new RicercaComponenteImportiCapitolo();
+			request.setDataOra(new Date());
+			request.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+			request.setRichiedente(sessionHandler.getRichiedente());
+			request.setCapitolo(new CapitoloUscitaPrevisione());
+			request.getCapitolo().setUid(uidCapitoloSelezionato);
+			RicercaComponenteImportiCapitoloResponse resComponenti = componenteImportiCapitoloService.ricercaComponenteImportiCapitolo(request);
+			if(resComponenti!= null){
+				
+				List<ImportiCapitoloPerComponente> importiComponentiCapitolo  = ComponenteImportiCapitoloPerAnnoHelper.toComponentiImportiCapitoloPerAnno(resComponenti.getListaImportiCapitolo());
+				model.setImportiComponentiCapitolo(importiComponentiCapitolo);
+				model.setImportiAnniSuccessivi(resComponenti.getImportiCapitoloAnniSuccessivi());
+				model.setImportiResidui(resComponenti.getImportiCapitoloResiduo());
+				
+				// COMPETENZA
+				List<ImportiCapitoloPerComponente> competenzaComponenti = new ArrayList<ImportiCapitoloPerComponente>();
+				//FARE CHECK SUL TIPO DI CAPITOLO
+				if(resComponenti.getListaImportiCapitolo()!= null && !resComponenti.getListaImportiCapitolo().isEmpty()){
+					//PRENDIAMO COME RIFERIMENTO IL PRIMO ANNO
+					Integer annoInizio = resComponenti.getListaImportiCapitolo().get(0).getAnnoCompetenza()+1 ;//ELEMENTO 0 HA ANNO-1
+					model.setAnnoStanziamentoCapitoloInizio(annoInizio);
+					if(resComponenti.getListaImportiCapitolo() instanceof  ImportiCapitoloUP){
+						
+						ComponenteImportiCapitoloPerAnnoHelper.buildCompetenzaRowUP(resComponenti.getListaImportiCapitolo(),
+								resComponenti.getImportiCapitoloResiduo(), resComponenti.getImportiCapitoloAnniSuccessivi(),
+								competenzaComponenti);
+						
+						
+					}else{
+						ComponenteImportiCapitoloPerAnnoHelper.buildCompetenzaRowUG(resComponenti.getListaImportiCapitolo(),
+								resComponenti.getImportiCapitoloResiduo(), resComponenti.getImportiCapitoloAnniSuccessivi(),
+								competenzaComponenti);
+						
+					}
+					
+					model.setCompetenzaStanziamento((competenzaComponenti.get(0) != null) ? competenzaComponenti.get(0) : null);
+					model.setCompetenzaImpegnato((competenzaComponenti.get(1) != null) ? competenzaComponenti.get(1) : null);
+					//todo model.setDisponibilita((competenzaComponenti.get(2) != null) ? competenzaComponenti.get(2) : null);
+					
+					// RESIDUI
+					List<ImportiCapitoloPerComponente> residuiComponenti = new ArrayList<ImportiCapitoloPerComponente>();
+					ComponenteImportiCapitoloPerAnnoHelper.buildResiduiRow(resComponenti.getListaImportiCapitolo(),
+							resComponenti.getImportiCapitoloResiduo(), resComponenti.getImportiCapitoloAnniSuccessivi(), residuiComponenti);
+
+					model.setResiduiPresunti((residuiComponenti.get(0) != null) ? residuiComponenti.get(0) : null);
+					model.setResiduiEffettivi((residuiComponenti.get(1) != null) ? residuiComponenti.get(1) : null);
+
+					// CASSA
+					List<ImportiCapitoloPerComponente> cassaComponenti = new ArrayList<ImportiCapitoloPerComponente>();
+					ComponenteImportiCapitoloPerAnnoHelper.buildCassaRow(resComponenti.getListaImportiCapitolo(),
+							resComponenti.getImportiCapitoloResiduo(), resComponenti.getImportiCapitoloAnniSuccessivi(), cassaComponenti);
+
+					model.setCassaStanziato((cassaComponenti.get(0) != null) ? cassaComponenti.get(0) : null);
+					model.setCassaPagato((cassaComponenti.get(1) != null) ? cassaComponenti.get(1) : null);
+						
+					model.setImportiEx(new ImportiCapitolo());
+					model.setImportiEx1(new ImportiCapitolo());
+					model.setImportiEx2(new ImportiCapitolo());
+					model.setImportiEx3(new ImportiCapitolo());
+					model.setImportiCapitoloUscita0( FinUtility.searchByAnno(resComponenti.getListaImportiCapitolo(), annoInizio));
+					model.setImportiCapitoloUscita1( FinUtility.searchByAnno(resComponenti.getListaImportiCapitolo(), Integer.valueOf(annoInizio + 1)));
+					model.setImportiCapitoloUscita2( FinUtility.searchByAnno(resComponenti.getListaImportiCapitolo(), Integer.valueOf(annoInizio + 2)));
+					
+					//SIAC-7349 - GS - Start - 28/07/2020 - Nuovo metodo per mostrare componenti nel triennio senza stanziamento
+					if(resComponenti.getListaImportiCapitoloTriennioNoStanz() != null &&  !resComponenti.getListaImportiCapitoloTriennioNoStanz().isEmpty()) {
+						Integer annoEsercizio = sessionHandler.getAnnoBilancio();
+						importiComponentiCapitolo = ComponenteImportiCapitoloPerAnnoHelper.toComponentiImportiCapitoloPerTriennioNoStanz(importiComponentiCapitolo, resComponenti.getListaImportiCapitoloTriennioNoStanz(), annoEsercizio);
+					}
+					//SIAC-7349 - End
+					
+					
+					
+				}
+				
+			}
+			
+			returnStr =  "visualizzaCapitoloComponentiBilancio";
+			
+		}else{
+			returnStr =  "visualizzaCapitolo";
+		}
+		
+		return returnStr;
 	}
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * wrapper di retrocompatibilita', va sul primo soggetto
@@ -826,7 +1153,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	 * @param soggettoImpegnoModel
 	 * @param modaleSoggetto
 	 */
-	private void settaSoggettoSelezionato(SoggettoImpegnoModel soggettoImpegnoModel,SoggettoDaCercareEnum modaleSoggetto){
+	protected void settaSoggettoSelezionato(SoggettoImpegnoModel soggettoImpegnoModel,SoggettoDaCercareEnum modaleSoggetto){
 		switch (modaleSoggetto.getValue()) {
 		case 1:
 			setSoggettoSelezionato(soggettoImpegnoModel);
@@ -887,29 +1214,17 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 				model.setListaRicercaSoggetto(response.getSoggetti());
 			} else {
 				
-				//JIRA 690 i mutui possono avere un soggetto in stato bloccato
-				if(!oggettoDaPopolare.equals(OggettoDaPopolareEnum.MUTUO)){
+				//JIRA 690 
 				
-					if(response.getSoggetti().get(0).getStatoOperativo() != null &&
-							!response.getSoggetti().get(0).getStatoOperativo().name().equals(Constanti.STATO_VALIDO) &&
-							!response.getSoggetti().get(0).getStatoOperativo().name().equals(Constanti.STATO_IN_MODIFICA)){
-						addErrore(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto=" + response.getSoggetti().get(0).getCodiceSoggetto(), response.getSoggetti().get(0).getStatoOperativo().name()));
-						model.setListaRicercaSoggetto(null);
-						model.setSoggettoTrovato(false);
-						return false;
-					}
-				}else{
-					
-					if(response.getSoggetti().get(0).getStatoOperativo() != null &&
-							!response.getSoggetti().get(0).getStatoOperativo().name().equals(Constanti.STATO_VALIDO) &&
-							!response.getSoggetti().get(0).getStatoOperativo().name().equals(Constanti.STATO_IN_MODIFICA) &&
-							!response.getSoggetti().get(0).getStatoOperativo().name().equals(Constanti.STATO_BLOCCATO)){
-						addErrore(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto=" + response.getSoggetti().get(0).getCodiceSoggetto(), response.getSoggetti().get(0).getStatoOperativo().name()));
-						model.setListaRicercaSoggetto(null);
-						model.setSoggettoTrovato(false);
-						return false;
-					}
+				if(response.getSoggetti().get(0).getStatoOperativo() != null &&
+						!response.getSoggetti().get(0).getStatoOperativo().name().equals(CostantiFin.STATO_VALIDO) &&
+						!response.getSoggetti().get(0).getStatoOperativo().name().equals(CostantiFin.STATO_IN_MODIFICA)){
+					addErrore(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto=" + response.getSoggetti().get(0).getCodiceSoggetto(), response.getSoggetti().get(0).getStatoOperativo().name()));
+					model.setListaRicercaSoggetto(null);
+					model.setSoggettoTrovato(false);
+					return false;
 				}
+
 				SoggettoImpegnoModel soggettoImpegnoModel = new SoggettoImpegnoModel();
 				soggettoImpegnoModel.setCodCreditore(response.getSoggetti().get(0).getCodiceSoggetto());
 				
@@ -1057,6 +1372,8 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	 * @throws Exception
 	 */
 	public String ricercaSoggetto() throws Exception {
+		//SIAC-7734
+		model.setErrori(new ArrayList<Errore>());
 		eseguiRicercaSoggetto(convertiModelPerChiamataServizioRicerca(model.getSoggettoRicerca()), true, oggettoDaPopolare);
 		return "ricercaSoggetto";
 	}
@@ -1196,7 +1513,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 					 *  i progetti che devo essere presi sono solo quelli in stato VALIDO o PROVVISORIO
 					 *  questo dopo l'n-esima telefonata con chiara
 					 */
-					if(s.getStatoOperativoProgetto() != null && !s.getStatoOperativoProgetto().name().equals(Constanti.STATO_VALIDO) && !s.getStatoOperativoProgetto().name().equals(Constanti.STATO_IN_MODIFICA)){
+					if(s.getStatoOperativoProgetto() != null && !s.getStatoOperativoProgetto().name().equals(CostantiFin.STATO_VALIDO) && !s.getStatoOperativoProgetto().name().equals(CostantiFin.STATO_IN_MODIFICA)){
 						listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("progetto="+s.getCodice(), s.getStatoOperativoProgetto().name()));
 						addErrori(listaErrori);
 						model.setListaRicercaProgetto(null);
@@ -1228,7 +1545,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 					
 					Progetto p = c.getProgetto();
 					
-					if(p.getStatoOperativoProgetto() != null && !p.getStatoOperativoProgetto().name().equals(Constanti.STATO_VALIDO) && !p.getStatoOperativoProgetto().name().equals(Constanti.STATO_IN_MODIFICA)){
+					if(p.getStatoOperativoProgetto() != null && !p.getStatoOperativoProgetto().name().equals(CostantiFin.STATO_VALIDO) && !p.getStatoOperativoProgetto().name().equals(CostantiFin.STATO_IN_MODIFICA)){
 						listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("progetto="+p.getCodice(), p.getStatoOperativoProgetto().name()));
 						addErrori(listaErrori);
 						model.setListaRicercaProgetto(null);
@@ -1290,7 +1607,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 						 *  i soggetti che devo essere presi sono solo quelli in stato VALIDO o PROVVISORIO
 						 *  questo dopo l'n-esima telefonata con chiara
 						 */
-						if(s.getStatoOperativo() != null && !s.getStatoOperativo().name().equals(Constanti.STATO_VALIDO) && !s.getStatoOperativo().name().equals(Constanti.STATO_IN_MODIFICA)){
+						if(s.getStatoOperativo() != null && !s.getStatoOperativo().name().equals(CostantiFin.STATO_VALIDO) && !s.getStatoOperativo().name().equals(CostantiFin.STATO_IN_MODIFICA)){
 							listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto="+s.getCodiceSoggetto(), s.getStatoOperativo().name()));
 							addErrori(listaErrori);
 							model.setListaRicercaSoggetto(null);
@@ -1329,27 +1646,16 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 					 *  i soggetti che devo essere presi sono solo quelli in stato VALIDO o PROVVISORIO
 					 *  questo dopo l'n-esima telefonata con chiara
 					 */
-					//JIRA 690 i mutui possono avere un soggetto in stato bloccato
-					if(!oggettoDaPopolare.equals(OggettoDaPopolareEnum.MUTUO)){
-						if(s.getStatoOperativo() != null && !s.getStatoOperativo().name().equals(Constanti.STATO_VALIDO) && !s.getStatoOperativo().name().equals(Constanti.STATO_IN_MODIFICA)){
-							listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto="+s.getCodiceSoggetto(), s.getStatoOperativo().name()));
-							addErrori(listaErrori);
-							model.setListaRicercaSoggetto(null);
-							model.setSoggettoTrovato(false);
-							return INPUT;
-						}else{
-							popolaSoggetto(s);
-						}
+					//JIRA 690 
+
+					if(s.getStatoOperativo() != null && !s.getStatoOperativo().name().equals(CostantiFin.STATO_VALIDO) && !s.getStatoOperativo().name().equals(CostantiFin.STATO_IN_MODIFICA)){
+						listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto="+s.getCodiceSoggetto(), s.getStatoOperativo().name()));
+						addErrori(listaErrori);
+						model.setListaRicercaSoggetto(null);
+						model.setSoggettoTrovato(false);
+						return INPUT;
 					}else{
-						if(s.getStatoOperativo() != null && !s.getStatoOperativo().name().equals(Constanti.STATO_VALIDO) && !s.getStatoOperativo().name().equals(Constanti.STATO_IN_MODIFICA) && !s.getStatoOperativo().name().equals(Constanti.STATO_BLOCCATO)){
-							listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto="+s.getCodiceSoggetto(), s.getStatoOperativo().name()));
-							addErrori(listaErrori);
-							model.setListaRicercaSoggetto(null);
-							model.setSoggettoTrovato(false);
-							return INPUT;
-						}else{
-							popolaSoggetto(s);
-						}
+						popolaSoggetto(s);
 					}
 				}
 			}
@@ -1381,7 +1687,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 					 *  questo dopo l'n-esima telefonata con chiara
 					 */
 					
-					if(s.getStatoOperativo() != null && !s.getStatoOperativo().name().equals(Constanti.STATO_VALIDO) && !s.getStatoOperativo().name().equals("SOSPESO")){
+					if(s.getStatoOperativo() != null && !s.getStatoOperativo().name().equals(CostantiFin.STATO_VALIDO) && !s.getStatoOperativo().name().equals("SOSPESO")){
 						listaErrori.add(ErroreCore.OPERAZIONE_INCOMPATIBILE_CON_STATO_ENTITA.getErrore("soggetto="+s.getCodiceSoggetto(), s.getStatoOperativo().name()));
 						addErrori(listaErrori);
 						model.setListaRicercaSoggetto(null);
@@ -1489,7 +1795,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	public String pulisciRicercaProgetto() {
 		model.setListaRicercaProgetto(null);
 		model.setProgettoTrovato(false);
-		return "ricercaSoggetto";
+		return "ricercaProgetto";
 	}
 	
 	/**
@@ -1674,6 +1980,8 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	 * @throws Exception
 	 */
 	public String ricercaProvvedimento() throws Exception {
+		//SIAC-7734
+		model.setErrori(new ArrayList<Errore>());
 		ProvvedimentoImpegnoModel pr = model.getProvvedimentoRicerca();
 		List<Errore> listaErrori = new ArrayList<Errore>();
 		
@@ -1753,15 +2061,17 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		List<Errore> listaErrori = new ArrayList<Errore>();
 		if(isEmpty(getRadioCodiceProvvedimento())){
 			if (!isEmpty(model.getListaRicercaProvvedimento())) {
+				//SIAC-7938
+				listaErrori.add(ErroreFin.ELEMENTO_NON_SELEZIONATO.getErrore());
 				//Se non viene selezionato alcun soggetto, mostro l'errore
-				addActionError("Elemento non selezionato");
 				addErrori(listaErrori);
 				model.setProvvedimentoTrovato(false);
 				model.setListaRicercaProvvedimento(null);
 			}
 			return INPUT;
 		} else {
-			for(ProvvedimentoImpegnoModel currentProvvedimento: model.getListaRicercaProvvedimento()){				
+			//SIAC-7924 eseguo un controllo formale su listaRicercaProvvedimento 
+			for(ProvvedimentoImpegnoModel currentProvvedimento: CoreUtil.checkList(model.getListaRicercaProvvedimento())){			
 				if (currentProvvedimento.getUid().toString().equalsIgnoreCase(getRadioCodiceProvvedimento())) {
 					String redirect = impostaProvvedimento(currentProvvedimento);
 					if(redirect!=null){
@@ -1812,8 +2122,8 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 				if(presenzaProvvedimentoInMovimento && 
 						!currentProvvedimento.getStato().equals(((GestisciMovGestModel)model).getStep1Model().getProvvedimento().getStato())){
 					
-					boolean ok = currentProvvedimento.getStato().equalsIgnoreCase(Constanti.STATO_PROVVISORIO) &&
-					((GestisciMovGestModel)model).getStep1Model().getProvvedimento().getStato().equalsIgnoreCase(Constanti.STATO_DEFINITIVO) ;
+					boolean ok = currentProvvedimento.getStato().equalsIgnoreCase(CostantiFin.STATO_PROVVISORIO) &&
+					((GestisciMovGestModel)model).getStep1Model().getProvvedimento().getStato().equalsIgnoreCase(CostantiFin.STATO_DEFINITIVO) ;
 					
 					if(!ok){
 						// jira 1749 msg sbagliato
@@ -2128,7 +2438,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		attoAmministrativo.setStatoOperativo(provvedimentoImpegnoModel.getStato());
 		//SIAC-6929
 		attoAmministrativo.setBloccoRagioneria(Boolean.FALSE);
-		attoAmministrativo.setProvenienza(Constanti.ATTO_AMMINISTRATIVO_PROVENIENZA_MANUALE);
+		attoAmministrativo.setProvenienza(CostantiFin.ATTO_AMMINISTRATIVO_PROVENIENZA_MANUALE);
 		
 		requestInsProvv.setAttoAmministrativo(attoAmministrativo );
 		
@@ -2195,7 +2505,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	protected boolean eseguiRicercaProvvedimento(OggettoDaPopolareEnum oggettoDaPopolare, ProvvedimentoImpegnoModel filtroAtto, boolean daRicerca) {
 		// Costruzione oggetti complessi
 		TipoAtto tipoAtto = buildAttoSelezionato(filtroAtto);
-		
+		boolean daCruscotto = model.isDaCruscotto();
 		// nel caso in cui si seleziona la struttura sulla pagina in maniera manuale ne faccio un passaggio di variabili e lascio 
 		// tutto invariato
 		if (!strutturaSelezionataSuPaginaiIsVuota()){
@@ -2213,7 +2523,12 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		
 		// se arrivo da compilazione guidata la struttura ce l'ho sul model.provvedimento,
 		// quindi aggiungo il controllo
-		if (strutturaAmministrativaSelezionata == null){
+		if (strutturaAmministrativaSelezionata == null || 
+				//SIAC-7523
+				//non vedendo il model passo alla sessione il parametro che se true mi dovra' resituire l'uid corretto
+				(strutturaAmministrativaSelezionata != null 
+				&& sessionHandler.containsKey(FinSessionParameter.PROVVEDIMENTO_SELEZIONATO) 
+				&& Boolean.TRUE.equals(sessionHandler.getParametro(FinSessionParameter.PROVVEDIMENTO_SELEZIONATO)))){
 			strutturaAmministrativaSelezionata = (filtroAtto.getUidStrutturaAmm() != null) ? filtroAtto.getUidStrutturaAmm().toString() : null;
 		}
 		
@@ -2235,6 +2550,9 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		
 		RicercaAtti ricercaAtti = new RicercaAtti();
 		ricercaAtti.setAnnoAtto(filtroAtto.getAnnoProvvedimento());
+		//SIAC-7523
+		ricercaAtti.setUid(filtroAtto.getUid());
+		//
 		if(filtroAtto.getNumeroProvvedimento() != null){
 			  ricercaAtti.setNumeroAtto(filtroAtto.getNumeroProvvedimento().intValue());
 	    }
@@ -2262,27 +2580,44 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 			for (AttoAmministrativo atto : response.getListaAttiAmministrativi()) {
 				if (!atto.getStatoOperativo().equals(StatoOperativoAtti.ANNULLATO.getDescrizione())) {
 					
-					boolean daAggiungere = true;
-					if (!daRicerca && (strutturaAmm ==null || strutturaAmm.getUid()<=0) ) {
-						//FIX PER JIRA SIAC-3353 occore gestire il caso in cui non sia indicata la struttura amministrativa:
-						daAggiungere = false;
-						//no struttura amm indicata
-						if(atto!=null && atto.getStrutturaAmmContabile()==null){
-							daAggiungere = true;
+					boolean isOggettoDaPopolareOrdinativo = oggettoDaPopolare != null && (oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_INCASSO) || oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_PAGAMENTO));
+					//SIAC-6997 escludi provvedimento con blocco ragioneria TRUE e SIAC-7704
+					if(isOggettoDaPopolareOrdinativo || model.isSkipControlloBloccoRagioneria() || !Boolean.TRUE.equals(atto.getBloccoRagioneria())){
+
+						boolean daAggiungere = true;
+						if (!daRicerca && (strutturaAmm ==null || strutturaAmm.getUid()<=0) ) {
+							//FIX PER JIRA SIAC-3353 occore gestire il caso in cui non sia indicata la struttura amministrativa:
+							daAggiungere = false;
+							//no struttura amm indicata
+							if(atto!=null && atto.getStrutturaAmmContabile()==null){
+								daAggiungere = true;
+							}
 						}
-					}
-					/*
-					 * SIAC-6929
-					 * Sia per la ricerca guidata che per il proseguia fine pagina
-					 * i valori ritornati non contengono casi di blocco
-					 */
-					if(daRicerca){
-						//TOLGO QUELLI BLOCCATI
-						if(atto.getBloccoRagioneria() == null || (atto.getBloccoRagioneria() != null && !atto.getBloccoRagioneria().booleanValue())){
+						/*
+						 * SIAC-6929
+						 * Sia per la ricerca guidata che per il proseguia fine pagina
+						 * i valori ritornati non contengono casi di blocco
+						 */
+						if(daRicerca){
+							//TOLGO QUELLI BLOCCATI
+							/* SIAC-7399
+							 * se skipControllo viene messo a true non facciamo
+							 * nessun controllo sul blocco ragioneria inserendo 
+							 * l'elemento in lista.
+							 * nel caso in cui non viene settato faccioamo  il controllo 
+							 * su blocco ragioneria
+							 */
+							if(model.isSkipControlloBloccoRagioneria()){
+								buildProvvedimento(atto, listaRicercaProvvedimento, listaTrovatiNonAnnullati, daAggiungere);
+							}else{
+								if(atto.getBloccoRagioneria() == null || (atto.getBloccoRagioneria() != null && !atto.getBloccoRagioneria().booleanValue())){
+									buildProvvedimento(atto, listaRicercaProvvedimento, listaTrovatiNonAnnullati, daAggiungere);
+								}
+							}
+							
+						}else{
 							buildProvvedimento(atto, listaRicercaProvvedimento, listaTrovatiNonAnnullati, daAggiungere);
 						}
-					}else{
-						buildProvvedimento(atto, listaRicercaProvvedimento, listaTrovatiNonAnnullati, daAggiungere);
 					}
 				}
 			}
@@ -2344,20 +2679,27 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 				 * viene mostrato il messaggio di errore
 				 */
 				if(listaRicercaProvvedimento.get(0).getBloccoRagioneria()!= null && listaRicercaProvvedimento.get(0).getBloccoRagioneria().booleanValue()){
-					addErrore(ErroreFin.OGGETTO_BLOCCATO_DALLA_RAGIONERIA.getErrore("Numero Provvedimento " + 
-							listaRicercaProvvedimento.get(0).getNumeroProvvedimento() + " Oggetto " + listaRicercaProvvedimento.get(0).getOggetto()));
+					/* SIAC-7399
+					 * se skipControllo viene messo a true in fase di prosegui non viene 
+					 * considerato l'errore per blocco ragioneria
+					 */
+					if(!model.isSkipControlloBloccoRagioneria()){
+						addErrore(ErroreFin.OGGETTO_BLOCCATO_DALLA_RAGIONERIA.getErrore("Numero Provvedimento " + 
+								listaRicercaProvvedimento.get(0).getNumeroProvvedimento() + " Oggetto " + listaRicercaProvvedimento.get(0).getOggetto()));
+					}
+					
 				}
 				
 				
 				
 				if(oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_PAGAMENTO) || oggettoDaPopolare.equals(OggettoDaPopolareEnum.ORDINATIVO_INCASSO)){
-					if(listaRicercaProvvedimento.get(0).getStato().equalsIgnoreCase(Constanti.STATO_PROVVISORIO)){
+					if(listaRicercaProvvedimento.get(0).getStato().equalsIgnoreCase(CostantiFin.STATO_PROVVISORIO)){
 						addErrore(ErroreFin.STATO_PROVVEDIMENTO_NON_CONSENTITO.getErrore("gestione ordinativo","definitivo"));
 						return false;
 					}
 				}
 				if (oggettoDaPopolare.equals(OggettoDaPopolareEnum.CARTA)) {
-					if(listaRicercaProvvedimento.get(0).getStato().equalsIgnoreCase(Constanti.STATO_PROVVISORIO)){
+					if(listaRicercaProvvedimento.get(0).getStato().equalsIgnoreCase(CostantiFin.STATO_PROVVISORIO)){
 						addErrore(ErroreFin.STATO_PROVVEDIMENTO_NON_CONSENTITO.getErrore("gestione carta contabile", "definitivo"));
 						return false;
 					}										
@@ -2620,7 +2962,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		if (!isEmpty(pdcSelezionato)) {
 			eg.setCodicePianoDeiConti(pdcSelezionato);
 		}
-		eg.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));		
+		eg.setAnnoEsercizio(sessionHandler.getAnnoBilancio());		
 		
 		if(!isEmpty(capitoloDiRiferimento.getTipoFinanziamentoSelezionato())){
 			eg.setCodiceTipoFinanziamento(capitoloDiRiferimento.getTipoFinanziamentoSelezionato());
@@ -2793,7 +3135,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		rip.setEnte(sessionHandler.getEnte());
 		rip.setRichiedente(sessionHandler.getRichiedente());
 		RicercaImpegnoK k = new RicercaImpegnoK();
-		k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		if(annoimpegno!=null){
 			k.setAnnoImpegno(Integer.valueOf(annoimpegno));
 		}
@@ -2806,8 +3148,6 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		//Richiedo alcuni dati opzionali:
 		DatiOpzionaliElencoSubTuttiConSoloGliIds datiOpzionaliElencoSubTuttiConSoloGliIds = new DatiOpzionaliElencoSubTuttiConSoloGliIds();
 		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaDisponibileLiquidareEDisponibilitaInModifica(true);
-		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaVociMutuo(true);
-		datiOpzionaliElencoSubTuttiConSoloGliIds.setCaricaMutui(true);
 		rip.setDatiOpzionaliElencoSubTuttiConSoloGliIds(datiOpzionaliElencoSubTuttiConSoloGliIds );
 		
 		//esclude il caricamento di tutti i sub con i dati pesanti:
@@ -2815,7 +3155,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		//
 		
 		//invoco il servizio ricercaImpegnoPerChiaveOttimizzato:
-		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 		if (respRk != null && respRk.getImpegno() != null) {
 			Impegno impegno = respRk.getImpegno();
 				if(impegno.getStatoOperativoMovimentoGestioneSpesa().equalsIgnoreCase("D") || impegno.getStatoOperativoMovimentoGestioneSpesa().equalsIgnoreCase("N")){
@@ -2829,12 +3169,6 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 					model.setDescrizioneImpegnoPopup(impegno.getDescrizione());
 					model.setHasImpegnoSelezionatoPopup(true);
 					model.setHasImpegnoSelezionatoXPopup(true);
-					List<VoceMutuo> listaVociMutuo = new ArrayList<VoceMutuo>();
-					if(impegno!=null && impegno.getListaVociMutuo()!=null && impegno.getListaVociMutuo().size()>0){
-						listaVociMutuo = impegno.getListaVociMutuo();
-						model.setHasMutui(true);
-					}
-					model.setListaVociMutuo(listaVociMutuo);
 				
 				
 				//verifico se presenti subimpegni, in questo caso popolo la tabella
@@ -2943,44 +3277,7 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		}
 	}
 	
-	/**
-	 * mutui per impegno
-	 * @return
-	 */
-	public String mutuiPerImpegno(){
-		//su selezione impegno nella tabella di ricercaImpegni guidata 
-		//calcola la lista mutui associata se presente
-		HttpServletRequest request = ServletActionContext.getRequest();
-		String selection = request.getParameter("selection");
-		Impegno impegnoSelezionato = new Impegno();
-		if(model.getListaImpegniCompGuidata()!=null){
-			for(int i=0; i<model.getListaImpegniCompGuidata().size();i++){
-				if(model.getListaImpegniCompGuidata().get(i)!=null){
-					int uid = model.getListaImpegniCompGuidata().get(i).getUid();
-					if(uid==Integer.valueOf(selection)){
-						model.setRadioImpegnoSelezionato(Integer.valueOf(selection));
-						model.setHasImpegnoSelezionatoPopup(true);
-						model.setHasImpegnoSelezionatoXPopup(true);
-						impegnoSelezionato = model.getListaImpegniCompGuidata().get(i);
-						if(model.isIsnSubImpegno()){
-							//agiorno, essendo sub impegno, nImpegno e nsubImpegno variabile utilita' popup
-							model.setnImpegno(model.getnImpegno());
-							if(impegnoSelezionato.getNumero()!=null)
-								model.setnSubImpegno(impegnoSelezionato.getNumero().intValue());
-						}
-						model.setImpegnoPopup(impegnoSelezionato);
-					}
-				}
-			}
-		}
-		List<VoceMutuo> listaVociMutuo = new ArrayList<VoceMutuo>();
-		if(impegnoSelezionato!=null){
-			listaVociMutuo = impegnoSelezionato.getListaVociMutuo();
-			model.setHasMutui(true);
-		}
-		model.setListaVociMutuo(listaVociMutuo);
-		return MODALIMPEGNO;
-	}
+	
 	
 	/**
 	 * conferma comp guidata
@@ -2990,7 +3287,6 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 		
 		// Impelmentare la logica sul pulsante conferma che dovrebbe settare 
 		// SOLO i quattro valori numero impegno,
-		// numero sub impegno anno e numero mutuo su step1.
 		
 		if(model.isHasImpegnoSelezionatoPopup()){
 			
@@ -3005,20 +3301,9 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 			String descrizioneTipoImpegnoPopup = (model.getImpegnoPopup().getTipoImpegno()!= null && !isEmpty(model.getImpegnoPopup().getTipoImpegno().getDescrizione())) ? model.getImpegnoPopup().getTipoImpegno().getDescrizione() : "" ;
 			
 			model.setDescrizioneTipoImpegnoPopup(descrizioneTipoImpegnoPopup);
-			model.setNumeroMutuoPopup(null);
 			model.setnAnno(null);
 			model.setnImpegno(null);
-			int voceMutuoScelta = model.getRadioVoceMutuoSelezionata();
-			List<VoceMutuo> listaVocMutuo = model.getListaVociMutuo();
-			
-			if(!isEmpty(listaVocMutuo)){
-				for(int j=0; j<listaVocMutuo.size();j++){
-					if(listaVocMutuo.get(j).getUid()==voceMutuoScelta){
-						model.setNumeroMutuoPopup(Integer.valueOf(listaVocMutuo.get(j).getNumeroMutuo()));
-						model.setDisponibilita(listaVocMutuo.get(j).getImportoDisponibileLiquidareVoceMutuo());
-					}
-				}
-			}
+
 		}
 		
 		// salvo il capitole del impegno per caricate TE di una nuova liquidazione
@@ -3068,11 +3353,9 @@ public abstract class GenericPopupAction<M extends GenericPopupModel> extends Ge
 	public void pulisciListeeSchedaPopup(){
 		//Azzero liste e info precedenti
 		model.setListaImpegniCompGuidata(new ArrayList<Impegno>());
-		model.setListaVociMutuo(new ArrayList<VoceMutuo>());
+
 		model.setRadioImpegnoSelezionato(0);
-		model.setRadioVoceMutuoSelezionata(0);
 		model.setHasImpegnoSelezionatoPopup(false);
-		model.setHasMutui(false);
 		model.setIsnSubImpegno(false);
 		model.setnSubImpegno(null);
 		model.setProvvedimentoPopup(null);

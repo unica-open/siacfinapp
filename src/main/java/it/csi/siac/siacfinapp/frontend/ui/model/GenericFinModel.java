@@ -46,7 +46,9 @@ public class GenericFinModel extends GenericModel {
     //variabile di appoggio per salvare i waring
     private List<Errore> warning = new ArrayList<Errore>();
     
-    //CREA LA REQUEST GENERICA:
+   
+
+	//CREA LA REQUEST GENERICA:
     protected <R extends ServiceRequest> R creaRequest(Class<R> cls){
 		R request;
 
@@ -128,5 +130,17 @@ public class GenericFinModel extends GenericModel {
 	public void addWarning(Errore wrng){
 		warning.add(wrng);
 	}
+	
+	public boolean hasWarning() {
+		return getWarning().size() > 0 ? true : false;
+	}
+
+	public void resetWarning() {
+		this.warning = new ArrayList<Errore>();
+	}
+	
+
+
+	
 	
 }

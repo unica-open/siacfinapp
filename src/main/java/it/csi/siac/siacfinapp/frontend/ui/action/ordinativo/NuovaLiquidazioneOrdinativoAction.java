@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -27,7 +27,7 @@ import it.csi.siac.siacfinapp.frontend.ui.model.commons.GestoreTransazioneElemen
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.NuovaLiquidazioneModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceLiquidazione;
 import it.csi.siac.siacfinser.frontend.webservice.msg.InserisceLiquidazioneResponse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOttimizzato;
@@ -193,16 +193,16 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 		} else {
 			if (presenzaQuote()) {
 				if (!presenzaQuoteCompetenza()) {
-					if(Integer.parseInt(model.getNuovaLiquidazioneModel().getAnnoImpegno()) >= Integer.parseInt(sessionHandler.getAnnoEsercizio())){
+					if(Integer.parseInt(model.getNuovaLiquidazioneModel().getAnnoImpegno()) >= sessionHandler.getAnnoBilancio()){
 						listaErrori.add(ErroreFin.INCONGRUENZA_NEI_PARAMETRI_.getErrore("Anno Impegno maggiore/uguale dell'anno esercizio"));
 					}
 				} else {
-					if(Integer.parseInt(model.getNuovaLiquidazioneModel().getAnnoImpegno()) != Integer.parseInt(sessionHandler.getAnnoEsercizio())){
+					if(Integer.parseInt(model.getNuovaLiquidazioneModel().getAnnoImpegno()) != sessionHandler.getAnnoBilancio()){
 						listaErrori.add(ErroreFin.INCONGRUENZA_NEI_PARAMETRI_.getErrore("Anno Impegno diverso dall'anno esercizio"));
 					}
 				}
 			} else {
-				if(Integer.parseInt(model.getNuovaLiquidazioneModel().getAnnoImpegno()) > Integer.parseInt(sessionHandler.getAnnoEsercizio())){
+				if(Integer.parseInt(model.getNuovaLiquidazioneModel().getAnnoImpegno()) > sessionHandler.getAnnoBilancio()){
 					listaErrori.add(ErroreFin.INCONGRUENZA_NEI_PARAMETRI_.getErrore("Anno Impegno maggiore dell'anno esercizio"));
 				}
 			}
@@ -235,7 +235,7 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 		rip.setEnte(sessionHandler.getEnte());
 		rip.setRichiedente(sessionHandler.getRichiedente());
 		RicercaImpegnoK k = new RicercaImpegnoK();
-		k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		if(StringUtils.isNotEmpty(model.getNuovaLiquidazioneModel().getAnnoImpegno())){
 			k.setAnnoImpegno(Integer.valueOf(model.getNuovaLiquidazioneModel().getAnnoImpegno()));	
 		}
@@ -250,7 +250,7 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 		//
 		
 		// 1 - richiama servizio
-		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 		
 		if (respRk != null && respRk.getImpegno() != null) {
 			debug("ricercaImpegno", "ciao");
@@ -321,7 +321,7 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 						// ad esempio elimino un sogg collegato ad un impegno
 						if(null!=currentSubimpegno.getSoggetto()){
 							// verifico che il sub impegno sia in stato Valido
-							if(currentSubimpegno.getStatoOperativoMovimentoGestioneSpesa()!=null && !currentSubimpegno.getStatoOperativoMovimentoGestioneSpesa().equalsIgnoreCase(Constanti.MOVGEST_STATO_ANNULLATO)){
+							if(currentSubimpegno.getStatoOperativoMovimentoGestioneSpesa()!=null && !currentSubimpegno.getStatoOperativoMovimentoGestioneSpesa().equalsIgnoreCase(CostantiFin.MOVGEST_STATO_ANNULLATO)){
 								if (currentSubimpegno.getSoggetto().getCodiceSoggetto().equalsIgnoreCase(model.getGestioneOrdinativoStep1Model().getSoggetto().getCodCreditore())) {
 									soggettoTrovato = true;
 									//TODO:Caricare dati
@@ -380,7 +380,7 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 			rip.setEnte(sessionHandler.getEnte());
 			rip.setRichiedente(sessionHandler.getRichiedente());
 			RicercaImpegnoK k = new RicercaImpegnoK();
-			k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			k.setAnnoImpegno(Integer.parseInt(model.getNuovaLiquidazioneModel().getAnnoImpegno()));
 			
 			k.setNumeroImpegno(new BigDecimal(model.getNuovaLiquidazioneModel().getNumeroImpegno()));
@@ -391,7 +391,7 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 			rip.setCaricaSub(false);
 			//
 			
-			RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+			RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 			
 			if (respRk != null && respRk.getImpegno() != null) {
 				
@@ -502,8 +502,8 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 		Liquidazione liquidazione = new Liquidazione();
 		
 		// Jira 1976, in fase di inserimento di liquidazione da ordinativo si deve settare non il liqManuale ma il
-		// liqAutomatica a S liquidazione.setLiqManuale(Constanti.LIQUIDAZIONE_AUTOMATICA)
-		liquidazione.setLiqAutomatica(Constanti.LIQUIDAZIONE_LIQ_AUTOMATICA_SI);
+		// liqAutomatica a S liquidazione.setLiqManuale(CostantiFin.LIQUIDAZIONE_AUTOMATICA)
+		liquidazione.setLiqAutomatica(CostantiFin.LIQUIDAZIONE_LIQ_AUTOMATICA_SI);
 		
 		liquidazione.setDescrizioneLiquidazione(model.getNuovaLiquidazioneModel().getDescrizioneLiquidazione());
 		if(model.getNuovaLiquidazioneModel().getImportoLiquidazione()!=null ||  StringUtils.isEmpty(model.getNuovaLiquidazioneModel().getImportoLiquidazione())){
@@ -592,9 +592,9 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 		liq.setAnnoLiquidazione(response.getLiquidazione().getAnnoLiquidazione());
 		liq.setNumeroLiquidazione(response.getLiquidazione().getNumeroLiquidazione());
 			
-		prl.setTipoRicerca(Constanti.TIPO_RICERCA_DA_ORDINATIVO);
+		prl.setTipoRicerca(CostantiFin.TIPO_RICERCA_DA_ORDINATIVO);
 		prl.setLiquidazione(liq);
-		prl.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		prl.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		
 		rlp.setEnte(sessionHandler.getAccount().getEnte());
 		rlp.setRichiedente(sessionHandler.getRichiedente());
@@ -732,7 +732,7 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 	public boolean presenzaQuoteCompetenza() {
 		if (model.getGestioneOrdinativoStep2Model().getListaSubOrdinativiPagamenti() != null && model.getGestioneOrdinativoStep2Model().getListaSubOrdinativiPagamenti().size() > 0) {
 			for (SubOrdinativoPagamento currentQuota : model.getGestioneOrdinativoStep2Model().getListaSubOrdinativiPagamenti()) {
-				if (currentQuota.getLiquidazione().getAnnoLiquidazione().intValue() == Integer.valueOf(sessionHandler.getAnnoEsercizio()).intValue()) {
+				if (currentQuota.getLiquidazione().getAnnoLiquidazione().intValue() == sessionHandler.getAnnoBilancio().intValue()) {
 					return true;
 				}
 			}
@@ -754,9 +754,6 @@ public class NuovaLiquidazioneOrdinativoAction extends ActionKeyGestioneOrdinati
 		if(model.getNuovaLiquidazioneModel()!=null){
 			if( model.getNumeroSub()!=null && model.getNumeroSub().intValue()>0){
 				model.getNuovaLiquidazioneModel().setNumeroSub(model.getNumeroSub().toString());
-			}
-			if(model.getNumeroMutuoPopup()!=null){
-				model.getNuovaLiquidazioneModel().setNumeroMutuoPopupString(model.getNumeroMutuoPopup().toString());
 			}
 			
 		}

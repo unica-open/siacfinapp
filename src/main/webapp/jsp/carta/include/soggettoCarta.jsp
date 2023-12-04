@@ -23,3 +23,22 @@ SPDX-License-Identifier: EUPL-1.2
 	</div>
 
 </fieldset>
+
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$("#ricercaGuidataSoggetto").click(function() {
+			$.ajax({
+				//task-131 url: '<s:url method="ricercaSoggetto"/>',
+				url: '<s:url action="%{#ricercaSoggettoAction}"/>',
+				type: 'POST',
+				data: $(".parametroRicercaSoggetto").serialize(),
+			    success: function(data)  {
+				    $("#gestioneRisultatoRicercaSoggetti").html(data);
+				}
+			});
+		});	
+	});
+	
+</script>

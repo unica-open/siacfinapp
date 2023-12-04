@@ -110,17 +110,6 @@ SPDX-License-Identifier: EUPL-1.2
 </div>
  
  <script type="text/javascript">	
-		
-// 	 $('input[type=radio][name=radioImpegnoSelezionato]').change(function() {
-// 	       var selectiondata = this.value;
-// 	       $.ajax({
-// 			url: '<s:url method="mutuiPerImpegno"></s:url>',
-// 			type: "GET",
-// 			data: { selection: selectiondata },
-// 		    success: function(data)  {
-// 		    	$("#refreshPopupModal").html(data);
-// 			}
-// 		});
-// 	   });
- 
+
+
  </script>

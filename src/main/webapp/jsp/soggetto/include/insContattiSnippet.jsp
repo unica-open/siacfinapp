@@ -55,7 +55,7 @@ SPDX-License-Identifier: EUPL-1.2
 	 -->
 	 <s:textfield id="pec" name="recapito.pec" cssClass="span2" />
 	 
-	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label>-->
+	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label> -->
      <span class="al">
      <!-- 
 	 <label class="radio inline">
@@ -76,7 +76,7 @@ SPDX-License-Identifier: EUPL-1.2
 	 <input id="mail" name="mail" class="span2" type="text"/>
 	 -->
 	  <s:textfield id="mail" name="recapito.email"  cssClass="span2"  />
-	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label>-->
+	 <!--<label class="checkbox"><input type="checkbox"> Avviso</label> -->
      <span class="al">
      <!-- 
 	 <label class="radio inline"> <input type="checkbox"> Avviso</label>
@@ -107,9 +107,9 @@ SPDX-License-Identifier: EUPL-1.2
 
    </fieldset>  
     <p><a class="btn" href="#" id="annullaInserimentoContatto" >annulla inserimento</a>    
-    	 <s:submit name="salvaRecapito" value="carica" method="salvaRecapito" 
-       		  cssClass="btn" data-target="#instelefono" data-toggle="collapse" />  
-      <!--  <a class="btn" href="#"  data-toggle="collapse" data-target="#instelefono">salva</a> -->  
+    	 <!-- task-131 <s:submit name="salvaRecapito" value="carica" method="salvaRecapito" cssClass="btn" /> -->
+    	 <s:submit name="salvaRecapito" value="carica" action="%{#salvaRecapitoAction}" cssClass="btn" />  
+      	<!--  <a class="btn" href="#"  data-toggle="collapse" data-target="#instelefono">salva</a> -->  
     </p>
 
     </div>   

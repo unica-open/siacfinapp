@@ -36,8 +36,8 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="row-fluid">
 		<div class="span12 contentPage">    
 				
-       <s:form id="gestioneCartaStep1" action="gestioneCartaStep1.do" method="post">
-<%--      <s:form id="%{labels.FORM}" action="%{labels.FORM}.do" method="post">   --%>
+       <s:form id="gestioneCartaStep1" action="gestioneCartaStep1" method="post">
+<%--      <s:form id="%{labels.FORM}" action="%{labels.FORM}" method="post">   --%>
 		 <s:include value="/jsp/include/actionMessagesErrors.jsp" />
 					<!--#include virtual="include/alertErrorSuccess.html" -->
 					<!-- <h3>Inserimento carta contabile</h3> -->
@@ -173,6 +173,10 @@ SPDX-License-Identifier: EUPL-1.2
 					</div>
 					
 					<!--#include virtual="include/modal.html" -->
+					<s:set var="selezionaProvvedimentoAction" value="%{'gestioneCartaStep1_selezionaProvvedimento'}" />
+            		<s:set var="clearRicercaProvvedimentoAction" value="%{'gestioneCartaStep1_clearRicercaProvvedimento'}" />	          
+        			<s:set var="ricercaProvvedimentoAction" value="%{'gestioneCartaStep1_ricercaProvvedimento'}" />	          
+         	
             		<s:include value="/jsp/include/modalProvvedimenti.jsp" />
             		
             		<s:hidden id="strutturaSelezionataSuPagina" name="strutturaSelezionataSuPagina"></s:hidden>
@@ -182,12 +186,15 @@ SPDX-License-Identifier: EUPL-1.2
 						<!-- <a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> -->
 						<s:include value="/jsp/include/indietro.jsp" />
 						<!-- <a class="btn btn-secondary" href="">annulla</a> -->
-						<s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary" />
+						<!-- task-131 <s:submit name="annulla" value="annulla" method="annulla" cssClass="btn btn-secondary" /> -->
+						<s:submit name="annulla" value="annulla" action="gestioneCartaStep1_annulla" cssClass="btn btn-secondary" />
 						
 						<span class="pull-right">
 							<span class="pull-right">
-							<s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary" />
-							<s:submit name="salva" value="salva" method="salvaCarta" cssClass="btn btn-primary" disabled="!aggiornamento"/>
+								<!-- task-131 <s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary" /> -->
+								<s:submit name="prosegui" value="prosegui" action="gestioneCartaStep1_prosegui" cssClass="btn btn-primary" />
+								<!-- task-131 <s:submit name="salva" value="salva" method="salvaCarta" cssClass="btn btn-primary" disabled="!aggiornamento"/> -->
+								<s:submit name="salva" value="salva" action="gestioneCartaStep1_salvaCarta" cssClass="btn btn-primary" disabled="!aggiornamento"/>
 							</span>
 						</span>					
 					</p>       

@@ -9,7 +9,9 @@ $(document).ready(function() {
 	$("#pulsanteCercaProvvisorio").click(function() {
 		
 		if ($("input[name='tipoDocumentoProv']:checked").val() == 'Spesa') {
-			$('#dataInizioInvioServizio, #dataFineInvioServizio, #dataInizioRifiutoErrataAttribuzione, #dataFineRifiutoErrataAttribuzione').val('');
+			$('#dataInizioInvioServizio, #dataFineInvioServizio').val('');
+			$('#dataInizioPresaInCaricoServizio, #dataFinePresaInCaricoServizio').val('');
+			$('#dataInizioRifiutoErrataAttribuzione, #dataFineRifiutoErrataAttribuzione').val('');
 		}
 		
 		var treeObj = $.fn.zTree.getZTreeObj("strutturaAmministrativaRicercaProvvisorio");
@@ -33,7 +35,7 @@ $(document).ready(function() {
 	
 	
 	var onClick_input_name_tipoDocumentoProv = function(val) {
-		$('#invioServizioCtrlGrp, #rifiutoErrataAttribuzioneCtrlGrp').toggle(val === 'Entrata');
+		$('#invioServizioCtrlGrp, #presaInCaricoServizioCtrlGrp, #rifiutoErrataAttribuzioneCtrlGrp').toggle(val === 'Entrata');
 	}
 	
 	onClick_input_name_tipoDocumentoProv($("input[name='tipoDocumentoProv']:checked").val());
@@ -41,6 +43,10 @@ $(document).ready(function() {
 	$("input[name='tipoDocumentoProv']").click(function(){
 		onClick_input_name_tipoDocumentoProv(this.value);
 	});
+	
+	
+	$("#documentoEntrata").trigger('click');
+	$("#annullatoProv-2").prop('checked', true);
 	
 	
 });

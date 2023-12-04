@@ -21,7 +21,6 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaImpegnoPerChiaveOtt
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.carta.CartaContabile;
 import it.csi.siac.siacfinser.model.carta.PreDocumentoCarta;
-import it.csi.siac.siacfinser.model.mutuo.VoceMutuo;
 import it.csi.siac.siacfinser.model.ric.ParametroRicercaCartaContabile;
 import it.csi.siac.siacfinser.model.ric.RicercaCartaContabileK;
 import it.csi.siac.siacfinser.model.ric.RicercaImpegnoK;
@@ -40,9 +39,9 @@ public class WizardRegolarizzaCartaAction extends AbstractCartaAction<GestioneCa
 		// pulisci campi della form
 		model.setIsnSubImpegno(false);
 		model.setHasImpegnoSelezionatoPopup(false);
-		model.setHasMutui(false);
+
 		model.setListaImpegniCompGuidata(new ArrayList<Impegno>());
-		model.setListaVociMutuo(new ArrayList<VoceMutuo>());
+
 		
 		
 		return "refreshPopupModalImpegno";
@@ -67,11 +66,9 @@ public class WizardRegolarizzaCartaAction extends AbstractCartaAction<GestioneCa
 	 */
 	public void pulisciListeeSchedaPopup(){
 		model.setListaImpegniCompGuidata(new ArrayList<Impegno>());
-		model.setListaVociMutuo(new ArrayList<VoceMutuo>());
+
 		model.setRadioImpegnoSelezionato(0);
-		model.setRadioVoceMutuoSelezionata(0);
 		model.setHasImpegnoSelezionatoPopup(false);
-		model.setHasMutui(false);
 		model.setIsnSubImpegno(false);
 		model.setnSubImpegno(null);
 		model.setProvvedimentoPopup(null);
@@ -90,7 +87,7 @@ public class WizardRegolarizzaCartaAction extends AbstractCartaAction<GestioneCa
 		BigDecimal numeroImpegno = new BigDecimal(String.valueOf(model.getNumeroImpegno()));
 		Ente enteProva = new Ente();
 		
-		impegnoDaCercare.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		impegnoDaCercare.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		impegnoDaCercare.setNumeroImpegno(numeroImpegno);
 		impegnoDaCercare.setAnnoImpegno(model.getAnnoImpegno());
 		enteProva = model.getEnte();

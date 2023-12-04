@@ -16,11 +16,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import it.csi.siac.siacattser.model.AttoAmministrativo;
+import it.csi.siac.siacbilser.frontend.webservice.CapitoloService;
+import it.csi.siac.siacbilser.frontend.webservice.msg.ControllaDisponibilitaCassaContoVincolatoCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.ControllaDisponibilitaCassaContoVincolatoCapitoloResponse;
+import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiSottoContiVincolatiCapitolo;
+import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiSottoContiVincolatiCapitoloResponse;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaCapitoloUscitaGestione;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaCapitoloUscitaGestioneResponse;
 import it.csi.siac.siacbilser.model.CapitoloEntrataGestione;
@@ -31,9 +37,14 @@ import it.csi.siac.siacbilser.model.ImportiCapitoloEG;
 import it.csi.siac.siacbilser.model.ImportiCapitoloUG;
 import it.csi.siac.siacbilser.model.SiopeSpesa;
 import it.csi.siac.siacbilser.model.ric.RicercaSinteticaCapitoloUGest;
+import it.csi.siac.siaccommon.util.number.NumberUtil;
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.model.Messaggio;
+import it.csi.siac.siaccorser.model.ParametroConfigurazioneEnteEnum;
+import it.csi.siac.siaccorser.model.TipologiaGestioneLivelli;
 import it.csi.siac.siaccorser.model.errore.ErroreCore;
 import it.csi.siac.siaccorser.model.paginazione.ParametriPaginazione;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfin2ser.model.CausaleEntrata;
 import it.csi.siac.siacfin2ser.model.TipoCausale;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
@@ -45,14 +56,15 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.CausaleEntrataTendinoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.DettaglioQuotaOrdinativoModel;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.GestioneOrdinativoModel;
+import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.GestioneOrdinativoStep1Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.GestioneOrdinativoStep2Model;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.RicercaProvvisorioModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
+import it.csi.siac.siacfinapp.frontend.ui.util.VerificaBloccoRORHelper;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.EntitaUtils;
 import it.csi.siac.siacfinser.frontend.webservice.OrdinativoService;
 import it.csi.siac.siacfinser.frontend.webservice.ProvvisorioService;
@@ -81,10 +93,11 @@ import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaProvvisoriDiCassaRe
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSoggettoPerChiave;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaSoggettoPerChiaveResponse;
 import it.csi.siac.siacfinser.model.Accertamento;
-import it.csi.siac.siacfinser.model.ContoTesoreria;
+import it.csi.siac.siacfin2ser.model.ContoTesoreria;
 import it.csi.siac.siacfinser.model.SubAccertamento;
 import it.csi.siac.siacfinser.model.codifiche.ClasseSoggetto;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
+import it.csi.siac.siacfinser.model.codifiche.CommissioneDocumento;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
 import it.csi.siac.siacfinser.model.liquidazione.Liquidazione;
@@ -125,6 +138,9 @@ public class WizardGestioneOrdinativoAction extends GenericOrdinativoAction<Gest
 	protected static final String MODPAGAMENTO = "modpagamento";
 	protected static final String SEDISECONDARIE = "sedisecondarie";
 	protected static final String BENEFICIARIO = "BN";
+	//task-162
+	protected static final String ESENTE = "ES";
+	
 	
 	protected static final String FORM = "FORM";
 	protected static final String LABEL_TITOLO = "TITOLO";
@@ -140,9 +156,9 @@ public class WizardGestioneOrdinativoAction extends GenericOrdinativoAction<Gest
 	
 	protected static final String TIPO_ORDINATIVO_INCASSO_I = "I";
 	protected static final String TIPO_ORDINATIVO_PAGAMENTO_P = "P";
-	
-	private static final String ERRORE_FORMATO_DATA_POP_UP = "Il formato del parametro data fine non e' valido e del tipo dd/MM/yyyy"; 
-	private static final String ERRORE_DATA_NON_IN_ESERCIZIO = "La data della ricerca deve appartenere all'anno esercizio"; 
+	//SIAC-8113
+//	private static final String ERRORE_FORMATO_DATA_POP_UP = "Il formato del parametro data fine non e' valido e del tipo dd/MM/yyyy"; 
+//	private static final String ERRORE_DATA_NON_IN_ESERCIZIO = "La data della ricerca deve appartenere all'anno esercizio"; 
 	protected static final String ERRORE_CONGRUENZA_COPERTURE = "Verificare che l'importo delle quote sia congruente con quello delle coperture";
 	protected static final String ERRORE_TOT_COPERTURE = "E' necessario collegare dei provvisori affinche' il totale da collegare sia uguale a zero";
 	protected static final String ERRORE_ORDINATIVO_COLLEGATO_PRESENTE = "Ordinativo gia' presente nella lista dei collegati";
@@ -155,7 +171,6 @@ public class WizardGestioneOrdinativoAction extends GenericOrdinativoAction<Gest
 	
 	private String numeroOrdinativo;
 	private String annoOrdinativo;
-	
 	private boolean idSedeCreditoreChecked;
 	
 	private String numeroOrdinativoStruts;
@@ -178,7 +193,9 @@ public class WizardGestioneOrdinativoAction extends GenericOrdinativoAction<Gest
 	@Autowired
 	protected transient ProvvisorioService provvisorioService;
 	
-	
+	@Autowired
+	private CapitoloService capitoloService;
+
 	private boolean attivaBtnSalva;
 	
 	private boolean disabilitaBtnAzioni;
@@ -212,7 +229,7 @@ public class WizardGestioneOrdinativoAction extends GenericOrdinativoAction<Gest
 	protected static final String TAB_PROVVISORI = "TAB_PROVVISORI"; 
 		
 	
-	
+
 	/**
 	 * Si occupa di impostare nell'Ordinativo di Incasso la causale editata dall'utente nella
 	 * maschera e salvata nel model.
@@ -476,6 +493,26 @@ public class WizardGestioneOrdinativoAction extends GenericOrdinativoAction<Gest
 		//
 	}
 
+	//SIAC-8850
+	protected void impostaDefaultContoTesoriereVar(boolean inAggiornamento){
+		// SIAC-5933 - SIAC-6029
+		if(!inAggiornamento && model.getGestioneOrdinativoStep1Model()!=null && !isEmpty(model.getGestioneOrdinativoStep1Model().getListaContoTesoriere())){
+			for(CodificaFin it: model.getGestioneOrdinativoStep1Model().getListaContoTesoriere()){
+				if(it.getCodice().startsWith("0000100")){
+						model.getGestioneOrdinativoStep1Model().getOrdinativo().setContoTesoreria(new ContoTesoreria());
+						model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreria().setCodice(it.getCodice());
+				}
+			}
+		}
+		//
+	}
+	
+	//task-162
+	public boolean abilitaCampoDefaultCommissioniInserimentoOrdinativiPagamento() {
+		return Boolean.TRUE.equals(Boolean.parseBoolean(getParametroConfigurazioneEnte(
+				ParametroConfigurazioneEnteEnum.INSERISCI_ORDINATIVO_PAGAMENTO_DEFAULT_COMMISSIONI)));
+	}
+	
 	/**
 	 * Setta nel model dello step 1 il provvedimento selezionato
 	 * 
@@ -787,7 +824,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 					RicercaSinteticaCapitoloUscitaGestione r = new RicercaSinteticaCapitoloUscitaGestione();
 					RicercaSinteticaCapitoloUGest ru = new RicercaSinteticaCapitoloUGest();
 					 
-					 ru.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+					 ru.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 					 
 					 if (liquidazioneScelta.getCapitoloUscitaGestione().getNumeroCapitolo() != null) {
 						ru.setNumeroCapitolo(liquidazioneScelta.getCapitoloUscitaGestione().getNumeroCapitolo());
@@ -823,15 +860,15 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 						rip.setEnte(sessionHandler.getEnte());
 						rip.setRichiedente(sessionHandler.getRichiedente());
 						RicercaImpegnoK k = new RicercaImpegnoK();
-						k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+						k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 						k.setAnnoImpegno(liquidazioneScelta.getImpegno().getAnnoMovimento());
-						k.setNumeroImpegno(liquidazioneScelta.getImpegno().getNumero());
+						k.setNumeroImpegno(liquidazioneScelta.getImpegno().getNumeroBigDecimal());
 						rip.setpRicercaImpegnoK(k);
 						
 						//MARZO 2016: ottimizzazioni
 						rip.setCaricaSub(false);
 						
-						RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+						RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 					 	 
 						if(respRk.getImpegno()!= null){
 							 teSupport.setCup(respRk.getImpegno().getCup());
@@ -937,7 +974,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			if(!isEmpty(response.getListaSecondariaSoggetto())){
 				List<SedeSecondariaSoggetto> listaSede = new ArrayList<SedeSecondariaSoggetto>();
 				for(SedeSecondariaSoggetto sede : response.getListaSecondariaSoggetto()){
-					if(sede.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_VALIDO) ){
+					if(sede.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_VALIDO) ){
 						listaSede.add(sede);
 					}
 				}
@@ -1035,7 +1072,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 			for(int i = 0; i<listaSediSecondarie.size(); i++){
 				if(modpagamentoSelezionato.getAssociatoA().equals(listaSediSecondarie.get(i).getDenominazione()) &&
-						listaSediSecondarie.get(i).getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_VALIDO)){
+						listaSediSecondarie.get(i).getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_VALIDO)){
 					model.getGestioneOrdinativoStep1Model().setRadioSediSecondarieSoggettoSelezionato(listaSediSecondarie.get(i).getUid());
 					//PROVA
 					model.getGestioneOrdinativoStep1Model().setSedeSelezionata(listaSediSecondarie.get(i));
@@ -1289,6 +1326,13 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		request.getOrdinativoIncasso().setElencoRegolarizzazioneProvvisori(rp);
 		
 		
+		//SIAC-8638 da SIAC-8017-CMTO
+		if(model.getGestioneOrdinativoStep1Model().getOrdinativo()!= null && model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreriaSenzaCapienza() != null && !StringUtils.isBlank(model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreriaSenzaCapienza().getCodice())) {
+			request.getOrdinativoIncasso().setContoTesoreriaSenzaCapienza(new ContoTesoreria());
+			request.getOrdinativoIncasso().getContoTesoreriaSenzaCapienza().setCodice(model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreriaSenzaCapienza().getCodice());
+			
+		}
+		
 		// copio i dati di transazione ELEMENTARE
 		request.setOrdinativoIncasso(copiaTEIncasso(request.getOrdinativoIncasso()));
 		
@@ -1374,6 +1418,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		ordPag.setStatoOperativoOrdinativo(ordInc.getStatoOperativoOrdinativo());
 		ordPag.setCodStatoOperativoOrdinativo(ordInc.getCodStatoOperativoOrdinativo());
 		ordPag.setContoTesoreria(ordInc.getContoTesoreria());
+		//SIAC-8017-CMTO
+		ordPag.setContoTesoreriaSenzaCapienza(ordInc.getContoTesoreriaSenzaCapienza());
 		ordPag.setDistinta(ordInc.getDistinta());
 		ordPag.setTipoAvviso(ordInc.getTipoAvviso());
 		ordPag.setCodiceBollo(ordInc.getCodiceBollo());
@@ -1393,12 +1439,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		return ordPag;
 		
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(StringUtils.length(null));
-		System.out.println(StringUtils.length(""));
-		System.out.println(StringUtils.length("Ciao"));
-	}
+
 	
 	/**
 	 * Salva ordinativo incasso
@@ -1472,7 +1513,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			addErrori(response.getErrori());
 			return INPUT;
 		} 
-		
+		//SIAC-8574
+		addPersistentActionMessage(response.getMessaggi());
 		
 		// vai sulla pagina di consulta
 
@@ -1552,7 +1594,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 
 		setNumeroOrdinativoStruts(String.valueOf(response.getOrdinativoPagamentoInserito().getNumero()));
 		setAnnoOrdinativoStruts(String.valueOf(response.getOrdinativoPagamentoInserito().getAnno()));
-		
+		//SIAC-8574
+		addPersistentActionMessage(response.getMessaggi());
 		// messaggio di ok nella pagina consulta
 		addPersistentActionMessage(ErroreFin.OPERAZIONE_EFFETTUATA_CORRETTAMENTE.getCodice() + " " 
 				                   + ErroreFin.OPERAZIONE_EFFETTUATA_CORRETTAMENTE.getErrore("").getDescrizione());
@@ -1633,7 +1676,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				addErrori(response.getErrori());
 				return INPUT;
 			} 
-			
+			//SIAC-8574
+			addPersistentActionMessage(response.getMessaggi());
 			// vai sulla pagina di consulta
 	
 			setNumeroOrdinativoStruts(String.valueOf(response.getOrdinativoPagamentoInserito().getNumero()));
@@ -1663,7 +1707,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				addErrori(response.getErrori());
 				return INPUT;
 			} 
-			
+			//SIAC-8574
+			addPersistentActionMessage(response.getMessaggi());
 			// vai sulla pagina di consulta
 			setNumeroOrdinativoStruts(String.valueOf(response.getOrdinativoIncassoInserito().getNumero()));
 			setAnnoOrdinativoStruts(String.valueOf(response.getOrdinativoIncassoInserito().getAnno()));
@@ -1769,7 +1814,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			
 			//va troncata alla massima lunghezza sul db:
 			if(FinStringUtils.length(descrizioneOrdinativo)>500){
-				descrizioneOrdinativo = descrizioneDaRiportare.substring(0, 500);
+				descrizioneOrdinativo = descrizioneOrdinativo.substring(0, 500);
 			}
 			
 		}
@@ -1941,7 +1986,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 	
 	public String forzaInserisciQuotaAccertamento() throws Exception{
 		setQuotaIncassoImpOver(true);
-		String ritorno= inserisciQuotaAccertamento();
+		String ritorno= inserisciQuotaAccertamento(null);
 		sommatoriaQuoteSubOrdIncasso();
 		return ritorno;
 		
@@ -1956,9 +2001,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 	}
 	
-	
-	protected String inserisciQuotaAccertamento() throws Exception {
-		
+	protected String inserisciQuotaAccertamento(Integer flagProvenienzaBloccoROR) throws Exception {
+		final String methodName="inserisciQuotaAccertamento";
 
 		model.getGestioneOrdinativoStep2Model().setCheckProseguiQuoteIncasso(false);
 		List<Errore> listaErrori= new ArrayList<Errore>();
@@ -2017,7 +2061,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 					
 					// Controllo dell'anno, l'anno della dt di esecuzione pagamento non deve essere superiore a quello di esercizio 
 					Integer inputAnnoEsecuzionePagamento = DateUtility.getAnno(dataEsecuzionePagamento);
-					Integer annoBilancio = Integer.parseInt(sessionHandler.getAnnoEsercizio());
+					Integer annoBilancio = sessionHandler.getAnnoBilancio();
 					
 					if(inputAnnoEsecuzionePagamento.compareTo(annoBilancio) > 0 ){
 						
@@ -2035,6 +2079,24 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		checkPianoDeiContiDataEsecuzioneIncasso(listaErrori, accertamentoTrovato);
 		
+		//SIAC-7470/SIAC-6997-bloccoROR: verifica su accertamento per blocco ROR
+		//controllo spostato al Cerca dello step1
+		if(flagProvenienzaBloccoROR != null && flagProvenienzaBloccoROR.intValue() == 1){
+			boolean escludi = VerificaBloccoRORHelper.escludiAccertamentoPerBloccoROR(sessionHandler.getAzioniConsentite(), accertamentoTrovato, sessionHandler.getAnnoBilancio());
+			if(escludi){
+				listaErrori.add(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Accertamento/sub accertamento residuo non utilizzabile"));
+			}else if(accertamentoTrovato.getElencoSubAccertamenti() != null && !accertamentoTrovato.getElencoSubAccertamenti().isEmpty()){
+				for(int k = 0; k < accertamentoTrovato.getElencoSubAccertamenti().size(); k++){
+					escludi = VerificaBloccoRORHelper.escludiAccertamentoPerBloccoROR(sessionHandler.getAzioniConsentite(), accertamentoTrovato.getElencoSubAccertamenti().get(k), sessionHandler.getAnnoBilancio());
+					if(escludi)
+						break;
+				}
+				if(escludi){
+					listaErrori.add(ErroreCore.OPERAZIONE_NON_CONSENTITA.getErrore("Accertamento/sub accertamento residuo non utilizzabile"));
+				}
+			}
+		}
+				
 		if(!isEmpty(listaErrori)){
 			// con errore tengo aperta la finestra quota
 			model.setToggleLiquidazioneAperto(true);
@@ -2075,64 +2137,10 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			
 			suboOrdinativoIncasso.setDataScadenza(DateUtility.parse(model.getGestioneOrdinativoStep2Model().getDataEsecuzionePagamento()));
 		}
-		
-		BigDecimal tmp= BigDecimal.ZERO;
-		
-		// accertamento
-		if(accertamentoTrovato instanceof SubAccertamento){
-			// subaccertamento
-			suboOrdinativoIncasso.setAccertamento(((SubAccertamento)accertamentoTrovato));
-			if(isQuotaIncassoImpOver()){
-				ModificaMovimentoGestioneEntrata mmge= new ModificaMovimentoGestioneEntrata();
-				//ma cha cavolo devo mettere?!
-				mmge.setTipoMovimento(Constanti.MODIFICA_TIPO_SAC);
-				mmge.setImportoOld(accertamentoTrovato.getImportoAttuale());
-				tmp= convertiImportoToBigDecimal(importoQuotaInserito).subtract(accertamentoTrovato.getDisponibilitaIncassare());
-				mmge.setImportoNew(tmp);
-				
-				mmge.setDescrizioneModificaMovimentoGestione(Constanti.MODIFICA_CONTESTUALE_INSERIMENTO_MANUALE_ORDINATIVO);
-				mmge.setAttoAmministrativo(popolaProvvedimento(model.getGestioneOrdinativoStep1Model().getProvvedimento()));
-				mmge.setStatoOperativoModificaMovimentoGestione(StatoOperativoModificaMovimentoGestione.VALIDO);
-				
-				if(suboOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata()== null){
-					suboOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
-				}
-				
-				//Setto a new la lista delle modifiche onde evitare che ci siano piu' valori al servizio
-				suboOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
-				
-				suboOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata().add(mmge);
-			}
-		}else{
-			// accertamento
-			suboOrdinativoIncasso.setAccertamento(((Accertamento)accertamentoTrovato));
-			if(isQuotaIncassoImpOver()){
-				
-				ModificaMovimentoGestioneEntrata mmge= new ModificaMovimentoGestioneEntrata();
-				//ma cha cavolo devo mettere?!
-				mmge.setTipoMovimento(Constanti.MODIFICA_TIPO_ACC);
-				mmge.setImportoOld(accertamentoTrovato.getImportoAttuale());
 
-				tmp= convertiImportoToBigDecimal(importoQuotaInserito).subtract(accertamentoTrovato.getDisponibilitaIncassare());
-				mmge.setImportoNew(tmp);
-				
-				mmge.setDescrizioneModificaMovimentoGestione(Constanti.MODIFICA_CONTESTUALE_INSERIMENTO_MANUALE_ORDINATIVO);
-				mmge.setAttoAmministrativo(popolaProvvedimento(model.getGestioneOrdinativoStep1Model().getProvvedimento()));
-				mmge.setStatoOperativoModificaMovimentoGestione(StatoOperativoModificaMovimentoGestione.VALIDO);
-				
-				if(suboOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata()== null){
-					suboOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
-				}
-				
-				//Setto a new la lista delle modifiche onde evitare che ci siano piu' valori al servizio
-				suboOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
-				
-				suboOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata().add(mmge);
-				
-			}
-			
-		}
-		
+		suboOrdinativoIncasso.setAccertamento(accertamentoTrovato instanceof SubAccertamento ? ((SubAccertamento)accertamentoTrovato) : ((Accertamento)accertamentoTrovato));
+		//SIAC-7606
+		gestisciModificaImportoDaOrdinativo(convertiImportoToBigDecimal(importoQuotaInserito), accertamentoTrovato, suboOrdinativoIncasso);
 		
 		// numerazione
 		if(model.getGestioneOrdinativoStep2Model().getListaSubOrdinativiIncasso()==null || model.getGestioneOrdinativoStep2Model().getListaSubOrdinativiIncasso().size()==0){
@@ -2165,6 +2173,60 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		}
 		
 		return SUCCESS;
+	}
+
+	/**
+	 * @param importoQuotaOrdinativo
+	 * @param accertamentoTrovato
+	 * @param suboOrdinativoIncasso
+	 */
+	private void gestisciModificaImportoDaOrdinativo(BigDecimal importoQuotaOrdinativo, Accertamento accSubAcc,	SubOrdinativoIncasso suboOrdinativoIncasso) {
+		final String methodName="gestisciModificaImportoDaOrdinativo";
+		
+		//SIAC-7606
+		BigDecimal importoModifica= BigDecimal.ZERO;
+		
+		if(!isQuotaIncassoImpOver()) {
+			//non posso sfondare, non ho avuto la conferma utente
+			return;
+		}
+		
+		importoModifica= importoQuotaOrdinativo.subtract(accSubAcc.getDisponibilitaIncassare());
+		
+		String tipoModifica = accSubAcc instanceof SubAccertamento? CostantiFin.MODIFICA_TIPO_SAC : CostantiFin.MODIFICA_TIPO_ACC;
+		
+		if(BigDecimal.ZERO.compareTo(importoModifica)<0){
+			ModificaMovimentoGestioneEntrata mmge= new ModificaMovimentoGestioneEntrata();
+			//ma cha cavolo devo mettere?!
+			mmge.setTipoMovimento(tipoModifica);
+			mmge.setImportoOld(accSubAcc.getImportoAttuale());
+			
+			mmge.setImportoNew(importoModifica);
+			
+			mmge.setDescrizioneModificaMovimentoGestione(CostantiFin.MODIFICA_CONTESTUALE_INSERIMENTO_MANUALE_ORDINATIVO);
+			mmge.setAttoAmministrativo(popolaProvvedimento(model.getGestioneOrdinativoStep1Model().getProvvedimento()));
+			mmge.setStatoOperativoModificaMovimentoGestione(StatoOperativoModificaMovimentoGestione.VALIDO);
+			
+			if(suboOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata()== null){
+				suboOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
+			}
+			
+			//Setto a new la lista delle modifiche onde evitare che ci siano piu' valori al servizio
+			suboOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
+			
+			suboOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata().add(mmge);
+			
+			return;
+		} 
+		log.error(methodName, new StringBuilder()
+				.append("Il sistema ha stabilito che l'ordinativo sfonda la disponibilita ad incassare del subAccertamento collegato,")
+				.append(" ma l'importo della modifica e' negativo e andrebbe quindi a decrementare l'accertamento invece che aumentarlo.")
+				.append(" Disponibilita ad incassare dell'accertamento: ")
+				.append(accSubAcc.getDisponibilitaIncassare() != null? accSubAcc.getDisponibilitaIncassare() : "null")
+				.append(" Importo modifica: ")
+				.append(importoModifica != null? importoModifica : "null")
+				.append(" . Viene saltato l'inserimento della modifica.")
+				.toString());
 	}
 	
 	protected String inserisciQuota() throws Exception {
@@ -2227,7 +2289,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		    sommatoria= sommatoria.add(convertiImportoToBigDecimal(importoQuotaInserito));
 		  
 		    Map<Integer, BigDecimal> mappaCassa= ritornaMappaAnniDisponibilitaCassa();
-		    BigDecimal bd = mappaCassa.get(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		    BigDecimal bd = mappaCassa.get(sessionHandler.getAnnoBilancio());
 		    
 		    //controllo con la disponibilita' di cassa del capitolo
 		    if(sommatoria.compareTo(bd)>0){
@@ -2253,7 +2315,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 					
 					// Controllo dell'anno, l'anno della dt di esecuzione pagamento non deve essere superiore a quello di esercizio 
 					Integer inputAnnoEsecuzionePagamento = DateUtility.getAnno(dataEsecuzionePagamento);
-					Integer annoBilancio = Integer.parseInt(sessionHandler.getAnnoEsercizio());
+					Integer annoBilancio = sessionHandler.getAnnoBilancio();
 					
 					if(inputAnnoEsecuzionePagamento.compareTo(annoBilancio) > 0 ){
 						listaErrori.add(it.csi.siac.siacfin2ser.model.errore.ErroreFin.DATA_NON_VALIDA.getErrore(model.getGestioneOrdinativoStep2Model().getDataEsecuzionePagamento()));
@@ -2819,10 +2881,10 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				model.getGestioneOrdinativoStep2Model().getDettaglioQuotaOrdinativoModel().setuIdQuota(String.valueOf(subOrdinativoIncasso.getUid()));
 				if(subOrdinativoIncasso.getAccertamento() instanceof SubAccertamento){
 					((SubAccertamento) subOrdinativoIncasso.getAccertamento()).getAnnoAccertamentoPadre();
-					model.getGestioneOrdinativoStep2Model().getDettaglioQuotaOrdinativoModel().setAccertamento(String.valueOf(((SubAccertamento) subOrdinativoIncasso.getAccertamento()).getAnnoAccertamentoPadre() +"/"+((SubAccertamento) subOrdinativoIncasso.getAccertamento()).getNumeroAccertamentoPadre()+"-"+((SubAccertamento) subOrdinativoIncasso.getAccertamento()).getNumero()));
+					model.getGestioneOrdinativoStep2Model().getDettaglioQuotaOrdinativoModel().setAccertamento(String.valueOf(((SubAccertamento) subOrdinativoIncasso.getAccertamento()).getAnnoAccertamentoPadre() +"/"+((SubAccertamento) subOrdinativoIncasso.getAccertamento()).getNumeroAccertamentoPadre()+"-"+((SubAccertamento) subOrdinativoIncasso.getAccertamento()).getNumeroBigDecimal()));
 
 				}else{
-					model.getGestioneOrdinativoStep2Model().getDettaglioQuotaOrdinativoModel().setAccertamento(String.valueOf(subOrdinativoIncasso.getAccertamento().getAnnoMovimento()) +"/"+subOrdinativoIncasso.getAccertamento().getNumero().toString());
+					model.getGestioneOrdinativoStep2Model().getDettaglioQuotaOrdinativoModel().setAccertamento(String.valueOf(subOrdinativoIncasso.getAccertamento().getAnnoMovimento()) +"/"+subOrdinativoIncasso.getAccertamento().getNumeroBigDecimal().toString());
 
 
 				}
@@ -2902,7 +2964,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		}
 	
 		// 
-		prp.setFlagAnnullato(Constanti.FALSE);
+		prp.setFlagAnnullato(CostantiFin.FALSE);
 		rpc.setParametroRicercaProvvisorio(prp);
 		RicercaProvvisoriDiCassaResponse response =  provvisorioService.ricercaProvvisoriDiCassa(rpc);
 		if(isFallimento(response)){
@@ -3005,7 +3067,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 						
 						// Controllo dell'anno, l'anno della dt di esecuzione pagamento non deve essere superiore a quello di esercizio 
 						Integer inputAnnoEsecuzionePagamento = DateUtility.getAnno(dataEsecuzionePagamento);
-						Integer annoBilancio = Integer.parseInt(sessionHandler.getAnnoEsercizio());
+						Integer annoBilancio = sessionHandler.getAnnoBilancio();
 						
 						if(inputAnnoEsecuzionePagamento.compareTo(annoBilancio) > 0 ){
 							
@@ -3049,7 +3111,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 									// RM : ho verificato che l'aggiorna quota ordinativo passa da questo blocco di sonoInAggiornamentoIncasso
 									// Controllo dell'anno, l'anno della dt di esecuzione pagamento non deve essere superiore a quello di esercizio 
 									Integer inputAnnoDtScadenzaQuotaIncasso = DateUtility.getAnno(dataScadenzaQuotaIncasso);
-									Integer annoBilancio = Integer.parseInt(sessionHandler.getAnnoEsercizio());
+									Integer annoBilancio = sessionHandler.getAnnoBilancio();
 									
 									if(inputAnnoDtScadenzaQuotaIncasso.compareTo(annoBilancio) > 0 ){
 										
@@ -3112,7 +3174,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			sommatoria= sommatoria.add(nuovoImportoQuota);
 	
 			Map<Integer, BigDecimal> mappaCassa= ritornaMappaAnniDisponibilitaCassa();
-			BigDecimal bd = mappaCassa.get(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+			BigDecimal bd = mappaCassa.get(sessionHandler.getAnnoBilancio());
 			
 			
 			if(nuovoImportoQuota.compareTo(importoPrimaDiModifica)>0){
@@ -3204,10 +3266,10 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 									
 									k.setAnnoAccertamento(sub.getAnnoAccertamentoPadre());
 									k.setNumeroAccertamento(sub.getNumeroAccertamentoPadre());
-									k.setAnnoEsercizio(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+									k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 
 									rac.setpRicercaAccertamentoK(k);
-									RicercaAccertamentoPerChiaveOttimizzatoResponse rp =  movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(rac);
+									RicercaAccertamentoPerChiaveOttimizzatoResponse rp =  movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(rac);
 									
 									if(rp!=null && rp.isFallimento()){
 										
@@ -3224,12 +3286,12 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 									RicercaAccertamentoK k = new RicercaAccertamentoK();
 									
 									k.setAnnoAccertamento(accertamentoAssociato.getAnnoMovimento());
-									k.setNumeroAccertamento(accertamentoAssociato.getNumero());
-									k.setAnnoEsercizio(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+									k.setNumeroAccertamento(accertamentoAssociato.getNumeroBigDecimal());
+									k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 
 									rac.setpRicercaAccertamentoK(k);
 									
-									RicercaAccertamentoPerChiaveOttimizzatoResponse rp =  movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(rac);
+									RicercaAccertamentoPerChiaveOttimizzatoResponse rp =  movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(rac);
 									
 									if(isFallimento(rp)){
 										addErrori(rp.getErrori());
@@ -3281,62 +3343,11 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				
 				subOrdinativoIncasso.setDataScadenza(DateUtility.parse(dataScadenzaSubOrdString));
 			}
-			BigDecimal tmp= BigDecimal.ZERO;
 			
-			if(accertamentoAssociato instanceof SubAccertamento){
-				// subaccertamento
-				subOrdinativoIncasso.setAccertamento(((SubAccertamento)accertamentoAssociato));
-				if(isQuotaIncassoImpOver()){
-					ModificaMovimentoGestioneEntrata mmge= new ModificaMovimentoGestioneEntrata();
-					//ma cha cavolo devo mettere?!
-					mmge.setTipoMovimento(Constanti.MODIFICA_TIPO_SAC);
-					mmge.setImportoOld(accertamentoAssociato.getImportoAttuale());
-					tmp= convertiImportoToBigDecimal(importoQuotaFormattato).subtract(accertamentoAssociato.getDisponibilitaIncassare().add(accertamentoAssociato.getImportoAttuale()));
-					mmge.setImportoNew(tmp);
-					
-					mmge.setDescrizioneModificaMovimentoGestione(Constanti.MODIFICA_CONTESTUALE_INSERIMENTO_MANUALE_ORDINATIVO);
-					mmge.setAttoAmministrativo(popolaProvvedimento(model.getGestioneOrdinativoStep1Model().getProvvedimento()));
-					mmge.setStatoOperativoModificaMovimentoGestione(StatoOperativoModificaMovimentoGestione.VALIDO);
-					
-					if(subOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata()== null){
-						subOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
-					}
-					
-					//Setto a new la lista delle modifiche onde evitare che ci siano piu' valori al servizio
-					subOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
-					
-					subOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata().add(mmge);
-				}
-			}else{
-				// accertamento
-				subOrdinativoIncasso.setAccertamento(((Accertamento)accertamentoAssociato));
-				if(isQuotaIncassoImpOver()){
-					
-					ModificaMovimentoGestioneEntrata mmge= new ModificaMovimentoGestioneEntrata();
-					//ma cha cavolo devo mettere?!
-					mmge.setTipoMovimento(Constanti.MODIFICA_TIPO_ACC);
-					//TODO controllare che l'importo old sia giusto
-					mmge.setImportoOld(accertamentoAssociato.getImportoAttuale());
-
-					tmp= convertiImportoToBigDecimal(importoQuotaFormattato).subtract(accertamentoAssociato.getDisponibilitaIncassare().add(accertamentoAssociato.getImportoAttuale()));
-					mmge.setImportoNew(tmp);
-					
-					mmge.setDescrizioneModificaMovimentoGestione(Constanti.MODIFICA_CONTESTUALE_INSERIMENTO_MANUALE_ORDINATIVO);
-					mmge.setAttoAmministrativo(popolaProvvedimento(model.getGestioneOrdinativoStep1Model().getProvvedimento()));
-					mmge.setStatoOperativoModificaMovimentoGestione(StatoOperativoModificaMovimentoGestione.VALIDO);
-					
-					if(subOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata()== null){
-						subOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
-					}
-					
-					//Setto a new la lista delle modifiche onde evitare che ci siano piu' valori al servizio
-					subOrdinativoIncasso.getAccertamento().setListaModificheMovimentoGestioneEntrata(new ArrayList<ModificaMovimentoGestioneEntrata>());
-					
-					subOrdinativoIncasso.getAccertamento().getListaModificheMovimentoGestioneEntrata().add(mmge);
-					
-				}
-				
-			}
+	
+			subOrdinativoIncasso.setAccertamento(accertamentoAssociato instanceof SubAccertamento ? ((SubAccertamento)accertamentoAssociato) : ((Accertamento)accertamentoAssociato));
+			//SIAC-7606
+			gestisciModificaImportoDaOrdinativo(nuovoImportoQuota, accertamentoAssociato,subOrdinativoIncasso);			
 		
 			if(null!=uIdQuota){
 				subOrdinativoIncasso.setUid(Integer.parseInt(uIdQuota));
@@ -3452,9 +3463,9 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			liq.setAnnoLiquidazione(model.getGestioneOrdinativoStep1Model().getAnnoLiquidazione());
 			liq.setNumeroLiquidazione(new BigDecimal(model.getGestioneOrdinativoStep1Model().getNumeroLiquidazione()));
 			ricercaLiquidazioneK.setLiquidazione(liq);
-			ricercaLiquidazioneK.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			ricercaLiquidazioneK.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			ricercaLiquidazioneK.setBilancio(sessionHandler.getBilancio());
-			ricercaLiquidazioneK.setTipoRicerca(Constanti.TIPO_RICERCA_DA_ORDINATIVO);
+			ricercaLiquidazioneK.setTipoRicerca(CostantiFin.TIPO_RICERCA_DA_ORDINATIVO);
 			
 			req.setEnte(sessionHandler.getAccount().getEnte());
 			req.setRichiedente(sessionHandler.getRichiedente());
@@ -3525,7 +3536,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				request.setEnte(sessionHandler.getEnte());
 				request.setRichiedente(sessionHandler.getRichiedente());
 				ParametroRicercaLiquidazione parametroRicercaLiquidazione = new ParametroRicercaLiquidazione();
-				parametroRicercaLiquidazione.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+				parametroRicercaLiquidazione.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 				if (model.getGestioneOrdinativoStep1Model().getCapitolo() != null) {
 					parametroRicercaLiquidazione.setAnnoCapitolo(model.getGestioneOrdinativoStep1Model().getCapitolo().getAnno());
 					parametroRicercaLiquidazione.setNumeroCapitolo(new BigDecimal(model.getGestioneOrdinativoStep1Model().getCapitolo().getNumCapitolo()));
@@ -3542,10 +3553,10 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				}
 				
 				// mi serve per non leggere le liquidzioni legate a documenti
-				parametroRicercaLiquidazione.setTipoRicerca(Constanti.TIPO_RICERCA_DA_ORDINATIVO);
+				parametroRicercaLiquidazione.setTipoRicerca(CostantiFin.TIPO_RICERCA_DA_ORDINATIVO);
 				
 				// anno bilancio
-				parametroRicercaLiquidazione.setAnnoBilancio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+				parametroRicercaLiquidazione.setAnnoBilancio(sessionHandler.getAnnoBilancio());
 				
 				request.setParametroRicercaLiquidazione(parametroRicercaLiquidazione);
 				RicercaLiquidazioniResponse response = liquidazioneService.ricercaLiquidazioni(request);
@@ -3592,13 +3603,13 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		modelInCuiImpostare.setTipoDebitoSiope(null);
 	}
 	
-	protected void caricaAccertamentoOrdinativo() {
+	protected Accertamento caricaAccertamentoOrdinativo() {
 		if(!model.isAccertamentoTrovato()){
 			model.getGestioneOrdinativoStep2Model().setListaAccertamento(new ArrayList<Accertamento>());
 			model.getGestioneOrdinativoStep2Model().setListaAccertamentoOriginale(new ArrayList<Accertamento>());
 			model.getGestioneOrdinativoStep2Model().setResultSize(0);
 		}
-		
+		Accertamento result = null;
 
 		
 		if (model.getGestioneOrdinativoStep1Model().getAnnoAccertamento() != null && 
@@ -3609,14 +3620,23 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
     		rap.setEnte(sessionHandler.getEnte());
     		rap.setRichiedente(sessionHandler.getRichiedente());
     		RicercaAccertamentoK k = new RicercaAccertamentoK();
-    		k.setAnnoEsercizio(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+    		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
     		k.setAnnoAccertamento(model.getGestioneOrdinativoStep1Model().getAnnoAccertamento());
     		k.setNumeroAccertamento(new BigDecimal(model.getGestioneOrdinativoStep1Model().getNumeroAccertamento()));
     		rap.setpRicercaAccertamentoK(k);
-    		RicercaAccertamentoPerChiaveOttimizzatoResponse response = movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(rap);
+    		//SIAC-8142
+    		rap.setCaricaAnnoAccertamentiConStessoNumeroNelBilancio(true);
+    		RicercaAccertamentoPerChiaveOttimizzatoResponse response = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(rap);
 			if (!isFallimento(response) && response.getAccertamento() != null){
-			
+				result = response.getAccertamento();
 				if (response.getAccertamento().getCapitoloEntrataGestione() != null) {
+					
+					//SIAC-8142
+					List<Integer> anniAccertamentiConStessoNumeroNelBilancio = response.getAnniAccertamentiConStessoNumeroNelBilancio();
+					//NOTA: sto utilizzando la lista come un boolean, ma lascio la gestione con lista in previsione della richiesta di mostrare l'anno
+					if(anniAccertamentiConStessoNumeroNelBilancio != null && !anniAccertamentiConStessoNumeroNelBilancio.isEmpty()) {
+						addPersistentActionWarning(ErroreFin.ACCERTAMENTI_PRESENTI_NEL_BILANCIO.getErrore("accertamenti").getTesto());
+					}
 					
 					CapitoloEntrataGestione capitoloAcc = response.getAccertamento().getCapitoloEntrataGestione();
 					CapitoloImpegnoModel capitoloModel = model.getGestioneOrdinativoStep1Model().getCapitolo();
@@ -3677,6 +3697,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			}
 		}
 		
+		return result;
+		
 	}
 	
 	protected void settaPdcDaAccertamentoCercato(Accertamento accertamento, SubAccertamento subAcc){
@@ -3701,7 +3723,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			boolean subIndicatoPresente = false;
 			if(accertamento.getElencoSubAccertamenti()!=null && !accertamento.getElencoSubAccertamenti().isEmpty()){
 				for (SubAccertamento sub : accertamento.getElencoSubAccertamenti()) {
-					BigInteger numerosub = sub.getNumero().toBigInteger();
+					BigInteger numerosub = sub.getNumeroBigDecimal().toBigInteger();
 					if(model.getGestioneOrdinativoStep1Model().getNumeroSubAcc()!=null){
 						if(numerosub.equals(model.getGestioneOrdinativoStep1Model().getNumeroSubAcc())){
 							//ok trovato corrisponde!
@@ -3728,7 +3750,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			//SUB COMPILATO, MI ASPETTO CHE CI SIA TRA QUELLI DELL'ACCERTAMENTO:
 			if(accertamento.getElencoSubAccertamenti()!=null && !accertamento.getElencoSubAccertamenti().isEmpty()){
 				for (SubAccertamento sub : accertamento.getElencoSubAccertamenti()) {
-					BigInteger numerosub = sub.getNumero().toBigInteger();
+					BigInteger numerosub = sub.getNumeroBigDecimal().toBigInteger();
 					if(model.getGestioneOrdinativoStep1Model().getNumeroSubAcc()!=null){
 						if(numerosub.equals(model.getGestioneOrdinativoStep1Model().getNumeroSubAcc())){
 							//ok trovato corrisponde!
@@ -3786,7 +3808,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 	    	//metto else if perche' propongono lo stesso identico messaggio di errore e
 	    	//non vorrei che ne presentasse due uguali, togliere l'else se 
 	    	//dovesse cambiare uno di questi due messaggi uguali
-	    } else if(Constanti.SIOPE_CODE_COMMERCIALE.equals(codiceTipoDebito) && FinStringUtils.entrambiVuoti(cigLiq,assenzaCigCode)){
+	    } else if(CostantiFin.SIOPE_CODE_COMMERCIALE.equals(codiceTipoDebito) && FinStringUtils.entrambiVuoti(cigLiq,assenzaCigCode)){
 	    	//SE "Tipo SIOPE" = Commerciale
 	        //CIG o, in alternativa, Motivazione assenza CIG sono obbligatori 
 	    	if(!riferimentoInErrore){
@@ -3869,17 +3891,17 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		List<Accertamento> listaAccDaPresentare = new ArrayList<Accertamento>();
 		
-		boolean accerInStatoDefinitivoConSubAnnullati = accertamento.getStatoOperativoMovimentoGestioneEntrata().equalsIgnoreCase(Constanti.MOVGEST_STATO_DEFINITIVO);
+		boolean accerInStatoDefinitivoConSubAnnullati = accertamento.getStatoOperativoMovimentoGestioneEntrata().equalsIgnoreCase(CostantiFin.MOVGEST_STATO_DEFINITIVO);
 					
 		// verifico prima di tutto se ci sono i subaccertamenti ma solo se l'accertamento non e' DEFINITIVO
 		if(!accerInStatoDefinitivoConSubAnnullati && !isEmpty(accertamento.getElencoSubAccertamenti())){
 			
 			for (SubAccertamento itSubAcc : accertamento.getElencoSubAccertamenti()) {
 								
-				if(itSubAcc.getAnnoMovimento()<=Integer.valueOf(sessionHandler.getAnnoEsercizio())){
+				if(itSubAcc.getAnnoMovimento()<=sessionHandler.getAnnoBilancio()){
 					
-					if(!itSubAcc.getStatoOperativoMovimentoGestioneEntrata().equals(Constanti.MOVGEST_STATO_ANNULLATO)
-							&& !itSubAcc.getStatoOperativoMovimentoGestioneEntrata().equals(Constanti.MOVGEST_STATO_PROVVISORIO)){
+					if(!itSubAcc.getStatoOperativoMovimentoGestioneEntrata().equals(CostantiFin.MOVGEST_STATO_ANNULLATO)
+							&& !itSubAcc.getStatoOperativoMovimentoGestioneEntrata().equals(CostantiFin.MOVGEST_STATO_PROVVISORIO)){
 						
 						if(itSubAcc.getDisponibilitaIncassare()!=null && itSubAcc.getDisponibilitaIncassare().compareTo(BigDecimal.ZERO)>0){
 
@@ -3888,7 +3910,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 									
 									// se nella prima pagina specifico il sub allora devo tirare fuori il
 									// sub preciso richiesto									 
-									if(new BigDecimal(model.getGestioneOrdinativoStep1Model().getNumeroSubAcc().longValue()).compareTo(new BigDecimal(itSubAcc.getNumero().longValue()))==0){
+									if(new BigDecimal(model.getGestioneOrdinativoStep1Model().getNumeroSubAcc().longValue()).compareTo(new BigDecimal(itSubAcc.getNumeroBigDecimal().longValue()))==0){
 										listaAccDaPresentare.add(itSubAcc);	
 										
 										// imposto importo e radio
@@ -3912,9 +3934,9 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		} else {
 				
 			// setto l'accertamento
-			if(accertamento.getAnnoMovimento()<=Integer.valueOf(sessionHandler.getAnnoEsercizio())){
-				if (!accertamento.getStatoOperativoMovimentoGestioneEntrata().equals(Constanti.MOVGEST_STATO_ANNULLATO)
-						&& !accertamento.getStatoOperativoMovimentoGestioneEntrata().equals(Constanti.MOVGEST_STATO_PROVVISORIO)) {
+			if(accertamento.getAnnoMovimento()<=sessionHandler.getAnnoBilancio()){
+				if (!accertamento.getStatoOperativoMovimentoGestioneEntrata().equals(CostantiFin.MOVGEST_STATO_ANNULLATO)
+						&& !accertamento.getStatoOperativoMovimentoGestioneEntrata().equals(CostantiFin.MOVGEST_STATO_PROVVISORIO)) {
 					
 					listaAccDaPresentare.add(accertamento);
 					
@@ -3948,6 +3970,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 	}
 	
 	public String cercaProvvisorio(){
+		//SIAC-8113 si azzera la lista ad ogni chiamata
+		model.resetErrori();
 		
 		// chiamata a servizio
 		setToggleRicercaProvvAperto(true);
@@ -3982,11 +4006,11 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		
 		if(null!=model.getRicercaProvvisorioModel().getAnnoProvvisorioDa() && model.getRicercaProvvisorioModel().getAnnoProvvisorioDa()<1900){
-			addErrore(ErroreCore.VALORE_NON_VALIDO.getErrore("anno da", "deve essere maggiore di 1900"));
+			addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("anno da", "deve essere maggiore di 1900"));
 		}
 		
 		if(null!=model.getRicercaProvvisorioModel().getAnnoProvvisorioA() && model.getRicercaProvvisorioModel().getAnnoProvvisorioA()<1900){
-			addErrore(ErroreCore.VALORE_NON_VALIDO.getErrore("anno a", "deve essere maggiore di 1900"));
+			addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("anno a", "deve essere maggiore di 1900"));
 		}
 		
 		// da inserire le date
@@ -3995,16 +4019,18 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		if(StringUtils.isNotEmpty(dataInizioEmissione) && dataInizioEmissione!=null){
 				
 			if(dataInizioEmissione.length() != 10){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data emissione da","e del tipo dd/MM/yyyy"));
 			} else if(!DateUtility.isDate(dataInizioEmissione, "dd/MM/yyyy")){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data emissione da","e del tipo dd/MM/yyyy"));
 			}else{
 				// in caso di ordinativo incasso
 				if(!oggettoDaPopolarePagamento()){
 					// verifico che le date siano nel anno esercizio
 					if(!sessionHandler.getAnnoEsercizio().equals(dataInizioEmissione.substring(6))){
-						
-						addActionError(ERRORE_DATA_NON_IN_ESERCIZIO);
+						//SIAC-8113
+						addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data emissione da", "deve essere maggiore di 1900"));
 					}
 							
 				}
@@ -4019,18 +4045,20 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		if(StringUtils.isNotEmpty(dataFineEmissione) && dataFineEmissione!=null) {
 			if(dataFineEmissione.length() != 10){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data emissione a","e del tipo dd/MM/yyyy"));
 			}else {
 				if(!DateUtility.isDate(dataFineEmissione, "dd/MM/yyyy")){
-					addActionError(ERRORE_FORMATO_DATA_POP_UP);
+					//SIAC-8113
+					addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data emissione a","e del tipo dd/MM/yyyy"));
 				}else{
 					
 					// in caso di ordinativo incasso
 					if(!oggettoDaPopolarePagamento()){
 						// verifico che le date siano nel anno esercizio
 						if(!sessionHandler.getAnnoEsercizio().equals(dataFineEmissione.substring(6))){
-							
-							addActionError(ERRORE_DATA_NON_IN_ESERCIZIO);
+							//SIAC-8113
+							addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data emissione a", "deve essere maggiore di 1900"));
 						}
 								
 					}
@@ -4046,16 +4074,18 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		if(StringUtils.isNotEmpty(dataInizioTrasmissione) && dataInizioTrasmissione!=null){
 			if(dataInizioTrasmissione.length() != 10){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data trasmissione da","e del tipo dd/MM/yyyy"));
 			}	else if(!DateUtility.isDate(dataInizioTrasmissione, "dd/MM/yyyy")){
-					addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data trasmissione da","e del tipo dd/MM/yyyy"));
 			}else{
 				// in caso di ordinativo incasso
 				if(!oggettoDaPopolarePagamento()){
 					// verifico che le date siano nel anno esercizio
 					if(!sessionHandler.getAnnoEsercizio().equals(dataInizioTrasmissione.substring(6))){
-						
-						addActionError(ERRORE_DATA_NON_IN_ESERCIZIO);
+						//SIAC-8113
+						addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data trasmissione da", "deve essere maggiore di 1900"));
 					}
 							
 				}
@@ -4069,16 +4099,18 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		if(StringUtils.isNotEmpty(dataFineTrasmissione) && dataFineTrasmissione!=null){
 			if(dataFineTrasmissione.length() != 10){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data trasmissione a","e del tipo dd/MM/yyyy"));
 			}	else if(!DateUtility.isDate(dataFineTrasmissione, "dd/MM/yyyy")){
-					addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data trasmissione a","e del tipo dd/MM/yyyy"));
 			}else{
 				// in caso di ordinativo incasso
 				if(!oggettoDaPopolarePagamento()){
 					// verifico che le date siano nel anno esercizio
 					if(!sessionHandler.getAnnoEsercizio().equals(dataFineTrasmissione.substring(6))){
-						
-						addActionError(ERRORE_DATA_NON_IN_ESERCIZIO);
+						//SIAC-8113
+						addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data trasmissione a", "deve essere maggiore di 1900"));
 					}
 							
 				} 
@@ -4091,9 +4123,11 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		if(StringUtils.isNotEmpty(dataInizioInvioServizio) && dataInizioInvioServizio!=null){
 			if(dataInizioInvioServizio.length() != 10){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data invio da","e del tipo dd/MM/yyyy"));
 			}	else if(!DateUtility.isDate(dataInizioInvioServizio, "dd/MM/yyyy")){
-					addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data invio da","e del tipo dd/MM/yyyy"));
 			}else{
 				// in caso di ordinativo incasso
 //				if(!oggettoDaPopolarePagamento()){
@@ -4114,9 +4148,11 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		if(StringUtils.isNotEmpty(dataFineInvioServizio) && dataFineInvioServizio!=null){
 			if(dataFineInvioServizio.length() != 10){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data invio a","e del tipo dd/MM/yyyy"));
 			}	else if(!DateUtility.isDate(dataFineInvioServizio, "dd/MM/yyyy")){
-					addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data invio a","e del tipo dd/MM/yyyy"));
 			}else{
 				// in caso di ordinativo incasso
 //				if(!oggettoDaPopolarePagamento()){
@@ -4138,9 +4174,11 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		if(StringUtils.isNotEmpty(dataInizioRifiutoErrataAttribuzione) && dataInizioRifiutoErrataAttribuzione!=null){
 			if(dataInizioRifiutoErrataAttribuzione.length() != 10){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data rifiuto da","e del tipo dd/MM/yyyy"));
 			}	else if(!DateUtility.isDate(dataInizioRifiutoErrataAttribuzione, "dd/MM/yyyy")){
-					addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data rifiuto da","e del tipo dd/MM/yyyy"));
 			}else{
 				// in caso di ordinativo incasso
 //				if(!oggettoDaPopolarePagamento()){
@@ -4161,9 +4199,11 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		
 		if(StringUtils.isNotEmpty(dataFineRifiutoErrataAttribuzione) && dataFineRifiutoErrataAttribuzione!=null){
 			if(dataFineRifiutoErrataAttribuzione.length() != 10){
-				addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data rifiuto a","e del tipo dd/MM/yyyy"));
 			}	else if(!DateUtility.isDate(dataFineRifiutoErrataAttribuzione, "dd/MM/yyyy")){
-					addActionError(ERRORE_FORMATO_DATA_POP_UP);
+				//SIAC-8113
+				addErrore(ErroreCore.FORMATO_NON_VALIDO.getErrore("data rifiuto a","e del tipo dd/MM/yyyy"));
 			}else{
 				// in caso di ordinativo incasso
 //				if(!oggettoDaPopolarePagamento()){
@@ -4187,11 +4227,12 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		}
 		
 		// 
-		prp.setFlagAnnullato(Constanti.FALSE);
+		prp.setFlagAnnullato(CostantiFin.FALSE);
 		rpc.setParametroRicercaProvvisorio(prp);
 		
+		//SIAC-8113 refactoring
 		// se ci sono errori nella maschere non lancio la ricerca
-		if(hasActionErrors()){
+		if(CollectionUtils.isNotEmpty(model.getErrori())){
 			model.getGestioneOrdinativoStep3Model().setListaProvvisori(new ArrayList<ProvvisorioDiCassa>());
 			return SUCCESS;
 		}
@@ -4205,20 +4246,15 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		RicercaProvvisoriDiCassaResponse response =  provvisorioService.ricercaProvvisoriDiCassa(rpc);
 		
 		model.getGestioneOrdinativoStep3Model().setProvvisorio(new ProvvisorioDiCassa());
-		
-		if(isFallimento(response)){
+		//SIAC-8113
+		if(isFallimento(response) && response.getErrori() != null){
 			//errore
-			if(response.getErrori()!=null){
-				addActionError(response.getErrori().get(0).getCodice() + " " +response.getErrori().get(0).getDescrizione());
-				// rimetto a vuoto la lista
-				model.getGestioneOrdinativoStep3Model().setListaProvvisori(new ArrayList<ProvvisorioDiCassa>());
-			}
-			
+			addErrori(response.getErrori());
 		}else{
 			//non fallimento, response qui non puo essere null
-			
-			if(response.getNumRisultati()>maxAmmissibili){
-				addActionWarning("Attenzione ricerca troppo estesa trovati: " + response.getNumRisultati() + " risultati. Presentati solo i primi " +maxAmmissibili + ".");
+			if(response.getNumRisultati() > maxAmmissibili){
+				//SIAC-8113
+				addWarning(ErroreFin.WARNING_GENERICO.getErrore("Attenzione ricerca troppo estesa trovati: " + response.getNumRisultati() + " risultati. Presentati solo i primi " + maxAmmissibili + "."));
 			}
 			
 			if(!isEmpty(response.getElencoProvvisoriDiCassa())){
@@ -4233,15 +4269,22 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				}else{
 					// in caso di incasso pulisco oggetto ma ripristino i valori di default
 					model.setRicercaProvvisorioModel(new RicercaProvvisorioModel());
-					model.getRicercaProvvisorioModel().setAnnoProvvisorioDa(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
-					model.getRicercaProvvisorioModel().setAnnoProvvisorioA(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+					model.getRicercaProvvisorioModel().setAnnoProvvisorioDa(sessionHandler.getAnnoBilancio());
+					model.getRicercaProvvisorioModel().setAnnoProvvisorioA(sessionHandler.getAnnoBilancio());
 				}
 			}else{
-				
-				addActionError("Non sono stati trovati risultati");
-				model.getGestioneOrdinativoStep3Model().setListaProvvisori(new ArrayList<ProvvisorioDiCassa>());
+				//SIAC-8113
+				addErrore(ErroreCore.NESSUN_DATO_REPERITO.getErrore());
 			}
 			
+		}
+		
+		//SIAC-8113 refactoring
+		//se ci sono errori li restituisco
+		if(CollectionUtils.isNotEmpty(model.getErrori())){
+			// rimetto a vuoto la lista
+			model.getGestioneOrdinativoStep3Model().setListaProvvisori(new ArrayList<ProvvisorioDiCassa>());
+			return SUCCESS;
 		}
 	
 		setAncoraVisualizza(true);
@@ -4442,8 +4485,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 	
 	protected RicercaOrdinativoPagamentoPerChiaveResponse caricaDatiOrdinativo(){
 	
-		model.getGestioneOrdinativoStep1Model().getOrdinativo().setAnno(Integer.parseInt(model.getAnnoOrdinativoInAggiornamento()));
-		model.getGestioneOrdinativoStep1Model().getOrdinativo().setNumero(Integer.parseInt(model.getNumeroOrdinativoInAggiornamento()));
+		model.getGestioneOrdinativoStep1Model().getOrdinativo().setAnno(NumberUtil.safeParseInt(model.getAnnoOrdinativoInAggiornamento()));
+		model.getGestioneOrdinativoStep1Model().getOrdinativo().setNumero(NumberUtil.safeParseInt(model.getNumeroOrdinativoInAggiornamento()));
 		
 		RicercaOrdinativoPagamentoPerChiaveResponse response= new RicercaOrdinativoPagamentoPerChiaveResponse();
 		if(model.isRicaricaDopoAggiornamento()){
@@ -4630,7 +4673,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			// si attiva solo con lo stato INSERITO
 			// se è legato a Documento deve essere un ALG 
 			
-			boolean statoOrdinativoInserito = op.getCodStatoOperativoOrdinativo().equalsIgnoreCase(Constanti.statoOperativoOrdinativoEnumToString(op.getStatoOperativoOrdinativo()));
+			boolean statoOrdinativoInserito = op.getCodStatoOperativoOrdinativo().equalsIgnoreCase(CostantiFin.statoOperativoOrdinativoEnumToString(op.getStatoOperativoOrdinativo()));
 			boolean senzaDocOTipoDocumentoALG = true; 
 			
 			//SOMMA E SETTA LA SOMMA DEGLI ORDINATIVI COLLEGATI:
@@ -4820,13 +4863,13 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				Accertamento accertamento = quotaUnica.getAccertamento();
 				if(accertamento!=null){
 					int annoMovimento = accertamento.getAnnoMovimento();
-					BigDecimal numeroMovimento = accertamento.getNumero();
+					BigDecimal numeroMovimento = accertamento.getNumeroBigDecimal();
 					if(annoMovimento >0 && numeroMovimento !=null){
 						model.getGestioneOrdinativoStep1Model().setAnnoAccertamento(annoMovimento);
 						model.getGestioneOrdinativoStep1Model().setNumeroAccertamento(numeroMovimento.toBigInteger());
 						SubAccertamento sub = FinUtility.getFirst(accertamento.getElencoSubAccertamenti());
 						if(sub!=null){
-							BigDecimal numeroSub = sub.getNumero();
+							BigDecimal numeroSub = sub.getNumeroBigDecimal();
 							if(numeroSub!=null){
 								model.getGestioneOrdinativoStep1Model().setNumeroSubAcc(numeroSub.toBigInteger());
 							}
@@ -4839,8 +4882,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 	
 	protected RicercaOrdinativoIncassoPerChiaveResponse caricaOrdinativoIncasso(){
 
-		model.getGestioneOrdinativoStep1Model().getOrdinativo().setAnno(Integer.parseInt(model.getAnnoOrdinativoInAggiornamento()));
-		model.getGestioneOrdinativoStep1Model().getOrdinativo().setNumero(Integer.parseInt(model.getNumeroOrdinativoInAggiornamento()));
+		model.getGestioneOrdinativoStep1Model().getOrdinativo().setAnno(NumberUtil.safeParseInt(model.getAnnoOrdinativoInAggiornamento()));
+		model.getGestioneOrdinativoStep1Model().getOrdinativo().setNumero(NumberUtil.safeParseInt(model.getNumeroOrdinativoInAggiornamento()));
 		
 		RicercaOrdinativoIncassoPerChiaveResponse response= new RicercaOrdinativoIncassoPerChiaveResponse();
 		if(model.isRicaricaDopoAggiornamento()){
@@ -4900,7 +4943,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 					if(!isEmpty(sub.getAccertamento().getElencoSubAccertamenti())){
 						
 						Integer tempAnno= sub.getAccertamento().getAnnoMovimento();
-						BigDecimal numeroAnno= sub.getAccertamento().getNumero();
+						BigDecimal numeroAnno= sub.getAccertamento().getNumeroBigDecimal();
 						sub.getAccertamento().getElencoSubAccertamenti().get(0).setAnnoAccertamentoPadre(tempAnno);
 						sub.getAccertamento().getElencoSubAccertamenti().get(0).setNumeroAccertamentoPadre(numeroAnno);
 						sub.setAccertamento(sub.getAccertamento().getElencoSubAccertamenti().get(0));
@@ -5070,7 +5113,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			List<SedeSecondariaSoggetto> listSedi= new ArrayList<SedeSecondariaSoggetto>();
 			if(response.getListaSecondariaSoggetto()!= null){
 				for(SedeSecondariaSoggetto sedeSec:response.getListaSecondariaSoggetto()){
-					if(sedeSec.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(Constanti.STATO_VALIDO) ){
+					if(sedeSec.getDescrizioneStatoOperativoSedeSecondaria().equalsIgnoreCase(CostantiFin.STATO_VALIDO) ){
 							listSedi.add(sedeSec);
 					}
 				}
@@ -5127,8 +5170,15 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			request.getOrdinativoPagamento().getSoggetto().getElencoModalitaPagamento().add(model.getGestioneOrdinativoStep1Model().getModpagamentoSelezionata());
 		}
 		
-		// setto i flag
+
 		if(model.getGestioneOrdinativoStep1Model().getOrdinativo()!=null){
+			
+			//SIAC-8638 da SIAC-8017-CMTO
+			if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreriaSenzaCapienza() != null && !StringUtils.isBlank(model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreriaSenzaCapienza().getCodice())) {
+				request.getOrdinativoPagamento().setContoTesoreriaSenzaCapienza(new ContoTesoreria());
+				request.getOrdinativoPagamento().getContoTesoreriaSenzaCapienza().setCodice(model.getGestioneOrdinativoStep1Model().getOrdinativo().getContoTesoreriaSenzaCapienza().getCodice());
+				
+			}
 		    
 			if(model.getGestioneOrdinativoStep1Model().getOrdinativo().isFlagAllegatoCartaceo()){
 				request.getOrdinativoPagamento().setFlagAllegatoCartaceo(true);
@@ -5181,12 +5231,12 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 	protected String aggiornaOrdinativo(){
 		
 		
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_SPE_insMan)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_insMan)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			return INPUT;
 		}
 		
-		if(controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()),"Gestione","Ordinativo")){
+		if(controlloStatoBilancio(sessionHandler.getAnnoBilancio(),"Gestione","Ordinativo")){
 			return INPUT;
 		}
 		
@@ -5273,7 +5323,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				addErrori(response.getErrori());
 				return INPUT;
 			}
-			
+			//SIAC-8017-CMTO
+			addPersistentActionMessage(response.getMessaggi());
 //			/*********************PARTE PER EVITARE LA MEGA QUERY ****************/
 		
 			if(response.getOrdinativoPagamentoAggiornato()!= null){
@@ -5355,7 +5406,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			if(model.isSonoInAggiornamento()){
 				//AGGIORNAMENTO
 				if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO)){
-					if(isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan)){
+					if(isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan)){
 						return true;
 					}
 				}
@@ -5370,7 +5421,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			if(model.isSonoInAggiornamentoIncasso()){
 				//AGGIORNAMENTO
 				if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO)){
-					if(isAzioneAbilitata(CodiciOperazioni.OP_ENT_VARORDINC)){
+					if(isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_VARORDINC)){
 						return true;
 					}
 				}
@@ -5391,7 +5442,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			if(model.isSonoInAggiornamento()){
 				//AGGIORNAMENTO
 				if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO)){
-					if(isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan)){
+					if(isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan)){
 						return true;
 					}
 				}
@@ -5406,7 +5457,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			if(model.isSonoInAggiornamentoIncasso()){
 				//AGGIORNAMENTO
 				if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO)){
-					if(isAzioneAbilitata(CodiciOperazioni.OP_ENT_VARORDINC)){
+					if(isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_VARORDINC)){
 						return true;
 					}
 				}
@@ -5426,7 +5477,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			if(model.isSonoInAggiornamento()){
 				//AGGIORNAMENTO
 				if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO)){
-					if(isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan)){
+					if(isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan)){
 						return true;
 					}
 				}
@@ -5441,7 +5492,7 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			if(model.isSonoInAggiornamentoIncasso()){
 				//AGGIORNAMENTO
 				if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO)){
-					if(isAzioneAbilitata(CodiciOperazioni.OP_ENT_VARORDINC)){
+					if(isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_VARORDINC)){
 						return true;
 					}
 				}
@@ -5458,12 +5509,12 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 	
 	public String aggiornaOrdinativoIncasso(){
 		//Controllo se e' abilitata l'azione
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_ENT_AGGORDINC)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_AGGORDINC)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			return INPUT;
 		}
 		//Controllo lo stato del bilancio
-		if(controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()),"Gestione","Ordinativo")){
+		if(controlloStatoBilancio(sessionHandler.getAnnoBilancio(),"Gestione","Ordinativo")){
 			return INPUT;
 		}
 		
@@ -5510,7 +5561,8 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			addErrori(response.getErrori());
 			return INPUT;
 		} 
-		
+		//SIAC-8017-CMTO
+		addPersistentActionMessage(response.getMessaggi());
 //		/*********************PARTE PER EVITARE LA MEGA QUERY ****************/
 		
 		if(response.getOrdinativoIncassoAggiornato()!= null){
@@ -5567,11 +5619,11 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 	public boolean checkDisabilita(){
 		if(oggettoDaPopolarePagamento()){
 			//ORDINATIVO PAGAMENTO
-	    	if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.TRASMESSO) && isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan)){
+	    	if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.TRASMESSO) && isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan)){
 				return true;
 			}
 	    	
-	    	if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO) && isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan)){
+	    	if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO) && isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan)){
 				return true;
 			}
 			
@@ -5581,13 +5633,13 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			if(model.isSonoInAggiornamentoIncasso()){
 	    		//AGGIORNAMENTO
 	    		if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.TRASMESSO)){
-					if(isAzioneAbilitata(CodiciOperazioni.OP_ENT_VARORDINC)){
+					if(isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_VARORDINC)){
 						return true;
 					}
 	    		}
 	    		
 	    		if(model.getGestioneOrdinativoStep1Model().getOrdinativo().getStatoOperativoOrdinativo().equals(StatoOperativoOrdinativo.QUIETANZATO)){
-					if(isAzioneAbilitata(CodiciOperazioni.OP_ENT_VARORDINC)){
+					if(isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_VARORDINC)){
 						return true;
 					}
 	    		}
@@ -5623,21 +5675,21 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 				conDocumento = Boolean.TRUE;
 			}
 			
-			if ((isAzioneAbilitata(CodiciOperazioni.OP_SPE_aggMan) && statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.INSERITO.toString())) 
-					||  (isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan) && statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.TRASMESSO.toString()))){
+			if ((isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_aggMan) && statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.INSERITO.toString())) 
+					||  (isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan) && statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.TRASMESSO.toString()))){
 				if(conDocumento && equalsIgnoreCaseSuAlmenoUno(nomeCampo, FIELD_BENEFICIARI_MULTIPLI,FIELD_A_COPERTURA,FIELD_IMPQUOTA,TAB_PROVVISORI)){
 					return Boolean.FALSE;
 				}
 			}
 	
-			if (isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan) && (statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.QUIETANZATO.toString())||
+			if (isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan) && (statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.QUIETANZATO.toString())||
 				statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.FIRMATO.toString()))) {
 				if(equalsIgnoreCaseSuAlmenoUno(nomeCampo, FIELD_BENEFICIARI_MULTIPLI,FIELD_A_COPERTURA,FIELD_IMPQUOTA,TAB_PROVVISORI,FIELD_TESORIERE)){
 					return Boolean.FALSE;
 				}
 			}
 				
-			if(isAzioneAbilitata(CodiciOperazioni.OP_SPE_varMan) && statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.TRASMESSO.toString())) {
+			if(isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_varMan) && statoOrdinativo.equalsIgnoreCase(StatoOperativoOrdinativo.TRASMESSO.toString())) {
 				if (!conDocumento){
 					if(equalsIgnoreCaseSuAlmenoUno(nomeCampo, FIELD_A_COPERTURA,FIELD_IMPQUOTA,TAB_PROVVISORI)){
 						return Boolean.FALSE;
@@ -5679,10 +5731,33 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 		if(oggettoDaPopolarePagamento()){
 			model.getGestioneOrdinativoStep2Model().setListaSubOrdinativiPagamenti(new ArrayList<SubOrdinativoPagamento>());
 		}else{
-			model.getGestioneOrdinativoStep2Model().setListaSubOrdinativiIncasso(new ArrayList<SubOrdinativoIncasso>());
-		}
 		
-		return super.selezionaCapitolo();
+			model.getGestioneOrdinativoStep2Model().setListaSubOrdinativiIncasso(new ArrayList<SubOrdinativoIncasso>());
+			
+		}
+		//super.selezionaCapitolo();
+		//SIAC-8850
+		if(!super.selezionaCapitolo().equals(SUCCESS)) {
+			return INPUT;
+		}else {
+			impostaDefaultContoTesoriereVar(sonoInAggiornamentoIncasso());
+			
+			LeggiSottoContiVincolatiCapitolo req = new LeggiSottoContiVincolatiCapitolo();
+			capitoloUscitaTrovato.setUid(model.getCapitoloModelTrovatoDaServizio().getUid());
+			req.setCapitoloUscitaGestione(capitoloUscitaTrovato);
+			req.setRichiedente(model.getRichiedente());
+			LeggiSottoContiVincolatiCapitoloResponse response = capitoloService.leggiSottoContiVincolatiCapitoloService(req);
+			if (response.isFallimento()) {
+				addErrori(response);
+				return INPUT;
+			}
+			if(response.getContoTesoreria()!=null) {
+				model.getGestioneOrdinativoStep1Model().getOrdinativo().setContoTesoreria(response.getContoTesoreria());
+			}
+			
+			
+			return SUCCESS;
+		}
 	}
 	
 	@Override
@@ -6328,5 +6403,72 @@ protected CapitoloImpegnoModel caricaDatiCapitolo(CapitoloUscitaGestione cug){	/
 			}
 		}
 	}
+	
+	
+	// SIAC-8555
+	
+	public String controllaDisponibilitaSottocontoVincolato() {
+		
+		super.cleanErrori();
+		
+		GestioneOrdinativoStep1Model gestioneOrdinativoStep1Model = model.getGestioneOrdinativoStep1Model();
+		
+		if (gestioneOrdinativoStep1Model.getCapitolo() == null ||
+				gestioneOrdinativoStep1Model.getCapitolo().getNumCapitolo() == null ||
+				gestioneOrdinativoStep1Model.getCapitolo().getNumCapitolo().equals(0) ||
+				gestioneOrdinativoStep1Model.getCapitolo().getArticolo() == null) {
+			
+			addErrore(ErroreCore.DATO_OBBLIGATORIO_OMESSO.getErrore("occorre selezionare un capitolo"));
+			
+			return INPUT;
+		}
+		
+		ControllaDisponibilitaCassaContoVincolatoCapitolo controllaDisponibilitaCassaContoVincolatoCapitolo = 
+				new ControllaDisponibilitaCassaContoVincolatoCapitolo();
+	
+		controllaDisponibilitaCassaContoVincolatoCapitolo.setAnnoBilancio(sessionHandler.getBilancio().getAnno());
+		//SIAC-8685, se non faccio new il sistema prende sempre l'id conto tesoreria vincolato dell'ordinativo
+		controllaDisponibilitaCassaContoVincolatoCapitolo.setContoTesoreria(new ContoTesoreria());
+		controllaDisponibilitaCassaContoVincolatoCapitolo.getContoTesoreria().setCodice(gestioneOrdinativoStep1Model.getOrdinativo().getContoTesoreria() != null? gestioneOrdinativoStep1Model.getOrdinativo().getContoTesoreria().getCodice() : null);
+		setCapitoloControllaDisponibilitaCassaContoVincolato(controllaDisponibilitaCassaContoVincolatoCapitolo, gestioneOrdinativoStep1Model.getCapitolo());
+		controllaDisponibilitaCassaContoVincolatoCapitolo.setRichiedente(sessionHandler.getRichiedente());
+		
+		
+		ControllaDisponibilitaCassaContoVincolatoCapitoloResponse response = 
+				capitoloService.controllaDisponibilitaCassaContoVincolatoCapitolo(controllaDisponibilitaCassaContoVincolatoCapitolo);
+		
+		if (response.isFallimento()) {
+			addErrori(response);
+			return INPUT;
+		}
+		
+		String dispString = "";
+		if(response.getMessaggi() != null) {
+			for (Messaggio messaggio : response.getMessaggi()) {
+				if(StringUtils.isNotEmpty(dispString)) {
+					dispString += ", ";
+				}
+				dispString += messaggio.getDescrizione();
+			}
+		}
+//		model.setDisponibilitaSottocontoVincolatoStr(NumberUtil.toImporto(getDisponibilitaContoVincolato(response)));
+		model.setDisponibilitaSottocontoVincolatoStr(dispString);
+		
+		return SUCCESS;
+	
+	}
 
+	protected BigDecimal getDisponibilitaContoVincolato(ControllaDisponibilitaCassaContoVincolatoCapitoloResponse response) {
+		throw new UnsupportedOperationException("Method must be overriden");
+	}
+
+	protected void setCapitoloControllaDisponibilitaCassaContoVincolato(
+			ControllaDisponibilitaCassaContoVincolatoCapitolo controllaDisponibilitaCassaContoVincolatoCapitolo, 
+			CapitoloImpegnoModel capitolo) {
+		throw new UnsupportedOperationException("Method must be overriden");
+	}
+	
+	public boolean isAbilitatoGestioneContiVincolati() {
+		return isAbilitatoTipologiaGestioneLivelli(TipologiaGestioneLivelli.GESTIONE_CONTI_VINCOLATI);
+	}
 }

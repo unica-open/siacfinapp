@@ -106,6 +106,11 @@ SPDX-License-Identifier: EUPL-1.2
 						 />
 					&nbsp;Avviso
 				</div>
+				
+				<span class="al">
+						<label class="radio inline" for="codDestinatario">Codice destinatario/ IPA</label>
+						<s:textfield id="codDestinatario" name="nuovaSedeSecondaria.codDestinatario" cssClass="span2" maxlength="7" style="text-transform: uppercase"/>
+				</span>
 			</div>
 		</div>
 
@@ -145,19 +150,12 @@ SPDX-License-Identifier: EUPL-1.2
 	</fieldset>
 	<p class="marginLarge">
 		<a href="#" id="annullaInserimento" class="btn">annulla inserimento</a>
-		<s:submit name="salvaSede" value="salva" method="salvaSede" id="salvaId"
-			cssClass="btn" data-target="#insInd" data-toggle="collapse" />
+		<!-- task-131 <s:submit name="salvaSede" value="salva" method="salvaSede" id="salvaId" cssClass="btn" data-target="#insInd"/>-->
+		<s:submit name="salvaSede" value="salva" action="aggiornaSediSecondarie_salvaSede" id="salvaId" cssClass="btn" data-target="#insInd"/>
 	</p>
 
 </div>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		// blocca pagina su salva 
-		$('#salvaId').click(function() {
-			bloccaPagina('#salvaId');
-		});
-	}); 
-</script>	
+	
 		
 		

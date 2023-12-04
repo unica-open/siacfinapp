@@ -10,13 +10,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -64,7 +64,7 @@ public class NuovaRigaDaMovimentoAction extends ActionKeyGestioneCartaAction {
 		model.setSoggettoObbligatorio(true);
 		model.setModPagamentoObbligatoria(true);
 		//
-		controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()), "GESTIONE", "CARTA CONTABILE");
+		controlloStatoBilancio(sessionHandler.getAnnoBilancio(), "GESTIONE", "CARTA CONTABILE");
 		
 		//Pulisco i campi model riga 
 		pulisciCampiRiga();	

@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -25,7 +25,7 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.model.ContoTesoreria;
+import it.csi.siac.siacfin2ser.model.ContoTesoreria;
 import it.csi.siac.siacfinser.model.Impegno;
 import it.csi.siac.siacfinser.model.SubImpegno;
 import it.csi.siac.siacfinser.model.carta.PreDocumentoCarta;
@@ -169,14 +169,14 @@ public class NuovaRigaDaDocumentiStep2Action extends ActionKeyNuovaRigaDaDocumen
 		//campi impegno
 		Impegno impegno = subDocumento.getImpegno();
 		SubImpegno subImp = subDocumento.getSubImpegno();
-		if(impegno!=null && impegno.getAnnoMovimento()!=0 && impegno.getNumero()!=null){
+		if(impegno!=null && impegno.getAnnoMovimento()!=0 && impegno.getNumeroBigDecimal()!=null){
 			riga.setImpegno(new Impegno());
-			riga.getImpegno().setNumero(impegno.getNumero());
+			riga.getImpegno().setNumeroBigDecimal(impegno.getNumeroBigDecimal());
 			riga.getImpegno().setAnnoMovimento( impegno.getAnnoMovimento());
 			if(subImp!=null){
 				SubImpegno subImpegno = new SubImpegno();
 				List<SubImpegno> listSubImpegni = new ArrayList<SubImpegno>();
-				subImpegno.setNumero(subImp.getNumero());
+				subImpegno.setNumeroBigDecimal(subImp.getNumeroBigDecimal());
 				listSubImpegni.add(subImpegno);
 				riga.getImpegno().setElencoSubImpegni(listSubImpegni);
 			}			

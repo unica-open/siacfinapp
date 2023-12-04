@@ -64,7 +64,7 @@ public abstract class GestioneAccertamentoPrimaNotaIntegrataBaseModel extends Ba
 		RicercaAccertamentoK ricercaAccertamentoK = new RicercaAccertamentoK();
 		ricercaAccertamentoK.setAnnoEsercizio(getAnnoEsercizioInt());
 		ricercaAccertamentoK.setAnnoAccertamento(acc.getAnnoMovimento());
-		ricercaAccertamentoK.setNumeroAccertamento(acc.getNumero());
+		ricercaAccertamentoK.setNumeroAccertamento(acc.getNumeroBigDecimal());
 		
 		req.setpRicercaAccertamentoK(ricercaAccertamentoK);
 		req.setEnte(getEnte());
@@ -107,7 +107,7 @@ public abstract class GestioneAccertamentoPrimaNotaIntegrataBaseModel extends Ba
 	 * @return the numero movimento
 	 */
 	public String  getNumeroMovimento() {
-		return getAccertamento() != null ? getAccertamento().getNumero().toString() : "0";
+		return getAccertamento() != null ? getAccertamento().getNumeroBigDecimal().toString() : "0";
 	}
 
 }

@@ -38,7 +38,8 @@ SPDX-License-Identifier: EUPL-1.2
 		<div class="span12 contentPage">    
 				
 				<!-- <form class="form-horizontal"> -->
-       			<s:form id="gestioneCartaStep2" action="gestioneCartaStep2.do" method="post">
+				<%-- SIAC-7952 rimuovo .do dalla action --%>
+       			<s:form id="gestioneCartaStep2" action="gestioneCartaStep2" method="post">
 					<!--#include virtual="include/alertErrorSuccess.html" -->
 		 			<s:include value="/jsp/include/actionMessagesErrors.jsp" />
 		 			
@@ -152,7 +153,8 @@ SPDX-License-Identifier: EUPL-1.2
 							<!--	<a class="btn btn-secondary" href="FIN-insRigaMov.shtml">nuova riga da movimenti</a> -->
 									
 									<s:if test="!optionsPagamentoEstero">
-										<s:submit name="nuovarigadadocumenti" value="nuova riga da documenti" method="nuovaRigaDaDocumenti" cssClass="btn btn-secondary" />
+										<!-- task-131 <s:submit name="nuovarigadadocumenti" value="nuova riga da documenti" method="nuovaRigaDaDocumenti" cssClass="btn btn-secondary" /> -->
+										<s:submit name="nuovarigadadocumenti" value="nuova riga da documenti" action="gestioneCartaStep2_nuovaRigaDaDocumenti" cssClass="btn btn-secondary" />
 									</s:if>	
 								</p>
 							
@@ -215,7 +217,8 @@ SPDX-License-Identifier: EUPL-1.2
 						<div class="modal-footer">
 							<button class="btn btn-secondary" data-dismiss="modal" aria-hidden="true">annulla</button>
 							<!-- <button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">conferma</button> -->
-							<s:submit cssClass="btn btn-primary pull-right" method="aggiornaRigaDaModale" value="conferma" name="aggiornaRigaDaModale" />							
+							<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" method="aggiornaRigaDaModale" value="conferma" name="aggiornaRigaDaModale" /> -->
+							<s:submit cssClass="btn btn-primary pull-right" action="gestioneCartaStep2_aggiornaRigaDaModale" value="conferma" name="aggiornaRigaDaModale" />							
 						</div>
 					</div> 
 					<!-- Modal aggiorna --->  
@@ -237,7 +240,8 @@ SPDX-License-Identifier: EUPL-1.2
 						<div class="modal-footer">
 							<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>							
 
-							<s:submit cssClass="btn btn-primary pull-right" method="eliminaRiga" value="si, prosegui" name="eliminaRiga" />							
+							<!-- task-131 <s:submit cssClass="btn btn-primary pull-right" method="eliminaRiga" value="si, prosegui" name="eliminaRiga" /> -->
+							<s:submit cssClass="btn btn-primary pull-right" action="gestioneCartaStep2_eliminaRiga" value="si, prosegui" name="eliminaRiga" />							
 						</div>
 					</div>
 					
@@ -251,10 +255,12 @@ SPDX-License-Identifier: EUPL-1.2
 					<p class="margin-medium">
 						<!-- <a class="btn btn-secondary" href="javascript:history.go(-1)">indietro</a> -->  
 						<%-- <s:include value="/jsp/include/indietro.jsp" /> --%>    
-						<s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary"/>
+						<!-- task-131 <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary"/> -->
+						<s:submit name="indietro" value="indietro" action="gestioneCartaStep2_indietro" cssClass="btn btn-secondary"/>
 						<!-- <a class="btn btn-primary pull-right" href="">salva</a> -->	
 						<span class="pull-right">
-							<s:submit name="salva" value="salva" method="salvaCarta" cssClass="btn btn-primary" />				
+							<!-- task-131 <s:submit name="salva" value="salva" method="salvaCarta" cssClass="btn btn-primary" /> -->
+							<s:submit name="salva" value="salva" action="gestioneCartaStep2_salvaCarta" cssClass="btn btn-primary" />				
 						</span>					
 					</p>       
 			

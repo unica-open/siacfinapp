@@ -10,14 +10,21 @@ SPDX-License-Identifier: EUPL-1.2
 		<interceptors>
 
 			<!-- Interceptor di log prima e a termine dell'invocazione -->
-			<interceptor name="logInterceptor" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.LogInterceptor" />
+			<interceptor name="logInterceptor" class="it.csi.siac.siaccommonapp.interceptor.LogInterceptor" />
 
 			<!-- Interceptor per la gestione degli errori di conversione <interceptor name="siacConversionErrorInterceptor" class="it.csi.siac.siacbilapp.frontend.ui.util.interceptor.ConversionErrorSIACInterceptor" /> -->
 
-			<!-- Interceptor per la gestione dei breadcrumb -->
+			<!-- Interceptor per la gestione dei breadcrumb --> 
+			<!-- task-131 -->
+			<!-- 
 			<interceptor name="breadCrumbs" class="org.softwareforge.struts2.breadcrumb.BreadCrumbInterceptor">
+  				<param name="defaultRewindMode">AUTO</param>
+  				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+			</interceptor>
+			-->
+			 <interceptor name="breadCrumbs" class="xyz.timedrain.arianna.plugin.BreadCrumbInterceptor">
 				<param name="defaultRewindMode">AUTO</param>
-				<param name="defaultComparator">org.softwareforge.struts2.breadcrumb.NameComparator</param>
+				<param name="defaultComparator">xyz.timedrain.arianna.plugin.NameComparator</param>
 			</interceptor>
 
 			<interceptor name="actionData" class="it.csi.siac.siacfinapp.frontend.ui.action.interceptor.ActionDataInterceptor" />
@@ -30,6 +37,8 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="servletConfig" />
 				<interceptor-ref name="i18n" />
 				<interceptor-ref name="actionData" />
+								<!-- Interceptor di log -->
+				<interceptor-ref name="logInterceptor" />
 				<interceptor-ref name="prepare" />
 				<interceptor-ref name="redirectMessage" />
 				<interceptor-ref name="chain" />
@@ -57,8 +66,6 @@ SPDX-License-Identifier: EUPL-1.2
 				<interceptor-ref name="breadCrumbs" />
 
 
-				<!-- Interceptor di log -->
-				<interceptor-ref name="logInterceptor" />
 
 			</interceptor-stack>
 		</interceptors>
@@ -67,14 +74,56 @@ SPDX-License-Identifier: EUPL-1.2
 
 	<!-- Gestione navigazione per il modulo liquidazione -->
 	<package namespace="/" extends="liquidazioneDefault" name="liquidazione">
+		
 		<action name="inserisciLiquidazioneStep1" class="inserisciLiquidazioneStep1Action">
 			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
 			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
-			<result name="prosegui" type="redirectAction">inserisciLiquidazioneStep2</result>
-			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<!-- <result name="prosegui" type="redirectAction">inserisciLiquidazioneStep2</result>-->
+			<!-- <result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>-->	
 			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>				
 		</action>
+		<!-- task-131 --> 
+		<action name="inserisciLiquidazioneStep1_azzeraModaleImpegno" class="inserisciLiquidazioneStep1Action" method="azzeraModaleImpegno">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<!-- <result name="prosegui" type="redirectAction">inserisciLiquidazioneStep2</result>-->
+			<!-- <result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>-->	
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>				
+		</action>		  
+		 <!-- task-131 --> 
+		 <action name="inserisciLiquidazioneStep1_confermaCompGuidata" class="inserisciLiquidazioneStep1Action" method="confermaCompGuidata">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+		 </action>
+		 
+		<!-- task-131 -->
+	  	<action name="inserisciLiquidazioneStep1_ricercaGuidataImpegno" class="inserisciLiquidazioneStep1Action" method="ricercaGuidataImpegno">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>				
+	  	</action>
+	  	<!-- task-131 -->
+	  	<action name="inserisciLiquidazioneStep1_ricercaImpegnoCompilazioneGuidata" class="inserisciLiquidazioneStep1Action" method="ricercaImpegnoCompilazioneGuidata">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>				
+	  	</action>
+	  
+		 
+		 <!-- task-131 -->
+		 <action name="inserisciLiquidazioneStep1_annulla" class="inserisciLiquidazioneStep1Action" method="annulla">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>					
+		</action> 
 		  
+		 <!-- task-131 -->
+		 <action name="inserisciLiquidazioneStep1_prosegui" class="inserisciLiquidazioneStep1Action" method="prosegui">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep1.jsp</result>
+			<result name="prosegui" type="redirectAction">inserisciLiquidazioneStep2</result>					
+		</action>  
+		
 		<action name="inserisciLiquidazioneStep2" class="inserisciLiquidazioneStep2Action">
 			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
 			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
@@ -100,6 +149,249 @@ SPDX-License-Identifier: EUPL-1.2
 			</result>
 		</action>	
 		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_salva" class="inserisciLiquidazioneStep2Action" method="salva">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep3Aggiorna</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="proceed" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_verifica" class="inserisciLiquidazioneStep2Action" method="verifica">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep3Aggiorna</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="proceed" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+		</action>	
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_codiceSiopeChangedAction" class="inserisciLiquidazioneStep2Action" method="codiceSiopeChangedAction">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep3Aggiorna</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="proceed" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_confermaPdc" class="inserisciLiquidazioneStep2Action" method="confermaPdc">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep3Aggiorna</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="proceed" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_resede" class="inserisciLiquidazioneStep2Action" method="resede">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep3Aggiorna</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="proceed" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_remodpagamento" class="inserisciLiquidazioneStep2Action" method="remodpagamento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep3Aggiorna</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="proceed" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_indietro" class="inserisciLiquidazioneStep2Action" method="indietro">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+		</action>
+		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_selezionaProvvedimento" class="inserisciLiquidazioneStep2Action" method="selezionaProvvedimento">
+				<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_clearRicercaProvvedimento" class="inserisciLiquidazioneStep2Action" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_ricercaProvvedimento" class="inserisciLiquidazioneStep2Action" method="ricercaProvvedimento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+	  <action name="inserisciLiquidazioneStep2_ricercaSoggetto" class="inserisciLiquidazioneStep2Action" method="ricercaSoggetto">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+	  </action>
+	  
+	  <!-- task-131 -->
+	  <action name="inserisciLiquidazioneStep2_pulisciRicercaSoggetto" class="inserisciLiquidazioneStep2Action" method="pulisciRicercaSoggetto">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+	  </action>
+	  
+	  <!-- task-131 -->
+	  <action name="inserisciLiquidazioneStep2_selezionaSoggetto" class="inserisciLiquidazioneStep2Action" method="selezionaSoggetto">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+	  </action>
+	  
+			
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_chiamaSalvaORichiediConferma" class="inserisciLiquidazioneStep2Action" method="chiamaSalvaORichiediConferma">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">inserisciLiquidazioneStep3Aggiorna</param>
+				<param name="arrivoDaInserimento">Si</param>
+			</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>
+			<result name="proceed" type="redirectAction">
+				<param name="actionName">gestionePrimaNotaIntegrataFIN</param>
+				<param name="namespace">/</param>
+				<param name="uidRegistrazione">${uidDaCompletare}</param>
+				<param name="validazione">true</param>
+			</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_sedisecondarie" class="inserisciLiquidazioneStep2Action" method="sedisecondarie">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep2_modpagamento" class="inserisciLiquidazioneStep2Action" method="modpagamento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep2.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>		
+		</action>
+		
 		<action name="inserisciLiquidazioneStep3Aggiorna" class="inserisciLiquidazioneStep3AggiornaAction">
 			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
 			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
@@ -118,6 +410,136 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>		
 			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>	
 		</action>	
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_confermaPdc" class="inserisciLiquidazioneStep3AggiornaAction" method="confermaPdc">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="salva" type="redirectAction">
+				<param name="actionName">consultaLiquidazione</param>
+				<param name="anno">${annoLiquidazioneConsulta}</param>
+				<param name="numero">${numeroLiquidazioneConsulta}</param>				
+			</result>
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>		
+			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_codiceSiopeChanged" class="inserisciLiquidazioneStep3AggiornaAction" method="codiceSiopeChanged">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="salva" type="redirectAction">
+				<param name="actionName">consultaLiquidazione</param>
+				<param name="anno">${annoLiquidazioneConsulta}</param>
+				<param name="numero">${numeroLiquidazioneConsulta}</param>				
+			</result>
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>		
+			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_resede" class="inserisciLiquidazioneStep3AggiornaAction" method="resede">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="salva" type="redirectAction">
+				<param name="actionName">consultaLiquidazione</param>
+				<param name="anno">${annoLiquidazioneConsulta}</param>
+				<param name="numero">${numeroLiquidazioneConsulta}</param>				
+			</result>
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>		
+			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_remodpagamento" class="inserisciLiquidazioneStep3AggiornaAction" method="remodpagamento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+			<result name="trx">/jsp/liquidazione/include/datiTransazione.jsp</result>			
+			<result name="salva" type="redirectAction">
+				<param name="actionName">consultaLiquidazione</param>
+				<param name="anno">${annoLiquidazioneConsulta}</param>
+				<param name="numero">${numeroLiquidazioneConsulta}</param>				
+			</result>
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="annulla" type="redirectAction">inserisciLiquidazioneStep1</result>
+			<result name="labelSiope">/jsp/movgest/include/labelSiope.jsp</result>		
+			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_indietro" class="inserisciLiquidazioneStep3AggiornaAction" method="indietro">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="indietro" type="redirectAction">inserisciLiquidazioneStep1</result>	
+			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>	
+		</action>	
+		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_salva" class="inserisciLiquidazioneStep3AggiornaAction" method="salva">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="salva" type="redirectAction">
+				<param name="actionName">consultaLiquidazione</param>
+				<param name="anno">${annoLiquidazioneConsulta}</param>
+				<param name="numero">${numeroLiquidazioneConsulta}</param>				
+			</result>
+		</action>	
+		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_sedisecondarie" class="inserisciLiquidazioneStep3AggiornaAction" method="sedisecondarie">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="sedisecondarie">/jsp/liquidazione/include/sediSecondarie.jsp</result>
+		</action>	
+		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_modpagamento" class="inserisciLiquidazioneStep3AggiornaAction" method="modpagamento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="modpagamento">/jsp/liquidazione/include/modalitaPagamento.jsp</result>
+		</action>	
+		
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_selezionaProvvedimento" class="inserisciLiquidazioneStep3AggiornaAction" method="selezionaProvvedimento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_clearRicercaProvvedimento" class="inserisciLiquidazioneStep3AggiornaAction" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="inserisciLiquidazioneStep3Aggiorna_ricercaProvvedimento" class="inserisciLiquidazioneStep3AggiornaAction" method="ricercaProvvedimento">
+			<result name="success">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="input">/jsp/liquidazione/inserisciLiquidazioneStep3Aggiorna.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
 		
 		<action name="ricercaLiquidazione" class="ricercaLiquidazioneAction">
 			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
@@ -132,12 +554,215 @@ SPDX-License-Identifier: EUPL-1.2
 			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
 			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
 		</action>
+		<!-- task-131 -->
+		<action name="ricercaLiquidazione_azzeraModaleImpegno" class="ricercaLiquidazioneAction" method="azzeraModaleImpegno">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaLiquidazione_annullaRicercaLiquidazioni" class="ricercaLiquidazioneAction" method="annullaRicercaLiquidazioni">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			</action>
 		
+		<!-- task-131 -->
+		<action name="ricercaLiquidazione_ricercaLiquidazioni" class="ricercaLiquidazioneAction" method="ricercaLiquidazioni">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+		</action>
+		
+		<!-- task-131 -->
+		<action name="ricercaLiquidazione_selezionaProvvedimento" class="ricercaLiquidazioneAction" method="selezionaProvvedimento">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaLiquidazione_clearRicercaProvvedimento" class="ricercaLiquidazioneAction" method="clearRicercaProvvedimento">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		<!-- task-131 -->
+		<action name="ricercaLiquidazione_ricercaProvvedimento" class="ricercaLiquidazioneAction" method="ricercaProvvedimento">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>			
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+	  <action name="ricercaLiquidazione_ricercaSoggetto" class="ricercaLiquidazioneAction" method="ricercaSoggetto">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>
+	  </action>
+	  
+	  <!-- task-131 -->
+	  <action name="ricercaLiquidazione_pulisciRicercaSoggetto" class="ricercaLiquidazioneAction" method="pulisciRicercaSoggetto">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>
+	  </action>
+	  
+	  <!-- task-131 -->
+	  <action name="ricercaLiquidazione_selezionaSoggetto" class="ricercaLiquidazioneAction" method="selezionaSoggetto">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>
+	  </action>
+	  
+	   <!-- task-131 -->
+	  	<action name="ricercaLiquidazione_ricercaCapitolo" class="ricercaLiquidazioneAction" method="ricercaCapitolo">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+	 	<!-- task-131 -->
+	  	<action name="ricercaLiquidazione_selezionaCapitolo" class="ricercaLiquidazioneAction" method="selezionaCapitolo">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 -->
+	  	<action name="ricercaLiquidazione_visualizzaDettaglioCapitolo" class="ricercaLiquidazioneAction" method="visualizzaDettaglioCapitolo">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		 <!-- task-131 -->
+	  	<action name="ricercaLiquidazione_pulisciRicercaCapitolo" class="ricercaLiquidazioneAction" method="pulisciRicercaCapitolo">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>	
+		</action>
+		<!-- task-131 --> 
+		<action name="ricercaLiquidazione_confermaCompGuidata" class="ricercaLiquidazioneAction" method="confermaCompGuidata">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>
+		</action>
+		
+		<!-- task-131 -->
+	  	<action name="ricercaLiquidazione_ricercaGuidataImpegno" class="ricercaLiquidazioneAction" method="ricercaGuidataImpegno">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>				
+	  	</action>
+	  	
+	  	<!-- task-131 -->
+	  	<action name="ricercaLiquidazione_ricercaImpegnoCompilazioneGuidata" class="ricercaLiquidazioneAction" method="ricercaImpegnoCompilazioneGuidata">
+			<result name="success">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="input">/jsp/liquidazione/ricercaLiquidazione.jsp</result>
+			<result name="ricercaCapitolo">/jsp/movgest/include/risultatoRicercaElencoCapitoli.jsp</result>  
+			<result name="ricercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="clearRicercaProvvedimento">/jsp/movgest/include/risultatoRicercaElencoProvvedimento.jsp</result>
+			<result name="ricercaSoggetto">/jsp/movgest/include/risultatoRicercaElencoSoggetti.jsp</result>
+			<result name="headerSoggetto">/jsp/movgest/include/headerSoggetto.jsp</result>
+			<result name="visualizzaCapitolo">/jsp/movgest/include/visualizzaCapitolo.jsp</result>
+			<result name="gotoElencoLiquidazioni" type="redirectAction">elencoLiquidazioni</result>
+			<result name="goToRicercaLiquidazione" type="redirectAction">ricercaLiquidazione</result>
+			<result name="refreshPopupModalImpegno">/jsp/liquidazione/include/modalImpegnoContent.jsp</result>				
+	  </action>
 		<action name="elencoLiquidazioni" class="elencoLiquidazioniAction">
 			<result name="success">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
 			<result name="input">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
 			<!-- <result name="gotoErroreRicerca">/jsp/liquidazione/ricercaLiquidazione.jsp</result> -->
 			<result name="gotoErroreRicerca" type="redirectAction">ricercaLiquidazione</result>
+			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>			
+		</action>
+		
+		<!-- task-131 -->
+		<action name="elencoLiquidazioni_inserisciLiquidazione" class="elencoLiquidazioniAction" method="inserisciLiquidazione">
+			<result name="success">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
+			<result name="input">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
 			<result name="gotoInserisciLiquidazioni" type="redirectAction">inserisciLiquidazioneStep1</result>			
 		</action>
 		
@@ -151,12 +776,8 @@ SPDX-License-Identifier: EUPL-1.2
 			  <param name="actionName">elencoLiquidazioni</param>
 			</result>  
 			<result name="input">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
-			<result name="gotoElencoLiquidazioni" type="redirectAction">	
-				<param name="actionName">elencoLiquidazioni</param>
-				<!--param name="numeroLiquidazione">${numeroLiquidazione}</param>
-				<param name="annoLiquidazione">${annoLiquidazione}</param-->
-			</result>
-			
+			<!-- task-263 -->
+			<result name="gotoElencoLiquidazioni">/jsp/liquidazione/elencoLiquidazioni.jsp</result>
 	  	</action>
 		  
 	</package>

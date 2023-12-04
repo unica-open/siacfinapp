@@ -13,7 +13,7 @@ SPDX-License-Identifier: EUPL-1.2
               <div class="alert alert-warning">
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
                 <p>
-                	<s:property value="messaggioProsecuzioneSuContabilitaGenerale" escape="false"/>
+                	<s:property value="messaggioProsecuzioneSuContabilitaGenerale" escapeHtml="false"/>
                 </p>
               </div>
             </div>

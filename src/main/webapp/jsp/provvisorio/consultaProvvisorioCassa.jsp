@@ -18,11 +18,14 @@ SPDX-License-Identifier: EUPL-1.2
 	<div class="container-fluid-banner">
 		<a name="A-contenuti" title="A-contenuti"></a>
 	</div>
+	
+	<s:set var="cambiaTabFolderAction" value="%{'consultaProvvisorioCassa_cambiaTabFolder'}" />
+					
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span12 contentPage">
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />
-				<s:form id="consultaOrdinativoPagamento" method="post" cssClass="form-horizontal">
+				<s:form id="consultaProvvisorioCassa" method="post" cssClass="form-horizontal">
 
 					<!-- ************************************************************************************* -->
 					<h3>
@@ -230,7 +233,7 @@ SPDX-License-Identifier: EUPL-1.2
 							</s:if>
 							<s:else>
 								<h4>Sub Documenti di Entrata</h4>
-
+								
 								<s:if test="%{(listaSubDocEntrata != null) && (listaSubDocEntrata.size > 0) }">
 									<display:table
 										name="sessionScope.RISULTATI_RICERCA_QUOTE_ENTRATA"
@@ -292,7 +295,6 @@ SPDX-License-Identifier: EUPL-1.2
 							<h4>Ordinativi di Spesa</h4>
 
 							<s:if test="%{(listaOrdPag != null) && (listaOrdPag.size > 0) }">
-								
 								<display:table name="sessionScope.RISULTATI_RICERCA_ORD_PAG"  
 					                class="table table-hover tab_left" 
 					                summary="riepilogo quote spesa"
@@ -368,7 +370,6 @@ SPDX-License-Identifier: EUPL-1.2
 							<h4>Ordinativi di Entrata</h4>
 
 							<s:if test="%{(listaOrdInc != null) && (listaOrdInc.size > 0) }">
-								
 								<display:table name="sessionScope.RISULTATI_RICERCA_ORD_INC"  
 					                class="table table-hover tab_left" 
 					                summary="riepilogo quote spesa"
@@ -430,7 +431,12 @@ SPDX-License-Identifier: EUPL-1.2
 						<%-- ************************************************************************************* --%>
 
 
-
+						<!-- per modalOrdinativo.jsp -->
+						<s:set var="eliminaQuotaOrdinativoAction" value="%{'consultaProvvisorioCassa_eliminaQuotaOrdinativo'}" />
+						<s:set var="eliminaProvvisorioAction" value="%{'consultaProvvisorioCassa_eliminaProvvisorio'}" />
+						<s:set var="forzaInserisciQuotaAccertamentoAction" value="%{'consultaProvvisorioCassa_forzaInserisciQuotaAccertamento'}" />
+						<s:set var="forzaAggiornaQuotaAccertamentoAction" value="%{'consultaProvvisorioCassa_forzaAggiornaQuotaAccertamento'}" />
+		
 						<s:include value="/jsp/ordinativo/include/modalOrdinativo.jsp" />
 
 					</div>
@@ -449,7 +455,8 @@ SPDX-License-Identifier: EUPL-1.2
 	<script type="text/javascript">
 		$("#linkTabProvvisorioCassa").click(function() {
 			$.ajax({
-				url : '<s:url method="cambiaTabFolder"/>',
+				//task-131 --> url : '<s:url method="cambiaTabFolder"/>',
+				url: '<s:url action="%{#cambiaTabFolderAction}"/>',
 				type : 'POST',
 				data : 'tabFolder=tabProvvisorioCassa',
 				success : function(data) {
@@ -459,7 +466,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 		$("#linkTabDocumenti").click(function() {
 			$.ajax({
-				url : '<s:url method="cambiaTabFolder"/>',
+				//task-131 --> url : '<s:url method="cambiaTabFolder"/>',
+				url: '<s:url action="%{#cambiaTabFolderAction}"/>',
 				type : 'POST',
 				data : 'tabFolder=tabDocumenti',
 				success : function(data) {
@@ -469,7 +477,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 		$("#linkTabOrdinativi").click(function() {
 			$.ajax({
-				url : '<s:url method="cambiaTabFolder"/>',
+				//task-131 --> url : '<s:url method="cambiaTabFolder"/>',
+				url: '<s:url action="%{#cambiaTabFolderAction}"/>',
 				type : 'POST',
 				data : 'tabFolder=tabOrdinativi',
 				success : function(data) {

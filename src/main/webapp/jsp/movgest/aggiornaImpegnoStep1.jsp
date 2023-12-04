@@ -2,6 +2,7 @@
 SPDX-FileCopyrightText: Copyright 2020 | CSI Piemonte
 SPDX-License-Identifier: EUPL-1.2
 --%>
+
 <%@taglib prefix="s" uri="/struts-tags" %>
 <%@taglib uri="http://www.csi.it/taglibs/remincl-1.0" prefix="r"%>
 <%@taglib prefix="display" uri="/display-tags"%>
@@ -29,35 +30,147 @@ SPDX-License-Identifier: EUPL-1.2
   </ul>
    /NAVIGAZIONE -->
   <hr />
-<div class="container-fluid-banner">
+	<div class="container-fluid-banner">
+	  <a name="A-contenuti" title="A-contenuti"></a>
+	</div>
 
-
-  <a name="A-contenuti" title="A-contenuti"></a>
-</div>
+	<s:if test="oggettoDaPopolareImpegno()">
+		<s:set var="oggetto" value="%{'Impegno'}" /> 
+		<s:set var="proseguiSalvaAction" value="%{'aggiornaImpegnoStep1_proseguiSalva'}" />
+		
+		<s:set var="gestisciForwardAction" value="%{'aggiornaImpegnoStep1_gestisciForward'}" />	 
+		<s:set var="siSalvaAction" value="%{'aggiornaImpegnoStep1_siSalva'}" />	 
+		<s:set var="siProseguiAction" value="%{'aggiornaImpegnoStep1_siProsegui'}" />	
+		<s:set var="annullaSubImpegnoAction" value="%{'aggiornaImpegnoStep1_annullaSubImpegno'}" />	 
+		<s:set var="annullaSubAccertamentoAction" value="%{'aggiornaImpegnoStep1_annullaSubAccertamento'}" />	 
+		<s:set var="annullaMovGestSpesaAction" value="%{'aggiornaImpegnoStep1_annullaMovGestSpesa'}" />	 
+		<s:set var="eliminaSubImpegnoAction" value="%{'aggiornaImpegnoStep1_eliminaSubImpegno'}" />	 
+		<s:set var="eliminaSubAccertamentoAction" value="%{'aggiornaImpegnoStep1_eliminaSubAccertamento'}" />
+		<s:set var="forzaProseguiAction" value="%{'aggiornaImpegnoStep1_forzaProsegui'}" />	          
+		<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'aggiornaImpegnoStep1_forzaSalvaPluriennaleAccertamento'}" />	          
+		<s:set var="salvaConByPassDodicesimiAction" value="%{'aggiornaImpegnoStep1_salvaConByPassDodicesimi'}" />	          
+		
+		<s:set var="salvaDaModaleConfermaSalvaVincoliAction" value="%{'aggiornaImpegnoStep1_salvaDaModaleConfermaSalvaVincoli'}" />
+		<s:set var="proseguiDaModaleConfermaSalvaVincoliAction" value="%{'aggiornaImpegnoStep1_proseguiDaModaleConfermaSalvaVincoli'}" />	
+			
+		<!--per modale provvedimento e elimina (incluse in modal.jsp) -->
+		<s:set var="selezionaProvvedimentoAction" value="%{'aggiornaImpegnoStep1_selezionaProvvedimento'}" />	          
+		<s:set var="clearRicercaProvvedimentoAction" value="%{'aggiornaImpegnoStep1_clearRicercaProvvedimento'}" />	          
+		<s:set var="ricercaProvvedimentoAction" value="%{'aggiornaImpegnoStep1_ricercaProvvedimento'}" />	          
+		<s:set var="eliminaAction" value="%{'aggiornaImpegnoStep1_elimina'}" />	  
+		<s:set var="selezionaProvvedimentoInseritoAction" value="%{'aggiornaImpegnoStep1_selezionaProvvedimentoInserito'}" />	
+		<s:set var="inserisciProvvedimentoAction" value="%{'aggiornaImpegnoStep1_inserisciProvvedimento'}" />
+		<s:set var="clearInserimentoProvvedimentoAction" value="%{'aggiornaImpegnoStep1_clearInserimentoProvvedimento'}" />
+		
+		<s:set var="consultaModificheProvvedimentoAction" value="%{'aggiornaImpegnoStep1_consultaModificheProvvedimento'}" />
+		<s:set var="consultaModificheProvvedimentoSubAction" value="%{'aggiornaImpegnoStep1_consultaModificheProvvedimentoSub'}" />
+		   
+		<!--per modale progetto -->
+	    <s:set var="selezionaProgettoCronopAction" value="%{'aggiornaImpegnoStep1_selezionaProgettoCronop'}" />	          
+		<s:set var="selezionaProgettoAction" value="%{'aggiornaImpegnoStep1_selezionaProgetto'}" />			          
+		<s:set var="pulisciRicercaProgettoAction" value="%{'aggiornaImpegnoStep1_pulisciRicercaProgetto'}" />	          
+		<s:set var="ricercaProgettoAction" value="%{'aggiornaImpegnoStep1_ricercaProgetto'}" />	 
+		<s:set var="codiceProgettoChangedAction" value="%{'aggiornaImpegnoStep1_codiceProgettoChanged'}" /> 
+		            
+		<s:set var="ricercaCapitoloAction" value="%{'aggiornaImpegnoStep1_ricercaCapitolo'}" />
+		<s:set var="pulisciRicercaCapitoloAction" value="%{'aggiornaImpegnoStep1_pulisciRicercaCapitolo'}" />
+		<s:set var="selezionaCapitoloAction" value="%{'aggiornaImpegnoStep1_selezionaCapitolo'}" />
+		<s:set var="visualizzaDettaglioCapitoloAction" value="%{'aggiornaImpegnoStep1_visualizzaDettaglioCapitolo'}" />
+		        
+				
+		<!--  per soggetto -->
+		<s:set var="selezionaSoggettoAction" value="%{'aggiornaImpegnoStep1_selezionaSoggetto'}" />
+		<s:set var="pulisciRicercaSoggettoAction" value="%{'aggiornaImpegnoStep1_pulisciRicercaSoggetto'}" />	          
+		<s:set var="ricercaSoggettoAction" value="%{'aggiornaImpegnoStep1_ricercaSoggetto'}" />	    
+		<s:set var="listaClasseSoggettoChangedAction" value="%{'aggiornaImpegnoStep1_listaClasseSoggettoChanged'}" />	
+		
+		<!-- vincoli -->
+		<!-- task-202 -->
+		<!--<s:set var="aggiornaImportoConVincoloAction" value="%{'aggiornaImpegnoStep1_aggiornaImportoConVincolo'}" /> -->
+		<!--<s:set var="aggiornaAvanzoVincoloAction" value="%{'aggiornaImpegnoStep1_aggiornaAvanzoVincolo'}" /> -->
+		<!--<s:set var="aggiornaVincoloAction" value="%{'aggiornaImpegnoStep1_aggiornaVincolo'}" /> -->
+		<s:set var="aggiornaVincoloOperazione" value="%{'aggiornaImpegnoStep1'}" />
+		
+		<s:set var="selezionaAccPerVincoloAction" value="%{'aggiornaImpegnoStep1_selezionaAccPerVincolo'}" />
+			
+			          
+	</s:if>
+	<s:else>
+		<s:set var="oggetto" value="%{'Accertamento'}" />	      
+		<s:set var="proseguiSalvaAction" value="%{'aggiornaAccertamentoStep1_proseguiSalva'}" />
+		    
+		<s:set var="gestisciForwardAction" value="%{'aggiornaAccertamentoStep1_gestisciForward'}" />
+		<s:set var="siSalvaAction" value="%{'aggiornaAccertamentoStep1_siSalva'}" />	 
+		<s:set var="siProseguiAction" value="%{'aggiornaAccertamentoStep1_siProsegui'}" />	
+		<s:set var="annullaSubImpegnoAction" value="%{'aggiornaAccertamentoStep1_annullaSubImpegno'}" />	 
+		<s:set var="annullaSubAccertamentoAction" value="%{'aggiornaAccertamentoStep1_annullaSubAccertamento'}" />	 
+		<s:set var="annullaMovGestSpesaAction" value="%{'aggiornaAccertamentoStep1_annullaMovGestSpesa'}" />	 
+		<s:set var="eliminaSubImpegnoAction" value="%{'aggiornaAccertamentoStep1_eliminaSubImpegno'}" />	 
+		<s:set var="eliminaSubAccertamentoAction" value="%{'aggiornaAccertamentoStep1_eliminaSubAccertamento'}" />
+		<s:set var="forzaProseguiAction" value="%{'aggiornaAccertamentoStep1_forzaProsegui'}" />	          
+		<s:set var="forzaSalvaPluriennaleAccertamentoAction" value="%{'aggiornaAccertamentoStep1_forzaSalvaPluriennaleAccertamento'}" />	          
+		<s:set var="salvaConByPassDodicesimiAction" value="%{'aggiornaAccertamentoStep1_salvaConByPassDodicesimi'}" />	          
+			    
+		<!--per modale provvedimento -->
+		<s:set var="selezionaProvvedimentoAction" value="%{'aggiornaAccertamentoStep1_selezionaProvvedimento'}" />	          
+		<s:set var="clearRicercaProvvedimentoAction" value="%{'aggiornaAccertamentoStep1_clearRicercaProvvedimento'}" />	          
+		<s:set var="ricercaProvvedimentoAction" value="%{'aggiornaAccertamentoStep1_ricercaProvvedimento'}" />	          
+		<s:set var="eliminaAction" value="%{'aggiornaAccertamentoStep1_elimina'}" />	  
+		<s:set var="selezionaProvvedimentoInseritoAction" value="%{'aggiornaAccertamentoStep1_selezionaProvvedimentoInserito'}" />	
+		<s:set var="inserisciProvvedimentoAction" value="%{'aggiornaAccertamentoStep1_inserisciProvvedimento'}" />	
+		<s:set var="clearInserimentoProvvedimentoAction" value="%{'aggiornaAccertamentoStep1_clearInserimentoProvvedimento'}" />
+		 
+		<s:set var="consultaModificheProvvedimentoAction" value="%{'aggiornaAccertamentoStep1_consultaModificheProvvedimento'}" />
+		<s:set var="consultaModificheProvvedimentoSubAction" value="%{'aggiornaAccertamentoStep1_consultaModificheProvvedimentoSub'}" />
+		           
+		<!--per modale progetto -->
+	    <s:set var="selezionaProgettoCronopAction" value="%{'aggiornaAccertamentoStep1_selezionaProgettoCronop'}" />	          
+		<s:set var="selezionaProgettoAction" value="%{'aggiornaAccertamentoStep1_selezionaProgetto'}" />			          
+		<s:set var="pulisciRicercaProgettoAction" value="%{'aggiornaAccertamentoStep1_pulisciRicercaProgetto'}" />	          
+		<s:set var="ricercaProgettoAction" value="%{'aggiornaAccertamentoStep1_ricercaProgetto'}" />	         
+		<s:set var="codiceProgettoChangedAction" value="%{'aggiornaAccertamentoStep1_codiceProgettoChanged'}" />   
+					
+		<s:set var="ricercaCapitoloAction" value="%{'aggiornaAccertamentoStep1_ricercaCapitolo'}" />
+		<s:set var="pulisciRicercaCapitoloAction" value="%{'aggiornaAccertamentoStep1_pulisciRicercaCapitolo'}" />
+		<s:set var="selezionaCapitoloAction" value="%{'aggiornaAccertamentoStep1_selezionaCapitolo'}" />
+		<s:set var="visualizzaDettaglioCapitoloAction" value="%{'aggiornaAccertamentoStep1_visualizzaDettaglioCapitolo'}" />
+		                
+		<!--  per soggetto -->
+		<s:set var="selezionaSoggettoAction" value="%{'aggiornaAccertamentoStep1_selezionaSoggetto'}" />
+		<s:set var="pulisciRicercaSoggettoAction" value="%{'aggiornaAccertamentoStep1_pulisciRicercaSoggetto'}" />	          
+		<s:set var="ricercaSoggettoAction" value="%{'aggiornaAccertamentoStep1_ricercaSoggetto'}" />
+		<s:set var="listaClasseSoggettoChangedAction" value="%{'aggiornaAccertamentoStep1_listaClasseSoggettoChanged'}" />
+		
+		<s:set var="selezionaAccPerVincoloAction" value="%{'aggiornaAccertamentoStep1_selezionaAccPerVincolo'}" />				
+	</s:else>
 
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span12 contentPage">
-    	<s:form class="form-horizontal" id="%{labels.FORM}" action="%{labels.FORM}.do" method="post" >
-  
-          <div id="msgControlloMovColl" class="modal hide fade" tabindex="-1" role="dialog"  aria-hidden="true">
+    	<s:form class="form-horizontal" id="%{labels.FORM}" action="%{labels.FORM}" method="post" >
+    	  <div id="msgControlloMovColl" class="modal hide fade" tabindex="-1" role="dialog"  aria-hidden="true">
 			<div class="modal-body">
 				<div class="alert alert-warning">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
     				<p><strong>Attenzione!</strong></p>
                    <s:iterator value="actionWarnings">
-		     	  		<s:property/><br>
+		     	  		<s:property escapeHtml="false"/><br>
 		   		   </s:iterator>
 				</div>
 			</div>
 			<div class="modal-footer">
                 <!-- <button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button> -->
-				<s:submit id="annullaMovCollBtn" name="btnAnnullaMovColl" method="annulla" value="no, annulla" cssClass="btn btn-secondary" />
+				<!-- tak-131 <s:submit id="annullaMovCollBtn" name="btnAnnullaMovColl" method="annulla" value="no, annulla" cssClass="btn btn-secondary" /> -->
+				<s:submit id="annullaMovCollBtn" name="btnAnnullaMovColl" action="aggiorna%{#oggetto}Step1_annulla" value="no, annulla" cssClass="btn btn-secondary" />
+				
+				
 				<s:if test="isProseguiStep1()">
-                	<s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="siProsegui"/>
+                	<!-- tak-131 <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" method="siProsegui"/>-->
+                	<s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, prosegui" cssClass="btn btn-primary" action="%{#siProseguiAction}"/>
                 </s:if>
                 <s:else>
-                	<s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, salva" cssClass="btn btn-primary" method="siSalva"/>
+                	<!-- tak-131 <s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, salva" cssClass="btn btn-primary" method="siSalva"/> -->
+                	<s:submit id="submitBtnForward" name="btnSubmitBtnForward" value="si, salva" cssClass="btn btn-primary" action="%{#siSalvaAction}"/>             	              	
                 </s:else>
 			</div>
 		</div>
@@ -77,6 +190,7 @@ SPDX-License-Identifier: EUPL-1.2
       	   
       	 <s:include value="/jsp/include/actionMessagesErrors.jsp" />
 		 <s:include value="/jsp/movgest/include/tabAggImpegnoPerStep.jsp" />
+		 
 		 <s:include value="/jsp/include/javascriptCheckModificheTabs.jsp" />
 			
         <div id="MyWizard" class="wizard">
@@ -88,14 +202,24 @@ SPDX-License-Identifier: EUPL-1.2
         </div>
         <div class="step-content">
           <div class="step-pane active" id="step1">
-
-			
-                		
-			 <h4>
-				  Capitolo <a class="tooltip-test" title="Visualizza dettagli" href="#capitoloTab" data-toggle="modal"><i class="icon-info-sign">&nbsp;<span class="nascosto">Visualizza dettagli</span></i></a></dt>
-				  <s:property value="step1Model.capitolo.anno"/>/<s:property value="step1Model.capitolo.numCapitolo"/>/<s:property value="step1Model.capitolo.articolo"/>/<s:property value="step1Model.capitolo.ueb"/>  - <s:property value="step1Model.capitolo.descrizione"/>  -  <s:property value="step1Model.capitolo.codiceStrutturaAmministrativa"/> - tipo Finanziamento: <s:property value="step1Model.capitolo.tipoFinanziamento"/></dd>              				
+			<h4>
+				 Capitolo 
+				 <a class="tooltip-test" title="Visualizza dettagli" href="#capitoloTab" data-toggle="modal">
+				 	<i class="icon-info-sign">&nbsp;<span class="nascosto">Visualizza dettagli</span></i>
+				 </a>
+				 </dt>
+				 <s:property value="step1Model.capitolo.anno"/>/<s:property value="step1Model.capitolo.numCapitolo"/>/<s:property value="step1Model.capitolo.articolo"/>/<s:property value="step1Model.capitolo.ueb"/> 
+				  - <s:property value="step1Model.capitolo.descrizione"/>  -  <s:property value="step1Model.capitolo.codiceStrutturaAmministrativa"/> 
+				  - tipo Finanziamento: <s:property value="step1Model.capitolo.tipoFinanziamento"/> -
+				  <!--SIAC-7349 Nome componente e tipo-->
+				  <s:if test="%{model.nomeComponente !=  null}">
+				  	&nbsp;COMPONENTE: <s:property value="%{model.nomeComponente}"/>
+				  </s:if>
+				  <!--END SIAC-7349-->
+				 </dd>              				
 			</h4>	
-	            
+	        
+	        
 			<s:include value="/jsp/movgest/include/provvedimento.jsp" />
                
             <s:if test="oggettoDaPopolareImpegno()">    
@@ -135,20 +259,35 @@ SPDX-License-Identifier: EUPL-1.2
             <s:include value="/jsp/movgest/include/datiEntita_aggimp.jsp" />
             
              <!-- Vincolo -->
-            <s:if test="oggettoDaPopolareImpegno()"> 
+            <s:if test="oggettoDaPopolareImpegno() && !isMovimentoResiduo()"> 
              	<a id="ancoraVincoli"></a>
-             	<s:include value="/jsp/movgest/include/tabVincolo.jsp" /> 
+             	
+             	<!--  per tabVincolo.jsp -->
+				<s:set var="dettaglioAggiornaVincoloAction" value="%{'aggiornaImpegnoStep1_dettaglioAggiornaVincolo'}" />
+				<s:set var="dettaglioAvanzoAggiornaVincoloAction" value="%{'aggiornaImpegnoStep1_dettaglioAvanzoAggiornaVincolo'}" />
+				<s:set var="dettaglioAggiornaImportoConVincoliAction" value="%{'aggiornaImpegnoStep1_dettaglioAggiornaImportoConVincoli'}" />
+				<s:set var="pulisciRicercaAccPerVincoliAction" value="%{'aggiornaImpegnoStep1_pulisciRicercaAccPerVincoli'}" />
+				<s:set var="ricercaAccertamentoPerVincoliAction" value="%{'aggiornaImpegnoStep1_ricercaAccertamentoPerVincoli'}" />
+				<s:set var="dettaglioImportoResiduoAvanzoSelezionatoAction" value="%{'aggiornaImpegnoStep1_dettaglioImportoResiduoAvanzoSelezionato'}" />
+				<s:set var="eliminaAvanzoVincoloAction" value="%{'aggiornaImpegnoStep1_eliminaAvanzoVincolo'}" />
+				<s:set var="eliminaVincoloAction" value="%{'aggiornaImpegnoStep1_eliminaVincolo'}" />
+				<s:set var="annullaValoriVincoloAction" value="%{'aggiornaImpegnoStep1_annullaValoriVincolo'}" />
+				<s:set var="aggiungiVincoloAction" value="%{'aggiornaImpegnoStep1_aggiungiVincolo'}" />
+				
+		
+			 	<s:include value="/jsp/movgest/include/tabVincolo.jsp" /> 
             </s:if> 
             <!-- fine Vincolo -->
             
+            
+          
             <s:include value="/jsp/movgest/include/modal.jsp" />
             
             <s:include value="/jsp/movgest/include/modalSalvaSdf.jsp"/>
-                                   
-                                   
+                                   	                       
             <s:include value="/jsp/movgest/include/modalAccVincoli.jsp" />  
             
-            <!--modale progetto -->
+            <!--modale progetto -->   
 			<s:include value="/jsp/movgest/include/modalProgettoCronop.jsp"/>	
 			<!--/modale progetto -->
                         
@@ -162,7 +301,8 @@ SPDX-License-Identifier: EUPL-1.2
 				<s:include value="/jsp/include/indietro.jsp" />
 			</s:if>
 			<s:else>
-				<s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary" />
+				<!--task-131 <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary" /> -->
+				<s:submit name="indietro" value="indietro" action="aggiorna%{#oggetto}Step1_indietro" cssClass="btn btn-secondary" />
 			</s:else>
 
 			<s:hidden id="doveMiTrovo" name="doveMiTrovo" value="Aggiornamento "></s:hidden>
@@ -183,16 +323,19 @@ SPDX-License-Identifier: EUPL-1.2
 			<s:hidden id="strutturaSelezionataSuPagina" name="strutturaSelezionataSuPagina"></s:hidden>
 
 			<%-- <s:if test="!isAbilitatoGestisciImpegnoDecentratoP()"> --%>
-				<s:submit method="annulla" value="annulla" cssClass="btn btn-secondary" ></s:submit>
+				<!-- task-131 <s:submit method="annulla" value="annulla" cssClass="btn btn-secondary" ></s:submit> -->
+				 <s:submit action="aggiorna%{#oggetto}Step1_annulla" value="annulla" cssClass="btn btn-secondary" ></s:submit>
 			<%-- </s:if> --%>
 			
             <span class="pull-right">
             
             	<%-- <s:if test="!isAbilitatoGestisciImpegnoDecentratoP()"> --%>
-	            	<s:submit name="ripeti" value="ripeti" method="ripeti" cssClass="btn btn-primary"  />
-	            	<s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary"  />
-		            
-					<!-- con disabilitaTabModificheAggiornamento == true &&  abilitaBottneSalvaDecentrato == false il bottone non si abilita! -->
+	            	<!--task-131 <s:submit name="ripeti" value="ripeti" method="ripeti" cssClass="btn btn-primary"  />-->
+	            	<!--task-131 <s:submit name="prosegui" value="prosegui" method="prosegui" cssClass="btn btn-primary"  />-->
+           		    <s:submit name="ripeti" value="ripeti" action="aggiorna%{#oggetto}Step1_ripeti" cssClass="btn btn-primary"  />
+	            	<s:submit name="prosegui" value="prosegui" action="aggiorna%{#oggetto}Step1_prosegui" cssClass="btn btn-primary pull-right"  />
+            	    
+					<%-- con disabilitaTabModificheAggiornamento == true &&  abilitaBottneSalvaDecentrato == false il bottone non si abilita! --%>
 					
 					<%-- SIAC-7320 viene disaccoppiata la gestione delle modifiche dall'azione decentrata
 					<s:if test="disabilitaTabModificheAggiornamento()">
@@ -215,9 +358,10 @@ SPDX-License-Identifier: EUPL-1.2
 						</div>
 					</s:elseif>
 					<s:elseif test="isAbilitaBottneSalvaDecentrato()">
-							<s:submit name="salva"  value="salva" id="salvaId" method="salva" cssClass="btn btn-primary freezePagina" />
+							<!-- task-131 <s:submit name="salva"  value="salva" id="salvaId" method="proseguiSalva" cssClass="btn btn-primary freezePagina" />-->
+							<s:submit name="salva"  value="salva" id="salvaId" action="%{#proseguiSalvaAction}" cssClass="btn btn-primary freezePagina" />								
 					</s:elseif>
-					
+	            
             </span>
 			<a id="linkMsgControlloMovColl" href="#msgControlloMovColl" data-toggle="modal" style="display:none;"></a>
 			<a id="linkVisualizzaModaleConfermaModificaProvvedimento" href="#modalSalvaModificaProvvedimento" data-toggle="modal" style="display:none;"></a>
@@ -246,16 +390,26 @@ SPDX-License-Identifier: EUPL-1.2
         
         
         <!-- SIAC-6993 -->
-					<s:url method="consultaModificheProvvedimento"
-						var="consultaModificheProvvedimento" />
-					<s:url method="consultaModificheProvvedimentoSub"
-						var="consultaModificheProvvedimentoSub" />
-
-					<s:hidden id="consultaModificheProvvedimento"
-						value="%{consultaModificheProvvedimento}" />
-					<s:hidden id="consultaModificheProvvedimentoSub"
-						value="%{consultaModificheProvvedimentoSub}" />
+        			<!--  TODO aggiugere s:if -->
+					<!-- task-131 <s:url method="consultaModificheProvvedimento"	var="consultaModificheProvvedimento" /> -->
+					<!-- task-131 <s:url method="consultaModificheProvvedimentoSub"	var="consultaModificheProvvedimentoSub" /> -->
+					<s:url action="aggiorna%{#oggetto}Step1_consultaModificheProvvedimento"	var="consultaModificheProvvedimento" /> 
+					<s:url method="aggiorna%{#oggetto}Step1_consultaModificheProvvedimentoSub"	var="consultaModificheProvvedimentoSub" />
+					
+					
+					<s:hidden id="consultaModificheProvvedimento" value="%{consultaModificheProvvedimento}" />
+					<s:hidden id="consultaModificheProvvedimentoSub" value="%{consultaModificheProvvedimentoSub}" />
         <!-- SIAC-6993 -->
+        
+         <!-- SIAC-6997 -->
+					<!-- task-131 <s:url method="consultaModificheStrutturaCompetente" var="consultaModificheStrutturaCompetente" /> -->
+					<!-- task-131 <s:url method="consultaModificheStrutturaCompetenteSub" var="consultaModificheStrutturaCompetenteSub" /> -->
+					<s:url method="aggiorna%{#oggetto}Step1_consultaModificheStrutturaCompetente" var="consultaModificheStrutturaCompetente" />
+					<s:url method="aggiorna%{#oggetto}Step1_consultaModificheStrutturaCompetenteSub" var="consultaModificheStrutturaCompetenteSub" />						
+						
+					<s:hidden id="consultaModificheStrutturaCompetente"	value="%{consultaModificheStrutturaCompetente}" />
+					<s:hidden id="consultaModificheStrutturaCompetenteSub" value="%{consultaModificheStrutturaCompetenteSub}" />
+        <!-- SIAC-6997 -->
 
 	  </s:form>
     </div>
@@ -325,7 +479,8 @@ SPDX-License-Identifier: EUPL-1.2
 				});
 			}
 			$.ajax({
-				url: '<s:url method="ricercaCapitolo"/>',
+				// task-131 url: '<s:url method="ricercaCapitolo"/>',
+				url: '<s:url action="%{#ricercaCapitoloAction}"/>',
 				type: 'POST',
 				data: $(".parametroRicercaCapitolo").serialize() + "&strutturaAmministrativaSelezionata=" + strutturaAmministrativaSelezionata.codice,
 				success: function(data)  {
@@ -336,7 +491,8 @@ SPDX-License-Identifier: EUPL-1.2
 		
 		$("#ricercaGuidataSoggetto").click(function() {
 			$.ajax({
-				url: '<s:url method="ricercaSoggetto"/>',
+				//task-131 url: '<s:url method="ricercaSoggetto"/>',
+				url: '<s:url action="%{#ricercaSoggettoAction}"/>',
 				type: 'POST',
 				data: $(".parametroRicercaSoggetto").serialize(),
 			    success: function(data)  {
@@ -384,7 +540,8 @@ SPDX-License-Identifier: EUPL-1.2
    			}
    			
    			$.ajax({
-   				url: '<s:url method="clearInserimentoProvvedimento"/>',
+   				//task-131 url: '<s:url method="clearInserimentoProvvedimento"/>',
+   				url: '<s:url action="%{#clearInserimentoProvvedimentoAction}"/>',
    				success: function(data)  {
    					$("#gestioneEsitoInserimentoProvvedimento").html(data);
    				}
@@ -407,7 +564,8 @@ SPDX-License-Identifier: EUPL-1.2
 			var cod = $("#progetto").val();
 			//Carico i dati in tabella "Modalita' di pagamento"		
 			$.ajax({
-				url: '<s:url method="codiceProgettoChanged"></s:url>',
+				//task-131 url: '<s:url method="codiceProgettoChanged"></s:url>',
+				url: '<s:url action="%{#codiceProgettoChangedAction}"/>',
 				type: "GET",
 				data: $(".hiddenGestoreToggle").serialize() + "&id=" + cod, 
 			    success: function(data)  {
@@ -423,8 +581,9 @@ SPDX-License-Identifier: EUPL-1.2
 		$("#listaClasseSoggetto").change(function(){
 			$("#codCreditore").val("");
 			$.ajax({
-				url: '<s:url method="listaClasseSoggettoChanged"/>',
-				success: function(data)  {
+				//url: '<s:url method="listaClasseSoggettoChanged"/>',
+				url: '<s:url action="%{#listaClasseSoggettoChangedAction}"/>',
+   				success: function(data)  {
 				    $("#refreshHeaderSoggetto").html(data);
 				}
 			});
@@ -512,26 +671,50 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	</s:if>
 	<s:else>
-	
-		$('#linkmsgPrimaNota').click();
-	 	$('#inserisciPrimaNotaProvvisoria').on('click', function(){
-			$('#HIDDEN_saltaInserimentoPrimaNota').val(false);
-			$('#HIDDEN_richiediConfermaUtente').val(true);
-			
-			$('form')
-			.append('<input type="hidden" name="method:salva" value="" class="btn" >')
-			.submit();
-		});
-		$('#validaPrimaNota').on('click', function(){
-			$('#HIDDEN_saltaInserimentoPrimaNota').val(true);
-			$('#HIDDEN_richiediConfermaUtente').val(true);
-			$('form')
-			.append('<input type="hidden" name="method:salva" value="" class="btn" >')
-			.submit(); 
+		<s:if test="oggettoDaPopolareImpegno()">
+			$('#linkmsgPrimaNota').click();
+		 	$('#inserisciPrimaNotaProvvisoria').on('click', function(){
+				$('#HIDDEN_saltaInserimentoPrimaNota').val(false);
+				$('#HIDDEN_richiediConfermaUtente').val(true);
+				
+				$('form')
+				//task-131 .append('<input type="hidden" name="method:salva" value="" class="btn" >')
+				.append('<input type="hidden" name="action:aggiornaImpegnoStep1_salva" value="" class="btn" >')
+				action="%{#salvaAction}"
+				.submit();
 			});
-	
+			$('#validaPrimaNota').on('click', function(){
+				$('#HIDDEN_saltaInserimentoPrimaNota').val(true);
+				$('#HIDDEN_richiediConfermaUtente').val(true);
+				$('form')
+				//task-131 .append('<input type="hidden" name="method:salva" value="" class="btn" >')
+				.append('<input type="hidden" name="action:aggiornaImpegnoStep1_salva" value="" class="btn" >')	
+				.submit(); 
+				});
+		</s:if>
+		<s:else>
+			$('#linkmsgPrimaNota').click();
+		 	$('#inserisciPrimaNotaProvvisoria').on('click', function(){
+				$('#HIDDEN_saltaInserimentoPrimaNota').val(false);
+				$('#HIDDEN_richiediConfermaUtente').val(true);
+				
+				$('form')
+				//task-131 .append('<input type="hidden" name="method:salva" value="" class="btn" >')
+				.append('<input type="hidden" name="action:aggiornaAccertamentoStep1_salva" value="" class="btn" >')
+				action="%{#salvaAction}"
+				.submit();
+			});
+			$('#validaPrimaNota').on('click', function(){
+				$('#HIDDEN_saltaInserimentoPrimaNota').val(true);
+				$('#HIDDEN_richiediConfermaUtente').val(true);
+				$('form')
+				//task-131 .append('<input type="hidden" name="method:salva" value="" class="btn" >')
+				.append('<input type="hidden" name="action:aggiornaAccertamentoStep1_salva" value="" class="btn" >')	
+				.submit(); 
+				});
+		</s:else>	
 	</s:else>
-	
+		
 	
 	<s:if test="step1Model.portaAdAltezzaVincoli">
 		spostaLAncora('ancoraVincoli');
@@ -552,4 +735,3 @@ SPDX-License-Identifier: EUPL-1.2
  
    
 <s:include value="/jsp/include/footer.jsp" />
- 

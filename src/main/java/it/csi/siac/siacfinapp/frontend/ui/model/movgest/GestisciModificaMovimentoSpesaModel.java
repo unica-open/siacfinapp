@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import it.csi.siac.siacattser.model.AttoAmministrativo;
 import it.csi.siac.siaccorser.model.ClassificatoreGenerico;
 import it.csi.siac.siacfinapp.frontend.ui.model.GenericFinModel;
@@ -20,6 +22,7 @@ import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestione.StatoOperativoModificaMovimentoGestione;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneEntrata;
 import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesa;
+import it.csi.siac.siacfinser.model.movgest.ModificaMovimentoGestioneSpesaCollegata;
 import it.csi.siac.siacfinser.model.soggetto.Soggetto;
 
 public class GestisciModificaMovimentoSpesaModel extends GenericFinModel {
@@ -28,6 +31,8 @@ public class GestisciModificaMovimentoSpesaModel extends GenericFinModel {
 
 	//listaTipoMotivo
 	private List<CodificaFin> listaTipoMotivo = new ArrayList<CodificaFin>();
+	//SIAC-7838
+	private List<CodificaFin> listaTipoMotivoAggiudicazione = new ArrayList<CodificaFin>();
 	
 	//Per inserimento modifica importo
 	private BigDecimal minAncheImpegno;
@@ -85,6 +90,12 @@ public class GestisciModificaMovimentoSpesaModel extends GenericFinModel {
 	private List<ModificaMovimentoGestioneSpesa> listaModifiche = new ArrayList<ModificaMovimentoGestioneSpesa>();
 	private List<ModificaMovimentoGestioneEntrata> listaModificheEntrata = new ArrayList<ModificaMovimentoGestioneEntrata>();
 	
+	
+	//MODIFICHE RELATIVE ALLA SIAC-7349
+	private List<ModificaMovimentoGestioneSpesaCollegata> listaModificheSpeseCollegata = new ArrayList<ModificaMovimentoGestioneSpesaCollegata>();
+	
+	
+	
 	//Mappatura oggetto modificaMovimentoGestione
 	private int idModificaMovimentoGestione;
 	private int numeroModificaMovimentoGestione;
@@ -130,13 +141,45 @@ public class GestisciModificaMovimentoSpesaModel extends GenericFinModel {
 	private String reimputazione;
 	private Integer annoReimputazione;
 	
+	//SIAC-6997
+	private List<String> daElaboratoRor = new ArrayList<String>();
+	private String elaboratoRor;
+	
+	//SIAC-6865
+	private Boolean aggiudicazione;
+	private SoggettoImpegnoModel soggettoAggiudicazioneModel;
+	private boolean abilitaGestioneAggiudicazione;
+	//SIAC-7838
+	private Boolean flagAggiudicazioneSenzaSoggetto;
+	
+	//SIAC-8184
+	private String nuovaDescrizioneEventualeImpegnoAggiudicazione;
+	
+	//SIAC-8811
+	private String EventualeNuovoCUPImpegno;
 	
 	//GETTER E SETTER:
 	
+	public List<String> getDaElaboratoRor() {
+		return daElaboratoRor;
+	}
+
+	public void setDaElaboratoRor(List<String> daElaboratoRor) {
+		this.daElaboratoRor = daElaboratoRor;
+	}
+
+	public String getElaboratoRor() {
+		return elaboratoRor;
+	}
+
+	public void setElaboratoRor(String elaboratoRor) {
+		this.elaboratoRor = elaboratoRor;
+	}
+
 	public Impegno getImpegno() {
 		return impegno;
 	}
-
+	
 	public void setImpegno(Impegno impegno) {
 		this.impegno = impegno;
 	}
@@ -436,6 +479,15 @@ public class GestisciModificaMovimentoSpesaModel extends GenericFinModel {
 	public void setListaTipoMotivo(List<CodificaFin> listaTipoMotivo) {
 		this.listaTipoMotivo = listaTipoMotivo;
 	}
+	
+
+	public List<CodificaFin> getListaTipoMotivoAggiudicazione() {
+		return listaTipoMotivoAggiudicazione;
+	}
+
+	public void setListaTipoMotivoAggiudicazione(List<CodificaFin> listaTipoMotivoAggiudicazione) {
+		this.listaTipoMotivoAggiudicazione = listaTipoMotivoAggiudicazione != null? listaTipoMotivoAggiudicazione : new ArrayList<CodificaFin>();
+	}
 
 	public ModificaMovimentoGestioneSpesa getModificaAggiornamento() {
 		return modificaAggiornamento;
@@ -547,6 +599,104 @@ public class GestisciModificaMovimentoSpesaModel extends GenericFinModel {
 
 	public void setAnnoReimputazione(Integer annoReimputazione) {
 		this.annoReimputazione = annoReimputazione;
+	}
+
+	/**
+	 * @return the listaModificheSpeseCollegata
+	 */
+	public List<ModificaMovimentoGestioneSpesaCollegata> getListaModificheSpeseCollegata() {
+		return listaModificheSpeseCollegata;
+	}
+
+	/**
+	 * @param listaModificheSpeseCollegata the listaModificheSpeseCollegata to set
+	 */
+	public void setListaModificheSpeseCollegata(
+			List<ModificaMovimentoGestioneSpesaCollegata> listaModificheSpeseCollegata) {
+		this.listaModificheSpeseCollegata = listaModificheSpeseCollegata;
+	}
+
+	/**
+	 * @return the aggiudicazione
+	 */
+	public Boolean getAggiudicazione() {
+		return aggiudicazione;
+	}
+
+	/**
+	 * @param aggiudicazione the aggiudicazione to set
+	 */
+	public void setAggiudicazione(Boolean aggiudicazione) {
+		this.aggiudicazione = aggiudicazione;
+	}
+
+	/**
+	 * @return the soggettoAggiudicazioneModel
+	 */
+	public SoggettoImpegnoModel getSoggettoAggiudicazioneModel() {
+		return soggettoAggiudicazioneModel;
+	}
+
+	/**
+	 * @param soggettoAggiudicazioneModel the soggettoAggiudicazioneModel to set
+	 */
+	public void setSoggettoAggiudicazioneModel(SoggettoImpegnoModel soggettoAggiudicazioneModel) {
+		this.soggettoAggiudicazioneModel = soggettoAggiudicazioneModel;
+	}
+	
+	public String getIntestazioneSoggettoAggiudicazioneSelezionato() {
+		StringBuilder intestazione = new StringBuilder().append("Soggetto ");
+		
+		if(soggettoAggiudicazioneModel == null || (StringUtils.isEmpty(soggettoAggiudicazioneModel.getCodCreditore()) && StringUtils.isEmpty(soggettoAggiudicazioneModel.getClasse()) )) {
+			return intestazione.toString();
+		}
+		intestazione.append(StringUtils.defaultIfEmpty(soggettoAggiudicazioneModel.getCodCreditore(), " "))
+			.append(" - ")
+			.append(StringUtils.defaultIfEmpty(soggettoAggiudicazioneModel.getDenominazione(), " "));
+		if(!StringUtils.isEmpty(soggettoAggiudicazioneModel.getClasse())) {
+			intestazione.append(" n.d. - Classe ")
+				.append(soggettoAggiudicazioneModel.getClasse());
+		}
+		
+		return intestazione.toString();
+	}
+
+	/**
+	 * @return the abilitaGestioneAggiudicazione
+	 */
+	public boolean isAbilitaGestioneAggiudicazione() {
+		return abilitaGestioneAggiudicazione;
+	}
+
+	/**
+	 * @param abilitaGestioneAggiudicazione the abilitaGestioneAggiudicazione to set
+	 */
+	public void setAbilitaGestioneAggiudicazione(boolean abilitaGestioneAggiudicazione) {
+		this.abilitaGestioneAggiudicazione = abilitaGestioneAggiudicazione;
+	}
+
+	public Boolean getFlagAggiudicazioneSenzaSoggetto() {
+		return flagAggiudicazioneSenzaSoggetto;
+	}
+
+	public void setFlagAggiudicazioneSenzaSoggetto(Boolean flagAggiudicazioneSenzaSoggetto) {
+		this.flagAggiudicazioneSenzaSoggetto = flagAggiudicazioneSenzaSoggetto;
+	}
+	
+	public String getEventualeNuovoCUPImpegno() {
+		return EventualeNuovoCUPImpegno;
+	}
+
+	public void setEventualeNuovoCUPImpegno(String eventualeNuovoCUPImpegno) {
+		EventualeNuovoCUPImpegno = eventualeNuovoCUPImpegno;
+	}
+
+	public String getNuovaDescrizioneEventualeImpegnoAggiudicazione() {
+		return nuovaDescrizioneEventualeImpegnoAggiudicazione;
+	}
+
+	public void setNuovaDescrizioneEventualeImpegnoAggiudicazione(String nuovaDescrizioneEventualeImpegnoAggiudicazione) {
+		this.nuovaDescrizioneEventualeImpegnoAggiudicazione = nuovaDescrizioneEventualeImpegnoAggiudicazione;
 	}
 	
 }

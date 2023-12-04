@@ -54,7 +54,7 @@ SPDX-License-Identifier: EUPL-1.2
                </div>
               
               <div class="modal-footer">
-              		<s:submit value="conferma" name="conferma" method="confermaPdc" cssClass="btn btn-primary" data-dismiss="modal" aria-hidden="true"></s:submit>
+              		<s:submit value="conferma" name="conferma" method="confermaPdc" cssClass="btn btn-primary" aria-hidden="true"></s:submit>
               </div>              
             </div>
             <!-- fine modale-->
@@ -121,7 +121,7 @@ SPDX-License-Identifier: EUPL-1.2
                 <ul id="siopeInserisciImpegnoStep2" class="ztree"></ul>
               </div>     
                <div class="modal-footer">
-              		<s:submit value="conferma" name="confermaSiope" method="confermaSiope" cssClass="btn btn-primary" data-dismiss="modal" aria-hidden="true"></s:submit>
+              		<s:submit value="conferma" name="confermaSiope" method="confermaSiope" cssClass="btn btn-primary" aria-hidden="true"></s:submit>
               </div>        
             </div>
             <!-- fine modale-->

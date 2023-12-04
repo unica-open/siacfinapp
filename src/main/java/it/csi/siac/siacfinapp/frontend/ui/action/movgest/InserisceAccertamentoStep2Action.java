@@ -6,7 +6,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -146,14 +146,14 @@ public class InserisceAccertamentoStep2Action extends ActionKeyInserisceAccertam
 					codiceTitoloEntrata.equalsIgnoreCase(CLASS_CAPITOLO_TITOLO_7) ;
 		}
 		
-		if((model.getStep1Model().getAnnoImpegno() > Integer.parseInt(sessionHandler.getAnnoEsercizio())) && titoloTipologiaConfermaAnnoDiCompetenzaInCorso){
+		if((model.getStep1Model().getAnnoImpegno() > sessionHandler.getAnnoBilancio()) && titoloTipologiaConfermaAnnoDiCompetenzaInCorso){
 			
 			if (isFromModaleConfermaAnnoDiCompetenzaInCorso()) {
 				
 				setShowModaleConfermaAnnoDiCompetenzaInCorso(false);
 				
 				if(isPluriennalePrimeNoteEsercizioInCorso())
-					model.getStep1Model().setAnnoScritturaEconomicoPatrimoniale(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+					model.getStep1Model().setAnnoScritturaEconomicoPatrimoniale(sessionHandler.getAnnoBilancio());
 				else 
 					model.getStep1Model().setAnnoScritturaEconomicoPatrimoniale(null);
 				
@@ -204,7 +204,7 @@ public class InserisceAccertamentoStep2Action extends ActionKeyInserisceAccertam
 		pulisciTransazioneElementare();
 		
 		// vai sulla pagina di aggiorna
-		setNumeroAccertamento(String.valueOf(response.getElencoAccertamentiInseriti().get(0).getNumero())); 
+		setNumeroAccertamento(String.valueOf(response.getElencoAccertamentiInseriti().get(0).getNumeroBigDecimal())); 
 		setAnnoAccertamento(String.valueOf(response.getElencoAccertamentiInseriti().get(0).getAnnoMovimento()));
 		
 		// messaggio di ok nella pagina aggiorna
@@ -233,7 +233,7 @@ public class InserisceAccertamentoStep2Action extends ActionKeyInserisceAccertam
 	 */
 	private boolean isNecessariaRichiestaConfermaUtentePerRedirezioneSuContabilitaGenerale() {
 		return model.isEnteAbilitatoGestionePrimaNotaDaFinanziaria()  && !model.isRichiediConfermaRedirezioneContabilitaGenerale() && model.isInserimentoSenzaSub()
-				&& model.getStep1Model().getAnnoImpegno() == Integer.parseInt(sessionHandler.getAnnoEsercizio()) 
+				&& model.getStep1Model().getAnnoImpegno() == sessionHandler.getAnnoBilancio() 
 				&& !webAppSiNoToBool(model.getStep1Model().getFlagFattura())
 				&& !webAppSiNoToBool(model.getStep1Model().getFlagCorrispettivo())
 				&& model.isProvvedimentoDefinitivo();
@@ -285,13 +285,13 @@ public class InserisceAccertamentoStep2Action extends ActionKeyInserisceAccertam
 		pulisciTransazioneElementare();
 		
 		// messaggio di ok nella terza pagina
-		addPersistentActionMessage("FIN_INF_0070, Movimento inserito ( movimento=Accertamento, anno = " + response.getElencoAccertamentiInseriti().get(0).getAnnoMovimento() +  ", numero= "+ response.getElencoAccertamentiInseriti().get(0).getNumero() +" )");
+		addPersistentActionMessage("FIN_INF_0070, Movimento inserito ( movimento=Accertamento, anno = " + response.getElencoAccertamentiInseriti().get(0).getAnnoMovimento() +  ", numero= "+ response.getElencoAccertamentiInseriti().get(0).getNumeroBigDecimal() +" )");
 		
 		// salvo nel model step3 il numero e l'anno del  movimento di partenza, cosi da poterli e settare in fase di impostazione degli impegni pluriennali
 		model.getStep3Model().setAnnoMovimentoInseritoInStep2(response.getElencoAccertamentiInseriti().get(0).getAnnoMovimento());
-		model.getStep3Model().setNumeroMovimentoInseritoInStep2(response.getElencoAccertamentiInseriti().get(0).getNumero().intValue());
+		model.getStep3Model().setNumeroMovimentoInseritoInStep2(response.getElencoAccertamentiInseriti().get(0).getNumeroBigDecimal().intValue());
 				
-		sessionHandler.setParametro(FinSessionParameter.MOVGEST_INIZIALE, response.getElencoAccertamentiInseriti().get(0).getAnnoMovimento()+"||"+response.getElencoAccertamentiInseriti().get(0).getNumero());
+		sessionHandler.setParametro(FinSessionParameter.MOVGEST_INIZIALE, response.getElencoAccertamentiInseriti().get(0).getAnnoMovimento()+"||"+response.getElencoAccertamentiInseriti().get(0).getNumeroBigDecimal());
 		
 
 		return "prosegui";

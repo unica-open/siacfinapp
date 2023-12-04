@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -59,33 +59,22 @@ public class ElencoProvvisorioCassaAction extends WizardRicercaProvvisorioAction
 		return SUCCESS;
 	}
 
-	/**
-	 * Aggiornamento della sac dei provvisori
-	 * @return
-	 * @throws Exception
-	 */
 	public String aggiornaSac() throws Exception {
-		
-		//istanzio la request per il servizio:
 		AggiornaSacProvvisoriDiCassa req = new AggiornaSacProvvisoriDiCassa();
 
 		req.setElencoProvvisoriDiCassa(model.getProvvisoriSacSel());
 		req.setEnte(sessionHandler.getEnte());
 		req.setRichiedente(sessionHandler.getRichiedente());
 
-		//invoco il servizio
 		AggiornaSacProvvisoriDiCassaResponse res = provvisorioService.aggiornaSacProvvisoriDiCassa(req);
 
 		if (res.isFallimento()) {
-			//ci sono errori
 			addErrori(res);
 			return INPUT;
 		}
 
-		//tutto ok:
 		addPersistentActionMessage(ErroreFin.OPERAZIONE_EFFETTUATA_CORRETTAMENTE.getErrore().getTesto());
 		
-		//vado all'elenco
 		return "elencoProvvisorioCassa";
 	}
 
@@ -98,7 +87,7 @@ public class ElencoProvvisorioCassaAction extends WizardRicercaProvvisorioAction
 		//istanzio la request per il servizio:
 		LeggiStrutturaAmminstrativoContabile request = new LeggiStrutturaAmminstrativoContabile();
 
-		request.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		request.setAnno(sessionHandler.getAnnoBilancio());
 		request.setIdEnteProprietario(sessionHandler.getEnte().getUid());
 		request.setRichiedente(sessionHandler.getRichiedente());
 

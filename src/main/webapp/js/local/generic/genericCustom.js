@@ -52,6 +52,11 @@ function today() {
 	return now.getDate() + '/' + (now.getMonth()+1) + '/' + now.getFullYear();
 }
 
+function todayDDMMYYYY() {
+	var now = new Date();
+	return now.getDate() + '/' + (now.getMonth()<9 ? '0' : '') + (now.getMonth()+1) + '/' + now.getFullYear();
+}
+
 
 
 /**
@@ -261,7 +266,7 @@ function autocompleteCitta() {
 //	            	}
 	                return {
 	                	label: value.descrizione,
-	                    value: value.comuneIstatCode
+	                    value: value.codiceIstat
 	                };
 	            }));
 	        });
@@ -496,6 +501,16 @@ function vaiStrutturaAlberoGenerico(idPerAlbero, livello, counter) {
 		  $.blockUI({ message: msg }); 
 	} 
 
+	//metodo che dato id blocca la pagina
+	function bloccaPaginaOver(msg) {
+		$.blockUI({ message: null, baseZ: 1050 }); 
+	} 
+
+	//metodo che dato id blocca la pagina
+	function bloccaPaginaWaitOver(msg) {
+		$.blockUI({ message: msg, baseZ: 1050 }); 
+	} 
+
 
 
 $(document).ready(function() {
@@ -528,6 +543,16 @@ $(document).ready(function() {
     // blocca pagina su salva 
     $('.freezePaginaWaitOp').click(function() { 
     	bloccaPaginaWait('Operazione in corso. Per favore attendere..');
+    }); 
+
+    // blocca pagina su salva alzando lo z-index dell'overlay
+    $('.freezePaginaOver').click(function() { 
+    	bloccaPaginaOver('Operazione in corso. Per favore attendere..');
+    }); 
+    
+    // blocca pagina su salva alzando lo z-index dell'overlay
+    $('.freezePaginaWaitOver').click(function() { 
+    	bloccaPaginaWaitOver('Operazione in corso. Per favore attendere..');
     }); 
    
    

@@ -13,7 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -27,7 +27,7 @@ import it.csi.siac.siacfinapp.frontend.ui.customdto.EsitoControlliDto;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.RigaDiReintroitoOrdinativoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinStringUtils;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.DatiOpzionaliElencoSubTuttiConSoloGliIds;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaSoggettiDellaClasse;
 import it.csi.siac.siacfinser.frontend.webservice.msg.ListaSoggettiDellaClasseResponse;
@@ -293,12 +293,12 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 	}
 	
 	private Errore controlloPdc(Impegno impegno){
-		if(!Constanti.D_CLASS_TIPO_PIANO_DEI_CONTI_V.equalsIgnoreCase(impegno.getCodicePdc())
+		if(!CostantiFin.D_CLASS_TIPO_PIANO_DEI_CONTI_V.equalsIgnoreCase(impegno.getCodicePdc())
 				|| !impegno.getCodPdc().equalsIgnoreCase("U.7.01.99.01.001")){
 			MovimentoKey movKey = buildMovimentoKey(impegno, null);
 			String nomeImp = buildNomeEntitaPerMessaggiDiErrore(movKey, true)  + " " +  buildCodiceEntitaPerMessaggiDiErrore(movKey);
-			String errorePdc = " - Attenzione l'impegno selezionato non è in partita di giro, deve appartenere al piano dei conti: U.7.01.99.01.001";
-			return ErroreCore.VALORE_NON_VALIDO.getErrore(nomeImp, errorePdc);
+			String errorePdc = " - Attenzione l'impegno selezionato non e' in partita di giro, deve appartenere al piano dei conti: U.7.01.99.01.001";
+			return ErroreCore.VALORE_NON_CONSENTITO.getErrore(nomeImp, errorePdc);
 		}
 		return null;
 	}
@@ -315,12 +315,12 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 	}
 	
 	private Errore controlloPdc(Accertamento accertamento){
-		if(!Constanti.D_CLASS_TIPO_PIANO_DEI_CONTI_V.equalsIgnoreCase(accertamento.getCodicePdc())
+		if(!CostantiFin.D_CLASS_TIPO_PIANO_DEI_CONTI_V.equalsIgnoreCase(accertamento.getCodicePdc())
 				|| !accertamento.getCodPdc().equalsIgnoreCase("E.9.01.99.99.999")){
 			MovimentoKey movKey = buildMovimentoKey(accertamento, null);
 			String nomeAcc = buildNomeEntitaPerMessaggiDiErrore(movKey, false) + " " + buildCodiceEntitaPerMessaggiDiErrore(movKey);
-			String errorePdc = " - Attenzione l'accertamento selezionato non è in partita di giro, deve appartenere al piano dei conti: E.9.01.99.99.999";
-			return ErroreCore.VALORE_NON_VALIDO.getErrore(nomeAcc, errorePdc);
+			String errorePdc = " - Attenzione l'accertamento selezionato non e' in partita di giro, deve appartenere al piano dei conti: E.9.01.99.99.999";
+			return ErroreCore.VALORE_NON_CONSENTITO.getErrore(nomeAcc, errorePdc);
 		}
 		return null;
 	}
@@ -337,13 +337,13 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 				String nomeEntita = buildNomeEntitaPerMessaggiDiErrore(buildMovimentoKey(impegno,numeroSub), true);
 				String codiceEntita = buildCodiceEntitaPerMessaggiDiErrore(buildMovimentoKey(impegno,numeroSub));
 				String msg = "Non ha un soggetto compatibile con l'ordinativo di pagamento.";
-				controlliSogg.addErrore(ErroreCore.VALORE_NON_VALIDO.getErrore(nomeEntita + ": " + codiceEntita, msg));
+				controlliSogg.addErrore(ErroreCore.VALORE_NON_CONSENTITO.getErrore(nomeEntita + ": " + codiceEntita, msg));
 			}
 			if(!classeSoggettoCoerentePerReintroito(impegno,subImpegno,ordPag)){
 				String nomeEntita = buildNomeEntitaPerMessaggiDiErrore(buildMovimentoKey(impegno,numeroSub), true);
 				String codiceEntita = buildCodiceEntitaPerMessaggiDiErrore(buildMovimentoKey(impegno,numeroSub));
 				String msg = "Non ha una classe coerente con il soggetto dell'ordinativo di pagamento.";
-				controlliSogg.addWarning(ErroreCore.VALORE_NON_VALIDO.getErrore(nomeEntita + ": " + codiceEntita, msg));
+				controlliSogg.addWarning(ErroreCore.VALORE_NON_CONSENTITO.getErrore(nomeEntita + ": " + codiceEntita, msg));
 			} 
 			
 			
@@ -362,13 +362,13 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 				String nomeEntita = buildNomeEntitaPerMessaggiDiErrore(buildMovimentoKey(accertamento,numeroSub), false);
 				String codiceEntita = buildCodiceEntitaPerMessaggiDiErrore(buildMovimentoKey(accertamento,numeroSub));
 				String msg = "Non ha un soggetto compatibile con l'ordinativo di incasso.";
-				controlliSogg.addErrore(ErroreCore.VALORE_NON_VALIDO.getErrore(nomeEntita + ": " + codiceEntita, msg));
+				controlliSogg.addErrore(ErroreCore.VALORE_NON_CONSENTITO.getErrore(nomeEntita + ": " + codiceEntita, msg));
 			}
 			if(!classeSoggettoCoerentePerReintroito(accertamento,subAccertamento,ordInc)){
 				String nomeEntita = buildNomeEntitaPerMessaggiDiErrore(buildMovimentoKey(accertamento,numeroSub), false);
 				String codiceEntita = buildCodiceEntitaPerMessaggiDiErrore(buildMovimentoKey(accertamento,numeroSub));
 				String msg = "Non ha una classe coerente con il soggetto dell'ordinativo di incasso.";
-				controlliSogg.addWarning(ErroreCore.VALORE_NON_VALIDO.getErrore(nomeEntita + ": " + codiceEntita, msg));
+				controlliSogg.addWarning(ErroreCore.VALORE_NON_CONSENTITO.getErrore(nomeEntita + ": " + codiceEntita, msg));
 			}
 			
 			idAccertamentiGiaControllati.add(accertamento.getUid());
@@ -488,7 +488,7 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 	private ListaSoggettiDellaClasseResponse caricaSoggettiDellaClasse(String codClasse){
 		ListaSoggettiDellaClasse requestSoggettiDellaClasse = new ListaSoggettiDellaClasse();
 		requestSoggettiDellaClasse.setCodiceClasse(codClasse);
-		requestSoggettiDellaClasse.setCodificaAmbito(Constanti.AMBITO_FIN);
+		requestSoggettiDellaClasse.setCodificaAmbito(CostantiFin.AMBITO_FIN);
 		requestSoggettiDellaClasse.setDataOra(new Date());
 		requestSoggettiDellaClasse.setEnte(sessionHandler.getEnte());
 		requestSoggettiDellaClasse.setRichiedente(sessionHandler.getRichiedente());
@@ -593,7 +593,7 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		if(dispLiqImpOSub.compareTo(importoNetto.add(sommaImportiOrdinativiCollegati))<0){
 			String nomeEntita = buildNomeEntitaPerMessaggiDiErrore(movKey, true);
 			String codiceEntita = buildCodiceEntitaPerMessaggiDiErrore(movKey);
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore(nomeEntita + ": " + codiceEntita, "La sua disponibilita' a liquidare e' minore degli importi da reintroitare"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore(nomeEntita + ": " + codiceEntita, "La sua disponibilita' a liquidare e' minore degli importi da reintroitare"));
 		}
 		return listaErrori;
 	}
@@ -628,7 +628,7 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		if(dispPagareCapitolo.compareTo(importoNetto.add(sommaImportiOrdinativiCollegati))<0){
 			String nomeEntita = buildNomeEntitaPerMessaggiDiErrore(movKey, true);
 			String codiceEntita = buildCodiceEntitaPerMessaggiDiErrore(movKey);
-			listaErrori.add(ErroreCore.VALORE_NON_VALIDO.getErrore(nomeEntita + ": " + codiceEntita, "La sua disponibilita' a pagare del suo capitolo e' minore degli importi da reintroitare"));
+			listaErrori.add(ErroreCore.VALORE_NON_CONSENTITO.getErrore(nomeEntita + ": " + codiceEntita, "La sua disponibilita' a pagare del suo capitolo e' minore degli importi da reintroitare"));
 		}
 		return listaErrori;
 	}
@@ -857,7 +857,7 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		//
 		
 		//Presento il mesaggio di operazione lanciata:
-		Errore messaggioAvvio = ErroreCore.ELABORAZIONE_ASINCRONA_AVVIATA.getErrore("di reintroito ordinativo", "l'esisto sara' disponibile su cruscotto");
+		Errore messaggioAvvio = ErroreCore.ELABORAZIONE_ASINCRONA_AVVIATA.getErrore("di reintroito ordinativo", "l'esito sara' disponibile su cruscotto");
 		addMessaggio(messaggioAvvio);
 		
 		//ok
@@ -938,8 +938,8 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 			Impegno impegno = respRk.getImpegno();
 			
 			//STATO:
-			if(!Constanti.MOVGEST_STATO_DEFINITIVO.equalsIgnoreCase(impegno.getStatoOperativoMovimentoGestioneSpesa())
-				&& !Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equalsIgnoreCase(impegno.getStatoOperativoMovimentoGestioneSpesa())){
+			if(!CostantiFin.MOVGEST_STATO_DEFINITIVO.equalsIgnoreCase(impegno.getStatoOperativoMovimentoGestioneSpesa())
+				&& !CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equalsIgnoreCase(impegno.getStatoOperativoMovimentoGestioneSpesa())){
 				listaErrori.add(ErroreFin.NUMERO_IMPEGNO_NON_VALIDO.getErrore("Impegno in stato: "+ impegno.getDescrizioneStatoOperativoMovimentoGestioneSpesa()));
 			}
 			
@@ -984,8 +984,8 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 			Accertamento accertamento = respRk.getAccertamento();
 			
 			//STATO:
-			if(!Constanti.MOVGEST_STATO_DEFINITIVO.equalsIgnoreCase(accertamento.getStatoOperativoMovimentoGestioneEntrata())
-					&& !Constanti.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equalsIgnoreCase(accertamento.getStatoOperativoMovimentoGestioneEntrata())){
+			if(!CostantiFin.MOVGEST_STATO_DEFINITIVO.equalsIgnoreCase(accertamento.getStatoOperativoMovimentoGestioneEntrata())
+					&& !CostantiFin.MOVGEST_STATO_DEFINITIVO_NON_LIQUIDABILE.equalsIgnoreCase(accertamento.getStatoOperativoMovimentoGestioneEntrata())){
 				listaErrori.add(ErroreFin.NUMERO_IMPEGNO_NON_VALIDO.getErrore("Accertamento in stato: "+ accertamento.getStatoOperativoMovimentoGestioneEntrata()));
 			}
 			
@@ -1037,7 +1037,7 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		RicercaImpegnoPerChiaveOttimizzato rip = builRequestPerRicercaImpegnoCompilazioneGuidata(annoimpegno, numeroimpegno);
 		
 		//invoco il servizio di ricerca:
-		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaImpegnoPerChiaveOttimizzato(rip);
+		RicercaImpegnoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaImpegnoPerChiaveOttimizzato(rip);
 		
 		if(!controlliDiMeritoImpegnoCercato(respRk)){
 			//l'impegno non va bene
@@ -1102,7 +1102,7 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		RicercaAccertamentoPerChiaveOttimizzato rip = builRequestPerRicercaAccertamentoCompilazioneGuidata(annoimpegno, numeroimpegno);
 		
 		//invoco il servizio di ricerca:
-		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestionService.ricercaAccertamentoPerChiaveOttimizzato(rip);
+		RicercaAccertamentoPerChiaveOttimizzatoResponse respRk = movimentoGestioneFinService.ricercaAccertamentoPerChiaveOttimizzato(rip);
 		
 		if(!controlliDiMeritoAccertamentoCercato(respRk)){
 			//l'accertamento non va bene
@@ -1278,7 +1278,7 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		
 		//chiave di ricerca dell'impegno:
 		RicercaImpegnoK k = new RicercaImpegnoK();
-		k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		if(annoimpegno!=null){
 			//anno
 			k.setAnnoImpegno(new Integer(annoimpegno));
@@ -1324,7 +1324,7 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		
 		//chiave di ricerca dell'impegno:
 		RicercaAccertamentoK k = new RicercaAccertamentoK();
-		k.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+		k.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 		if(annoAccertamento!=null){
 			//anno
 			k.setAnnoAccertamento(new Integer(annoAccertamento));
@@ -1355,7 +1355,6 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		
 		// Implementare la logica sul pulsante conferma che dovrebbe settare 
 		// SOLO i quattro valori numero impegno,
-		// numero sub impegno anno e numero mutuo su step1.
 		
 		//pulisco i warning per evitare la comparsa dei popup:
 		pulisciChecksWarningPopUp();
@@ -1489,8 +1488,8 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		riga.setNumeroImpegno(model.getnImpegno());
 		riga.setAnnoImpegno(model.getnAnno());
 		
-		if(subImpegno!=null && subImpegno.getNumero()!=null){
-			riga.setNumeroSubImpegno(subImpegno.getNumero().intValue());
+		if(subImpegno!=null && subImpegno.getNumeroBigDecimal()!=null){
+			riga.setNumeroSubImpegno(subImpegno.getNumeroBigDecimal().intValue());
 		}
 		
 	}
@@ -1506,8 +1505,8 @@ public class ReintroitoOrdinativoPagamentoStep2Action extends ActionKeyReintroit
 		riga.setNumeroAccertamento(model.getnImpegno());
 		riga.setAnnoAccertamento(model.getnAnno());
 		
-		if(subAccertamento!=null && subAccertamento.getNumero()!=null){
-			riga.setNumeroSubAccertamento(subAccertamento.getNumero().intValue());
+		if(subAccertamento!=null && subAccertamento.getNumeroBigDecimal()!=null){
+			riga.setNumeroSubAccertamento(subAccertamento.getNumeroBigDecimal().intValue());
 		}
 	}
 	

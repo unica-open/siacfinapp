@@ -29,7 +29,8 @@ SPDX-License-Identifier: EUPL-1.2
 											<p>
 												<a class="btn btn-secondary" onclick="pulisciCampiQuota()"  data-toggle="collapse" data-target="#insQuota" >annulla inserimento</a>    
 												<span class="pull-right">
-													<s:submit id="inserisciQuota" cssClass="btn btn-primary" data-toggle="collapse" data-target="#insQuota" method="inserisciQuota" value="inserisci quota" name="inserisci quota" />	
+													<!-- task-131 <s:submit id="inserisciQuota" cssClass="btn btn-primary" method="inserisciQuota" value="inserisci quota" name="inserisci quota" /> -->
+													<s:submit id="inserisciQuota" cssClass="btn btn-primary" action="%{#inserisciQuotaAction}" value="inserisci quota" name="inserisci quota" />	
 												</span> 
 											</p>
 																

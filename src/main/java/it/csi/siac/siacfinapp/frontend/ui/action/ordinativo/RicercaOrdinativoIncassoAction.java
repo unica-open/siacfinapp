@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -16,9 +16,9 @@ import org.springframework.web.context.WebApplicationContext;
 import it.csi.siac.siacbilser.frontend.webservice.msg.LeggiClassificatoriGenericiByTipoElementoBilResponse;
 import it.csi.siac.siacbilser.model.TipoFinanziamento;
 import it.csi.siac.siaccorser.model.Errore;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.ordinativo.CausaleEntrataTendinoModel;
-import it.csi.siac.siacfinser.CodiciOperazioni;
 import it.csi.siac.siacfinser.model.codifiche.CodificaFin;
 import it.csi.siac.siacfinser.model.codifiche.TipiLista;
 import it.csi.siac.siacfinser.model.errore.ErroreFin;
@@ -55,11 +55,11 @@ public class RicercaOrdinativoIncassoAction extends WizardRicercaOrdinativoActio
 	@BreadCrumb("%{model.titolo}")
 	public String execute() throws Exception {
 		
-		if(!isFaseBilancioAbilitata()){
-			addErrore(ErroreFin.OPERAZIONE_INCOMPATIBILE_PER_BILANCIO.getErrore("ricerca ordinativo incasso", sessionHandler.getFaseBilancio()));
-		}		
+//		if(!isFaseBilancioAbilitata()){
+//			addErrore(ErroreFin.OPERAZIONE_INCOMPATIBILE_PER_BILANCIO.getErrore("ricerca ordinativo incasso", sessionHandler.getFaseBilancio()));
+//		}		
 
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_ENT_RICORDINC)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_RICORDINC)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 		}
 
@@ -117,7 +117,7 @@ public class RicercaOrdinativoIncassoAction extends WizardRicercaOrdinativoActio
 
 		List<Errore> listaErrori = checkParametri();
 
-		if(!isAzioneAbilitata(CodiciOperazioni.OP_ENT_RICORDINC)){
+		if(!isAzioneConsentita(AzioneConsentitaEnum.OP_ENT_RICORDINC)){
 			addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));
 			return INPUT;
 		}

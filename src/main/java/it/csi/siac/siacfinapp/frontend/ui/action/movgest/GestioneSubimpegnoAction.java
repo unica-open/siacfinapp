@@ -7,14 +7,14 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang.StringUtils;
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.GestisciImpegnoStep1Model;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 
 @Component
 @Scope(WebApplicationContext.SCOPE_REQUEST)
@@ -47,6 +47,9 @@ public class GestioneSubimpegnoAction extends ActionKeyAggiornaImpegno {
 		
 		//invoco il prepare della super classe:
 		super.prepare();
+		
+		//SIAC-8034
+		resetPageNumberTableId("ricercaSubImpegniID");
 		
 		setVisualizzaLinkConsultaModificheProvvedimento(true);
 		
@@ -113,7 +116,7 @@ public class GestioneSubimpegnoAction extends ActionKeyAggiornaImpegno {
 	 * @return
 	 */
 	private boolean isSubImpegnoInAggiornamentoProvvisorio(){
-		if(Constanti.MOVGEST_STATO_PROVVISORIO.equals(model.getStep1ModelSubimpegno().getStatoOperativo())){
+		if(CostantiFin.MOVGEST_STATO_PROVVISORIO.equals(model.getStep1ModelSubimpegno().getStatoOperativo())){
 			return true;
 		} else {
 			return false;

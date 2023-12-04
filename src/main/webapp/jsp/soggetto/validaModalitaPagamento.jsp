@@ -64,7 +64,8 @@ SPDX-License-Identifier: EUPL-1.2
 
 
 <div class="contentPage">    
-<s:form name="validaModalitaPropostaForm" action="validaModalitaPagamento.do" method="post" class="form-horizontal">
+<%-- SIAC-7952 rimuovo .do dalla action --%>
+<s:form name="validaModalitaPropostaForm" action="validaModalitaPagamento" method="post" class="form-horizontal">
 <s:hidden name="mdpId" value="%{mdpId}" />
   <div>	
     <ul class="nav nav-tabs">
@@ -422,7 +423,8 @@ SPDX-License-Identifier: EUPL-1.2
 </div>
 <div class="modal-footer">
 	<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-	<s:submit method="rifiutaValidazione" name="rifiutaValidazione" value="si, prosegui" cssClass="btn btn-primary rifiuta-prosegui" />
+	<!--task-131 <s:submit method="rifiutaValidazione" name="rifiutaValidazione" value="si, prosegui" cssClass="btn btn-primary rifiuta-prosegui" /> -->
+	<s:submit action="validaModalitaPagamento_rifiutaValidazione" name="rifiutaValidazione" value="si, prosegui" cssClass="btn btn-primary rifiuta-prosegui" />
 </div>
 </div>  
   <!--/modale Rifiuta -->  
@@ -438,7 +440,8 @@ SPDX-License-Identifier: EUPL-1.2
 </div>
 <div class="modal-footer">
 	<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-	<s:submit method="validaProposta" name="validaProposta" value="si, prosegui" cssClass="btn btn-primary valida-prosegui" />
+	<!-- task-131 <s:submit method="validaProposta" name="validaProposta" value="si, prosegui" cssClass="btn btn-primary valida-prosegui" /> -->
+	<s:submit action="validaModalitaPagamento_validaProposta" name="validaProposta" value="si, prosegui" cssClass="btn btn-primary valida-prosegui" />
 </div>
 </div>  
   <!--/modale Valida --> 

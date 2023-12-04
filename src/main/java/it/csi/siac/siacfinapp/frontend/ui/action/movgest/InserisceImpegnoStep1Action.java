@@ -7,7 +7,7 @@ package it.csi.siac.siacfinapp.frontend.ui.action.movgest;
 
 import java.math.BigInteger;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
@@ -16,6 +16,7 @@ import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaSinteticaProgetto;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipiAmbito;
 import it.csi.siac.siacbilser.frontend.webservice.msg.RicercaTipiAmbitoResponse;
 import it.csi.siac.siacbilser.model.ElementoPianoDeiConti;
+import it.csi.siac.siaccorser.util.AzioneConsentitaEnum;
 import it.csi.siac.siacfinapp.frontend.ui.action.OggettoDaPopolareEnum;
 import it.csi.siac.siacfinapp.frontend.ui.handler.session.FinSessionParameter;
 import it.csi.siac.siacfinapp.frontend.ui.model.movgest.CapitoloImpegnoModel;
@@ -27,8 +28,7 @@ import it.csi.siac.siacfinapp.frontend.ui.model.movgest.SoggettoImpegnoModel;
 import it.csi.siac.siacfinapp.frontend.ui.util.DateUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.FinUtility;
 import it.csi.siac.siacfinapp.frontend.ui.util.WebAppConstants;
-import it.csi.siac.siacfinser.CodiciOperazioni;
-import it.csi.siac.siacfinser.Constanti;
+import it.csi.siac.siacfinser.CostantiFin;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaDeiCronoprogrammiCollegatiAlProvvedimento;
 import it.csi.siac.siacfinser.frontend.webservice.msg.RicercaDeiCronoprogrammiCollegatiAlProvvedimentoResponse;
 import it.csi.siac.siacfinser.model.Impegno;
@@ -43,13 +43,25 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 	
 	private String ripetereMovimento;
 	
+	//SIAC-6997
+	private boolean ricaricaStrutturaAmministrativa = true;
+	
+	
 	public InserisceImpegnoStep1Action () {
 	   	//setto la tipologia di oggetto trattato:
 		oggettoDaPopolare = OggettoDaPopolareEnum.IMPEGNO;
 	}
 	
+	public boolean isRicaricaStrutturaAmministrativa() {
+		return ricaricaStrutturaAmministrativa;
+	}
+
+	public void setRicaricaStrutturaAmministrativa(boolean ricaricaStrutturaAmministrativa) {
+		this.ricaricaStrutturaAmministrativa = ricaricaStrutturaAmministrativa;
+	}
+	
 	/**
-	 *   settembre 2017 SIAC-5288
+	 * settembre 2017 SIAC-5288
 	 * @return
 	 */
 	public boolean isAbilitatoInserimentoVincolo(){
@@ -61,7 +73,6 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 		// ritorna true
 		return super.sonoInInserimento();
 	}
-	
 	
 	@Override
 	public void prepare() throws Exception {
@@ -94,7 +105,8 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 		    model.getStep1Model().setDaRiaccertamento(buildListaSiNo());
 		    model.getStep1Model().setImplPluriennale(buildListaSiNo());
 		    model.getStep1Model().setListflagAttivaGsa(buildListaSiNo());
-		    
+		    //SIAC-6997
+		    model.getStep1Model().setDaReanno(buildListaSiNo());
 		    model.getStep1Model().setDaPrenotazione(buildListaSiNo());
 		    model.getStep1Model().setDiCassaEconomale(buildListaSiNo());
 		    
@@ -111,6 +123,9 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 		    // non agisce l'ancora dei vincoli 
 		    model.getStep1Model().setPortaAdAltezzaVincoli(false);
 		    
+			//SIAC-6997
+			recuperaDescrizioneStrutturaCompetente();
+		    
 		} catch(Exception e) {
 			log.debug("prepare", e.getMessage());
 		}
@@ -122,7 +137,7 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 	private void caricaListaAmbiti() {
 		
 		RicercaTipiAmbito request = model.creaRequestRicercaTipiAmbito();
-		request.setAnno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+		request.setAnno(sessionHandler.getAnnoBilancio());
 		RicercaTipiAmbitoResponse response = progettoService.ricercaTipiAmbito(request);
 
 		model.setListaTipiAmbito(response.getTipiAmbito());
@@ -130,26 +145,32 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 	
 	
 	public boolean isVisibileFlagFrazionabile(){
-		//In inserimento il frazionabile compare solo se il bilancio � in stato "Esercizio Provvisoro"
+		//In inserimento il frazionabile compare solo se il bilancio . in stato "Esercizio Provvisoro"
 		return isBilancioAttualeInEsercizioProvvisorio();
 	}
 	
 	
 	public boolean isImpegnoPlurAbilitato(){
-		return isAzioneAbilitata(CodiciOperazioni.OP_SPE_gestisciImpegnoPluriennale);
+		return isAzioneConsentita(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoPluriennale);
 	}
 	
 	@Override
 	@BreadCrumb("%{model.titolo}")
 	public String execute() throws Exception {
 		setMethodName("execute");
-		
+		//SIAC-7349
+		Integer componenteUidFromRipeti=null;
 		//FIX PER JIRA  SIAC-2709 caso in cui si crea una situazione incoerente cliccando il filo d'arianna:
 		if(ripetereMovimento()){
 			GestisciMovGestModel mvDaRiperte = (GestisciMovGestModel) sessionHandler.getParametro(FinSessionParameter.MOVIMENTO_GESTIONE_DA_RIPETERE);
 			if(mvDaRiperte==null){
 				setRipetereMovimento("false");
 				forceReload = true;
+			}else{
+				if(mvDaRiperte.getStep1Model()!= null && mvDaRiperte.getStep1Model().getCapitolo()!= null){
+					componenteUidFromRipeti = mvDaRiperte.getStep1Model().getCapitolo().getComponenteBilancioUid();
+				}
+				
 			}
 		}
 		//
@@ -160,13 +181,13 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 		
 		if(isAbilitatoGestisciImpegnoDec()){
 			// decentrato
-			setAzioniDecToCheck(CodiciOperazioni.OP_SPE_gestisciImpegnoDecentrato);
+			setAzioniDecToCheck(AzioneConsentitaEnum.OP_SPE_gestisciImpegnoDecentrato.getNomeAzione());
 			if(!checkAzioniDec()){
 			   addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));	
 			}
 		}else if(isAbilitatoGestisciImpegno()){
 			    // master
-			setAzioniToCheck(CodiciOperazioni.OP_SPE_gestisciImpegno);
+			setAzioniToCheck(AzioneConsentitaEnum.OP_SPE_gestisciImpegno.getNomeAzione());
 			if(!checkAzioni()){
 				   addErrore(ErroreFin.UTENTE_NON_ABILITATO.getErrore(""));	
 				}
@@ -177,10 +198,10 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 		
 		// verifico lo stato di bilancio
 		// nel caso genero errore non appena si atterra sulla pagina
-		controlloStatoBilancio(Integer.parseInt(sessionHandler.getAnnoEsercizio()), "INSERIMENTO", "IMPEGNO");
+		controlloStatoBilancio(sessionHandler.getAnnoBilancio(), "INSERIMENTO", "IMPEGNO");
 		
 		//jira 1846
-		if(forceReload || (model.getStep1Model().getCapitolo()!=null && model.getStep1Model().getCapitolo().getAnno() ==null)){
+		if(forceReload || (model.getStep1Model().getCapitolo() != null && model.getStep1Model().getCapitolo().getAnno() == null)){
 			
 			//CARICAMENTO AVANZOVINCOLI:
 			caricaListaAvanzovincolo();
@@ -188,14 +209,15 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 			//
 			
 			if (sessionHandler.getAnnoEsercizio() != null && !"".equalsIgnoreCase(sessionHandler.getAnnoEsercizio())) {
-				model.getStep1Model().setAnnoImpegno(Integer.parseInt(sessionHandler.getAnnoEsercizio()));
+				model.getStep1Model().setAnnoImpegno(sessionHandler.getAnnoBilancio());
 				model.getStep1Model().getCapitolo().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
 				model.getCapitoloRicerca().setAnno(new Integer(sessionHandler.getAnnoEsercizio()));
 				//anomalia numero 16
-				
 			}
 
 			model.getStep1Model().setRiaccertato(setNoIfNull(model.getStep1Model().getRiaccertato()));
+			//SIAC-6997
+			model.getStep1Model().setReanno(setNoIfNull(model.getStep1Model().getReanno()));
 			model.getStep1Model().setSoggettoDurc(setNoIfNull(model.getStep1Model().getSoggettoDurc()));
 			model.getStep1Model().setPluriennale(setNoIfNull(model.getStep1Model().getPluriennale()));
 			model.getStep1Model().setFlagAttivaGsa(setNoIfNull(model.getStep1Model().getFlagAttivaGsa()));
@@ -206,14 +228,43 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 			model.getStep1Model().setFrazionabile(setFrazionabileIfNull(model.getStep1Model().getFrazionabile()));
 			
 			if(model.getStep1Model().getStato() == null){
-				model.getStep1Model().setStato(Constanti.STATO_PROVVISORIO);
+				model.getStep1Model().setStato(CostantiFin.STATO_PROVVISORIO);
 			}
 			
+			//SIAC-6997
+			recuperaDescrizioneStrutturaCompetente();
+//			if(model.getStep1Model().getStrutturaSelezionataCompetente() != null && !model.getStep1Model().getStrutturaSelezionataCompetente().equals("")){
+//				List<StrutturaAmministrativoContabile> lista = sessionHandler.getAccount().getStruttureAmministrativeContabili();
+//				if(lista != null && !lista.isEmpty()){
+//					 if(lista.size() > 1){
+//						//devo filtrare l'elenco per codice
+//						for(int j = 0; j < lista.size(); j++){
+//								//System.out.println("SAC(in sessione) n." + j + " e uid="+lista.get(j).getUid() + " e cod+descrizione="+lista.get(j).getCodice() + "-" + lista.get(j).getDescrizione());
+//							 if(lista.get(j).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())) {
+//								 model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getCodice() +"-"+lista.get(j).getDescrizione());
+//								 break;
+//							 }else{
+//								 if(lista.get(j).getSubStrutture() != null && !lista.get(j).getSubStrutture().isEmpty()){
+//									 for(int k = 0; k < lista.get(j).getSubStrutture().size(); k++){
+//										 if(lista.get(j).getSubStrutture().get(k).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())){
+//											 model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getSubStrutture().get(k).getCodice() +"-"+lista.get(j).getSubStrutture().get(k).getDescrizione());
+//											 break;
+//										 }
+//									 }
+//								 }
+//							 }
+//						}
+//					 }
+//				}
+//			}
+			
 		}
-		if(teSupport==null){
+		
+		if(teSupport == null){
 			pulisciTransazioneElementare();
 		}
-		if (caricaListeBil(WebAppConstants.CAP_UG)) {
+		
+		if(caricaListeBil(WebAppConstants.CAP_UG)) {
 			return INPUT;
 		}
 		
@@ -239,8 +290,61 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 			ripetiImpegno((GestisciMovGestModel) sessionHandler.getParametro(FinSessionParameter.MOVIMENTO_GESTIONE_DA_RIPETERE));
 			sessionHandler.setParametro(FinSessionParameter.MOVIMENTO_GESTIONE_DA_RIPETERE, null);
 		}
-	    return SUCCESS;
+		
+		/*
+		 * SIAC-7349
+		 * Setting dell abilitazione per 
+		 * il funzionamento con le componenti di bilancio
+		 * del capitolo
+		 */
+		model.setComponenteBilancioCapitoloAttivo(true);
+		//SE PRESENTE UID MA ASSENTE LA LISTA IL CARICAMENTO AVVIENE LATO AJAX. BISOGNA RISETTARE LA LISTA.
+    	if(model.getStep1Model().getCapitolo()!= null && model.getStep1Model().getCapitolo().getListaComponentiBilancio()== null
+    			|| model.getStep1Model().getCapitolo().getListaComponentiBilancio().isEmpty() 
+    			){
+    		
+    		//model.getStep1Model().setListaComponentiCapitoloFromAjax();
+    		model.getStep1Model().getCapitolo().setComponenteBilancioUid(model.getStep1Model().getComponenteImpegnoCapitoloUid());
+    		model.getStep1Model().getCapitolo().setComponenteBilancioUidReturn(model.getStep1Model().getComponenteImpegnoCapitoloUid());
+    		//DA RIPETI componenteUidFromRipeti
+    		if(model.getStep1Model().getComponenteImpegnoCapitoloUid()== null  ){
+    			model.getStep1Model().getCapitolo().setComponenteBilancioUid(componenteUidFromRipeti);
+        		model.getStep1Model().getCapitolo().setComponenteBilancioUidReturn(componenteUidFromRipeti);
+    		}
+    		
+    		
+    	}
+		return SUCCESS;
 	}
+	
+	//SIAC-6997
+	/*protected void recuperaDescrizioneStrutturaCompetente() {
+		//istanzio la request per il servizio:
+		LeggiStrutturaAmminstrativoContabile request = new LeggiStrutturaAmminstrativoContabile();
+		request.setAnno(sessionHandler.getAnnoBilancio());
+		request.setIdEnteProprietario(sessionHandler.getEnte().getUid());
+		request.setRichiedente(sessionHandler.getRichiedente());
+		//invoco il servizio:
+		LeggiStrutturaAmminstrativoContabileResponse response = classificatoreService.leggiStrutturaAmminstrativoContabile(request);
+		List<StrutturaAmministrativoContabile> lista =response.getListaStrutturaAmmContabile();// sessionHandler.getAccount().getStruttureAmministrativeContabili();
+		if(lista != null && !lista.isEmpty() && model.getStep1Model().getStrutturaSelezionataCompetente()!=null){
+			 for(int j = 0; j < lista.size(); j++){
+				 if(lista.get(j).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())) {
+					 model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getCodice() +"-"+lista.get(j).getDescrizione());
+					 break;
+				 }else{
+					 if(lista.get(j).getSubStrutture() != null && !lista.get(j).getSubStrutture().isEmpty()){
+						 for(int k = 0; k < lista.get(j).getSubStrutture().size(); k++){
+							 if(lista.get(j).getSubStrutture().get(k).getUid() == Integer.parseInt(model.getStep1Model().getStrutturaSelezionataCompetente())){
+								 model.getStep1Model().setStrutturaSelezionataCompetenteDesc(lista.get(j).getSubStrutture().get(k).getCodice() +"-"+lista.get(j).getSubStrutture().get(k).getDescrizione());
+								 break;
+							 }
+						 }
+					 }
+				 }
+			 }
+		}
+	}  */
 	
 	private boolean ripetereMovimento(){
 		if(getRipetereMovimento()!=null && getRipetereMovimento().equals("true")){
@@ -394,7 +498,8 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
         step1Model.setCronoprogramma(null);
         step1Model.setIdCronoprogramma(null);
         step1Model.setIdSpesaCronoprogramma(null);
-        
+        //SIAC-7349
+        step1Model.setComponenteImpegnoCapitoloUid(null);
         
 		ricaricaValoriDefaultStep1();
 		// levo le righe dei vincoli
@@ -448,9 +553,6 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 		return "ricercaProgettoCronop";
 	}
 	
-	
-	
-	
 	public String ricercaCronop() throws Exception {
 		
 		RicercaDeiCronoprogrammiCollegatiAlProvvedimento req = model.creaRequestRicercaCronoprogramma();
@@ -467,6 +569,7 @@ public class InserisceImpegnoStep1Action extends ActionKeyInserisceImpegno {
 		return "ricercaCronop";
 	}
 
+	
 	
 	
 

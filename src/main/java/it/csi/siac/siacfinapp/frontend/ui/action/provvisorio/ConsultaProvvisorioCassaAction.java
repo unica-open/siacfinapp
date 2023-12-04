@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.softwareforge.struts2.breadcrumb.BreadCrumb;
+import xyz.timedrain.arianna.plugin.BreadCrumb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -442,14 +442,14 @@ public class ConsultaProvvisorioCassaAction extends WizardConsultaProvvisorioAct
 		
 		if(isDiSpesa()){
 			ParametroRicercaOrdinativoPagamento prop = new ParametroRicercaOrdinativoPagamento();
-			prop.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			prop.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			prop.setAnnoProvvCassa(model.getProvvisorioCassa().getAnno());
 			prop.setNumeroProvvCassa(new BigDecimal(model.getProvvisorioCassa().getNumero()));
 			ricercaOrdinativo.setParametroRicercaOrdinativoPagamento(prop);
 			addNumAndPageSize(ricercaOrdinativo, "ricercaOrdPagID");
 		} else {
 			ParametroRicercaOrdinativoIncasso prop = new ParametroRicercaOrdinativoIncasso();
-			prop.setAnnoEsercizio(Integer.valueOf(sessionHandler.getAnnoEsercizio()));
+			prop.setAnnoEsercizio(sessionHandler.getAnnoBilancio());
 			prop.setAnnoProvvCassa(model.getProvvisorioCassa().getAnno());
 			prop.setNumeroProvvCassa(new BigDecimal(model.getProvvisorioCassa().getNumero()));
 			ricercaOrdinativo.setParametroRicercaOrdinativoIncasso(prop);

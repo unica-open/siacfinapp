@@ -18,8 +18,8 @@ SPDX-License-Identifier: EUPL-1.2
 <body>                       
 	<!-- NAVIGAZIONE -->
 	<s:include value="/jsp/include/header.jsp" />  	
-	
-	<s:form id="mainForm" method="post" action="nuovaRigaDaDocumentiStep2.do">
+	<%-- SIAC-7952 rimuovo .do dalla action --%>
+	<s:form id="mainForm" method="post" action="nuovaRigaDaDocumentiStep2">
 	<!-- /NAVIGAZIONE -->
 	<hr />
 <div class="container-fluid-banner">
@@ -30,8 +30,8 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span12 contentPage"> 
-		
-			<form method="post" action="nuovaRigaDaDocumentiStep2.do">  
+			<%-- SIAC-7952 rimuovo .do dalla action --%>
+			<form method="post" action="nuovaRigaDaDocumentiStep2">  
 				<s:include value="/jsp/include/actionMessagesErrors.jsp" />	   
 				<h3><s:property value="model.titoloStep"/></h3>
 				
@@ -45,7 +45,9 @@ SPDX-License-Identifier: EUPL-1.2
 				<div class="step-content">
 					<div class="step-pane active" id="step1">
 				
-				<p><s:submit name="inserisci in carta (selezionati)" value="inserisci in carta (selezionati)" method="inserisciInCarta" cssClass="btn btn-primary pull-right" /></p>
+				<p><!--task-131 <s:submit name="inserisci in carta (selezionati)" value="inserisci in carta (selezionati)" method="inserisciInCarta" cssClass="btn btn-primary pull-right" /> -->
+					<s:submit name="inserisci in carta (selezionati)" value="inserisci in carta (selezionati)" action="nuovaRigaDaDocumentiStep2_inserisciInCarta" cssClass="btn btn-primary pull-right" />
+				</p>
 				<h4>Documenti da collegare</h4>
 					
 				<fieldset class="form-horizontal">
@@ -109,9 +111,11 @@ SPDX-License-Identifier: EUPL-1.2
 
 			 
 				<p class="margin-medium">
-					<s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary"/>
+					<!--task-131 <s:submit name="indietro" value="indietro" method="indietro" cssClass="btn btn-secondary"/> -->
+					<s:submit name="indietro" value="indietro" action="nuovaRigaDaDocumentiStep2_indietro" cssClass="btn btn-secondary"/>
 					<span class="pull-right">
-						<s:submit name="inserisci in carta (selezionati)" value="inserisci in carta (selezionati)" method="inserisciInCarta" cssClass="btn btn-primary" />
+						<!--task-131 <s:submit name="inserisci in carta (selezionati)" value="inserisci in carta (selezionati)" method="inserisciInCarta" cssClass="btn btn-primary" /> -->
+						<s:submit name="inserisci in carta (selezionati)" value="inserisci in carta (selezionati)" action="nuovaRigaDaDocumentiStep2_inserisciInCarta" cssClass="btn btn-primary"/>
 					</span>
 				</p>       
 				

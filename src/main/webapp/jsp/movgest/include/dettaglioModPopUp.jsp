@@ -39,7 +39,11 @@ SPDX-License-Identifier: EUPL-1.2
 			</dd>
 			<dt>Motivo</dt>
 			<dd><s:property value="modificaDettaglio.motivo" />&nbsp;</dd>
-			
+			<!-- SIAC-8834 -->
+			<s:if test="modificaDettaglio.impegnoAssociato != null">
+				<dt>Impegno contestuale</dt>
+					<dd><s:property value="modificaDettaglio.impegnoAssociato.annoMovimento" /> / <s:property value="modificaDettaglio.impegnoAssociato.numero.intValue()" />&nbsp;</dd>
+			</s:if>
 		<s:if test="modificaDettaglio.importo != null">
 			<dt>Importo modifica</dt>
 			<dd><s:property value="getText('struts.money.format', {modificaDettaglio.importo})" /></dd>
@@ -85,6 +89,93 @@ SPDX-License-Identifier: EUPL-1.2
 				<dt>Anno reimputazione</dt>
 				<dd><s:property value="modificaDettaglio.annoReimputazione" /></dd>
 			</s:if>
+			<s:if test="modificaDettaglio.reanno != null">
+				<dt>Elaborato ROR - Reimp. in corso d&lsquo;anno</dt>
+				<dd><s:property value="modificaDettaglio.reanno" /></dd>
+			</s:if>
+			
+			<%-- SIAC-7349 Inzio SR180 CM 08/04/2020 Introduzione della tabella delle associazioni nella popup di consulta modifiche di accertamento --%>
+			<br/>
+			
+			<s:if test="modificaDettaglio.reimputazione == 'Si'">
+				<div class="accordion" id="accordion2">
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a class="accordion-toggle collapsed" data-toggle="collapse" id="ModalAssociazioni" data-parent="#accordion2" href="#collapseOne">
+								Associazioni<span class="icon">&nbsp;</span>
+							</a>
+						</div>
+						<div id="collapseOne" class="accordion-body collapse">
+							<div class="accordion-inner">
+								<fieldset class="form-horizontal">
+					<!-- 											qui dentro si inserisce la tabella 								-->
+									<span class="control-label" id="titoloTabAssociazioni">Reimputazioni di Spesa:</span>
+									<br/>		
+									<br/>
+									
+									<s:if test="%{(modificaDettaglio.listaModificheMovimentoGestioneSpesaCollegata != null) && (modificaDettaglio.listaModificheMovimentoGestioneSpesaCollegata.size > 0) }">
+										<table class="table table-hover table-condensed table-bordered" id="tabellaAssociazioni">
+											<tr class="componentiRowOther">
+												<s:if test="modificaDettaglio.tipoMovimento == 0">
+													<th class="text-center">Numero Accertamento</th>
+												</s:if>
+												<s:else>				
+													<th class="text-center">Numero impegno</th>	
+												</s:else>	
+												<th class="text-center">Numero modifica</th>
+												<th class="text-center">Descrizione</th>
+												<th class="text-center">Anno Reimp.</th>
+												<th class="text-center">Importo modifica</th>
+												<th class="text-center">Residuo collegare</th>
+												<th class="text-center">Importo collegamento</th>
+											</tr>
+											<s:iterator value="modificaDettaglio.listaModificheMovimentoGestioneSpesaCollegata" var="modColl" status="statusModColl">
+											 		<tr>
+											 			<s:if test="modificaDettaglio.tipoMovimento == 0">
+											 				<td class="text-left componentiRowFirst" ><s:property value="#modColl.modificaMovimentoGestioneEntrata.accertamento.numero.intValue()"/></td>
+															<td class="text-left componentiRowFirst"><s:property value="#modColl.modificaMovimentoGestioneEntrata.numeroModificaMovimentoGestione"/></td>
+															<!-- SIAC-7349 Inizio SR180 CM 22/04/2020 Aggiunto tooltip nella descrizione -->
+															<td class="text-left componentiRowFirst"> 
+																<div data-toggle="tooltip" data-placement="right" title="<s:property value="%{ (#modColl.modificaMovimentoGestioneEntrata.descrizioneModificaMovimentoGestione.length())>=10 ? #modColl.modificaMovimentoGestioneEntrata.descrizioneModificaMovimentoGestione : '' }"/>">
+						 											<s:property value="%{ (#modColl.modificaMovimentoGestioneEntrata.descrizioneModificaMovimentoGestione.length())>=10 ? #modColl.modificaMovimentoGestioneEntrata.descrizioneModificaMovimentoGestione.substring(0,10)+'...' : #modColl.modificaMovimentoGestioneEntrata.descrizioneModificaMovimentoGestione }"/>
+						 										</div> 
+															</td>
+															<!-- SIAC-7349 Fine SR180 CM 23/04/2020 -->
+															<td class="text-left componentiRowFirst"><s:property value="#modColl.modificaMovimentoGestioneEntrata.annoReimputazione"/></td>
+															<td class="text-right componentiRowLight"><s:property value="#modColl.modificaMovimentoGestioneEntrata.importoOld"/></td>
+														</s:if>
+														<s:else>					
+															<td class="text-left componentiRowFirst" ><s:property value="#modColl.modificaMovimentoGestioneSpesa.impegno.numero.intValue()"/></td>
+															<td class="text-left componentiRowFirst"><s:property value="#modColl.modificaMovimentoGestioneSpesa.numeroModificaMovimentoGestione"/></td>
+															<!-- SIAC-7349 Inizio SR180 CM 22/04/2020 Aggiunto tooltip nella descrizione -->
+															<td class="text-left componentiRowFirst"> 
+																<div data-toggle="tooltip" data-placement="right" title="<s:property value="%{ (#modColl.modificaMovimentoGestioneSpesa.descrizioneModificaMovimentoGestione.length())>=10 ? #modColl.modificaMovimentoGestioneSpesa.descrizioneModificaMovimentoGestione : '' }"/>">
+						 											<s:property value="%{ (#modColl.modificaMovimentoGestioneSpesa.descrizioneModificaMovimentoGestione.length())>=10 ? #modColl.modificaMovimentoGestioneSpesa.descrizioneModificaMovimentoGestione.substring(0,10)+'...' : #modColl.modificaMovimentoGestioneSpesa.descrizioneModificaMovimentoGestione }"/>
+						 										</div> 
+															</td>
+															<!-- SIAC-7349 Fine SR180 CM 22/04/2020 Aggiunto tooltip nella descrizione -->
+															<td class="text-left componentiRowFirst"><s:property value="#modColl.modificaMovimentoGestioneSpesa.annoReimputazione"/></td>
+															<td class="text-right componentiRowLight"><s:property value="#modColl.modificaMovimentoGestioneSpesa.importoOld"/></td>
+														</s:else>
+														<td class="text-right componentiRowLight"><s:property value="#modColl.importoResiduoCollegare"/></td>
+														<td class="text-right componentiRowLight"><s:property value="#modColl.importoCollegamento"/></td>
+													</tr>
+											</s:iterator>   
+					
+										</table>
+										
+										</s:if>
+									<s:else>
+									<div id="ncsdf">Non ci sono record da visualizzare.</div>
+								</s:else>
+								</fieldset>
+							</div>
+						</div>
+					</div>
+				</div>     
+		      </s:if>
+			<%-- SIAC-7349 Fine SR180 CM 08/04/2020 --%>     
+			
 		</s:if>	
 	
 		</dl>
@@ -93,3 +184,13 @@ SPDX-License-Identifier: EUPL-1.2
 <div class="modal-footer">
 	<button class="btn btn-primary" data-dismiss="modal" aria-hidden="true">chiudi</button>
 </div>
+
+<!-- SIAC-7349 Inizio SR180 CM 08/04/2020 aggiunto per visualizzazione tooltip su descrizione -->
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+   		$('[data-toggle="tooltip"]').tooltip(); 
+   		
+	});
+</script>
+<!-- SIAC-7349 Fine SR180 CM 08/04/2020 -->

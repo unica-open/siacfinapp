@@ -118,8 +118,8 @@ SPDX-License-Identifier: EUPL-1.2
 								</fieldset>
 								  
 								<p> 
-									<s:submit name="aggiungiOrdinativoDaCollegare" id="aggiungiOrdinativoDaCollegare"  value="collega" 
-											  method="aggiungiOrdinativoDaCollegare" cssClass="btn btn-primary pull-right" />
+									<!-- task-131  <s:submit name="aggiungiOrdinativoDaCollegare" id="aggiungiOrdinativoDaCollegare"  value="collega"  method="aggiungiOrdinativoDaCollegare" cssClass="btn btn-primary pull-right" /> -->
+									<s:submit name="aggiungiOrdinativoDaCollegare" id="aggiungiOrdinativoDaCollegare"  value="collega" action="%{#aggiungiOrdinativoDaCollegareAction}" cssClass="btn btn-primary pull-right" />
 								</p>
 								
 							</div>
@@ -177,7 +177,8 @@ SPDX-License-Identifier: EUPL-1.2
 	
 	<div class="modal-footer">
 		<button class="btn" data-dismiss="modal" aria-hidden="true">no, indietro</button>
-		<s:submit id="submitBtnEliminaOrdinativoCollegato" name="btnEliminaOrdinativoCollegato" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaOrdinativoCollegato"/>
+		<!--task-131 <s:submit id="submitBtnEliminaOrdinativoCollegato" name="btnEliminaOrdinativoCollegato" value="si, prosegui" cssClass="btn btn-primary"  method="eliminaOrdinativoCollegato"/> -->
+		<s:submit id="submitBtnEliminaOrdinativoCollegato" name="btnEliminaOrdinativoCollegato" value="si, prosegui" cssClass="btn btn-primary" action="%{#eliminaOrdinativoCollegatoAction}"/>
 	</div>
 </div>  
 <!--/modale elimina -->

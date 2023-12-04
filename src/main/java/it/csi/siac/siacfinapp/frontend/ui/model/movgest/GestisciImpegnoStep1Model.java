@@ -11,6 +11,7 @@ import java.util.List;
 
 import it.csi.siac.siacbilser.model.CapitoloEntrataGestione;
 import it.csi.siac.siacbilser.model.CapitoloUscitaGestione;
+import it.csi.siac.siacbilser.model.wrapper.ImportiCapitoloPerComponente;
 import it.csi.siac.siacfinapp.frontend.ui.model.GenericFinModel;
 import it.csi.siac.siacfinser.model.Accertamento;
 import it.csi.siac.siacfinser.model.movgest.VincoloImpegno;
@@ -45,8 +46,27 @@ public class GestisciImpegnoStep1Model extends GenericFinModel {
 	private Integer annoImpegno, annoFinanziamento, numeroFinanziamento, annoImpRiacc, numeroPluriennali, 
 					annoImpOrigine, numImpOrigine, uid, numeroImpegno, numImpRiacc, annoAccertamentoVincolo, numeroAccertamentoVincolo;
 	private String oggettoImpegno, stato, cig, cup, progetto,riaccertato,pluriennale, tipoImpegno, titolo , statoOperativo, 
-				   descrizioneStatoOperativoMovimento; 
+				   descrizioneStatoOperativoMovimento,
+				   //SIAC-8178
+				   codiceVerbale
+				   ;
 	
+	//SIAC-6997
+	
+	private Integer numeroSubImpegno;
+	private String reanno;
+	private List<String> daReanno = new ArrayList<String>();
+	private String strutturaSelezionataCompetente;
+	private String strutturaSelezionataCompetenteDesc;
+
+
+	//SIAC-6997 cruscotto gestione impegno ror
+	private BigDecimal importoDaRiaccertare;
+	private BigDecimal importoGestito;
+	private BigDecimal importoDaGestire;
+
+	private String strutturaSelezionataCompetenteMODDesc;
+
 	private String attivitaPrevista;
 	private String cronoprogramma;
 
@@ -148,6 +168,39 @@ public class GestisciImpegnoStep1Model extends GenericFinModel {
 	//SIAC-6702
 	private boolean saltaControlloLegamiStoricizzati;
 	
+	//SIAC-7349
+	private Integer componenteImpegnoCapitoloUid;
+	private List<ImportiCapitoloPerComponente> importiCapitoloPerComponente = new ArrayList<ImportiCapitoloPerComponente>();
+
+	
+
+	/**
+	 * @return the strutturaSelezionataCompetenteMODDesc
+	 */
+	public String getStrutturaSelezionataCompetenteMODDesc() {
+		return strutturaSelezionataCompetenteMODDesc;
+	}
+
+	/**
+	 * @param strutturaSelezionataCompetenteMODDesc the strutturaSelezionataCompetenteMODDesc to set
+	 */
+	public void setStrutturaSelezionataCompetenteMODDesc(String strutturaSelezionataCompetenteMODDesc) {
+		this.strutturaSelezionataCompetenteMODDesc = strutturaSelezionataCompetenteMODDesc;
+	}
+
+	/**
+	 * @return the strutturaSelezionataCompetenteDesc
+	 */
+	public String getStrutturaSelezionataCompetenteDesc() {
+		return strutturaSelezionataCompetenteDesc;
+	}
+
+	/**
+	 * @param strutturaSelezionataCompetenteDesc the strutturaSelezionataCompetenteDesc to set
+	 */
+	public void setStrutturaSelezionataCompetenteDesc(String strutturaSelezionataCompetenteDesc) {
+		this.strutturaSelezionataCompetenteDesc = strutturaSelezionataCompetenteDesc;
+	}
 
 	/**
 	 * @return the alertMovimentoCollegatoAOrdinativiOLiquidazioni
@@ -240,6 +293,20 @@ public class GestisciImpegnoStep1Model extends GenericFinModel {
 	public Integer getNumImpRiacc() {
 		return numImpRiacc;
 	}
+	/**
+	 * @return the importiCapitoloPerComponente
+	 */
+	public List<ImportiCapitoloPerComponente> getImportiCapitoloPerComponente() {
+		return importiCapitoloPerComponente;
+	}
+
+	/**
+	 * @param importiCapitoloPerComponente the importiCapitoloPerComponente to set
+	 */
+	public void setImportiCapitoloPerComponente(List<ImportiCapitoloPerComponente> importiCapitoloPerComponente) {
+		this.importiCapitoloPerComponente = importiCapitoloPerComponente;
+	}
+
 	public void setNumImpRiacc(Integer numImpRiacc) {
 		this.numImpRiacc = numImpRiacc;
 	}
@@ -329,6 +396,21 @@ public class GestisciImpegnoStep1Model extends GenericFinModel {
 	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
+	
+	/**
+	 * @return the numeroSubImpegno
+	 */
+	public Integer getNumeroSubImpegno() {
+		return numeroSubImpegno;
+	}
+
+	/**
+	 * @param numeroSubImpegno the numeroSubImpegno to set
+	 */
+	public void setNumeroSubImpegno(Integer numeroSubImpegno) {
+		this.numeroSubImpegno = numeroSubImpegno;
+	}
+
 	public Integer getNumeroImpegno() {
 		return numeroImpegno;
 	}
@@ -859,6 +941,102 @@ public class GestisciImpegnoStep1Model extends GenericFinModel {
 	public void setFlagCorrispettivo(String flagCorrispettivo) {
 		this.flagCorrispettivo = flagCorrispettivo;
 	}
+
+	/**
+	 * @return the reanno
+	 */
+	public String getReanno() {
+		return reanno;
+	}
+
+	/**
+	 * @param reanno the reanno to set
+	 */
+	public void setReanno(String reanno) {
+		this.reanno = reanno;
+	}
+
+	
+
+	/**
+	 * @return the daReanno
+	 */
+	public List<String> getDaReanno() {
+		return daReanno;
+	}
+
+	/**
+	 * @param daReanno the daReanno to set
+	 */
+	public void setDaReanno(List<String> daReanno) {
+		this.daReanno = daReanno;
+	}
+
+	
+
+	/**
+	 * @return the strutturaSelezionataCompetente
+	 */
+	public String getStrutturaSelezionataCompetente() {
+		return strutturaSelezionataCompetente;
+	}
+
+	/**
+	 * @param strutturaSelezionataCompetente the strutturaSelezionataCompetente to set
+	 */
+	public void setStrutturaSelezionataCompetente(String strutturaSelezionataCompetente) {
+		this.strutturaSelezionataCompetente = strutturaSelezionataCompetente;
+	}
+
+	public BigDecimal getImportoDaRiaccertare() {
+		return importoDaRiaccertare;
+	}
+
+	public void setImportoDaRiaccertare(BigDecimal importoDaRiaccertare) {
+		this.importoDaRiaccertare = importoDaRiaccertare;
+	}
+
+	public BigDecimal getImportoGestito() {
+		return importoGestito;
+	}
+
+	public void setImportoGestito(BigDecimal importoGestito) {
+		this.importoGestito = importoGestito;
+	}
+
+	public BigDecimal getImportoDaGestire() {
+		return importoDaGestire;
+	}
+
+	public void setImportoDaGestire(BigDecimal importoDaGestire) {
+		this.importoDaGestire = importoDaGestire;
+	}
+
+	/**
+	 * @return the componenteImpegnoCapitoloUid
+	 */
+	public Integer getComponenteImpegnoCapitoloUid() {
+		return componenteImpegnoCapitoloUid;
+	}
+
+	/**
+	 * @param componenteImpegnoCapitoloUid the componenteImpegnoCapitoloUid to set
+	 */
+	public void setComponenteImpegnoCapitoloUid(Integer componenteImpegnoCapitoloUid) {
+		this.componenteImpegnoCapitoloUid = componenteImpegnoCapitoloUid;
+	}
+
+	public String getCodiceVerbale() {
+		return codiceVerbale;
+	}
+
+	public void setCodiceVerbale(String codiceVerbale) {
+		this.codiceVerbale = codiceVerbale;
+	}
+
+	
+
+	
 
 	
 	

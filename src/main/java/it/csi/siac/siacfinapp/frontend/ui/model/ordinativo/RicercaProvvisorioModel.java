@@ -36,6 +36,8 @@ public class RicercaProvvisorioModel extends GenericPopupModel{
 	// SIAC-6879
 	private String dataInizioInvioServizio;
 	private String dataFineInvioServizio;
+	private String dataInizioPresaInCaricoServizio;
+	private String dataFinePresaInCaricoServizio;
 	private String dataInizioRifiutoErrataAttribuzione;
 	private String dataFineRifiutoErrataAttribuzione;
 	
@@ -47,15 +49,15 @@ public class RicercaProvvisorioModel extends GenericPopupModel{
 
 	//tipo documento provvisorio:
 	private String tipoDocumentoProv;
-	private List<String> tipoDocumentoProvList = new ArrayList<String>();
 
 	//flag annullato prov:
 	private String flagAnnullatoProv;
-	private List<String> flagAnnullatoProvList = new ArrayList<String>();
 
 	//flag da regolarizzare:
 	private String flagDaRegolarizzare;
-	private List<String> flagDaRegolarizzareList = new ArrayList<String>();
+
+
+	private String flagAccettato;
 
 	//struttura selezionata:
 	private String strutturaSelezionataSuPagina;
@@ -197,17 +199,10 @@ public class RicercaProvvisorioModel extends GenericPopupModel{
 		return tipoDocumentoProv;
 	}
 
-	public List<String> getTipoDocumentoProvList() {
-		return tipoDocumentoProvList;
-	}
-
 	public void setTipoDocumentoProv(String tipoDocumentoProv) {
 		this.tipoDocumentoProv = tipoDocumentoProv;
 	}
 
-	public void setTipoDocumentoProvList(List<String> tipoDocumentoProvList) {
-		this.tipoDocumentoProvList = tipoDocumentoProvList;
-	}
 
 	public String getFlagAnnullatoProv() {
 		return flagAnnullatoProv;
@@ -217,21 +212,6 @@ public class RicercaProvvisorioModel extends GenericPopupModel{
 		this.flagAnnullatoProv = flagAnnullatoProv;
 	}
 
-	public List<String> getFlagAnnullatoProvList() {
-		return flagAnnullatoProvList;
-	}
-
-	public void setFlagAnnullatoProvList(List<String> flagAnnullatoProvList){
-		this.flagAnnullatoProvList = flagAnnullatoProvList;
-	}
-
-	public List<String> getFlagDaRegolarizzareList(){
-		return flagDaRegolarizzareList;
-	}
-
-	public void setFlagDaRegolarizzareList(List<String> flagDaRegolarizzareList){
-		this.flagDaRegolarizzareList = flagDaRegolarizzareList;
-	}
 
 	public BigDecimal getImportoDa(){
 		return importoDa;
@@ -360,5 +340,29 @@ public class RicercaProvvisorioModel extends GenericPopupModel{
 
 	public void setDataFineRifiutoErrataAttribuzione(String dataFineRifiutoErrataAttribuzione) {
 		this.dataFineRifiutoErrataAttribuzione = dataFineRifiutoErrataAttribuzione;
+	}
+
+	public String getDataInizioPresaInCaricoServizio() {
+		return dataInizioPresaInCaricoServizio;
+	}
+
+	public void setDataInizioPresaInCaricoServizio(String dataInizioPresaInCaricoServizio) {
+		this.dataInizioPresaInCaricoServizio = dataInizioPresaInCaricoServizio;
+	}
+
+	public String getDataFinePresaInCaricoServizio() {
+		return dataFinePresaInCaricoServizio;
+	}
+
+	public void setDataFinePresaInCaricoServizio(String dataFinePresaInCaricoServizio) {
+		this.dataFinePresaInCaricoServizio = dataFinePresaInCaricoServizio;
+	}
+
+	public String getFlagAccettato() {
+		return flagAccettato;
+	}
+
+	public void setFlagAccettato(String flagAccettato) {
+		this.flagAccettato = flagAccettato;
 	}
 }
